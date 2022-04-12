@@ -28,7 +28,7 @@
 <meta property="og:description" content="刷了有快一周leetcode题目了，感觉算法这块进度偏慢，一天可能刷一两道题就是极限了。 刷的是leetcode学习栏里的初级算法选题。有时候感觉自己的记忆力真是差到一定程度了，有好两道题刷完后才发现自己在算法竞赛入门里看过，就是记不起来，结果还是用了最笨的方法… 可以预感到自己学了有些方法，例如双指针，之后还需要适应…太难了！一步一步来吧 (以下所有题目来源力扣cn官网) 2&#x2F;25-3&#x2F;1LC2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-01T12:16:22.254Z">
-<meta property="article:modified_time" content="2022-03-11T12:56:20.112Z">
+<meta property="article:modified_time" content="2022-04-12T02:45:11.503Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
@@ -180,7 +180,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-11 20:56:20" itemprop="dateModified" datetime="2022-03-11T20:56:20+08:00">2022-03-11</time>
+                <time title="修改时间：2022-04-12 10:45:11" itemprop="dateModified" datetime="2022-04-12T10:45:11+08:00">2022-04-12</time>
               </span>
 
           
@@ -219,11 +219,20 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> pf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            prices[i]=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&gt;<span class="number">0</span>)pf+=prices[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>这样看起来就简洁多了！需要注意的是最后一天没有别的天数来减（买了不卖也是亏），在第二个循环中不用加上。</p>
-<h4 id="189-轮转数组"><a href="#189-轮转数组" class="headerlink" title="189. 轮转数组"></a>189. 轮转数组</h4><p>给你一个数组，将数组中的元素向右轮转 k 个位置，其中 k 是非负数。</p>
-<p>示例 1:</p>
-<p>输入: nums = [1,2,3,4,5,6,7], k = 3<br>输出: [5,6,7,1,2,3,4]<br>解释:<br>向右轮转 1 步: [7,1,2,3,4,5,6]<br>向右轮转 2 步: [6,7,1,2,3,4,5]<br>向右轮转 3 步: [5,6,7,1,2,3,4]</p>
-<p>（这几天其实练了八道题，有时间再更新吧）</p>
-<p>（3/11：更新变成鸽子飞走了！）</p>
+<h4 id="48-旋转图像"><a href="#48-旋转图像" class="headerlink" title="48.旋转图像"></a>48.旋转图像</h4><p>给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。</p>
+<p>你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 使用另一个矩阵来旋转图像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]</span><br><span class="line">输出：[[7,4,1],[8,5,2],[9,6,3]]</span><br></pre></td></tr></table></figure>
+
+<p>这题显然是有一定的规律可以利用的，否则一边一边写旋转，代码有点太多了。看到题目强调矩阵这个概念，我就想到了可以把矩阵操作一下，比如转置之类的。</p>
+<p>第一次做这题时，我想到可以先转置，再看看怎么调整。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">        int n = matrix.size();</span><br><span class="line">        int tri = 0;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            for (int j = 0+tri; j &lt; n; j++) &#123;</span><br><span class="line">                int tr=matrix[i][j];</span><br><span class="line">                matrix[i][j] = matrix[j][i];</span><br><span class="line">                matrix[j][i] = tr;</span><br><span class="line">            &#125;</span><br><span class="line">            tri++;</span><br><span class="line">        &#125;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            reverse(matrix[i].begin(),matrix[i].end());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>果然，转置过后，每一行reverse一下就行了。不过需要注意的是转置时遍历一个三角即可，不然是转置两次。</p>
+<p>后来重做了一遍，我是倒过来想的，先reverse列，再转置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">	void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">		reverse(matrix.begin(), matrix.end());</span><br><span class="line">		for (int i = 0; i &lt; matrix.size(); i++) &#123;</span><br><span class="line">			for (int j = i; j &lt; matrix[i].size(); j++) &#123;</span><br><span class="line">				int ori = matrix[i][j];</span><br><span class="line">				matrix[i][j] = matrix[j][i];</span><br><span class="line">				matrix[j][i] = ori;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这次我学聪明了，知道遍历三角可以<code>j = i</code>，少几行代码。不过这样写使用内存居然比第一次多！我把这个想法也改成用<code>j = 0+tri</code>的形式（其他没变），内存使用变成和第一次一样了。这是为什么呢？</p>
+<p>我想去stackoverflow上问问，就去了leetcode英文站看看英文题目描述，顺手再提交了两次题目，发现内存占用又一样了…但是我用最开始的写法时间更快。好吧，看来这或许不是我现阶段能了解的问题。</p>
 
     </div>
 
@@ -304,7 +313,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-25-3-1"><span class="nav-number">1.</span> <span class="nav-text">2&#x2F;25-3&#x2F;1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LC26-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9"><span class="nav-number">1.0.1.</span> <span class="nav-text">LC26. 删除有序数组中的重复项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#122-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA-II"><span class="nav-number">1.0.2.</span> <span class="nav-text">122. 买卖股票的最佳时机 II</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#189-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84"><span class="nav-number">1.0.3.</span> <span class="nav-text">189. 轮转数组</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-25-3-1"><span class="nav-number">1.</span> <span class="nav-text">2&#x2F;25-3&#x2F;1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LC26-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9"><span class="nav-number">1.0.1.</span> <span class="nav-text">LC26. 删除有序数组中的重复项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#122-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA-II"><span class="nav-number">1.0.2.</span> <span class="nav-text">122. 买卖股票的最佳时机 II</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#48-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F"><span class="nav-number">1.0.3.</span> <span class="nav-text">48.旋转图像</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
