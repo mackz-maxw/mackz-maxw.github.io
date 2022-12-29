@@ -157,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/25/algorithm3/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/25/network2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -171,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/12/25/algorithm3/" class="post-title-link" itemprop="url">刷题-初级算法</a>
+            <a href="/2022/12/25/network2/" class="post-title-link" itemprop="url">计算机网络练习</a>
         </h2>
 
         <div class="post-meta">
@@ -180,10 +180,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-12-25 12:31:29 / 修改时间：12:35:06" itemprop="dateCreated datePublished" datetime="2022-12-25T12:31:29+08:00">2022-12-25</time>
+              <time title="创建时间：2022-12-25 12:31:29" itemprop="dateCreated datePublished" datetime="2022-12-25T12:31:29+08:00">2022-12-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-29 11:30:20" itemprop="dateModified" datetime="2022-12-29T11:30:20+08:00">2022-12-29</time>
+              </span>
 
           
 
@@ -197,8 +203,26 @@
 
       
           <p>语言考试的事情终于可以暂时放一下了，最近重新看起了计算机网络的网课，感觉自己算法这块还是得加强一二，得刷题啊。</p>
-<h2 id="12-25"><a href="#12-25" class="headerlink" title="12/25"></a>12/25</h2><p>（摸🐟中，占位）</p>
+<h2 id="12-25"><a href="#12-25" class="headerlink" title="12/25"></a>12/25</h2><p>网课笔记啥的我实在是没时间做（），就记录一下自己做的网课作业吧</p>
+<p>作业要求在这里：<a target="_blank" rel="noopener" href="https://cs144.github.io/assignments/lab0.pdf">实验0</a></p>
+<p>1.实现一个webget程序，使用操作系统的TCP协助和流套接抽象获取网络上的网页</p>
+<p>主要需要编写的就是这一个函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">get_URL</span><span class="params">(<span class="type">const</span> string &amp;host, <span class="type">const</span> string &amp;path)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Your code here.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// You will need to connect to the &quot;http&quot; service on</span></span><br><span class="line">    <span class="comment">// the computer whose name is in the &quot;host&quot; string,</span></span><br><span class="line">    <span class="comment">// then request the URL path given in the &quot;path&quot; string.</span></span><br><span class="line">    TCPSocket sock1;</span><br><span class="line">    sock1.<span class="built_in">connect</span>(<span class="built_in">Address</span>(host, <span class="string">&quot;80&quot;</span>));</span><br><span class="line"></span><br><span class="line">    string req = <span class="string">&quot;GET &quot;</span>;</span><br><span class="line">    req.<span class="built_in">append</span>(path);</span><br><span class="line">    <span class="comment">//一开始写的时候根本没理解“每行都需要\r\n“的意思，</span></span><br><span class="line">    <span class="comment">//只在整个链接的最后使用了\r\n，可把我难住了</span></span><br><span class="line">    req += <span class="string">&quot; HTTP/1.1\r\nHost: &quot;</span>;</span><br><span class="line">    req.<span class="built_in">append</span>(host);</span><br><span class="line">    <span class="comment">//这里的Connection: close没有的话会持续输出空行，或者等待后关闭（取决于具体代码）</span></span><br><span class="line">    <span class="comment">//后面的sock1.close();感觉在提供输出上没啥用，可能是作用于本机socket的运行状态</span></span><br><span class="line">    <span class="comment">//req += &quot;\r\nConnection: close\r\n\r\n&quot;;</span></span><br><span class="line">    req += <span class="string">&quot;\r\n\r\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//auto recvd = sock1.read();</span></span><br><span class="line">    sock1.<span class="built_in">write</span>(req);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Then you&#x27;ll need to print out everything the server sends back,</span></span><br><span class="line">    <span class="comment">// (not just one call to read() -- everything) until you reach</span></span><br><span class="line">    <span class="comment">//谢谢你的原注释这里把eof用双引号括起来哈，我还以为是字符串&quot;eof&quot;呢，结果不是</span></span><br><span class="line">    <span class="comment">// the &quot;eof&quot; (end of file).</span></span><br><span class="line">    <span class="comment">//看仓库文档的示例之后，我以为需要创建两个socket，一个读一个写，结果是我理解错了</span></span><br><span class="line">    <span class="comment">//不过从原理来看也应该是一个socket才对</span></span><br><span class="line">    <span class="comment">//auto recvd = sock2.read();</span></span><br><span class="line">    <span class="comment">//cout &lt;&lt; recvd &lt;&lt; endl;</span></span><br></pre></td></tr></table></figure>
 
+<p>接下来输出的一个错误示例，网上的答案好像也跟这写得差不多</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    	    <span class="keyword">if</span>(!sock1.<span class="built_in">eof</span>())&#123;</span><br><span class="line">		<span class="keyword">auto</span> recvd2 = sock1.<span class="built_in">read</span>();</span><br><span class="line">        <span class="comment">//在一个链接的过程中究竟读了几次呢？我测试了一下，</span></span><br><span class="line">        <span class="comment">//第一次读出了状态码等东西（这个是叫请求头吧？）和网页内容</span></span><br><span class="line">        <span class="comment">//第二次读了一个空行</span></span><br><span class="line">        <span class="comment">//取决于传输内容的速率，传输过来的内容会随机换行（读的次数也不一样）</span></span><br><span class="line">    		cout &lt;&lt; recvd2 &lt;&lt; endl;</span><br><span class="line">   	 &#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		sock1.<span class="built_in">close</span>();</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    &#125;	  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判定的程序会报错不匹配，于是我翻找了一下这个小程序的检验条件，在项目目录下的tests文件夹里，是一串固定的字符</p>
+<p>所以接下来这段才是正确的写法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">   string resp;</span><br><span class="line">   <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">   	<span class="keyword">if</span>(!sock1.<span class="built_in">eof</span>())&#123;</span><br><span class="line">	<span class="keyword">auto</span> recvd = sock1.<span class="built_in">read</span>();</span><br><span class="line">       <span class="comment">//组合在一起就不会有薛定谔的空行了</span></span><br><span class="line">	resp.<span class="built_in">append</span>(recvd);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line">   &#125;</span><br><span class="line">   string split = <span class="string">&quot;Content-type:&quot;</span>;</span><br><span class="line">   <span class="comment">//要删掉请求头和后面的一个换行和回车，不过我这里如果Content-type的内容字符数变了就gg了</span></span><br><span class="line">   <span class="type">size_t</span> pos = resp.<span class="built_in">find</span>(split) + <span class="number">26</span>;</span><br><span class="line">   <span class="keyword">if</span>(pos != string::npos)&#123;</span><br><span class="line"><span class="comment">//cout &lt;&lt; &quot;position:&quot;&lt;&lt; pos &lt;&lt; endl;</span></span><br><span class="line">   	resp = resp.<span class="built_in">substr</span>(pos); </span><br><span class="line">   &#125;</span><br><span class="line">   <span class="type">size_t</span> str_size = resp.<span class="built_in">size</span>();</span><br><span class="line">   <span class="comment">//结尾还有一个换行/回车</span></span><br><span class="line">   resp.<span class="built_in">erase</span>(str_size - <span class="number">1</span>);</span><br><span class="line">   cout &lt;&lt; resp &lt;&lt; endl;</span><br><span class="line">   <span class="comment">//记得注释掉原文件里的两行报错</span></span><br></pre></td></tr></table></figure>
+
+<p>2.在内存中实现一个可靠的字节流</p>
+<p>头文件里主要是加一些私有变量</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ByteStream</span> &#123;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// Your code here -- add private members as necessary.</span></span><br><span class="line">    std::deque&lt;<span class="type">char</span>&gt; _queue;</span><br><span class="line">    <span class="type">size_t</span> _capacity_size;</span><br><span class="line">    <span class="type">size_t</span> _written_size;</span><br><span class="line">    <span class="type">size_t</span> _read_size;</span><br><span class="line">    <span class="type">bool</span> _end_input;</span><br><span class="line">    <span class="type">bool</span> _error&#123;&#125;;  <span class="comment">//!&lt; Flag indicating that the stream suffered an error.</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ByteStream</span>(<span class="type">const</span> <span class="type">size_t</span> capacity);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \name &quot;Input&quot; interface for the writer</span></span><br><span class="line">    <span class="comment">//接口函数还没有试验过</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">InputInterface</span> &#123;</span><br><span class="line">	    <span class="keyword">private</span>:</span><br><span class="line">		    ByteStream* _input_stream;</span><br><span class="line">	    <span class="keyword">public</span>:</span><br><span class="line">		    <span class="built_in">InputInterface</span>(ByteStream* stream) : _input_stream(stream) &#123;&#125;</span><br><span class="line">	    <span class="function"><span class="type">size_t</span> <span class="title">write</span><span class="params">(<span class="type">const</span> std::string &amp;data)</span></span>&#123;</span><br><span class="line">	    	<span class="keyword">return</span> _input_stream-&gt;<span class="built_in">write</span>(data);</span><br><span class="line">	    &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//! Write a string of bytes into the stream. Write as many</span></span><br><span class="line">    <span class="comment">//! as will fit, and return how many were written.</span></span><br><span class="line">    <span class="comment">//! \returns the number of bytes accepted into the stream</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">write</span><span class="params">(<span class="type">const</span> std::string &amp;data)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns the number of additional bytes that the stream has space for</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">remaining_capacity</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Signal that the byte stream has reached its ending</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">end_input</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Indicate that the stream suffered an error.</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_error</span><span class="params">()</span> </span>&#123; _error = <span class="literal">true</span>; &#125;</span><br><span class="line">    <span class="comment">//!@&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \name &quot;Output&quot; interface for the reader</span></span><br><span class="line">    <span class="comment">//接口函数还没有试验过</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">OutputInterface</span> &#123;</span><br><span class="line">	    <span class="keyword">private</span>:</span><br><span class="line">		ByteStream* _output_stream;</span><br><span class="line">	    <span class="keyword">public</span>:</span><br><span class="line">		<span class="built_in">OutputInterface</span>(ByteStream* stream) : _output_stream(stream)&#123;&#125;</span><br><span class="line">		<span class="function">std::string <span class="title">peek_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span></span>&#123;</span><br><span class="line">		   <span class="keyword">return</span> _output_stream-&gt;<span class="built_in">peek_output</span>(len);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="type">void</span> <span class="title">pop_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span></span>&#123;</span><br><span class="line">		    _output_stream-&gt;<span class="built_in">pop_output</span>(len);</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//! Peek at next &quot;len&quot; bytes of the stream</span></span><br><span class="line">    <span class="comment">//! \returns a string</span></span><br><span class="line">    <span class="function">std::string <span class="title">peek_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Remove bytes from the buffer</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Read (i.e., copy and then pop) the next &quot;len&quot; bytes of the stream</span></span><br><span class="line">    <span class="comment">//! \returns a string</span></span><br><span class="line">    <span class="function">std::string <span class="title">read</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns `true` if the stream input has ended</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">input_ended</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns `true` if the stream has suffered an error</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">error</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _error; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns the maximum amount that can currently be read from the stream</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">buffer_size</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns `true` if the buffer is empty</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">buffer_empty</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \returns `true` if the output has reached the ending</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">eof</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="comment">//!@&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//! \name General accounting</span></span><br><span class="line">    <span class="comment">//!@&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Total number of bytes written</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">bytes_written</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//! Total number of bytes popped</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">bytes_read</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="comment">//!@&#125;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>因为读写在数据中的位置在两端，需要使用双端队列的数据结构</p>
+<p>这些代码只是实现基本功能，如何判断写了多少，没写进去的是否要重写的不用考虑</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;byte_stream.hh&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//template &lt;typename... Targs&gt;</span></span><br><span class="line"><span class="comment">//void DUMMY_CODE(Targs &amp;&amp;... /* unused */) &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">//别忘了初始化类中的变量</span></span><br><span class="line">ByteStream::<span class="built_in">ByteStream</span>(<span class="type">const</span> <span class="type">size_t</span> capacity)</span><br><span class="line">: _queue(), _capacity_size(capacity), _written_size(<span class="number">0</span>), _read_size(<span class="number">0</span>), _end_input(<span class="literal">false</span>), _error(<span class="literal">false</span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">ByteStream::write</span><span class="params">(<span class="type">const</span> string &amp;data)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//先判断边界条件</span></span><br><span class="line">   <span class="keyword">if</span>(_end_input)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">   <span class="comment">//注意内存限制</span></span><br><span class="line">   <span class="type">size_t</span> write_size = <span class="built_in">min</span>(data.<span class="built_in">size</span>(), _capacity_size - _queue.<span class="built_in">size</span>());</span><br><span class="line">   _written_size += write_size;</span><br><span class="line">   <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; write_size; i++)&#123;</span><br><span class="line">	_queue.<span class="built_in">push_back</span>(data[i]);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> write_size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//! \param[in] len bytes will be copied from the output side of the buffer</span></span><br><span class="line"><span class="function">string <span class="title">ByteStream::peek_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="type">size_t</span> pop_size = <span class="built_in">min</span>(len, _queue.<span class="built_in">size</span>());</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">string</span>(_queue.<span class="built_in">begin</span>(), _queue.<span class="built_in">begin</span>() + pop_size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//! \param[in] len bytes will be removed from the output side of the buffer</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ByteStream::pop_output</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span> </span>&#123;</span><br><span class="line">    <span class="type">size_t</span> pop_size = <span class="built_in">min</span>(len, _queue.<span class="built_in">size</span>());</span><br><span class="line">    _read_size += pop_size;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; pop_size; i++)&#123;</span><br><span class="line">    	_queue.<span class="built_in">pop_front</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//! Read (i.e., copy and then pop) the next &quot;len&quot; bytes of the stream</span></span><br><span class="line"><span class="comment">//! \param[in] len bytes will be popped and returned</span></span><br><span class="line"><span class="comment">//! \returns a string</span></span><br><span class="line"><span class="function">std::string <span class="title">ByteStream::read</span><span class="params">(<span class="type">const</span> <span class="type">size_t</span> len)</span> </span>&#123;</span><br><span class="line">    string data = <span class="keyword">this</span>-&gt;<span class="built_in">peek_output</span>(len);</span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">pop_output</span>(len);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ByteStream::end_input</span><span class="params">()</span> </span>&#123;_end_input = <span class="literal">true</span>;&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ByteStream::input_ended</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _end_input; &#125;</span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">ByteStream::buffer_size</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _queue.<span class="built_in">size</span>(); &#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ByteStream::buffer_empty</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _queue.<span class="built_in">empty</span>(); &#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ByteStream::eof</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _end_input &amp;&amp; _queue.<span class="built_in">empty</span>(); &#125;</span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">ByteStream::bytes_written</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _written_size; &#125;</span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">ByteStream::bytes_read</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _read_size; &#125;</span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">ByteStream::remaining_capacity</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> _capacity_size - _queue.<span class="built_in">size</span>(); &#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -292,6 +316,74 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/25/mvvm-frtnd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+      <meta itemprop="description" content="这里是Maxw的学习记录">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/12/25/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-12-25 12:09:29" itemprop="dateCreated datePublished" datetime="2022-12-25T12:09:29+08:00">2022-12-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-30 10:27:47" itemprop="dateModified" datetime="2022-06-30T10:27:47+08:00">2022-06-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实现一个简单的MVVM框架</p>
+<h2 id="6-30"><a href="#6-30" class="headerlink" title="6/30"></a>6/30</h2><p>纯javascript实现双向数据绑定：<a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript">https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</a></p>
+<p>javascript MVVM框架介绍：<a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc">https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</a></p>
+<p>谢谢你，<a target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr Kopytin</a>大神！</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/25/network/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -348,74 +440,6 @@
 <p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
 <h2 id="4-22"><a href="#4-22" class="headerlink" title="4/22"></a>4/22</h2><p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
 <p>绝了！</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/25/mvvm-frtnd/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-      <meta itemprop="description" content="这里是Maxw的学习记录">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/25/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-25 12:09:29" itemprop="dateCreated datePublished" datetime="2022-12-25T12:09:29+08:00">2022-12-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-30 10:27:47" itemprop="dateModified" datetime="2022-06-30T10:27:47+08:00">2022-06-30</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>实现一个简单的MVVM框架</p>
-<h2 id="6-30"><a href="#6-30" class="headerlink" title="6/30"></a>6/30</h2><p>纯javascript实现双向数据绑定：<a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript">https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</a></p>
-<p>javascript MVVM框架介绍：<a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc">https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</a></p>
-<p>谢谢你，<a target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr Kopytin</a>大神！</p>
 
       
     </div>
