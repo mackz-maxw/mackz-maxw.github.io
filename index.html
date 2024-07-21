@@ -157,6 +157,66 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/21/bash_var/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+      <meta itemprop="description" content="这里是Maxw的学习记录">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/07/21/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-07-21 13:58:46 / 修改时间：14:01:26" itemprop="dateCreated datePublished" datetime="2024-07-21T13:58:46+08:00">2024-07-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="bash的一些特殊变量表示"><a href="#bash的一些特殊变量表示" class="headerlink" title="bash的一些特殊变量表示"></a>bash的一些特殊变量表示</h3><p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
+<p>$0 - 脚本名<br>$1 到 $9 - 脚本的参数。 $1 是第一个参数，依此类推。<br>$@ - 所有参数<br>$# - 参数个数<br>$? - 前一个命令的返回值<br>$$ - 当前脚本的进程识别码<br>!! - 完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用 sudo !!再尝试一次。<br>$_ - 上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下 Esc 之后键入 . 来获取这个值。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/Learn_gdb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -180,10 +240,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-06-11 19:40:42 / 修改时间：19:54:58" itemprop="dateCreated datePublished" datetime="2024-06-11T19:40:42+08:00">2024-06-11</time>
+              <time title="创建时间：2024-06-11 19:40:42" itemprop="dateCreated datePublished" datetime="2024-06-11T19:40:42+08:00">2024-06-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-06-14 14:04:10" itemprop="dateModified" datetime="2024-06-14T14:04:10+08:00">2024-06-14</time>
+              </span>
 
           
 
@@ -214,6 +280,18 @@
 <p>DEBUG模式可以检测每步状态：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure>
 
+<h3 id="GDB-debug"><a href="#GDB-debug" class="headerlink" title="GDB debug"></a>GDB debug</h3><p>使用友好的GDB debug会话：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure>
+<p>设置核心转储：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+<p>永久解除核心文件大小限制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>检查核心文件元数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+<p>使用GDB分析核心转储：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+<p>在GDB会话中，可以使用以下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -862,89 +940,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/24/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-      <meta itemprop="description" content="这里是Maxw的学习记录">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/24/hello-world/" class="post-title-link" itemprop="url">搭建博客</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-24 08:41:21" itemprop="dateCreated datePublished" datetime="2022-02-24T08:41:21+08:00">2022-02-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-22 10:05:03" itemprop="dateModified" datetime="2022-06-22T10:05:03+08:00">2022-06-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。</p>
-<p>Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择…</p>
-<h2 id="2-23-2-24"><a href="#2-23-2-24" class="headerlink" title="2/23-2/24"></a>2/23-2/24</h2><h3 id="git初试"><a href="#git初试" class="headerlink" title="git初试"></a>git初试</h3><p>follow <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103391101">枫叶的教程</a><br>problem occur:<br>can’ t clone existing repostory with git bash reports timeout<br>or OpenSSL SSL_read: Connection was reset, errno 10054</p>
-<p>从GitHub上clone仓库的时候，试了几次，有时git bash报错10054，有时timeout。</p>
-<p>我先是按<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44795128/article/details/119214048?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromBaidu~HighlightScore-1.queryctrv2&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromBaidu~HighlightScore-1.queryctrv2&utm_relevant_index=1">网上教程</a>改了git的global config，还是报错</p>
-<p>想到自己上GitHub都要科学方法，就觉得应该是代理的问题。git应该并非使用系统代理设置，而是需要自行设置，果不其然。</p>
-<p>solve:<br>setup proxy for git, following <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/290152303598">git设置代理</a></p>
-<h3 id="博客搭建"><a href="#博客搭建" class="headerlink" title="博客搭建"></a>博客搭建</h3><p>follow <a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1201860091307458560">枫叶的教程合集</a></p>
-<p>感谢枫叶大佬的教程，有时间一定上知乎评论区里发个反馈。</p>
-<p>安装node.js与插件的过程中报错属于node.js本地的文件夹无法访问。一开始觉得很奇怪，明明特意从c盘卸载了安别的盘，后来我想起来那个盘是我从c盘分出去的了，草（感叹词）。所以应该是因为也需要管理员权限（也可能是我把git安到c盘了？）。果然管理员启动bash之后，安装就顺畅了。</p>
-<p>枫叶的教程里面设置npm的环境变量那里可能有点问题，设置好之后应该是不需要像网上一些教程说的那样安装两遍npm的。npm所在目录需要保留而不是更改，再按教程添加node的目录。在系统变量里添加node的路径后，path里需要添加对应的%NODE_PATH%，这也是教程里未提及的。</p>
-<p>其他问题应该就只是跟版本有关了，比如GitHub把主分支从master改成main，创建个人网页的setting单独分页了等等。以及博客更新后无需删除.git重新上传，hexo的操作估计是有延迟的。</p>
-<p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
-<p>在菜单中增加新页面需要同时hexo new page以及在主题的config文件中设置（参考枫叶的教程）</p>
-<h3 id="一些感叹"><a href="#一些感叹" class="headerlink" title="一些感叹"></a>一些感叹</h3><p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
-<h3 id="一些bug"><a href="#一些bug" class="headerlink" title="一些bug"></a>一些bug</h3><p>git报错the remote end hung up unexpectedly：照此教程解决了：</p>
-<p><a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html">https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -1009,7 +1009,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
