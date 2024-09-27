@@ -291,7 +291,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-22 10:05:03" itemprop="dateModified" datetime="2022-06-22T10:05:03+08:00">2022-06-22</time>
+                <time title="修改时间：2024-09-27 10:18:45" itemprop="dateModified" datetime="2024-09-27T10:18:45+08:00">2024-09-27</time>
               </span>
 
           
@@ -320,9 +320,10 @@
 <p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
 <p>在菜单中增加新页面需要同时hexo new page以及在主题的config文件中设置（参考枫叶的教程）</p>
 <h3 id="一些感叹"><a href="#一些感叹" class="headerlink" title="一些感叹"></a>一些感叹</h3><p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
-<h3 id="一些bug"><a href="#一些bug" class="headerlink" title="一些bug"></a>一些bug</h3><p>git报错the remote end hung up unexpectedly：照此教程解决了：</p>
-<p><a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html">https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</a></p>
-
+<h3 id="一些bug"><a href="#一些bug" class="headerlink" title="一些bug"></a>一些bug</h3><p>git报错the remote end hung up unexpectedly：照此教程解决了：<br><a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html">https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</a></p>
+<h3 id="一些bug-2-0"><a href="#一些bug-2-0" class="headerlink" title="一些bug 2.0"></a>一些bug 2.0</h3><p>。。。又给git的proxy摆了一道没办法deploy博客，不想用的时候一定要记得<code>git config --global --unset http.proxy </code>重置啊！设置回来则是<code>git config --global http.proxy proxyaddress:port</code></p>
+<p>最近总感觉自己记性有点差，这是写完博客后如何deploy:<br>在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
       
     </div>
 
