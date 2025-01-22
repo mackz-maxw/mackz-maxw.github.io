@@ -1,5 +1,6 @@
 ---
 title: 摸鱼时间
+lang: zh-CN
 ---
 
 心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。

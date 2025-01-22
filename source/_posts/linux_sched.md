@@ -1,5 +1,6 @@
 ---
 title: Linux调度算法相关
+lang: zh-CN
 ---
 
 # 实时调度策略及算法概述

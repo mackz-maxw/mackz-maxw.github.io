@@ -1,5 +1,6 @@
 ---
 title: 为wsl2安装中文输入法
+lang: zh-CN
 ---
 
 安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法

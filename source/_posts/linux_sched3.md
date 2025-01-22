@@ -1,5 +1,6 @@
 ---
 title: Linux调度算法相关3
+lang: zh-CN
 ---
 
 # 实时进程调度 API

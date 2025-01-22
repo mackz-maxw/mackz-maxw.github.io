@@ -1,5 +1,7 @@
 ---
 title: 刷题-初级算法：数组
+categories: leetcode
+lang: zh-CN
 ---
 
 刷了有快一周leetcode题目了，感觉算法这块进度偏慢，一天可能刷一两道题就是极限了。

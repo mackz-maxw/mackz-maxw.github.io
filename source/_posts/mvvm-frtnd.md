@@ -1,5 +1,6 @@
 ---
 title: MVVM框架项目
+lang: zh-CN
 ---
 
 实现一个简单的MVVM框架

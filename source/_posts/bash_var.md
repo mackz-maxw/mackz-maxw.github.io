@@ -1,5 +1,7 @@
 ---
 title: bash小技巧
+categories: linux tricks
+lang: zh-CN
 ---
 
 ### bash的一些特殊变量表示

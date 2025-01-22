@@ -1,5 +1,6 @@
 ---
 title: 学习GCC和GDB
+lang: zh-CN
 ---
 
 ### GCC编译

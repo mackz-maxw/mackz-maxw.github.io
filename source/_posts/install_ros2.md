@@ -1,5 +1,6 @@
 ---
 title: 在wsl2安装ros2遇到的一些坑
+lang: zh-CN
 ---
 
 ### 依赖问题

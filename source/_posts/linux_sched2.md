@@ -1,5 +1,6 @@
 ---
 title: Linux调度算法相关2
+lang: zh-CN
 ---
 
 # 实时进程调度概述

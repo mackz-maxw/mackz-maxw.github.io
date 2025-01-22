@@ -1,5 +1,6 @@
 ---
 title: 设置Ubuntu
+lang: zh-CN
 ---
 
 ### 设置apt源
