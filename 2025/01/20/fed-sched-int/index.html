@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/project/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/project/js/config.js"></script>
+
+    <meta name="description" content="摘录一下Marion的论文要点，方便查阅  任务模型 每个任务 \(\tau_i\) 由一组子任务 \(\tau_{i,j}\) 组成，并在其间具有优先关系 \(&lt;\)。每个子任务 \(\tau_{i,j}\) 的特征为： - 工作量 \(c_{i,j} \in \mathbb{N}\)，表示其最坏情况下的执行时间。 子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fed_sched_int">
+<meta property="og:url" content="https://mackz-maxw.github.io/project/2025/01/20/fed-sched-int/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="摘录一下Marion的论文要点，方便查阅  任务模型 每个任务 \(\tau_i\) 由一组子任务 \(\tau_{i,j}\) 组成，并在其间具有优先关系 \(&lt;\)。每个子任务 \(\tau_{i,j}\) 的特征为： - 工作量 \(c_{i,j} \in \mathbb{N}\)，表示其最坏情况下的执行时间。 子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-01-20T14:45:29.000Z">
+<meta property="article:modified_time" content="2025-01-22T02:30:04.079Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/project/2025/01/20/fed-sched-int/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/project/2025/01/20/fed-sched-int/","path":"2025/01/20/fed-sched-int/","title":"fed_sched_int"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>fed_sched_int | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/project/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/project/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/project/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/project/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">任务模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E5%85%B3%E7%B3%BB%E7%9A%84dag%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">优先关系的DAG表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.</span> <span class="nav-text">关键路径长度的定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E%E6%95%B4%E6%95%B0%E5%80%BC%E4%BB%BB%E5%8A%A1%E7%9A%84%E8%81%94%E5%90%88%E8%B0%83%E5%BA%A6"><span class="nav-number"></span> <span class="nav-text">适用于整数值任务的联合调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%B7%A5%E4%BD%9C%E9%87%8F%E8%A1%A8%E8%B0%83%E5%BA%A6unit-workload-list-scheduling"><span class="nav-number"></span> <span class="nav-text">单工作量表调度（Unit-Workload
+List Scheduling）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E6%94%B9%E8%BF%9B"><span class="nav-number">1.</span> <span class="nav-text">方法改进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">2.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E8%A1%A8%E8%B0%83%E5%BA%A6%E5%90%AF%E5%8F%91%E5%BC%8F%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">5.1 常见的表调度启发式方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%99critical-path-rule-cp"><span class="nav-number">3.1.</span> <span class="nav-text">关键路径规则（Critical Path
+Rule, CP）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dag%E5%88%86%E8%A7%A3"><span class="nav-number">3.2.</span> <span class="nav-text">DAG分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%BB%A7%E6%95%B0%E9%87%8F%E8%A7%84%E5%88%99largest-number-of-successors-rule-lns"><span class="nav-number">3.3.</span> <span class="nav-text">后继数量规则（Largest
+Number of Successors Rule, LNS）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">3.4.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/project/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/project/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/project/2025/01/20/fed-sched-int/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="fed_sched_int | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          fed_sched_int
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-01-20 22:45:29" itemprop="dateCreated datePublished" datetime="2025-01-20T22:45:29+08:00">2025-01-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:04" itemprop="dateModified" datetime="2025-01-22T10:30:04+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/project/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>摘录一下Marion的论文要点，方便查阅</p>
+<hr />
+<h3 id="任务模型">任务模型</h3>
+<p>每个任务 <span class="math inline">\(\tau_i\)</span> 由一组子任务
+<span class="math inline">\(\tau_{i,j}\)</span>
+组成，并在其间具有优先关系 <span
+class="math inline">\(&lt;\)</span>。每个子任务 <span
+class="math inline">\(\tau_{i,j}\)</span> 的特征为： - 工作量 <span
+class="math inline">\(c_{i,j} \in
+\mathbb{N}\)</span>，表示其最坏情况下的执行时间。</p>
+<p>子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执行时间最长为
+<span
+class="math inline">\(c_{i,j}\)</span>。假设子任务执行是可重入的：执行可以被其他子任务抢占，且无需在系统中同一个核心上恢复。</p>
+<p>优先关系限制了子任务的执行顺序，例如 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span>，则 <span
+class="math inline">\(\tau_{i,a}\)</span> 必须在 <span
+class="math inline">\(\tau_{i,b}\)</span> 之前完全执行。我们说，当任务
+<span class="math inline">\(\tau_{i,a}\)</span> 的所有前驱任务 <span
+class="math inline">\(\tau_{i,a&#39;}\)</span> 完成时，<span
+class="math inline">\(\tau_{i,a}\)</span> 变为“可用”（available）。</p>
+<p>根据 [26]，我们将任务分为两类： 1. <strong>轻量任务（light
+tasks）</strong>：满足 <span class="math inline">\(C_i &lt;
+D_i\)</span>； 2. <strong>重量任务（heavy tasks）</strong>：满足 <span
+class="math inline">\(C_i \geq
+D_i\)</span>，此类任务必须利用其潜在的并行性才能满足调度要求。</p>
+<p>本文的重点是<strong>联合调度</strong>（federated
+scheduling），对于每个重量任务，其被分配到一个专用核心集上并独占执行。我们仅考虑截止时间
+<span class="math inline">\(D_i\)</span> 和子任务工作量 <span
+class="math inline">\(c_{i,j}\)</span>
+为正整数的任务，称为<strong>整数值任务</strong>（integer-valued
+tasks）。</p>
+<hr />
+<h3 id="优先关系的dag表示">优先关系的DAG表示</h3>
+<p>子任务执行的优先关系可表示为一个<strong>有向无环图（DAG）</strong>。对于每个并行任务
+<span class="math inline">\(\tau_i\)</span>，存在一个DAG <span
+class="math inline">\(G_i\)</span>，其包含的顶点集合为 <span
+class="math inline">\(v_{i,j}\)</span>，对应于任务 <span
+class="math inline">\(\tau_i\)</span> 的子任务 <span
+class="math inline">\(\tau_{i,j}\)</span>： - 每个顶点 <span
+class="math inline">\(v_{i,j}\)</span> 的属性为子任务的工作量 <span
+class="math inline">\(c_{i,j}\)</span>； - 边 <span
+class="math inline">\(v_{i,a} \to v_{i,b}\)</span> 存在当且仅当 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span> 且不存在 <span
+class="math inline">\(v_{i,c}\)</span> 满足 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,c} &lt;
+\tau_{i,b}\)</span>，即 <span class="math inline">\(v_{i,b}\)</span>
+直接继承 <span class="math inline">\(v_{i,a}\)</span>。</p>
+<hr />
+<h3 id="关键路径长度的定义">关键路径长度的定义</h3>
+<p>对于每个图顶点 <span
+class="math inline">\(v_{i,j}\)</span>，我们定义其<strong>关键路径长度</strong>或<strong>跨度</strong>
+<span class="math inline">\(l_{i,j} \in \mathbb{N}\)</span>
+为从该顶点起始的最长路径的长度，该路径由沿路径每个顶点的执行时间（包括起始顶点的权重
+<span class="math inline">\(c_{i,j}\)</span>）加权。</p>
+<p>对于相应的任务 <span class="math inline">\(\tau_i\)</span>，跨度
+<span class="math inline">\(L_i \in \mathbb{N}\)</span>
+是所有顶点的跨度中的最大值，即整个DAG的关键路径长度。跨度对应于任务在给定无限数量核心时相对于其激活时间的最早完成时间。</p>
+<p>显然，为使任务可调度，必须满足： <span class="math display">\[
+L_i \leq D_i
+\]</span></p>
+<h2 id="适用于整数值任务的联合调度">适用于整数值任务的联合调度</h2>
+<p>对于一个重量任务 <span
+class="math inline">\(\tau_i\)</span>，其特征为工作量 <span
+class="math inline">\(C_i\)</span>、跨度 <span
+class="math inline">\(L_i\)</span> 和截止时间 <span
+class="math inline">\(D_i\)</span>，在提供足够核心的情况下，任何工作保留型（work-conserving，即贪婪型）调度器均可调度该任务。分配给任务
+<span class="math inline">\(\tau_i\)</span> 的核心数可以表示为： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil \tag{1}
+\]</span></p>
+<p>我们在此证明，对于一个并行任务，如果其截止时间和所有子任务的工作量均为整数，则分配的核心数可以改进为：
+<span class="math display">\[
+n_i&#39; = \left\lceil \frac{C_i - L_i + 1}{D_i - L_i + 1} \right\rceil
+\]</span></p>
+<p>这一公式比方程 (1)
+在限制重量任务的核心数方面提供了实际且直观的优势。</p>
+<h2
+id="单工作量表调度unit-workload-list-scheduling">单工作量表调度（Unit-Workload
+List Scheduling）</h2>
+<p>第4节中提出的联合调度方法为高利用率的整数值任务分配了足够的处理器，以保证任何工作保留型调度器的可行性，前提是给定每个任务的工作量、关键路径长度和截止时间。然而，这种常量时间的分配方法可能会导致对重量任务的处理器过度分配，进而造成资源浪费。</p>
+<p>在 [3] 中，Graham 的表调度方法（list
+scheduling）被应用于重量任务；通过使用多种启发式方法为子任务排序，可以在更少的处理器上生成可行的调度。表调度以非抢占式方式将可用子任务分配给空闲处理器；如
+[14]
+所述，这可能导致对重量任务的处理器分配过多。然而，允许空闲子任务进行抢占可能会引入切换问题。</p>
+<h3 id="方法改进">方法改进</h3>
+<p>为了解决这个问题，我们提出了<strong>单工作量子任务的表调度</strong>。<br />
+- 一个整数值并行任务 <span class="math inline">\(\tau_i\)</span>，由DAG
+<span class="math inline">\(G_i\)</span>
+表示，可以被分解为一个包含单工作量顶点的DAG <span
+class="math inline">\(G_i^*\)</span>。<br />
+- 在 <span class="math inline">\(G_i\)</span> 中具有工作量 <span
+class="math inline">\(c\)</span> 的顶点 <span
+class="math inline">\(v_{i,j}\)</span>
+被映射为一个完全有序的顶点序列，在 <span
+class="math inline">\(G_i^*\)</span> 中形成从起点到终点的路径。</p>
+<p>对于 <span class="math inline">\(G_i^*\)</span> 中的任何边 <span
+class="math inline">\(v_{i,j}\)</span>，其连接方式如下： 1. <span
+class="math inline">\(G_i^*\)</span> 中进入 <span
+class="math inline">\(v_{i,j}\)</span>
+的任何边连接到其分解后路径中的第一个顶点； 2. 在 <span
+class="math inline">\(G_i\)</span> 中离开 <span
+class="math inline">\(v_j\)</span> 的任何边，现在连接到 <span
+class="math inline">\(v_{i,j}\)</span> 的分解路径中的最后一个顶点。</p>
+<h3 id="优势">优势</h3>
+<p>对于这样的DAG，表调度方法可以为每个单位工作量分配一个优先级；<br />
+这使得原始DAG <span class="math inline">\(G_i\)</span>
+中的相应子任务能够在单位时间步边界内被抢占。</p>
+<h3 id="常见的表调度启发式方法">5.1 常见的表调度启发式方法</h3>
+<h4 id="关键路径规则critical-path-rule-cp">关键路径规则（Critical Path
+Rule, CP）</h4>
+<p>关键路径规则用于表调度时，以<strong>最长跨度</strong>的顺序选择可用子任务进行执行。<br />
+-
+子任务跨度的分配可以以深度优先搜索的方式完成；当为每个顶点分配跨度后，图的总跨度
+<span class="math inline">\(L\)</span> 会被更新。 - 该过程的时间复杂度为
+<span class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<h4 id="dag分解">DAG分解</h4>
+<p>DAG <span class="math inline">\(G\)</span> 分解为单位工作量的 DAG
+<span class="math inline">\(G^*\)</span> 的过程表示为函数
+<strong>Convert_Unit_DAG</strong>： 1. 初始化 <span
+class="math inline">\(G^*\)</span> 为 <span
+class="math inline">\(G\)</span> 的副本。 2. 建立一个顶点集合 <span
+class="math inline">\(V^*\)</span>，其由 <span
+class="math inline">\(G^*\)</span>
+中的顶点（实际代码中可能为指向顶点的指针）组成。 3. 对于 <span
+class="math inline">\(V^*\)</span> 中的每个顶点 <span
+class="math inline">\(v_i\)</span>： - 将 <span
+class="math inline">\(v_i\)</span> 的工作量 <span
+class="math inline">\(c_i\)</span> 转化为单位工作量顶点序列，这些顶点在
+<span class="math inline">\(G^*\)</span> 中形成路径： -
+路径中的每个顶点之间用边连接，第一个顶点的跨度等于 <span
+class="math inline">\(v_i\)</span> 的跨度 <span
+class="math inline">\(l_i\)</span>； -
+每个后续顶点的跨度比前一个顶点小1。 - 删除原始顶点 <span
+class="math inline">\(v_i\)</span>。</p>
+<ol start="4" type="1">
+<li>处理完成后，<span class="math inline">\(G^*\)</span>
+中仅包含单位工作量的顶点：
+<ul>
+<li>通过分解，生成了 <span class="math inline">\(C - |V|\)</span>
+个额外顶点，以及 <span class="math inline">\(C - |V|\)</span>
+条额外边。</li>
+<li>因此，总运行时间为 <span class="math inline">\(O(|V| + C - |V| + |E|
++ C - |V|)\)</span>，简化为 <span class="math inline">\(O(C +
+|E|)\)</span>。</li>
+</ul></li>
+</ol>
+<h4
+id="后继数量规则largest-number-of-successors-rule-lns">后继数量规则（Largest
+Number of Successors Rule, LNS）</h4>
+<p>LNS规则以<strong>后继任务的总工作量</strong>为顺序，选择可用子任务进行执行：
+- 子任务 <span class="math inline">\(v_i \in G\)</span> 的后继工作量由与
+<span class="math inline">\(v_i\)</span>
+通过路径相连的所有顶点的工作量之和定义。 -
+可以通过动态规划在整个图上实现这一过程，其时间复杂度为 <span
+class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<p>LNS规则也可以应用于单位工作量子任务的表调度，并保持伪多项式时间复杂度。</p>
+<h4 id="注意">注意</h4>
+<p>将整数值任务的 DAG <span class="math inline">\(G\)</span>
+分解为单位工作量的 DAG <span class="math inline">\(G^*\)</span>
+时，还需要为每个单位工作量顶点分配一个子图工作量。这与跨度的分配类似，不会影响算法的时间复杂度。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/project/2025/01/18/federated_sched/" rel="prev" title="Linux联合调度相关">
+                  <i class="fa fa-angle-left"></i> Linux联合调度相关
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/project/2025/01/21/algorithm1-en/" rel="next" title="algorithm1-en">
+                  algorithm1-en <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/project/2025/01/20/fed-sched-int/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/project/en/2025/01/20/fed-sched-int/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/sidebar.js"></script><script src="/project/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/project/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

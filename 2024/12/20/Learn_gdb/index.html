@@ -5,37 +5,37 @@
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/project/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/project/js/config.js"></script>
 
-    <meta name="description" content="GCC编译gcc编译hello.c，指定输出为hello： 1gcc hello.c -o hello 运行可执行文件： 1.&#x2F;hello  一个简单的Makefile示例12345hello:hello.c   # 目标文件名:依赖文件列表	gcc hello.c -o hello	# 用于生成目标文件的命令序列.PHONY: clean   # 声明伪目标，使用make clean执行clea">
+    <meta name="description" content="GCC编译 gcc编译hello.c，指定输出为hello： 1gcc hello.c -o hello 运行可执行文件： 1.&#x2F;hello 一个简单的Makefile示例 12345hello:hello.c   # 目标文件名:依赖文件列表	gcc hello.c -o hello	# 用于生成目标文件的命令序列.PHONY: clean   # 声明伪目标，使用make clean执">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习GCC和GDB">
-<meta property="og:url" content="http://example.com/2024/12/20/Learn_gdb/index.html">
+<meta property="og:url" content="https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/index.html">
 <meta property="og:site_name" content="Maxw的小站">
-<meta property="og:description" content="GCC编译gcc编译hello.c，指定输出为hello： 1gcc hello.c -o hello 运行可执行文件： 1.&#x2F;hello  一个简单的Makefile示例12345hello:hello.c   # 目标文件名:依赖文件列表	gcc hello.c -o hello	# 用于生成目标文件的命令序列.PHONY: clean   # 声明伪目标，使用make clean执行clea">
+<meta property="og:description" content="GCC编译 gcc编译hello.c，指定输出为hello： 1gcc hello.c -o hello 运行可执行文件： 1.&#x2F;hello 一个简单的Makefile示例 12345hello:hello.c   # 目标文件名:依赖文件列表	gcc hello.c -o hello	# 用于生成目标文件的命令序列.PHONY: clean   # 声明伪目标，使用make clean执">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-12-21T04:10:52.726Z">
-<meta property="article:modified_time" content="2024-12-21T04:10:52.726Z">
+<meta property="article:modified_time" content="2025-01-22T02:30:26.176Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2024/12/20/Learn_gdb/">
+<link rel="canonical" href="https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/12/20/Learn_gdb/","path":"2024/12/20/Learn_gdb/","title":"学习GCC和GDB"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/","path":"2024/12/20/Learn_gdb/","title":"学习GCC和GDB"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>学习GCC和GDB | Maxw的小站</title>
@@ -49,8 +49,9 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/project/css/noscript.css">
   </noscript>
+<link rel="alternate" href="/project/atom.xml" title="Maxw的小站" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -61,16 +62,20 @@
       <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/project/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Maxw的小站</p>
       <i class="logo-line"></i>
     </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
   </div>
 
   <div class="site-nav-right">
@@ -81,6 +86,10 @@
 
 
 
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/project/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
 
 
 
@@ -103,25 +112,35 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCC%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">GCC编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84Makefile%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">一个简单的Makefile示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-bash%E8%84%9A%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">debug bash脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GDB-debug"><span class="nav-number">4.</span> <span class="nav-text">GDB debug</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#gcc%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">GCC编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84makefile%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">一个简单的Makefile示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-bash%E8%84%9A%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">debug bash脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gdb-debug"><span class="nav-number">4.</span> <span class="nav-text">GDB debug</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
-  <div class="site-description" itemprop="description">这里是Maxw的学习记录</div>
+  <div class="site-description" itemprop="description">这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+        <a href="/project/archives/">
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/project/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
   </nav>
 </div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
         </div>
       </div>
@@ -144,16 +163,16 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/20/Learn_gdb/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/project/images/avatar.gif">
       <meta itemprop="name" content="Mackz-Maxw">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="这里是Maxw的学习记录">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -175,6 +194,13 @@
 
       <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
     </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
+    </span>
 
   
 </div>
@@ -185,36 +211,23 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h3 id="GCC编译"><a href="#GCC编译" class="headerlink" title="GCC编译"></a>GCC编译</h3><p>gcc编译hello.c，指定输出为hello：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure>
-<p>运行可执行文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure>
+    <div class="post-body" itemprop="articleBody"><h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
 
-<h3 id="一个简单的Makefile示例"><a href="#一个简单的Makefile示例" class="headerlink" title="一个简单的Makefile示例"></a>一个简单的Makefile示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
-
-<h3 id="debug-bash脚本"><a href="#debug-bash脚本" class="headerlink" title="debug bash脚本"></a>debug bash脚本</h3><p>直接输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
-<p>可以在脚本shebang列设置需要使用的xtrace选项：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
-<p>仅在指定列设置xtrace选项：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
-<p>使用trap，EXIT模式仅检测退出时状态:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-<p>DEBUG模式可以检测每步状态：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure>
-
-<h3 id="GDB-debug"><a href="#GDB-debug" class="headerlink" title="GDB debug"></a>GDB debug</h3><p>使用友好的GDB debug会话：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure>
-<p>设置核心转储：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
-<p>永久解除核心文件大小限制：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<p>检查核心文件元数据：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
-<p>使用GDB分析核心转储：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
-<p>在GDB会话中，可以使用以下操作：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -227,13 +240,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/12/20/bash_var/" rel="prev" title="bash小技巧">
-                  <i class="fa fa-angle-left"></i> bash小技巧
+                <a href="/project/2024/12/20/algorithm1/" rel="prev" title="刷题-初级算法：数组">
+                  <i class="fa fa-angle-left"></i> 刷题-初级算法：数组
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/12/20/gametime/" rel="next" title="摸鱼时间">
-                  摸鱼时间 <i class="fa fa-angle-right"></i>
+                <a href="/project/2024/12/20/Ubuntu_setup/" rel="next" title="设置Ubuntu">
+                  设置Ubuntu <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -251,6 +264,24 @@
 
   <footer class="footer">
     <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/project/2024/12/20/Learn_gdb/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/project/en/2024/12/20/Learn_gdb/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
 
   <div class="copyright">
     &copy; 
@@ -285,7 +316,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/sidebar.js"></script><script src="/project/js/next-boot.js"></script>
 
   
 
@@ -297,6 +328,12 @@
   
 
 
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/project/js/third-party/math/mathjax.js"></script>
 
 
 

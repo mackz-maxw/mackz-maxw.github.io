@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/project/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/project/js/config.js"></script>
+
+    <meta name="description" content="摘录一下Jing Li的论文要点，方便查阅  性能界限的定义 通常，可以为实时调度器推导出两种类型的性能界限：  资源增益界限（Resource Augmentation Bound）： 调度器 \(S\) 提供一个资源增益界限 \(b \geq 1\)，如果理想调度器能够在 \(m\) 个速度为 1 的核心上调度任何任务集 \(\tau\)，它能够在 \(m\) 个速度为 \(b\)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux联合调度相关">
+<meta property="og:url" content="https://mackz-maxw.github.io/project/2025/01/18/federated_sched/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="摘录一下Jing Li的论文要点，方便查阅  性能界限的定义 通常，可以为实时调度器推导出两种类型的性能界限：  资源增益界限（Resource Augmentation Bound）： 调度器 \(S\) 提供一个资源增益界限 \(b \geq 1\)，如果理想调度器能够在 \(m\) 个速度为 1 的核心上调度任何任务集 \(\tau\)，它能够在 \(m\) 个速度为 \(b\)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-01-18T19:39:54.270Z">
+<meta property="article:modified_time" content="2025-01-22T02:30:10.613Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/project/2025/01/18/federated_sched/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/project/2025/01/18/federated_sched/","path":"2025/01/18/federated_sched/","title":"Linux联合调度相关"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux联合调度相关 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/project/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/project/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/project/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/project/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E7%95%8C%E9%99%90%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">性能界限的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E5%88%86%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">策略分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="nav-number">3.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">系统模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dag%E4%BB%BB%E5%8A%A1%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">4.1.</span> <span class="nav-text">DAG任务的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%88%A9%E7%94%A8%E7%8E%87"><span class="nav-number">4.2.</span> <span class="nav-text">任务的利用率</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%88%A9%E7%94%A8%E7%8E%87%E7%9A%84%E5%8F%AF%E8%B0%83%E5%BA%A6%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">基于利用率的可调度性测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">5.1.</span> <span class="nav-text">定义 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">5.2.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iii.-%E8%81%94%E5%90%88%E8%B0%83%E5%BA%A6federated-scheduling"><span class="nav-number">6.</span> <span class="nav-text">III. 联合调度（Federated
+Scheduling）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.-%E8%81%94%E5%90%88%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95federated-scheduling-algorithm"><span class="nav-number">6.1.</span> <span class="nav-text">A.
+联合调度算法（Federated Scheduling Algorithm）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E8%B0%83%E5%BA%A6runtime-scheduling"><span class="nav-number">6.2.</span> <span class="nav-text">运行时调度（Runtime
+Scheduling）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">6.3.</span> <span class="nav-text">关键点</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/project/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/project/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/project/2025/01/18/federated_sched/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux联合调度相关 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux联合调度相关
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-01-19 03:39:54" itemprop="dateCreated datePublished" datetime="2025-01-19T03:39:54+08:00">2025-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:10" itemprop="dateModified" datetime="2025-01-22T10:30:10+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/project/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>摘录一下Jing Li的论文要点，方便查阅</p>
+<hr />
+<h2 id="性能界限的定义">性能界限的定义</h2>
+<p>通常，可以为实时调度器推导出两种类型的性能界限：</p>
+<ol type="1">
+<li><strong>资源增益界限</strong>（Resource Augmentation Bound）：<br />
+调度器 <span class="math inline">\(S\)</span> 提供一个资源增益界限 <span
+class="math inline">\(b \geq 1\)</span>，如果理想调度器能够在 <span
+class="math inline">\(m\)</span> 个速度为 1 的核心上调度任何任务集 <span
+class="math inline">\(\tau\)</span>，它能够在 <span
+class="math inline">\(m\)</span> 个速度为 <span
+class="math inline">\(b\)</span> 的核心上成功调度 <span
+class="math inline">\(\tau\)</span>。
+<ul>
+<li>资源增益界限很好地反映了调度器与最优调度的接近程度，但有一个缺点：理想调度器只是一个假设的调度器，它总能找到一个可行调度（如果存在）。<br />
+</li>
+<li>由于无法验证理想调度器是否能够在单位速度核心上调度给定任务集，因此资源增益界限无法提供可调度性测试。</li>
+</ul></li>
+<li><strong>利用率界限</strong>（Utilization Bound）：<br />
+调度器 <span class="math inline">\(S\)</span> 提供一个利用率界限 <span
+class="math inline">\(b\)</span>，如果它能够在 <span
+class="math inline">\(m\)</span>
+个核心上成功调度任何任务集，其总利用率不超过 <span
+class="math inline">\(m/b\)</span>。
+<ul>
+<li>利用率界限比资源增益界限提供了更多信息：任何保证利用率界限 <span
+class="math inline">\(b\)</span> 的调度器都会自动保证资源增益界限 <span
+class="math inline">\(b\)</span>。<br />
+</li>
+<li>此外，利用率界限本身是一种简单的可调度性测试，因为任务集的总利用率可以在线性时间内计算，并与
+<span class="math inline">\(m/b\)</span> 进行比较。</li>
+</ul></li>
+</ol>
+<p>注意这些界限讨论的是调度的相对效率，而不是程序执行的速度，所以b值越小，调度更有效率。</p>
+<ol start="3" type="1">
+<li><strong>容量增益界限</strong> Li 等人 [35]
+定义了一个名为<strong>容量增益界限</strong>（capacity augmentation
+bound）的概念，这一概念与利用率界限类似，但增加了一个新条件：<br />
+调度器 <span class="math inline">\(S\)</span> 提供容量增益界限 <span
+class="math inline">\(b\)</span>，如果它能够调度满足以下两个条件的任何任务集
+<span class="math inline">\(\tau\)</span>：</li>
+</ol>
+<ul>
+<li><span class="math inline">\(\tau\)</span> 的总利用率最多为 <span
+class="math inline">\(m/b\)</span>；</li>
+<li>每个任务的最差情况关键路径长度 <span
+class="math inline">\(L_i\)</span>（即在无限核心上的执行时间）最多为其截止时间的
+<span class="math inline">\(1/b\)</span> 的比例。</li>
+</ul>
+<p>容量增益界限与利用率界限非常相似，但它提供的信息比资源增益界限更多：<br />
+- 任何保证容量增益界限为 <span class="math inline">\(b\)</span>
+的调度器也自动保证资源增益界限为 <span
+class="math inline">\(b\)</span>。<br />
+-
+它同样可以作为一种简单的可调度性测试，并提供对系统可承受负载的估计。</p>
+<hr />
+<h2 id="策略分类">策略分类</h2>
+<p>最近的研究主要集中在为并行任务的各种调度策略证明<strong>资源增益界限</strong>和<strong>容量增益界限</strong>。这些工作可以分为两类：
+1. <strong>基于分解的策略</strong>（Decomposition-based
+strategies）：<br />
+并行任务被分解为一组顺序任务，并使用现有的顺序任务调度策略在多处理器上进行调度。这些策略通常需要事先明确DAG的结构，以便进行分解。</p>
+<ol start="2" type="1">
+<li><strong>非分解策略</strong>（Non-decomposition-based
+strategies）：<br />
+程序可以动态展开，因此不需要离线知识。研究主要集中在两种调度策略上：</li>
+</ol>
+<hr />
+<h2 id="主要贡献">主要贡献</h2>
+<p>本文的主要贡献如下： 1.
+<strong>提出了一种新的联合调度策略</strong>（federated scheduling
+strategy）：<br />
+- 在此策略中，每个<strong>高利用率任务</strong>（利用率 ≥
+1）被分配到一个专用的核心集（cluster）。<br />
+-
+一个多处理器调度算法用于调度所有<strong>低利用率任务</strong>，这些任务依次运行在由剩余核心组成的共享核心集上。<br />
+- 联合调度可以看作是分区调度策略的推广，适用于并行任务。<br />
+- 这是目前已知的针对任意并行 DAG 调度器的最佳容量增益界限。</p>
+<ol start="2" type="1">
+<li><p><strong>证明联合调度的容量增益界限为 2</strong>：<br />
+此外，我们还证明了没有任何调度器能够为并行任务提供比 <span
+class="math inline">\(2 - 1/m\)</span> 更好的容量增益界限。<br />
+因此，当 <span class="math inline">\(m\)</span>
+足够大时，联合调度的界限为 2 是最优的。</p></li>
+<li><p><strong>改进了 G-EDF 的容量增益界限</strong>：<br />
+对于 DAG 任务，G-EDF 的容量增益界限被改进为<br />
+<span class="math display">\[
+\frac{3 + \sqrt{5}}{2} \approx 2.618
+\]</span> 当 <span class="math inline">\(m\)</span> 足够大时，G-EDF
+的容量增益界限达到这一匹配的下界。因此，这一结果填补了大 <span
+class="math inline">\(m\)</span>
+场景下的间隙，这是目前已知针对任意全局调度器的最佳容量增益界限。</p></li>
+<li><p><strong>证明 G-RM 的容量增益界限为</strong> <span
+class="math inline">\(2 + \sqrt{3} \approx 3.732\)</span> ：</p>
+<ul>
+<li>这是目前已知针对任何固定优先级调度器的 DAG
+任务的最佳容量增益界限。<br />
+</li>
+<li>即使仅限于同步任务，这仍是基于全局固定优先级调度（且无需分解）的最佳界限。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="系统模型">系统模型</h2>
+<p>我们现在详细描述并行任务的DAG模型以及一些附加定义。</p>
+<p>我们考虑一个由 <span class="math inline">\(n\)</span>
+个独立的间歇性实时任务 <span class="math inline">\(\tau = \{\tau_1,
+\tau_2, \dots, \tau_n\}\)</span> 组成的任务集。任务 <span
+class="math inline">\(\tau_i\)</span>
+表示任务实例（也称为作业）的无限到达和执行序列。我们考虑<strong>间歇性任务模型</strong>，其中对于任务
+<span class="math inline">\(\tau_i\)</span>： -
+<strong>最小间隔时间</strong>（或周期）<span
+class="math inline">\(T_i\)</span> 表示连续任务实例到达之间的时间； -
+<strong>相对截止时间</strong> <span class="math inline">\(D_i\)</span>
+表示完成作业的时间约束。</p>
+<p>如果任务实例 <span class="math inline">\(\tau_i\)</span> 在时间 <span
+class="math inline">\(t\)</span> 到达，则其执行必须在绝对截止时间 <span
+class="math inline">\(t + D_i\)</span>
+之前完成，且下一个任务实例不能早于 <span class="math inline">\(t +
+T_i\)</span> 到达。<br />
+在本文中，我们考虑<strong>隐式截止时间任务</strong>，即每个任务 <span
+class="math inline">\(\tau_i\)</span> 的相对截止时间 <span
+class="math inline">\(D_i\)</span> 等于其最小间隔时间 <span
+class="math inline">\(T_i\)</span>，即 <span class="math inline">\(T_i =
+D_i\)</span>。</p>
+<p>我们研究在具有 <span class="math inline">\(m\)</span>
+个相同核心的多核系统上调度这些任务集的可调度性。</p>
+<h3 id="dag任务的特性">DAG任务的特性</h3>
+<p>每个任务 <span class="math inline">\(\tau_i \in \tau\)</span>
+是一个并行任务，并被描述为一个<strong>有向无环图（DAG）</strong>。<br />
+- DAG
+中的每个节点（子任务）表示指令序列（一个线程），每条边表示节点之间的依赖关系。
+- 当一个节点的所有前驱节点完成时，该节点准备好执行。</p>
+<p>在本文中，由于不需要基于DAG的具体结构进行分析，仅定义了与任务 <span
+class="math inline">\(\tau_i\)</span> 的执行模式相关的两个参数：</p>
+<ol type="1">
+<li><p><strong>总执行时间（或工作量）<span
+class="math inline">\(C_i\)</span></strong>：<br />
+这是任务 <span class="math inline">\(\tau_i\)</span>
+的所有子任务在最坏情况下的执行时间总和。</p></li>
+<li><p><strong>关键路径长度 <span
+class="math inline">\(L_i\)</span></strong>：<br />
+在给定DAG中，这是关键路径的长度，其中每个节点由对应子任务的最坏情况下执行时间表示。<br />
+关键路径长度是任务在无限核心下的最坏情况下执行时间。</p></li>
+</ol>
+<p>给定一个DAG，计算 <span class="math inline">\(C_i\)</span> 和 <span
+class="math inline">\(L_i\)</span> 都可以在线性时间内完成。</p>
+<h3 id="任务的利用率">任务的利用率</h3>
+<ul>
+<li>任务 <span class="math inline">\(\tau_i\)</span>
+的<strong>利用率</strong>定义为 <span class="math inline">\(u_i =
+\frac{C_i}{T_i} = \frac{C_i}{D_i}\)</span>。<br />
+</li>
+<li>任务集的总利用率表示为： <span class="math display">\[
+U_\Sigma = \sum_{\tau_i \in \tau} u_i
+\]</span></li>
+</ul>
+<hr />
+<h2 id="基于利用率的可调度性测试">基于利用率的可调度性测试</h2>
+<p>在本文中，我们从容量增益界限的角度分析调度器。形式化定义如下：</p>
+<h3 id="定义-1">定义 1</h3>
+<p>给定总利用率为 <span class="math inline">\(U_\Sigma\)</span> 的任务集
+<span class="math inline">\(\tau\)</span>，如果调度算法 <span
+class="math inline">\(S\)</span> 在 <span
+class="math inline">\(m\)</span> 个速度为 <span
+class="math inline">\(b\)</span> 的核心上总能调度 <span
+class="math inline">\(\tau\)</span>，且满足以下条件，则其容量增益界限为
+<span class="math inline">\(b\)</span>：</p>
+<ol type="1">
+<li><p><strong>利用率限制条件</strong>：<br />
+<span class="math display">\[
+\sum_{\tau_i \in \tau} u_i \leq \frac{m}{b}
+\]</span></p></li>
+<li><p><strong>关键路径限制条件</strong>：<br />
+对于每个任务 <span class="math inline">\(\tau_i \in \tau\)</span>：
+<span class="math display">\[
+L_i \leq \frac{D_i}{b}
+\]</span></p></li>
+</ol>
+<h3 id="说明">说明</h3>
+<ul>
+<li>条件 (1) 表示任务集的总利用率不超过 <span
+class="math inline">\(m/b\)</span>。</li>
+<li>条件 (2) 表示每个任务的关键路径长度不超过其相对截止时间的 <span
+class="math inline">\(1/b\)</span>。</li>
+</ul>
+<p>因此，为了验证任务集是否可调度，我们只需知道任务集的总利用率和最大关键路径利用率即可。</p>
+<p>当 <span class="math inline">\(b = 1\)</span> 时，<span
+class="math inline">\(S\)</span> 是一个理想调度器；调度器的 <span
+class="math inline">\(b\)</span> 越小，其性能越优。</p>
+<h2 id="iii.-联合调度federated-scheduling">III. 联合调度（Federated
+Scheduling）</h2>
+<h3 id="a.-联合调度算法federated-scheduling-algorithm">A.
+联合调度算法（Federated Scheduling Algorithm）</h3>
+<p>给定任务集 <span
+class="math inline">\(\tau\)</span>，联合调度算法的工作流程如下：</p>
+<ol type="1">
+<li>首先，将任务划分为两个不相交的集合：
+<ul>
+<li><span class="math inline">\(\tau_{\text{high}}\)</span>
+包含所有<strong>高利用率任务</strong>，即利用率至少为 1 的任务（<span
+class="math inline">\(u_i \geq 1\)</span>）。<br />
+</li>
+<li><span class="math inline">\(\tau_{\text{low}}\)</span>
+包含所有剩余的<strong>低利用率任务</strong>。</li>
+</ul></li>
+</ol>
+<p>考虑一个高利用率任务 <span
+class="math inline">\(\tau_i\)</span>，其最坏情况下执行时间为 <span
+class="math inline">\(C_i\)</span>，关键路径长度为 <span
+class="math inline">\(L_i\)</span>，截止时间为 <span
+class="math inline">\(D_i\)</span>（与其周期 <span
+class="math inline">\(T_i\)</span> 相等）。我们为任务 <span
+class="math inline">\(\tau_i\)</span> 分配 <span
+class="math inline">\(n_i\)</span> 个专用核心，其中： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil
+\]</span></p>
+<ol start="2" type="1">
+<li><p>我们使用以下公式计算分配给高利用率任务的核心总数： <span
+class="math display">\[
+n_{\text{high}} = \sum_{\tau_i \in \tau_{\text{high}}} n_i
+\]</span></p></li>
+<li><p>剩余的核心被分配给所有低利用率任务 <span
+class="math inline">\(\tau_{\text{low}}\)</span>，其核心数为： <span
+class="math display">\[
+n_{\text{low}} = m - n_{\text{high}}
+\]</span></p></li>
+</ol>
+<p>如果 <span class="math inline">\(n_{\text{low}}\)</span>
+非负且满足以下条件： <span class="math display">\[
+n_{\text{low}} \geq 2 \sum_{\tau_i \in \tau_{\text{low}}} u_i
+\]</span> 则联合调度算法接受任务集 <span
+class="math inline">\(\tau\)</span>。</p>
+<h3 id="运行时调度runtime-scheduling">运行时调度（Runtime
+Scheduling）</h3>
+<p>在有效的核心分配之后，运行时调度过程如下：</p>
+<ol type="1">
+<li><strong>高利用率任务的调度</strong>：
+<ul>
+<li>使用任何贪婪调度器（greedy scheduler）对高利用率任务 <span
+class="math inline">\(\tau_i\)</span> 进行调度。<br />
+</li>
+<li>贪婪调度器确保当某节点准备好执行时，不会让核心处于空闲状态。</li>
+</ul></li>
+<li><strong>低利用率任务的调度</strong>：
+<ul>
+<li>将低利用率任务视为顺序任务，并使用任何多处理器调度算法（如分区EDF或速率单调调度器）进行调度。<br />
+</li>
+<li>低利用率任务的总利用率最多为 <span
+class="math inline">\(1/2\)</span>，因此可以在分配的 <span
+class="math inline">\(n_{\text{low}}\)</span> 核心上进行调度。</li>
+</ul></li>
+</ol>
+<h3 id="关键点">关键点</h3>
+<p>联合调度算法的一个重要特性是：我们可以安全地将低利用率任务视为顺序任务，因为
+<span class="math inline">\(C_i \leq
+D_i\)</span>，这表明这些任务在其截止时间内完成时不需要并行执行。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/project/2025/01/04/linux_sched4/" rel="prev" title="Linux调度算法相关4">
+                  <i class="fa fa-angle-left"></i> Linux调度算法相关4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/project/2025/01/20/fed-sched-int/" rel="next" title="fed_sched_int">
+                  fed_sched_int <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/project/2025/01/18/federated_sched/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/project/en/2025/01/18/federated_sched/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/sidebar.js"></script><script src="/project/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/project/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
