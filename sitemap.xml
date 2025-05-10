@@ -211,7 +211,7 @@
 
   <url>
     <loc>https://mackz-maxw.github.io/project</loc>
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-05-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -221,21 +221,21 @@
   
   <url>
     <loc>https://mackz-maxw.github.io/project/categories/leetcode/</loc>
-    <lastmod>2025-01-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mackz-maxw.github.io/project/categories/linux-tricks/</loc>
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/project/categories/realtime-sched/</loc>
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/project/categories/linux-tricks/</loc>
+    <lastmod>2025-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

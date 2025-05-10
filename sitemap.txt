@@ -23,5 +23,5 @@ https://mackz-maxw.github.io/project/links/index.html
 https://mackz-maxw.github.io/project/comment/index.html
 https://mackz-maxw.github.io/project
 https://mackz-maxw.github.io/project/categories/leetcode/
-https://mackz-maxw.github.io/project/categories/linux-tricks/
 https://mackz-maxw.github.io/project/categories/realtime-sched/
+https://mackz-maxw.github.io/project/categories/linux-tricks/

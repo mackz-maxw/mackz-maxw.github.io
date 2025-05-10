@@ -186,28 +186,6 @@ feel like my progress with algorithms is pretty slow—managing just o</summary>
   </entry>
   
   <entry>
-    <title>设置Ubuntu</title>
-    <link href="https://mackz-maxw.github.io/project/2024/12/20/Ubuntu_setup/"/>
-    <id>https://mackz-maxw.github.io/project/2024/12/20/Ubuntu_setup/</id>
-    <published>2024-12-21T04:10:52.726Z</published>
-    <updated>2025-01-22T02:30:56.761Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="设置apt源">设置apt源</h3><p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p><h3 id="vim技巧">vim技巧</h3><p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p><h3 id="设置vim">设置vim</h3><p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;设置apt源&quot;&gt;设置apt源&lt;/h3&gt;
-&lt;p&gt;检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
-&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>学习GCC和GDB</title>
     <link href="https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/"/>
     <id>https://mackz-maxw.github.io/project/2024/12/20/Learn_gdb/</id>
@@ -301,6 +279,28 @@ feel like my progress with algorithms is pretty slow—managing just o</summary>
   </entry>
   
   <entry>
+    <title>设置Ubuntu</title>
+    <link href="https://mackz-maxw.github.io/project/2024/12/20/Ubuntu_setup/"/>
+    <id>https://mackz-maxw.github.io/project/2024/12/20/Ubuntu_setup/</id>
+    <published>2024-12-21T04:10:52.726Z</published>
+    <updated>2025-01-22T02:30:56.761Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="设置apt源">设置apt源</h3><p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p><h3 id="vim技巧">vim技巧</h3><p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p><h3 id="设置vim">设置vim</h3><p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;设置apt源&quot;&gt;设置apt源&lt;/h3&gt;
+&lt;p&gt;检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>搭建博客</title>
     <link href="https://mackz-maxw.github.io/project/2024/12/20/hello-world/"/>
     <id>https://mackz-maxw.github.io/project/2024/12/20/hello-world/</id>
@@ -314,28 +314,6 @@ feel like my progress with algorithms is pretty slow—managing just o</summary>
       
     <summary type="html">&lt;p&gt;虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。&lt;/p&gt;
 &lt;p&gt;Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择..</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>摸鱼时间</title>
-    <link href="https://mackz-maxw.github.io/project/2024/12/20/gametime/"/>
-    <id>https://mackz-maxw.github.io/project/2024/12/20/gametime/</id>
-    <published>2024-12-21T04:10:52.726Z</published>
-    <updated>2025-01-22T02:30:13.395Z</updated>
-    
-    <content type="html"><![CDATA[<p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p><h2 id="section">3/18</h2><p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p><p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），gitbash安装了http-server，http-server可以这么启动：</p><p><code>http-server [path]</code></p><p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p><p>下载gitbash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p><p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p><p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p><p>整了挺久累了，下次再更🕊~</p><p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p><h2 id="section-1">3/18</h2><p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p><blockquote><p>Here's a solution:</p><ol type="1"><li>Right click and click “Save As...”</li><li>Edit the html file that just saved, overwrite jQuery reference<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>as<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>or other reference you trust.</li><li>run the html.</li></ol></blockquote><p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p><p><code>E:\works\untrusted-master\scripts\build</code></p><p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p><p>对了，别忘了</p><p><code>http-server *:/.../untrusted-master</code></p><p>（*：code所在盘符，...：code所在目录）</p><p>终于可以玩了！</p><p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。&lt;/p&gt;
-&lt;h2 id=&quot;section&quot;&gt;3/18&lt;/h2&gt;
-&lt;p&gt;想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只</summary>
       
     
     
@@ -380,6 +358,28 @@ feel like my progress with algorithms is pretty slow—managing just o</summary>
 &lt;p&gt;由于安装的老版本（humble）ros2,
 很多必需包直接安装会报依赖小版本号不一致错误，使用apt
 install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 &lt;figure class=&quot;highlight b</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>摸鱼时间</title>
+    <link href="https://mackz-maxw.github.io/project/2024/12/20/gametime/"/>
+    <id>https://mackz-maxw.github.io/project/2024/12/20/gametime/</id>
+    <published>2024-12-21T04:10:52.726Z</published>
+    <updated>2025-01-22T02:30:13.395Z</updated>
+    
+    <content type="html"><![CDATA[<p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p><h2 id="section">3/18</h2><p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p><p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），gitbash安装了http-server，http-server可以这么启动：</p><p><code>http-server [path]</code></p><p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p><p>下载gitbash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p><p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p><p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p><p>整了挺久累了，下次再更🕊~</p><p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p><h2 id="section-1">3/18</h2><p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p><blockquote><p>Here's a solution:</p><ol type="1"><li>Right click and click “Save As...”</li><li>Edit the html file that just saved, overwrite jQuery reference<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>as<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>or other reference you trust.</li><li>run the html.</li></ol></blockquote><p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p><p><code>E:\works\untrusted-master\scripts\build</code></p><p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p><p>对了，别忘了</p><p><code>http-server *:/.../untrusted-master</code></p><p>（*：code所在盘符，...：code所在目录）</p><p>终于可以玩了！</p><p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。&lt;/p&gt;
+&lt;h2 id=&quot;section&quot;&gt;3/18&lt;/h2&gt;
+&lt;p&gt;想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只</summary>
       
     
     
