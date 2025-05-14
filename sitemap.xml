@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mackz-maxw.github.io/2025/05/13/kamacode1/</loc>
+    
+    <lastmod>2025-05-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mackz-maxw.github.io/2025/01/21/algorithm1-en/</loc>
     
     <lastmod>2025-01-22</lastmod>
@@ -211,7 +220,7 @@
 
   <url>
     <loc>https://mackz-maxw.github.io/</loc>
-    <lastmod>2025-05-10</lastmod>
+    <lastmod>2025-05-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -221,21 +230,21 @@
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/leetcode/</loc>
-    <lastmod>2025-05-10</lastmod>
+    <lastmod>2025-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/linux-tricks/</loc>
-    <lastmod>2025-05-10</lastmod>
+    <lastmod>2025-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/realtime-sched/</loc>
-    <lastmod>2025-05-10</lastmod>
+    <lastmod>2025-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
