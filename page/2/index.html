@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,186 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/27/linux_sched/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/27/linux_sched/" class="post-title-link" itemprop="url">Linux调度算法相关</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-28 02:35:39" itemprop="dateCreated datePublished" datetime="2024-12-28T02:35:39+08:00">2024-12-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:30" itemprop="dateModified" datetime="2025-01-22T10:30:30+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="实时调度策略及算法概述">实时调度策略及算法概述</h1>
+<p>Linux 提供了两种实时调度策略，<code>SCHED_FIFO</code> 和
+<code>SCHED_RR</code>。非实时的普通调度策略是
+<code>SCHED_NORMAL</code>。</p>
+<p>通过调度类框架，这些实时调度策略并非由完全公平调度器（CFS）管理，而是由一个特殊的实时调度器管理，该调度器定义在
+<code>kernel/sched_rt.c</code> 文件中。</p>
+<h2 id="sched_fifo-策略">1. SCHED_FIFO 策略</h2>
+<p><code>SCHED_FIFO</code>
+实现了一种简单的先进先出（FIFO）调度算法，<strong>没有时间片限制</strong>，可以无限期运行。
+- 一个可运行的 <code>SCHED_FIFO</code> 任务始终优先于任何
+<code>SCHED_NORMAL</code> 任务。 - 当 <code>SCHED_FIFO</code>
+任务变为可运行状态时，它会一直运行，直到阻塞或显式放弃处理器。 -
+<strong>抢占规则</strong>：只有更高优先级的 <code>SCHED_FIFO</code> 或
+<code>SCHED_RR</code> 任务可以抢占当前的 <code>SCHED_FIFO</code> 任务。
+- 如果多个 <code>SCHED_FIFO</code>
+任务具有相同优先级，它们以轮转的方式运行。</p>
+<h2 id="sched_rr-策略">2. SCHED_RR 策略</h2>
+<p><code>SCHED_RR</code> 与 <code>SCHED_FIFO</code>
+类似，但有时间片限制。 -
+每个任务运行到时间片耗尽时，会被切换到同一优先级队列中的下一个任务。 -
+只有更高优先级的任务可以抢占当前任务，即使 <code>SCHED_RR</code>
+任务的时间片耗尽，低优先级的进程也无法抢占它的执行。 -
+<strong>时间片的作用</strong>：仅用于同优先级进程之间的调度。</p>
+<h2 id="静态优先级">3. 静态优先级</h2>
+<ul>
+<li>两种实时调度策略都实现了<strong>静态优先级</strong>。</li>
+<li>内核不会为实时任务计算动态优先级。</li>
+<li>给定优先级的实时任务总是会抢占低优先级的任务。</li>
+</ul>
+<h2 id="软实时与硬实时">4. 软实时与硬实时</h2>
+<ul>
+<li>Linux
+的实时调度策略提供的是<strong>软实时</strong>行为：内核会尽力在时限内调度应用程序，但不保证一定达成。</li>
+<li>硬实时系统则保证严格的时限要求，而 Linux 并不原生支持。</li>
+</ul>
+<hr />
+<h1 id="实时优先级范围">实时优先级范围</h1>
+<ul>
+<li>实时优先级范围为 <code>0</code> 到
+<code>MAX_RT_PRIO - 1</code>，默认情况下 <code>MAX_RT_PRIO</code> 为
+<code>100</code>。99为最高实时优先级。</li>
+<li>普通任务（<code>SCHED_NORMAL</code>）与实时任务共享优先级空间：
+<ul>
+<li><code>-20</code> 到 <code>+19</code> 的 nice 值映射到优先级范围
+<code>100</code> 到
+<code>139</code>。这是用户空间的进程评级，-20为最高优先级。</li>
+</ul></li>
+</ul>
+<hr />
+<h1 id="与调度器相关的系统调用">与调度器相关的系统调用</h1>
+<p>以下是管理调度参数的系统调用列表：</p>
+<table>
+<thead>
+<tr>
+<th><strong>系统调用</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nice()</code></td>
+<td>设置进程的 nice 值</td>
+</tr>
+<tr>
+<td><code>sched_setscheduler()</code></td>
+<td>设置进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_getscheduler()</code></td>
+<td>获取进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_setparam()</code></td>
+<td>设置进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_getparam()</code></td>
+<td>获取进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_max()</code></td>
+<td>获取实时调度的最大优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_min()</code></td>
+<td>获取实时调度的最小优先级</td>
+</tr>
+<tr>
+<td><code>sched_rr_get_interval()</code></td>
+<td>获取进程的时间片值</td>
+</tr>
+<tr>
+<td><code>sched_setaffinity()</code></td>
+<td>设置进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_getaffinity()</code></td>
+<td>获取进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_yield()</code></td>
+<td>临时将处理器让给其他任务</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1021,89 +1201,6 @@ c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，�
 在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
 <p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
 <p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/mvvm-frtnd/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue---This is Maxw, an enthusiast of software tinkering, 3D printing, and video games. If you have any questions about this blog, feel free to open a GitHub issue.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:46" itemprop="dateModified" datetime="2025-01-22T10:30:46+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>实现一个简单的MVVM框架</p>
-<h2 id="section">6/30</h2>
-<p>纯javascript实现双向数据绑定：https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</p>
-<p>javascript
-MVVM框架介绍：https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</p>
-<p>谢谢你，<a
-target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr
-Kopytin</a>大神！</p>
 
       
     </div>
