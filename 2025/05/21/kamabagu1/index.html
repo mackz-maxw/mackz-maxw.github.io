@@ -19,26 +19,26 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="设置apt源 检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入： 1lsb_release -a source APT源： 1sudo bash -c &amp;#x27;echo &quot;deb http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;ubuntu&#x2F; jammy main restricted universe multiverse&quot; &gt; &#x2F;etc&#x2F;">
+    <meta name="description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架 - 物理层：光纤，电缆等传输信号的物理通道 - 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 - 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 - 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP - 会话">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设置Ubuntu">
-<meta property="og:url" content="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/index.html">
+<meta property="og:title" content="代码随想录 | 八股-网络模型">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/05/21/kamabagu1/index.html">
 <meta property="og:site_name" content="Maxw的小站">
-<meta property="og:description" content="设置apt源 检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入： 1lsb_release -a source APT源： 1sudo bash -c &amp;#x27;echo &quot;deb http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;ubuntu&#x2F; jammy main restricted universe multiverse&quot; &gt; &#x2F;etc&#x2F;">
+<meta property="og:description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架 - 物理层：光纤，电缆等传输信号的物理通道 - 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 - 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 - 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP - 会话">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-21T04:10:52.726Z">
-<meta property="article:modified_time" content="2025-01-22T02:30:56.761Z">
+<meta property="article:published_time" content="2025-05-21T14:18:29.155Z">
+<meta property="article:modified_time" content="2025-05-21T14:18:11.998Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/05/21/kamabagu1/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/","path":"2024/12/20/Ubuntu_setup/","title":"设置Ubuntu"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/05/21/kamabagu1/","path":"2025/05/21/kamabagu1/","title":"代码随想录 | 八股-网络模型"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>设置Ubuntu | Maxw的小站</title>
+<title>代码随想录 | 八股-网络模型 | Maxw的小站</title>
   
 
 
@@ -112,7 +112,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEapt%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">设置apt源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim%E6%8A%80%E5%B7%A7"><span class="nav-number">2.</span> <span class="nav-text">vim技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEvim"><span class="nav-number">3.</span> <span class="nav-text">设置vim</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B%E5%92%8C-tcpip-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">OSI 模型和 TCP&#x2F;IP 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">OSI 模型</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -163,7 +163,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamabagu1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,12 +176,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="设置Ubuntu | Maxw的小站">
+      <meta itemprop="name" content="代码随想录 | 八股-网络模型 | Maxw的小站">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          设置Ubuntu
+          代码随想录 | 八股-网络模型
         </h1>
 
         <div class="post-meta-container">
@@ -191,15 +191,18 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:18:11" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
+        <i class="far fa-folder"></i>
       </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
     </span>
 
   
@@ -211,14 +214,29 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h3 id="设置apt源">设置apt源</h3>
-<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
-<h3 id="vim技巧">vim技巧</h3>
-<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
-<h3 id="设置vim">设置vim</h3>
-<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
+    <div class="post-body" itemprop="articleBody"><h2 id="osi-模型和-tcpip-模型">OSI 模型和 TCP/IP 模型</h2>
+<h3 id="osi-模型">OSI 模型</h3>
+<p>开放式系统互联模型 七层 概念框架<br />
+- 物理层：光纤，电缆等传输信号的物理通道 -
+数据链路层：通过物理层网络连接两台计算机
+管理数据帧：封装在数据包中的电子信号 示例：以太网 -
+网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 -
+传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP -
+会话层：负责会话中两个独立应用程序之间的网络协调，管理一对一应用程序连接的开始和结束以及同步冲突。网络文件系统（NFS）和服务器消息块（SMB）是会话层的常用协议。
+-
+表示层：主要关注应用程序发送和使用的数据本身的语法。例如，超文本标记语言（HTML）、JavaScript
+对象标记（JSON）和逗号分隔值（CSV） -
+应用层：关注应用程序本身的特定类型及其标准化通信方法。例如，浏览器可以使用超文本传输安全协议（HTTPS）进行通信，而
+HTTP 和电子邮件客户端可以使用 POP3（邮局协议版本 3）和
+SMTP（简单邮件传输协议）进行通信。 ### TCP/IP 模型<br />
+TCP/IP模型分为四个层级，每个层级负责特定的网络功能。 -
+网络接口层：该层对应OSI模型的数据链路层和物理层。它负责物理传输媒介的传输，例如以太网、Wi-Fi等，并提供错误检测和纠正的功能。此外，网络接口层还包含硬件地址（MAC地址）的管理。
+-
+网络层：该层对应OSI模型的网络层。主要协议是IP，它负责数据包的路由和转发，选择最佳路径将数据从源主机传输到目标主机。IP协议使用IP地址来标识主机和网络，并进行逻辑地址寻址。<br />
+-
+传输层：该层对应OSI模型的传输层。它负责端到端的数据传输，提供可靠的、无连接的数据传输服务。主要的传输层协议有TCP和UDP。TCP提供可靠的数据传输，确保数据的正确性和完整性；而UDP则是无连接的，适用于不要求可靠性的传输，如实时音频和视频流。
+-
+应用层：该层与OSI模型的应用层和表示层以及会话层类似，提供直接与用户应用程序交互的接口。它为网络上的各种应用程序提供服务，如电子邮件（SMTP）、网页浏览（HTTP）、文件传输（FTP）等。</p>
 
     </div>
 
@@ -232,13 +250,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/12/20/bash_var/" rel="prev" title="bash小技巧">
-                  <i class="fa fa-angle-left"></i> bash小技巧
+                <a href="/2025/05/16/kamacode4/" rel="prev" title="代码随想录 | 刷题-链表2">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-链表2
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/12/20/Learn_gdb/" rel="next" title="学习GCC和GDB">
-                  学习GCC和GDB <i class="fa fa-angle-right"></i>
+                <a href="/2025/05/21/kamacode5/" rel="next" title="代码随想录 | 刷题-哈希表">
+                  代码随想录 | 刷题-哈希表 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -264,11 +282,11 @@
     </label>
     <select class="lang-select" data-canonical="" aria-label="选择语言">
       
-        <option value="zh-CN" data-href="/2024/12/20/Ubuntu_setup/" selected="">
+        <option value="zh-CN" data-href="/2025/05/21/kamabagu1/" selected="">
           简体中文
         </option>
       
-        <option value="en" data-href="/en/2024/12/20/Ubuntu_setup/" selected="">
+        <option value="en" data-href="/en/2025/05/21/kamabagu1/" selected="">
           English
         </option>
       

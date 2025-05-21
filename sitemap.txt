@@ -1,7 +1,11 @@
+https://mackz-maxw.github.io/2025/05/21/kamacode6/
+https://mackz-maxw.github.io/2025/05/21/kamacode5/
 https://mackz-maxw.github.io/2025/05/16/kamacode4/
 https://mackz-maxw.github.io/2025/05/16/kamacode3/
 https://mackz-maxw.github.io/2025/05/14/kamacode2/
 https://mackz-maxw.github.io/2025/05/13/kamacode1/
+https://mackz-maxw.github.io/2025/05/21/kamabagu1/
+https://mackz-maxw.github.io/2025/05/21/kamacode7/
 https://mackz-maxw.github.io/2025/01/21/algorithm1-en/
 https://mackz-maxw.github.io/2024/12/20/wx-frtnd/
 https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/
@@ -29,3 +33,4 @@ https://mackz-maxw.github.io/
 https://mackz-maxw.github.io/categories/leetcode/
 https://mackz-maxw.github.io/categories/linux-tricks/
 https://mackz-maxw.github.io/categories/realtime-sched/
+https://mackz-maxw.github.io/categories/comp-basic/
