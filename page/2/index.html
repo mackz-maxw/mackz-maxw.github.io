@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,520 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/21/algorithm1-en/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/01/21/algorithm1-en/" class="post-title-link" itemprop="url">algorithm1-en</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-01-21 20:36:03" itemprop="dateCreated datePublished" datetime="2025-01-21T20:36:03+08:00">2025-01-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:49:27" itemprop="dateModified" datetime="2025-01-22T10:49:27+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>I've been working on LeetCode problems for almost a week now, and I
+feel like my progress with algorithms is pretty slow—managing just one
+or two problems a day seems like my limit.</p>
+<p>I'm focusing on problems from the "Beginner Algorithms" section on
+LeetCode. Sometimes, I feel my memory is terrible; I realized I had
+encountered some of these problems before in an introductory algorithms
+book but couldn't recall the solutions. I ended up solving them with the
+most inefficient methods...</p>
+<p>I can foresee that learning techniques like two-pointers will take
+some getting used to. It's tough! But I'll take it one step at a
+time.</p>
+<p>(All problems below are from LeetCode's official website.)</p>
+<h2 id="section">2/25-3/1</h2>
+<h3 id="lc26.-remove-duplicates-from-sorted-array">LC26. Remove
+Duplicates from Sorted Array</h3>
+<p>You are given an array <code>nums</code> sorted in non-decreasing
+order. Remove the duplicates in-place such that each unique element
+appears only once. The relative order of the elements should be kept the
+same. After removing the duplicates, return the new length of the
+array.</p>
+<p>Since some languages cannot change the size of the array, the final
+result must be placed in the first part of the array <code>nums</code>.
+More formally, if there are <code>k</code> elements after removing the
+duplicates, then the first <code>k</code> elements of <code>nums</code>
+should hold the final result.</p>
+<p>Do not allocate extra space for another array. You must do this by
+modifying the input array in-place with <span
+class="math inline">\(O(1)\)</span> extra memory.</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{class Solution \{} \\
+&amp;\quad \text{public:} \\
+&amp;\quad \quad \text{int removeDuplicates(vector&lt;int&gt;\&amp;
+nums) \{} \\
+&amp;\quad \quad \quad \text{int a = 0;} \\
+&amp;\quad \quad \quad \text{int b = nums.size();} \\
+&amp;\quad \quad \quad \text{if (b &lt;= 1) return b;} \\
+&amp;\quad \quad \quad \text{for (int i = 0; i &lt; (b - 1); i++) \{} \\
+&amp;\quad \quad \quad \quad \text{if (nums[i] != nums[i + 1]) \{} \\
+&amp;\quad \quad \quad \quad \quad \text{nums[a] = nums[i];} \\
+&amp;\quad \quad \quad \quad \quad \text{a++;} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{nums[a] = nums[b - 1];} \\
+&amp;\quad \quad \quad \text{return a + 1;} \\
+&amp;\quad \quad \text{\}} \\
+&amp;\text{\};}
+\end{aligned}
+\]</span></p>
+<p>Here, I learned (again) about the two-pointer technique and refreshed
+my long-unused C++ knowledge. I chose C++ mainly because many of the
+algorithm and OpenCV books I previously studied use C++. Although I've
+heard C++ interviews focus heavily on language features, it feels more
+suitable than Python for understanding internal mechanisms. Python seems
+to hide a lot of details, which might not be ideal for my coding style
+later.</p>
+<p>This problem was manageable, but for problems involving in-place
+modifications, it's essential to use
+<code>vector&lt;int&gt;&amp; nums</code> to pass by reference.</p>
+<p>While solving this, I realized I had forgotten basic functions like
+<code>.size()</code>, <code>memset()</code>, and <code>.length()</code>.
+Sigh.</p>
+<hr />
+<h3 id="lc122.-best-time-to-buy-and-sell-stock-ii">LC122. Best Time to
+Buy and Sell Stock II</h3>
+<p>You are given an array <code>prices</code> where
+<code>prices[i]</code> is the price of a given stock on the
+<code>i</code>th day.</p>
+<p>On each day, you may decide to buy and/or sell the stock. You can
+hold at most one share of the stock at any time. However, you can buy it
+and then sell it on the same day. Return the maximum profit you can
+achieve.</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{class Solution \{} \\
+&amp;\quad \text{public:} \\
+&amp;\quad \quad \text{int maxProfit(vector&lt;int&gt;\&amp; prices) \{}
+\\
+&amp;\quad \quad \quad \text{int day = 0;} \\
+&amp;\quad \quad \quad \text{int count = 0;} \\
+&amp;\quad \quad \quad \text{bool st = false;} \\
+&amp;\quad \quad \quad \text{if (prices.size() == 1) return 0;} \\
+&amp;\quad \quad \quad \text{for (int i = 0; i &lt; prices.size() - 1;
+i++) \{} \\
+&amp;\quad \quad \quad \quad \text{if (prices[i] &lt; prices[i + 1]
+&amp;&amp; st == false) \{} \\
+&amp;\quad \quad \quad \quad \quad \text{day = i; st = true;} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \quad \text{if (prices[i] &gt; prices[i + 1]
+&amp;&amp; st == true) \{} \\
+&amp;\quad \quad \quad \quad \quad \text{count += prices[i] -
+prices[day]; st = false;} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{return count;} \\
+&amp;\quad \quad \text{\}} \\
+&amp;\text{\};}
+\end{aligned}
+\]</span></p>
+<p>The above solution attempts to track local minima and maxima but led
+to overly complex <code>if</code> conditions. A simpler approach is
+summing positive differences between consecutive days:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{class Solution \{} \\
+&amp;\quad \text{public:} \\
+&amp;\quad \quad \text{int maxProfit(vector&lt;int&gt;\&amp; prices) \{}
+\\
+&amp;\quad \quad \quad \text{int pf = 0;} \\
+&amp;\quad \quad \quad \text{for (int i = 0; i &lt; prices.size() - 1;
+i++) \{} \\
+&amp;\quad \quad \quad \quad \text{if (prices[i] &lt; prices[i + 1]) \{}
+\\
+&amp;\quad \quad \quad \quad \quad \text{pf += prices[i + 1] -
+prices[i];} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{return pf;} \\
+&amp;\quad \quad \text{\}} \\
+&amp;\text{\};}
+\end{aligned}
+\]</span></p>
+<p>This solution is concise and easier to understand, summing up profits
+whenever prices go up.</p>
+<hr />
+<h3 id="lc48.-rotate-image">LC48. Rotate Image</h3>
+<p>You are given an <span class="math inline">\(n \times n\)</span> 2D
+matrix representing an image. Rotate the image by 90 degrees
+clockwise.</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{class Solution \{} \\
+&amp;\quad \text{public:} \\
+&amp;\quad \quad \text{void rotate(vector&lt;vector&lt;int&gt;&gt;\&amp;
+matrix) \{} \\
+&amp;\quad \quad \quad \text{int n = matrix.size();} \\
+&amp;\quad \quad \quad \text{for (int i = 0; i &lt; n; i++) \{} \\
+&amp;\quad \quad \quad \quad \text{for (int j = i; j &lt; n; j++) \{} \\
+&amp;\quad \quad \quad \quad \quad \text{swap(matrix[i][j],
+matrix[j][i]);} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{for (auto\&amp; row : matrix) \{
+reverse(row.begin(), row.end()); \}} \\
+&amp;\quad \quad \text{\}} \\
+&amp;\text{\};}
+\end{aligned}
+\]</span></p>
+<p>First, transpose the matrix, then reverse each row to achieve the
+90-degree rotation.</p>
+<p>After solving the problem using the approach of transposing the
+matrix followed by reversing the rows, I thought of an alternative way:
+reversing the rows first and then transposing the matrix.</p>
+<p>This approach also works effectively and provides the same result.
+Here's how it looks:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{class Solution \{} \\
+&amp;\quad \text{public:} \\
+&amp;\quad \quad \text{void rotate(vector&lt;vector&lt;int&gt;&gt;\&amp;
+matrix) \{} \\
+&amp;\quad \quad \quad \text{reverse(matrix.begin(), matrix.end());} \\
+&amp;\quad \quad \quad \text{for (int i = 0; i &lt; matrix.size(); i++)
+\{} \\
+&amp;\quad \quad \quad \quad \text{for (int j = i; j &lt;
+matrix[i].size(); j++) \{} \\
+&amp;\quad \quad \quad \quad \quad \text{swap(matrix[i][j],
+matrix[j][i]);} \\
+&amp;\quad \quad \quad \quad \text{\}} \\
+&amp;\quad \quad \quad \text{\}} \\
+&amp;\quad \quad \text{\}} \\
+&amp;\text{\};}
+\end{aligned}
+\]</span></p>
+<p>This version simplifies the triangle iteration by starting the inner
+loop at <code>j = i</code>. It reduces the code's complexity while
+maintaining clarity. However, I noticed that the memory usage was
+slightly higher compared to my earlier implementation where I explicitly
+managed the triangular region with an additional variable. To
+investigate further, I experimented with both versions on LeetCode's
+submission platform. Interestingly, I found that memory usage sometimes
+fluctuated slightly for reasons I couldn't fully understand, possibly
+due to internal optimizations in the runtime environment.</p>
+<p>Ultimately, both methods provide the correct result, and the choice
+depends on your preference for readability versus strict memory
+management.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/20/fed-sched-int/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/01/20/fed-sched-int/" class="post-title-link" itemprop="url">fed_sched_int</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-01-20 22:45:29" itemprop="dateCreated datePublished" datetime="2025-01-20T22:45:29+08:00">2025-01-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:04" itemprop="dateModified" datetime="2025-01-22T10:30:04+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>摘录一下Marion的论文要点，方便查阅</p>
+<hr />
+<h3 id="任务模型">任务模型</h3>
+<p>每个任务 <span class="math inline">\(\tau_i\)</span> 由一组子任务
+<span class="math inline">\(\tau_{i,j}\)</span>
+组成，并在其间具有优先关系 <span
+class="math inline">\(&lt;\)</span>。每个子任务 <span
+class="math inline">\(\tau_{i,j}\)</span> 的特征为： - 工作量 <span
+class="math inline">\(c_{i,j} \in
+\mathbb{N}\)</span>，表示其最坏情况下的执行时间。</p>
+<p>子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执行时间最长为
+<span
+class="math inline">\(c_{i,j}\)</span>。假设子任务执行是可重入的：执行可以被其他子任务抢占，且无需在系统中同一个核心上恢复。</p>
+<p>优先关系限制了子任务的执行顺序，例如 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span>，则 <span
+class="math inline">\(\tau_{i,a}\)</span> 必须在 <span
+class="math inline">\(\tau_{i,b}\)</span> 之前完全执行。我们说，当任务
+<span class="math inline">\(\tau_{i,a}\)</span> 的所有前驱任务 <span
+class="math inline">\(\tau_{i,a&#39;}\)</span> 完成时，<span
+class="math inline">\(\tau_{i,a}\)</span> 变为“可用”（available）。</p>
+<p>根据 [26]，我们将任务分为两类： 1. <strong>轻量任务（light
+tasks）</strong>：满足 <span class="math inline">\(C_i &lt;
+D_i\)</span>； 2. <strong>重量任务（heavy tasks）</strong>：满足 <span
+class="math inline">\(C_i \geq
+D_i\)</span>，此类任务必须利用其潜在的并行性才能满足调度要求。</p>
+<p>本文的重点是<strong>联合调度</strong>（federated
+scheduling），对于每个重量任务，其被分配到一个专用核心集上并独占执行。我们仅考虑截止时间
+<span class="math inline">\(D_i\)</span> 和子任务工作量 <span
+class="math inline">\(c_{i,j}\)</span>
+为正整数的任务，称为<strong>整数值任务</strong>（integer-valued
+tasks）。</p>
+<hr />
+<h3 id="优先关系的dag表示">优先关系的DAG表示</h3>
+<p>子任务执行的优先关系可表示为一个<strong>有向无环图（DAG）</strong>。对于每个并行任务
+<span class="math inline">\(\tau_i\)</span>，存在一个DAG <span
+class="math inline">\(G_i\)</span>，其包含的顶点集合为 <span
+class="math inline">\(v_{i,j}\)</span>，对应于任务 <span
+class="math inline">\(\tau_i\)</span> 的子任务 <span
+class="math inline">\(\tau_{i,j}\)</span>： - 每个顶点 <span
+class="math inline">\(v_{i,j}\)</span> 的属性为子任务的工作量 <span
+class="math inline">\(c_{i,j}\)</span>； - 边 <span
+class="math inline">\(v_{i,a} \to v_{i,b}\)</span> 存在当且仅当 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span> 且不存在 <span
+class="math inline">\(v_{i,c}\)</span> 满足 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,c} &lt;
+\tau_{i,b}\)</span>，即 <span class="math inline">\(v_{i,b}\)</span>
+直接继承 <span class="math inline">\(v_{i,a}\)</span>。</p>
+<hr />
+<h3 id="关键路径长度的定义">关键路径长度的定义</h3>
+<p>对于每个图顶点 <span
+class="math inline">\(v_{i,j}\)</span>，我们定义其<strong>关键路径长度</strong>或<strong>跨度</strong>
+<span class="math inline">\(l_{i,j} \in \mathbb{N}\)</span>
+为从该顶点起始的最长路径的长度，该路径由沿路径每个顶点的执行时间（包括起始顶点的权重
+<span class="math inline">\(c_{i,j}\)</span>）加权。</p>
+<p>对于相应的任务 <span class="math inline">\(\tau_i\)</span>，跨度
+<span class="math inline">\(L_i \in \mathbb{N}\)</span>
+是所有顶点的跨度中的最大值，即整个DAG的关键路径长度。跨度对应于任务在给定无限数量核心时相对于其激活时间的最早完成时间。</p>
+<p>显然，为使任务可调度，必须满足： <span class="math display">\[
+L_i \leq D_i
+\]</span></p>
+<h2 id="适用于整数值任务的联合调度">适用于整数值任务的联合调度</h2>
+<p>对于一个重量任务 <span
+class="math inline">\(\tau_i\)</span>，其特征为工作量 <span
+class="math inline">\(C_i\)</span>、跨度 <span
+class="math inline">\(L_i\)</span> 和截止时间 <span
+class="math inline">\(D_i\)</span>，在提供足够核心的情况下，任何工作保留型（work-conserving，即贪婪型）调度器均可调度该任务。分配给任务
+<span class="math inline">\(\tau_i\)</span> 的核心数可以表示为： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil \tag{1}
+\]</span></p>
+<p>我们在此证明，对于一个并行任务，如果其截止时间和所有子任务的工作量均为整数，则分配的核心数可以改进为：
+<span class="math display">\[
+n_i&#39; = \left\lceil \frac{C_i - L_i + 1}{D_i - L_i + 1} \right\rceil
+\]</span></p>
+<p>这一公式比方程 (1)
+在限制重量任务的核心数方面提供了实际且直观的优势。</p>
+<h2
+id="单工作量表调度unit-workload-list-scheduling">单工作量表调度（Unit-Workload
+List Scheduling）</h2>
+<p>第4节中提出的联合调度方法为高利用率的整数值任务分配了足够的处理器，以保证任何工作保留型调度器的可行性，前提是给定每个任务的工作量、关键路径长度和截止时间。然而，这种常量时间的分配方法可能会导致对重量任务的处理器过度分配，进而造成资源浪费。</p>
+<p>在 [3] 中，Graham 的表调度方法（list
+scheduling）被应用于重量任务；通过使用多种启发式方法为子任务排序，可以在更少的处理器上生成可行的调度。表调度以非抢占式方式将可用子任务分配给空闲处理器；如
+[14]
+所述，这可能导致对重量任务的处理器分配过多。然而，允许空闲子任务进行抢占可能会引入切换问题。</p>
+<h3 id="方法改进">方法改进</h3>
+<p>为了解决这个问题，我们提出了<strong>单工作量子任务的表调度</strong>。<br />
+- 一个整数值并行任务 <span class="math inline">\(\tau_i\)</span>，由DAG
+<span class="math inline">\(G_i\)</span>
+表示，可以被分解为一个包含单工作量顶点的DAG <span
+class="math inline">\(G_i^*\)</span>。<br />
+- 在 <span class="math inline">\(G_i\)</span> 中具有工作量 <span
+class="math inline">\(c\)</span> 的顶点 <span
+class="math inline">\(v_{i,j}\)</span>
+被映射为一个完全有序的顶点序列，在 <span
+class="math inline">\(G_i^*\)</span> 中形成从起点到终点的路径。</p>
+<p>对于 <span class="math inline">\(G_i^*\)</span> 中的任何边 <span
+class="math inline">\(v_{i,j}\)</span>，其连接方式如下： 1. <span
+class="math inline">\(G_i^*\)</span> 中进入 <span
+class="math inline">\(v_{i,j}\)</span>
+的任何边连接到其分解后路径中的第一个顶点； 2. 在 <span
+class="math inline">\(G_i\)</span> 中离开 <span
+class="math inline">\(v_j\)</span> 的任何边，现在连接到 <span
+class="math inline">\(v_{i,j}\)</span> 的分解路径中的最后一个顶点。</p>
+<h3 id="优势">优势</h3>
+<p>对于这样的DAG，表调度方法可以为每个单位工作量分配一个优先级；<br />
+这使得原始DAG <span class="math inline">\(G_i\)</span>
+中的相应子任务能够在单位时间步边界内被抢占。</p>
+<h3 id="常见的表调度启发式方法">5.1 常见的表调度启发式方法</h3>
+<h4 id="关键路径规则critical-path-rule-cp">关键路径规则（Critical Path
+Rule, CP）</h4>
+<p>关键路径规则用于表调度时，以<strong>最长跨度</strong>的顺序选择可用子任务进行执行。<br />
+-
+子任务跨度的分配可以以深度优先搜索的方式完成；当为每个顶点分配跨度后，图的总跨度
+<span class="math inline">\(L\)</span> 会被更新。 - 该过程的时间复杂度为
+<span class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<h4 id="dag分解">DAG分解</h4>
+<p>DAG <span class="math inline">\(G\)</span> 分解为单位工作量的 DAG
+<span class="math inline">\(G^*\)</span> 的过程表示为函数
+<strong>Convert_Unit_DAG</strong>： 1. 初始化 <span
+class="math inline">\(G^*\)</span> 为 <span
+class="math inline">\(G\)</span> 的副本。 2. 建立一个顶点集合 <span
+class="math inline">\(V^*\)</span>，其由 <span
+class="math inline">\(G^*\)</span>
+中的顶点（实际代码中可能为指向顶点的指针）组成。 3. 对于 <span
+class="math inline">\(V^*\)</span> 中的每个顶点 <span
+class="math inline">\(v_i\)</span>： - 将 <span
+class="math inline">\(v_i\)</span> 的工作量 <span
+class="math inline">\(c_i\)</span> 转化为单位工作量顶点序列，这些顶点在
+<span class="math inline">\(G^*\)</span> 中形成路径： -
+路径中的每个顶点之间用边连接，第一个顶点的跨度等于 <span
+class="math inline">\(v_i\)</span> 的跨度 <span
+class="math inline">\(l_i\)</span>； -
+每个后续顶点的跨度比前一个顶点小1。 - 删除原始顶点 <span
+class="math inline">\(v_i\)</span>。</p>
+<ol start="4" type="1">
+<li>处理完成后，<span class="math inline">\(G^*\)</span>
+中仅包含单位工作量的顶点：
+<ul>
+<li>通过分解，生成了 <span class="math inline">\(C - |V|\)</span>
+个额外顶点，以及 <span class="math inline">\(C - |V|\)</span>
+条额外边。</li>
+<li>因此，总运行时间为 <span class="math inline">\(O(|V| + C - |V| + |E|
++ C - |V|)\)</span>，简化为 <span class="math inline">\(O(C +
+|E|)\)</span>。</li>
+</ul></li>
+</ol>
+<h4
+id="后继数量规则largest-number-of-successors-rule-lns">后继数量规则（Largest
+Number of Successors Rule, LNS）</h4>
+<p>LNS规则以<strong>后继任务的总工作量</strong>为顺序，选择可用子任务进行执行：
+- 子任务 <span class="math inline">\(v_i \in G\)</span> 的后继工作量由与
+<span class="math inline">\(v_i\)</span>
+通过路径相连的所有顶点的工作量之和定义。 -
+可以通过动态规划在整个图上实现这一过程，其时间复杂度为 <span
+class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<p>LNS规则也可以应用于单位工作量子任务的表调度，并保持伪多项式时间复杂度。</p>
+<h4 id="注意">注意</h4>
+<p>将整数值任务的 DAG <span class="math inline">\(G\)</span>
+分解为单位工作量的 DAG <span class="math inline">\(G^*\)</span>
+时，还需要为每个单位工作量顶点分配一个子图工作量。这与跨度的分配类似，不会影响算法的时间复杂度。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1529,228 +2043,6 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
 <p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
 <h3 id="设置vim">设置vim</h3>
 <p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
-<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
-<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
-是第一个参数，依此类推。\)</span>@ - 所有参数 <span
-class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
-当前脚本的进程识别码 !! -
-完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
-sudo !!再尝试一次。 $_ -
-上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
-Esc 之后键入 . 来获取这个值。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/algorithm1/" class="post-title-link" itemprop="url">刷题-初级算法：数组</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:42" itemprop="dateModified" datetime="2025-01-22T10:29:42+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>刷了有快一周leetcode题目了，感觉算法这块进度偏慢，一天可能刷一两道题就是极限了。</p>
-<p>刷的是leetcode学习栏里的初级算法选题。有时候感觉自己的记忆力真是差到一定程度了，有好两道题刷完后才发现自己在算法竞赛入门里看过，就是记不起来，结果还是用了最笨的方法...</p>
-<p>可以预感到自己学了有些方法，例如双指针，之后还需要适应...太难了！一步一步来吧</p>
-<p>(以下所有题目来源力扣cn官网)</p>
-<h2 id="section">2/25-3/1</h2>
-<h4 id="lc26.-删除有序数组中的重复项">LC26. 删除有序数组中的重复项</h4>
-<p>给你一个 升序排列 的数组 nums ，请你 原地
-删除重复出现的元素，使每个元素 只出现一次
-，返回删除后数组的新长度。元素的 相对顺序 应该保持 一致 。</p>
-<p>由于在某些语言中不能改变数组的长度，所以必须将结果放在数组nums的第一部分。更规范地说，如果在删除重复项之后有
-k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
-<p>将最终结果插入 nums 的前 k 个位置后返回 k 。</p>
-<p>不要使用额外的空间，你必须在 原地 修改输入数组 并在使用 O(1)
-额外空间的条件下完成。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeDuplicates</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> b=nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(b&lt;=<span class="number">1</span>) <span class="keyword">return</span> b;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(b<span class="number">-1</span>);i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]!=nums[i+<span class="number">1</span>])&#123;</span><br><span class="line">                nums[a]=nums[i];</span><br><span class="line">                a++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[a]=nums[b<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">return</span> a+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>这里（重新）学到了双指针的思想，熟悉了下许久未见的cpp。选cpp语言来学其实只是因为自己以前选的好几本（算法跟opencv）教程都是cpp的，虽然听说cpp面试在语言特性上挺严格的，但是感觉比起另一个我学过一点的python，这个更能展现一些语言内部的设定吧，python总感觉隐去了不少细节，对我之后代码风格不是太有利。</p>
-<p>这道题其实还好，后面有在原值上修改的题，就一定要用<code>vector&lt;int&gt;&amp; nums</code>这种传引用的方式。</p>
-<p>在写这道题的时候发现自己各种函数都快忘完了，<code>.size()/memset()/.length()</code>都不记得了，哎。</p>
-<h4 id="买卖股票的最佳时机-ii">122. 买卖股票的最佳时机 II</h4>
-<p>给定一个数组 prices ，其中 prices[i] 表示股票第 i 天的价格。</p>
-<p>在每一天，你可能会决定购买和/或出售股票。你在任何时候 最多 只能持有
-一股 股票。你也可以购买它，然后在 同一天 出售。 返回 你能获得的 最大
-利润 。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> day=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">        <span class="type">bool</span> st=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>()==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&lt;prices[i+<span class="number">1</span>]&amp;&amp;i+<span class="number">1</span>!=prices.<span class="built_in">size</span>()<span class="number">-1</span>&amp;&amp;st==<span class="literal">false</span>)&#123;</span><br><span class="line">                day=i;</span><br><span class="line">                st=<span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&gt;prices[i+<span class="number">1</span>]&amp;&amp;st==<span class="literal">true</span>)&#123;</span><br><span class="line">                count+=prices[i]-prices[day];</span><br><span class="line">                st=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&lt;=prices[i+<span class="number">1</span>]&amp;&amp;i+<span class="number">1</span>==prices.<span class="built_in">size</span>()<span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(st==<span class="literal">true</span>)count+=prices[i+<span class="number">1</span>]-prices[day];</span><br><span class="line">                <span class="keyword">if</span>(st==<span class="literal">false</span>)count+=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>做这道题的时候我想到了要在下降的最低日买，上升的最高日卖，然后就捅了if窝......不过这几个条件想合并确实有点难吧。</p>
-<p>然后我一想到这个解决方法就乐起来了，完全没想到自己之前在教程里看过一个更简单的解法，就是求每一个前后两日差，然后求其中正数的和。其实我思考题目的时候想到了是不是可以利用每一段买入到卖出可以拆解成这段时间每天都买入卖出，但是没想到啥好的利用方法。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            prices[i]=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> pf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(prices[j]&gt;<span class="number">0</span>)pf+=prices[j];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>哦对，还可以代码复用一下</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> pf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            prices[i]=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&gt;<span class="number">0</span>)pf+=prices[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>这样看起来就简洁多了！需要注意的是最后一天没有别的天数来减（买了不卖也是亏），在第二个循环中不用加上。</p>
-<h4 id="旋转图像">48.旋转图像</h4>
-<p>给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转
-90 度。</p>
-<p>你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要
-使用另一个矩阵来旋转图像。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]</span><br><span class="line">输出：[[7,4,1],[8,5,2],[9,6,3]]</span><br></pre></td></tr></table></figure>
-<p>这题显然是有一定的规律可以利用的，否则一边一边写旋转，代码有点太多了。看到题目强调矩阵这个概念，我就想到了可以把矩阵操作一下，比如转置之类的。</p>
-<p>第一次做这题时，我想到可以先转置，再看看怎么调整。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">        int n = matrix.size();</span><br><span class="line">        int tri = 0;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            for (int j = 0+tri; j &lt; n; j++) &#123;</span><br><span class="line">                int tr=matrix[i][j];</span><br><span class="line">                matrix[i][j] = matrix[j][i];</span><br><span class="line">                matrix[j][i] = tr;</span><br><span class="line">            &#125;</span><br><span class="line">            tri++;</span><br><span class="line">        &#125;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            reverse(matrix[i].begin(),matrix[i].end());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>果然，转置过后，每一行reverse一下就行了。不过需要注意的是转置时遍历一个三角即可，不然是转置两次。</p>
-<p>后来重做了一遍，我是倒过来想的，先reverse列，再转置。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">	void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">		reverse(matrix.begin(), matrix.end());</span><br><span class="line">		for (int i = 0; i &lt; matrix.size(); i++) &#123;</span><br><span class="line">			for (int j = i; j &lt; matrix[i].size(); j++) &#123;</span><br><span class="line">				int ori = matrix[i][j];</span><br><span class="line">				matrix[i][j] = matrix[j][i];</span><br><span class="line">				matrix[j][i] = ori;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>这次我学聪明了，知道遍历三角可以<code>j = i</code>，少几行代码。不过这样写使用内存居然比第一次多！我把这个想法也改成用<code>j = 0+tri</code>的形式（其他没变），内存使用变成和第一次一样了。这是为什么呢？</p>
-<p>我想去stackoverflow上问问，就去了leetcode英文站看看英文题目描述，顺手再提交了两次题目，发现内存占用又一样了...但是我用最开始的写法时间更快。好吧，看来这或许不是我现阶段能了解的问题。</p>
 
       
     </div>

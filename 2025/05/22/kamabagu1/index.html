@@ -19,23 +19,23 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架 - 物理层：光纤，电缆等传输信号的物理通道 - 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 - 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 - 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP - 会话">
+    <meta name="description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架  物理层：光纤，电缆等传输信号的物理通道 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP 会话层：负责会话中两">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码随想录 | 八股-网络模型">
-<meta property="og:url" content="https://mackz-maxw.github.io/2025/05/21/kamabagu1/index.html">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/05/22/kamabagu1/index.html">
 <meta property="og:site_name" content="Maxw的小站">
-<meta property="og:description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架 - 物理层：光纤，电缆等传输信号的物理通道 - 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 - 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 - 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP - 会话">
+<meta property="og:description" content="OSI 模型和 TCP&#x2F;IP 模型 OSI 模型 开放式系统互联模型 七层 概念框架  物理层：光纤，电缆等传输信号的物理通道 数据链路层：通过物理层网络连接两台计算机 管理数据帧：封装在数据包中的电子信号 示例：以太网 网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP 会话层：负责会话中两">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-05-21T14:18:29.155Z">
-<meta property="article:modified_time" content="2025-05-21T14:18:11.998Z">
+<meta property="article:published_time" content="2025-05-22T21:28:25.818Z">
+<meta property="article:modified_time" content="2025-05-22T20:53:51.000Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://mackz-maxw.github.io/2025/05/21/kamabagu1/">
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/05/22/kamabagu1/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/05/21/kamabagu1/","path":"2025/05/21/kamabagu1/","title":"代码随想录 | 八股-网络模型"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/05/22/kamabagu1/","path":"2025/05/22/kamabagu1/","title":"代码随想录 | 八股-网络模型"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>代码随想录 | 八股-网络模型 | Maxw的小站</title>
@@ -112,7 +112,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B%E5%92%8C-tcpip-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">OSI 模型和 TCP&#x2F;IP 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">OSI 模型</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B%E5%92%8C-tcpip-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">OSI 模型和 TCP&#x2F;IP 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#osi-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">OSI 模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcpip-%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">TCP&#x2F;IP 模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E8%BE%93%E5%85%A5-url-%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%B1%95%E7%A4%BA%E5%88%B0%E5%BA%95%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">从输入 URL
+到页面展示到底发生了什么？</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -125,7 +126,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -163,7 +164,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamabagu1/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/22/kamabagu1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -193,7 +194,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:18:11" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
+      <time title="创建时间：2025-05-23 05:28:25 / 修改时间：04:53:51" itemprop="dateCreated datePublished" datetime="2025-05-23T05:28:25+08:00">2025-05-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -214,29 +215,47 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="osi-模型和-tcpip-模型">OSI 模型和 TCP/IP 模型</h2>
-<h3 id="osi-模型">OSI 模型</h3>
-<p>开放式系统互联模型 七层 概念框架<br />
-- 物理层：光纤，电缆等传输信号的物理通道 -
-数据链路层：通过物理层网络连接两台计算机
-管理数据帧：封装在数据包中的电子信号 示例：以太网 -
-网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6 -
-传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP -
-会话层：负责会话中两个独立应用程序之间的网络协调，管理一对一应用程序连接的开始和结束以及同步冲突。网络文件系统（NFS）和服务器消息块（SMB）是会话层的常用协议。
--
-表示层：主要关注应用程序发送和使用的数据本身的语法。例如，超文本标记语言（HTML）、JavaScript
-对象标记（JSON）和逗号分隔值（CSV） -
-应用层：关注应用程序本身的特定类型及其标准化通信方法。例如，浏览器可以使用超文本传输安全协议（HTTPS）进行通信，而
+    <div class="post-body" itemprop="articleBody"><h3 id="osi-模型和-tcpip-模型">OSI 模型和 TCP/IP 模型</h3>
+<h4 id="osi-模型">OSI 模型</h4>
+<p>开放式系统互联模型 七层 概念框架</p>
+<ul>
+<li>物理层：光纤，电缆等传输信号的物理通道</li>
+<li>数据链路层：通过物理层网络连接两台计算机
+管理数据帧：封装在数据包中的电子信号 示例：以太网</li>
+<li>网络层：多个互联网络的路由，转发和寻址 示例：IPv4, IPv6</li>
+<li>传输层：传输控制，例如确保数据包以正确的顺序到达 示例：TCP，UDP</li>
+<li>会话层：负责会话中两个独立应用程序之间的网络协调，管理一对一应用程序连接的开始和结束以及同步冲突。网络文件系统（NFS）和服务器消息块（SMB）是会话层的常用协议。</li>
+<li>表示层：主要关注应用程序发送和使用的数据本身的语法。例如，超文本标记语言（HTML）、JavaScript
+对象标记（JSON）和逗号分隔值（CSV）</li>
+<li>应用层：关注应用程序本身的特定类型及其标准化通信方法。例如，浏览器可以使用超文本传输安全协议（HTTPS）进行通信，而
 HTTP 和电子邮件客户端可以使用 POP3（邮局协议版本 3）和
-SMTP（简单邮件传输协议）进行通信。 ### TCP/IP 模型<br />
-TCP/IP模型分为四个层级，每个层级负责特定的网络功能。 -
-网络接口层：该层对应OSI模型的数据链路层和物理层。它负责物理传输媒介的传输，例如以太网、Wi-Fi等，并提供错误检测和纠正的功能。此外，网络接口层还包含硬件地址（MAC地址）的管理。
--
-网络层：该层对应OSI模型的网络层。主要协议是IP，它负责数据包的路由和转发，选择最佳路径将数据从源主机传输到目标主机。IP协议使用IP地址来标识主机和网络，并进行逻辑地址寻址。<br />
--
-传输层：该层对应OSI模型的传输层。它负责端到端的数据传输，提供可靠的、无连接的数据传输服务。主要的传输层协议有TCP和UDP。TCP提供可靠的数据传输，确保数据的正确性和完整性；而UDP则是无连接的，适用于不要求可靠性的传输，如实时音频和视频流。
--
-应用层：该层与OSI模型的应用层和表示层以及会话层类似，提供直接与用户应用程序交互的接口。它为网络上的各种应用程序提供服务，如电子邮件（SMTP）、网页浏览（HTTP）、文件传输（FTP）等。</p>
+SMTP（简单邮件传输协议）进行通信。</li>
+</ul>
+<h4 id="tcpip-模型">TCP/IP 模型</h4>
+<p>TCP/IP模型分为四个层级</p>
+<ul>
+<li>网络接口层：该层对应OSI模型的数据链路层和物理层。它负责物理传输媒介的传输，例如以太网、Wi-Fi等，并提供错误检测和纠正的功能。此外，网络接口层还包含硬件地址（MAC地址）的管理。</li>
+<li>网络层：该层对应OSI模型的网络层。主要协议是IP，它负责数据包的路由和转发，选择最佳路径将数据从源主机传输到目标主机。IP协议使用IP地址来标识主机和网络，并进行逻辑地址寻址。<br />
+</li>
+<li>传输层：对应OSI模型的传输层。服务应用。主要的传输层协议有TCP和UDP。TCP提供可靠的数据传输，确保数据的正确性和完整性；而UDP则是无连接的，适用于不要求可靠性的传输，如实时音频和视频流。</li>
+<li>应用层：对应OSI模型的应用层和表示层以及会话层，面向用户，示例：电子邮件（SMTP）、网页浏览（HTTP）、文件传输（FTP）等。</li>
+</ul>
+<h3 id="从输入-url-到页面展示到底发生了什么">从输入 URL
+到页面展示到底发生了什么？</h3>
+<ol type="1">
+<li>输入网址，解析URL信息，准备发送HTTP请求</li>
+<li>检查浏览器缓存里是否有缓存该资源，如果有直接返回；如果没有进入下一步网络请求。</li>
+<li>DNS域名解析：网络请求前，进行DNS解析，以获取请求域名的IP地址。DNS解析时会按本地浏览器缓存-&gt;本地Host文件-&gt;路由器缓存-&gt;DNS服务器-&gt;根DNS服务器的顺序查询域名对应IP，直到找到为止。</li>
+<li>TCP三次握手建立连接：浏览器与服务器IP建立TCP连接。</li>
+<li>客户端发送HTTP请求：连接建立后，浏览器端会构建请求行、请求头等信息，并把和该域名相关的Cookie等数据附加到请求头中，向服务器构建请求信息。如果是HTTPS的话，还涉及到HTTPS的加解密流程。</li>
+<li>服务器处理请求并返回HTTP资源：服务器接收到请求信息，根据请求生成响应数据。</li>
+<li>TCP四次挥手断开连接：浏览器与服务器IP断开TCP连接。</li>
+<li>浏览器解析响应并渲染页面：
+<ol type="1">
+<li>浏览器解析响应头。若响应头状态码为301、302，会重定向到新地址；若响应数据类型是字节流类型，一般会将请求提交给下载管理器；若是HTML类型，会进入下一部渲染流程。</li>
+<li>浏览器解析HTML文件，创建DOM树，解析CSS进行样式计算，然后将CSS和DOM合并，构建渲染树；最后布局和绘制渲染树，完成页面展示。</li>
+</ol></li>
+</ol>
 
     </div>
 
@@ -250,13 +269,13 @@ TCP/IP模型分为四个层级，每个层级负责特定的网络功能。 -
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/05/16/kamacode4/" rel="prev" title="代码随想录 | 刷题-链表2">
-                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-链表2
+                <a href="/2025/05/21/kamacode7/" rel="prev" title="代码随想录 | 刷题-字符串">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-字符串
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/05/21/kamacode5/" rel="next" title="代码随想录 | 刷题-哈希表">
-                  代码随想录 | 刷题-哈希表 <i class="fa fa-angle-right"></i>
+                <a href="/2025/05/22/kamacode8/" rel="next" title="代码随想录 | 刷题-字符串2">
+                  代码随想录 | 刷题-字符串2 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -282,11 +301,11 @@ TCP/IP模型分为四个层级，每个层级负责特定的网络功能。 -
     </label>
     <select class="lang-select" data-canonical="" aria-label="选择语言">
       
-        <option value="zh-CN" data-href="/2025/05/21/kamabagu1/" selected="">
+        <option value="zh-CN" data-href="/2025/05/22/kamabagu1/" selected="">
           简体中文
         </option>
       
-        <option value="en" data-href="/en/2025/05/21/kamabagu1/" selected="">
+        <option value="en" data-href="/en/2025/05/22/kamabagu1/" selected="">
           English
         </option>
       
