@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,190 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/13/kamacode1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/13/kamacode1/" class="post-title-link" itemprop="url">代码随想录 | 刷题-数组</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-14 11:19:17" itemprop="dateCreated datePublished" datetime="2025-05-14T11:19:17+08:00">2025-05-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-21 22:19:17" itemprop="dateModified" datetime="2025-05-21T22:19:17+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="数组基础与算法实现">数组基础与算法实现</h1>
+<h2 id="数组基本特性">数组基本特性</h2>
+<ul>
+<li>数组下标从0开始</li>
+<li>数组内存空间的地址是连续的</li>
+<li>在C++中，二维数组在内存的空间地址是连续的</li>
+</ul>
+<h2 id="c常见数据类型长度">C++常见数据类型长度</h2>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 37%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>长度（字节）</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>char</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>long long</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>long double</td>
+<td>8或16</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>1</td>
+<td>实际只使用1位</td>
+</tr>
+<tr>
+<td>指针类型</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+</tbody>
+</table>
+<h2 id="算法实现">算法实现</h2>
+<h3 id="二分查找">704. 二分查找</h3>
+<h4 id="左闭右闭区间实现">左闭右闭区间实现</h4>
+<p>原本仅判断left ==
+right，后来发现在处理仅两个元素，且target小于最小元素的数组时，这样写会导致left
+= 0同时right= -1,陷入死循环，更改判断条件后就解决了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>()<span class="number">-1</span>, target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid - <span class="number">1</span>, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="左闭右开区间实现">左闭右开区间实现</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>(), target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="移除元素">27. 移除元素</h3>
+<p>当target小于所有数时，right不断左移，left不变等于0，刚好结果应该是0。当target大于所有数时，right不会动，left不断右移直到nums.length，刚好等于结果。所以未找到时应返回left</p>
+<p>我的方法从数组的两端向中间遍历，虽然也是双指针方法，但是需要不少额外判断。下一次要定义快慢指针去解题，因为实际上不用把所有查找的元素移动到数组最后，所以直接跳过这些元素复制即可：
+快指针：寻找新数组的元素 ，新数组就是不含有目标元素的数组
+慢指针：指向更新 新数组下标的位置 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeElement</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">empty</span>()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] != val &amp;&amp; left &lt; right) left++;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] == val &amp;&amp; left &lt; right) &#123;</span><br><span class="line">                nums[left] = nums[right];</span><br><span class="line">                nums[right] = val;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(nums[left] != val) <span class="keyword">return</span> left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> left == <span class="number">0</span> ? <span class="number">0</span> : left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="有序数组的平方">977. 有序数组的平方</h3>
+<p>这题我一开始总是想着在原数组中修改，于是想不出什么来。看了题解是新开一个数组，再左右指针遍历原数组，思路正确很快就做出来了：
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sortedSquares</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">res</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res_p = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(res_p &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">abs</span>(nums[left]) &lt; <span class="built_in">abs</span>(nums[right])) &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[right], <span class="number">2</span>);</span><br><span class="line">                right--;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[left], <span class="number">2</span>);</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            res_p--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="c常用数学函数">C++常用数学函数</h2>
+<ul>
+<li><code>pow(x, y)</code>：计算x的y次方</li>
+<li><code>sqrt(x)</code>：计算平方根</li>
+<li><code>abs(x)</code>：计算绝对值</li>
+<li><code>ceil(x)</code>：向上取整</li>
+<li><code>floor(x)</code>：向下取整</li>
+<li><code>round(x)</code>：四舍五入</li>
+<li><code>max(x, y)</code>/<code>min(x, y)</code>：返回较大/较小值</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1895,97 +2079,6 @@ id="sched_rr-策略允许我们更精确地控制进程的调度顺序和执行�
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="gcc编译">GCC编译</h3>
-<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
-<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
-<h3 id="debug-bash脚本">debug bash脚本</h3>
-<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
-可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
-仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
-使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
-<h3 id="gdb-debug">GDB debug</h3>
-<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
-永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
-在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2069,7 +2162,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm2/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -2087,7 +2180,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/algorithm2/" class="post-title-link" itemprop="url">刷题-初级算法：字符串</a>
+          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
         </h2>
 
         <div class="post-meta-container">
@@ -2105,16 +2198,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:46" itemprop="dateModified" datetime="2025-01-22T10:29:46+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
     </span>
 
   
@@ -2127,11 +2211,22 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这两天感觉做题的速度快起来了！可以一到一个半小时做完一道题（当然是比较简单的题目啦）。</p>
-<p>试着做了一点牛客网上的面试题库，发现数据结构这块果然不能一点书不看（之前我是不是飘了？），准备看数据结构书了。</p>
-<p>最近发现了力扣的笔记功能，虽然题目集的笔记和题目的笔记是分开的，有点坑，不过还是打算不写博客的时候先记在题目集笔记里，方便之后翻阅整理。</p>
-<h2 id="section">3/2-3/11</h2>
-<p>（累了，摸会🐟）</p>
+          <h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -2151,7 +2246,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
