@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="今天找到了一个将chatGPT内容markdown化的插件（chrome插件商店搜索chatGPT to Markdown），这样整理每天的错题就方便直观多了 堆对象 vs 栈对象 初始化 在 C++ 中，struct 和 class 在语法上几乎没有区别，主要区别只有两点：  默认访问权限：struct 默认是 public，class 默认是 private 默认继承权限：s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码随想录 | 刷题-二叉树2">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/05/26/kamacode12/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="今天找到了一个将chatGPT内容markdown化的插件（chrome插件商店搜索chatGPT to Markdown），这样整理每天的错题就方便直观多了 堆对象 vs 栈对象 初始化 在 C++ 中，struct 和 class 在语法上几乎没有区别，主要区别只有两点：  默认访问权限：struct 默认是 public，class 默认是 private 默认继承权限：s">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-27T02:04:25.786Z">
+<meta property="article:modified_time" content="2025-05-26T19:30:18.000Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/05/26/kamacode12/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/05/26/kamacode12/","path":"2025/05/26/kamacode12/","title":"代码随想录 | 刷题-二叉树2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>代码随想录 | 刷题-二叉树2 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%AF%B9%E8%B1%A1-vs-%E6%A0%88%E5%AF%B9%E8%B1%A1-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">堆对象 vs 栈对象 初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">102. 二叉树的层序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.</span> <span class="nav-text">226.翻转二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%E9%94%99%E8%AF%AF%E5%88%9B%E5%BB%BA%E4%BA%86%E6%97%A0%E7%94%A8%E7%9A%84-treenode"><span class="nav-number">3.1.</span> <span class="nav-text">❌ 问题一：错误创建了无用的
+TreeNode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.2.</span> <span class="nav-text">✅ 注意事项：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C%E5%88%A4%E6%96%AD%E9%80%BB%E8%BE%91%E6%B7%B7%E4%B9%B1%E9%80%92%E5%BD%92%E4%B8%8D%E5%AE%8C%E6%95%B4"><span class="nav-number">3.3.</span> <span class="nav-text">❌
+问题二：判断逻辑混乱，递归不完整</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">4.</span> <span class="nav-text">101. 对称二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">104.二叉树的最大深度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%B0%8F%E6%B7%B1%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">111.二叉树的最小深度</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/26/kamacode12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="这里是喜欢捣鼓软件，3D打印和电子游戏的Maxw，对本博客有任何问题欢迎github issue">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="代码随想录 | 刷题-二叉树2 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代码随想录 | 刷题-二叉树2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-27 10:04:25 / 修改时间：03:30:18" itemprop="dateCreated datePublished" datetime="2025-05-27T10:04:25+08:00">2025-05-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>今天找到了一个将chatGPT内容markdown化的插件（chrome插件商店搜索chatGPT
+to Markdown），这样整理每天的错题就方便直观多了</p>
+<h3 id="堆对象-vs-栈对象-初始化">堆对象 vs 栈对象 初始化</h3>
+<p>在 <strong>C++ 中，<code>struct</code> 和 <code>class</code>
+在语法上几乎没有区别</strong>，主要区别只有两点：</p>
+<ol type="1">
+<li><p>默认访问权限：<code>struct</code> 默认是
+<code>public</code>，<code>class</code> 默认是
+<code>private</code></p></li>
+<li><p>默认继承权限：<code>struct</code> 默认是 <code>public</code>
+继承，<code>class</code> 默认是 <code>private</code> 继承</p></li>
+</ol>
+<p>👉 所以：<strong><code>struct</code> 并不“必须”用 <code>new</code>
+来创建对象！</strong></p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>写法</th>
+<th>内存位置</th>
+<th>生命周期</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Class c;</code></td>
+<td>栈 (stack)</td>
+<td>自动管理</td>
+<td><code>class</code> 或 <code>struct</code> 都可以</td>
+</tr>
+<tr>
+<td><code>Class* c = new Class();</code></td>
+<td>堆 (heap)</td>
+<td>需要手动 <code>delete</code></td>
+<td><code>class</code> 或 <code>struct</code> 都可以</td>
+</tr>
+</tbody>
+</table>
+<p><strong>在需要动态分配的场景使用new（如链表节点）</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    Node* next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Node* head = <span class="keyword">new</span> <span class="built_in">Node</span>(); <span class="comment">// ✅ 堆上分配，适合动态数据结构</span></span><br></pre></td></tr></table></figure>
+<h3 id="二叉树的层序遍历">102. 二叉树的层序遍历</h3>
+<p>昨天的层序遍历练一练 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">levelOrder</span>(TreeNode* root) &#123;</span><br><span class="line">        queue&lt;TreeNode*&gt; lev;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> res;</span><br><span class="line">        lev.<span class="built_in">push</span>(root);</span><br><span class="line">        <span class="keyword">while</span>(!lev.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="type">int</span> len = lev.<span class="built_in">size</span>();</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; levVar;</span><br><span class="line">            <span class="keyword">while</span>(len &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                len--;</span><br><span class="line">                TreeNode* cur = lev.<span class="built_in">front</span>();</span><br><span class="line">                lev.<span class="built_in">pop</span>();</span><br><span class="line">                levVar.<span class="built_in">push_back</span>(cur-&gt;val);</span><br><span class="line">                <span class="keyword">if</span>(cur-&gt;left)lev.<span class="built_in">push</span>(cur-&gt;left);</span><br><span class="line">                <span class="keyword">if</span>(cur-&gt;right)lev.<span class="built_in">push</span>(cur-&gt;right);</span><br><span class="line">            &#125;</span><br><span class="line">            res.<span class="built_in">push_back</span>(levVar);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="翻转二叉树">226.翻转二叉树</h3>
+<h4 id="问题一错误创建了无用的-treenode">❌ 问题一：错误创建了无用的
+<code>TreeNode</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TreeNode* rightT = <span class="keyword">new</span> <span class="built_in">TreeNode</span>();</span><br><span class="line"><span class="keyword">if</span>(root-&gt;right) rightT = root-&gt;right;</span><br></pre></td></tr></table></figure>
+<p>在这里无论 <code>root-&gt;right</code> 是否为空，都会创建一个新的
+<code>TreeNode</code> 实例。但实际上你只需要记录
+<code>root-&gt;right</code> 的原始指针。<strong>没有 delete 掉那个多余的
+new TreeNode()</strong>，会造成内存泄漏。在递归中创建新的
+<code>TreeNode</code>，可能无限递归，造成 <strong>stack
+overflow</strong>。</p>
+<p>要删除通过 <code>new TreeNode()</code> 动态创建的对象，只需要调用
+<code>delete</code> 并传入该指针即可。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TreeNode* node = <span class="keyword">new</span> <span class="built_in">TreeNode</span>();</span><br><span class="line"><span class="comment">// 使用 node 做一些操作</span></span><br><span class="line"><span class="keyword">delete</span> node; <span class="comment">// 释放内存</span></span><br><span class="line">node = <span class="literal">nullptr</span>; <span class="comment">// 避免悬空指针（可选但推荐）</span></span><br></pre></td></tr></table></figure>
+<h4 id="注意事项">✅ 注意事项：</h4>
+<ol type="1">
+<li><p><strong>每一个 <code>new</code> 都要对应一个
+<code>delete</code></strong>，否则会导致内存泄漏。</p></li>
+<li><p>删除后最好将指针设为
+<code>nullptr</code>，防止以后误访问已释放的内存。</p></li>
+<li><p>如果你创建的是数组，用 <code>new[]</code>，则要用
+<code>delete[]</code>。</p></li>
+</ol>
+<p>例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* arr = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">delete</span>[] arr;</span><br></pre></td></tr></table></figure>
+<h4 id="问题二判断逻辑混乱递归不完整">❌
+问题二：判断逻辑混乱，递归不完整</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(root-&gt;left)&#123;</span><br><span class="line">    root-&gt;right = <span class="built_in">invertTree</span>(root-&gt;left);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(rightT != <span class="literal">nullptr</span>)&#123;</span><br><span class="line">    root-&gt;left = <span class="built_in">invertTree</span>(rightT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>root-&gt;left</code> 是 <code>nullptr</code>，就跳过了对
+<code>root-&gt;right</code> 的赋值</p>
+<p>正确的做法是把翻转和赋值分隔开来： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">invertTree</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> root;</span><br><span class="line">        TreeNode* rightT = <span class="built_in">invertTree</span>(root-&gt;right);</span><br><span class="line">        TreeNode* leftT = <span class="built_in">invertTree</span>(root-&gt;left);</span><br><span class="line">        root-&gt;left = rightT;</span><br><span class="line">        root-&gt;right = leftT;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="对称二叉树">101. 对称二叉树</h3>
+<p>别忘了判定值是否一致 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isSym</span><span class="params">(TreeNode* left, TreeNode* right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!left &amp;&amp; !right)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span>((!left &amp;&amp; right) || (!right &amp;&amp; left))<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(left-&gt;val != right-&gt;val)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">bool</span> isIn = <span class="built_in">isSym</span>(left-&gt;right, right-&gt;left);</span><br><span class="line">        <span class="type">bool</span> isOut = <span class="built_in">isSym</span>(left-&gt;left, right-&gt;right);</span><br><span class="line">        <span class="keyword">return</span> isIn &amp;&amp; isOut;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isSymmetric</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isSym</span>(root-&gt;left, root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="二叉树的最大深度">104.二叉树的最大深度</h3>
+<ul>
+<li>二叉树节点的深度：指从根节点到该节点的最长简单路径边的条数或者节点数（取决于深度从0开始还是从1开始）</li>
+<li>二叉树节点的高度：指从该节点到叶子节点的最长简单路径边的条数或者节点数（取决于高度从0开始还是从1开始）</li>
+</ul>
+<p>注意边界条件对代码的影响</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxD = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(root)&#123;</span><br><span class="line">            maxD++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> maxD;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> maxL = root-&gt;left ? <span class="built_in">maxDepth</span>(root-&gt;left) : <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> maxR = root-&gt;right ? <span class="built_in">maxDepth</span>(root-&gt;right) : <span class="number">0</span>;</span><br><span class="line">        maxD += maxL &gt; maxR ? maxL : maxR;</span><br><span class="line">        <span class="keyword">return</span> maxD;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="二叉树的最小深度">111.二叉树的最小深度</h3>
+<p>迭代法： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minDepth</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> minD = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> minD;</span><br><span class="line">        minD++;</span><br><span class="line">        <span class="keyword">if</span>(!root-&gt;left &amp;&amp; !root-&gt;right)<span class="keyword">return</span> minD;</span><br><span class="line">        <span class="keyword">if</span>(!root-&gt;left &amp;&amp; root-&gt;right)&#123;</span><br><span class="line">            <span class="keyword">return</span> minD + <span class="built_in">minDepth</span>(root-&gt;right);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(root-&gt;left &amp;&amp; !root-&gt;right)&#123;</span><br><span class="line">            <span class="keyword">return</span> minD + <span class="built_in">minDepth</span>(root-&gt;left);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="type">int</span> minL = <span class="built_in">minDepth</span>(root-&gt;left);</span><br><span class="line">            <span class="type">int</span> minR = <span class="built_in">minDepth</span>(root-&gt;right);</span><br><span class="line">            minD += minL &gt; minR ? minR : minL;</span><br><span class="line">            <span class="keyword">return</span> minD;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/26/kamabagu2/" rel="prev" title="代码随想录 | 八股-HTTP请求">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 八股-HTTP请求
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/05/26/kamacode12/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/05/26/kamacode12/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
