@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,224 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/04/kamacode20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/04/kamacode20/" class="post-title-link" itemprop="url">代码随想录 | 刷题-回溯算法2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-04 23:50:22" itemprop="dateCreated datePublished" datetime="2025-06-04T23:50:22+08:00">2025-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-05 07:35:01" itemprop="dateModified" datetime="2025-06-05T07:35:01+08:00">2025-06-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="组合总和">39. 组合总和</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">combSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt; path, <span class="type">int</span> left, vector&lt;<span class="type">int</span>&gt;&amp; candi, <span class="type">int</span> t)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(t == <span class="number">0</span>)&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(candi[<span class="number">0</span>] &gt; t)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = left;i&lt; candi.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(candi[i] &lt;= t)&#123;</span><br><span class="line">                path.<span class="built_in">push_back</span>(candi[i]);</span><br><span class="line">                <span class="built_in">combSum</span>(path, i, candi, t-candi[i]);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combinationSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; candidates, <span class="type">int</span> target) &#123; <span class="comment">// candidate不是递增的</span></span><br><span class="line">        <span class="built_in">sort</span>(candidates.<span class="built_in">begin</span>(), candidates.<span class="built_in">end</span>());</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="built_in">combSum</span>(path, <span class="number">0</span>, candidates, target);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="introsortintrosort">✅
+<strong>Introsort</strong>（IntroSort）</h4>
+<p>C++ 中的 <code>std::sort()</code>（定义在
+<code>&lt;algorithm&gt;</code> 中）默认使用的是一种由
+<strong>三种排序算法组合而成的混合排序算法</strong></p>
+<h4 id="introsort-的组成">🔧 Introsort 的组成：</h4>
+<ol type="1">
+<li><p><strong>快速排序（Quicksort）</strong>：在数据量大、分布均匀时使用，速度快，期望时间复杂度是
+O(n log n)。</p></li>
+<li><p><strong>堆排序（Heapsort）</strong>：当递归深度超过一定阈值（防止最坏情况
+O(n²)）时退化为堆排序，保证最坏时间复杂度也是 O(n log n)。</p></li>
+<li><p><strong>插入排序（Insertion Sort）</strong>：在小数据范围（如
+&lt;16）时使用，性能优于快速排序。</p></li>
+</ol>
+<h3 id="组合总和ii">40.组合总和II</h3>
+<p><code>i &gt; left &amp;&amp; candi[i] == candi[i-1]</code>和题解中创建candidate长度的<code>i &gt; 0 &amp;&amp; candidates[i] == candidates[i - 1] &amp;&amp; used[i - 1] == false</code>都可以达到剪去重复结果，代码AC的效果
+如果使用<code>i &gt; left &amp;&amp; candidates[i] == candidates[i - 1] &amp;&amp; used[i - 1] == false</code>可以提高代码效率</p>
+<p>注意题解中used数组只用来剪去同一层的重复数字，所以递归调用后<code>used[i]</code>要设置回<code>false</code>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; candi, <span class="type">int</span> left, vector&lt;<span class="type">int</span>&gt; path, <span class="type">int</span> t)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(t == <span class="number">0</span>)&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(t &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = left; i&lt; candi.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(candi[i] &gt; t)<span class="keyword">return</span>;</span><br><span class="line">            <span class="keyword">if</span>(i &gt; left &amp;&amp; candi[i] == candi[i<span class="number">-1</span>])<span class="keyword">continue</span>;</span><br><span class="line">            path.<span class="built_in">push_back</span>(candi[i]);</span><br><span class="line">            <span class="built_in">comb</span>(candi, i+<span class="number">1</span>, path, t-candi[i]);</span><br><span class="line">            path.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combinationSum2</span>(vector&lt;<span class="type">int</span>&gt;&amp; candidates, <span class="type">int</span> target) &#123;</span><br><span class="line">        <span class="built_in">sort</span>(candidates.<span class="built_in">begin</span>(), candidates.<span class="built_in">end</span>());</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="built_in">comb</span>(candidates, <span class="number">0</span>, path, target);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="分割回文串">131.分割回文串</h3>
+<p>如题解所说，难点在于认识到切割问题和组合问题类似——每个位置是否“切”——每种切法就是一条树枝，还有求是否是回文串部分的优化
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">bool</span>&gt;&gt; pal;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">isPal</span><span class="params">(string s)</span></span>&#123;</span><br><span class="line">        pal.<span class="built_in">resize</span>(s.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(s.<span class="built_in">size</span>(), <span class="literal">false</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = (s.<span class="built_in">size</span>()<span class="number">-1</span>); i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = i; j&lt;= (s.<span class="built_in">size</span>()<span class="number">-1</span>);j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(j == i)&#123;</span><br><span class="line">                    pal[i][j] = <span class="literal">true</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>((j - i) == <span class="number">1</span>)&#123;</span><br><span class="line">                    pal[i][j] = s[i] == s[j] ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    pal[i][j] = (s[i] == s[j] &amp;&amp; pal[i+<span class="number">1</span>][j<span class="number">-1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">partPal</span><span class="params">(vector&lt;string&gt; path, string s, <span class="type">int</span> div)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(div == s.<span class="built_in">size</span>())&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = div; i &lt; s.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(pal[div][i] == <span class="literal">true</span>)&#123;</span><br><span class="line">                path.<span class="built_in">push_back</span>(s.<span class="built_in">substr</span>(div, i-div+<span class="number">1</span>));</span><br><span class="line">                <span class="built_in">partPal</span>(path, s, i+<span class="number">1</span>);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">partition</span>(string s) &#123;</span><br><span class="line">        vector&lt;string&gt; path;</span><br><span class="line">        <span class="built_in">isPal</span>(s);</span><br><span class="line">        <span class="built_in">partPal</span>(path, s, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/03/kamacode19/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/03/kamacode19/" class="post-title-link" itemprop="url">代码随想录 | 刷题-回溯算法1</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-04 06:42:17 / 修改时间：10:17:32" itemprop="dateCreated datePublished" datetime="2025-06-04T06:42:17+08:00">2025-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="组合">77. 组合</h3>
+<p>虽然runtime离谱地高，但是俺居然自己寻思出了怎么回溯，可喜可贺：
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(vector&lt;<span class="type">int</span>&gt; curNums, <span class="type">int</span> l, <span class="type">int</span> r,<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(curNums.<span class="built_in">size</span>() == k)&#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(curNums);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// for(int i = l; i&lt;= r;i++)&#123;// 能想明白l和r的关系我已经很不容易了</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = l; i&lt;= r-(k-curNums.<span class="built_in">size</span>())+<span class="number">1</span>;i++)&#123; </span><br><span class="line">                <span class="comment">// 👆 看了题解发现我想不明白的地方（i最大取多少）应该每次循环重新算而不是代入递归，用于剪枝</span></span><br><span class="line">                curNums.<span class="built_in">push_back</span>(i);</span><br><span class="line">                <span class="built_in">comb</span>(curNums, i+<span class="number">1</span>, r, k);</span><br><span class="line">                curNums.<span class="built_in">pop_back</span>();<span class="comment">// 最重要的一句</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combine</span>(<span class="type">int</span> n, <span class="type">int</span> k) &#123;</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; cur;</span><br><span class="line">            <span class="built_in">comb</span>(cur, <span class="number">1</span>, n, k);</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> 这种写法的时间复杂度<strong>不是</strong>
+<code>O(n * 2^n)</code></p>
+<h4 id="实际代码做的事情">🚩实际代码做的事情：</h4>
+<p>这段代码实现的是 <strong>从 <code>1</code> 到 <code>n</code> 中选择
+<code>k</code> 个数的所有组合</strong>，即 <strong>组合数 C(n,
+k)</strong>。</p>
+<p>所以：</p>
+<h4 id="正确时间复杂度是">✅ 正确时间复杂度是：</h4>
+<p><span class="math display">\[O(C(n, k) \cdot k)\]</span></p>
+<p>解释如下：</p>
+<ul>
+<li><p>一共会生成 <span class="math inline">\(C(n, k)\)</span>
+个组合，每个组合长度是 <code>k</code></p></li>
+<li><p>每次 <code>curNums</code> 达到长度 <code>k</code> 就复制一次
+<code>curNums</code> 到结果 <code>res</code> 中</p></li>
+<li><p>每次复制 <code>k</code> 个元素，因此时间复杂度为 <span
+class="math inline">\(O(k)\)</span></p></li>
+<li><p>总时间复杂度为： <span class="math display">\[O(C(n, k) \cdot
+k)\]</span></p></li>
+</ul>
+<h4 id="那为什么会看到-on-2n-的说法">❓那为什么会看到
+<code>O(n * 2^n)</code> 的说法？</h4>
+<p>这个复杂度常出现在<strong>子集枚举</strong>问题（power
+set）中，比如“所有子集”或“子集和”等问题，使用类似回溯结构但<strong>允许选择/不选择每个元素</strong>，即二叉树结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt;= r; i++) &#123; </span><br><span class="line">   <span class="comment">// include or skip i —&gt; 2^n branches</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>选出来的每个子集的<strong>长度</strong>是<strong>从1到n</strong>的，而本题组合问题选出来的组合长度固定为<strong>K</strong></p>
+<h3 id="组合总和iii">216.组合总和III</h3>
+<p>和上题基本思想差不多，多了一些限制条件 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(vector&lt;<span class="type">int</span>&gt; nums, <span class="type">int</span> k, <span class="type">int</span> l, <span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(k == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(n == <span class="number">0</span>)&#123;</span><br><span class="line">                result.<span class="built_in">push_back</span>(nums);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> r = <span class="built_in">min</span>(<span class="number">9</span>, n);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = l; i&lt;=r;i++)&#123;</span><br><span class="line">            nums.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="built_in">comb</span>(nums, k<span class="number">-1</span>,i+<span class="number">1</span>, n-i);</span><br><span class="line">            nums.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combinationSum3</span>(<span class="type">int</span> k, <span class="type">int</span> n) &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; nums;</span><br><span class="line">        <span class="built_in">comb</span>(nums,k,<span class="number">1</span>,n);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="电话号码的字母组合">17.电话号码的字母组合</h3>
+<p>注意终止条件是索引数加一 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">const</span> string digToStr[<span class="number">10</span>] = &#123;</span><br><span class="line">        <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">        <span class="string">&quot;def&quot;</span>,</span><br><span class="line">        <span class="string">&quot;ghi&quot;</span>,</span><br><span class="line">        <span class="string">&quot;jkl&quot;</span>,</span><br><span class="line">        <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pqrs&quot;</span>,</span><br><span class="line">        <span class="string">&quot;tuv&quot;</span>,</span><br><span class="line">        <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    vector&lt;string&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(string str, string digits, <span class="type">int</span> ind)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(ind == digits.<span class="built_in">size</span>())&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(str);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> d = digits[ind] - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">        ind++;</span><br><span class="line">        string s = digToStr[d];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c : s)&#123;</span><br><span class="line">            str.<span class="built_in">push_back</span>(c);</span><br><span class="line">            <span class="built_in">comb</span>(str, digits, ind);</span><br><span class="line">            str.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;string&gt; <span class="title">letterCombinations</span><span class="params">(string digits)</span> </span>&#123;</span><br><span class="line">        string str;</span><br><span class="line">        <span class="keyword">if</span>(digits.<span class="built_in">empty</span>())<span class="keyword">return</span> result;</span><br><span class="line">        <span class="built_in">comb</span>(str, digits, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1206,306 +1424,6 @@ overflow</strong>。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxD = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(root)&#123;</span><br><span class="line">            maxD++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> maxD;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> maxL = root-&gt;left ? <span class="built_in">maxDepth</span>(root-&gt;left) : <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> maxR = root-&gt;right ? <span class="built_in">maxDepth</span>(root-&gt;right) : <span class="number">0</span>;</span><br><span class="line">        maxD += maxL &gt; maxR ? maxL : maxR;</span><br><span class="line">        <span class="keyword">return</span> maxD;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="二叉树的最小深度">111.二叉树的最小深度</h3>
 <p>迭代法： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minDepth</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> minD = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> minD;</span><br><span class="line">        minD++;</span><br><span class="line">        <span class="keyword">if</span>(!root-&gt;left &amp;&amp; !root-&gt;right)<span class="keyword">return</span> minD;</span><br><span class="line">        <span class="keyword">if</span>(!root-&gt;left &amp;&amp; root-&gt;right)&#123;</span><br><span class="line">            <span class="keyword">return</span> minD + <span class="built_in">minDepth</span>(root-&gt;right);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(root-&gt;left &amp;&amp; !root-&gt;right)&#123;</span><br><span class="line">            <span class="keyword">return</span> minD + <span class="built_in">minDepth</span>(root-&gt;left);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="type">int</span> minL = <span class="built_in">minDepth</span>(root-&gt;left);</span><br><span class="line">            <span class="type">int</span> minR = <span class="built_in">minDepth</span>(root-&gt;right);</span><br><span class="line">            minD += minL &gt; minR ? minR : minL;</span><br><span class="line">            <span class="keyword">return</span> minD;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/26/kamabagu2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/05/26/kamabagu2/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP请求</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-05-27 10:04:25 / 修改时间：10:06:30" itemprop="dateCreated datePublished" datetime="2025-05-27T10:04:25+08:00">2025-05-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3
-id="http请求报文和响应报文是怎样的有哪些常见的字段">HTTP请求报文和响应报文是怎样的，有哪些常见的字段？</h3>
-<p>HTTP报文分为请求报文和响应报文。</p>
-<h4 id="请求报文"><strong>请求报文</strong></h4>
-<p>请求报文主要由请求行、请求头、空行、请求体构成。
-请求行包括如下字段：</p>
-<ul>
-<li>方法（Method）：指定要执行的操作，如 GET、POST、PUT、DELETE
-等。</li>
-<li>资源路径（Resource Path）：请求的资源的URI（统一资源标识符）。</li>
-<li>HTTP版本（HTTP Version）：使用的HTTP协议版本，如 HTTP/1.1 或
-HTTP/2.0。</li>
-</ul>
-<p><strong>请求头</strong>的字段较多，常使用的包含以下几个：</p>
-<ul>
-<li>Host：请求的服务器的域名。</li>
-<li>Accept：客户端能够处理的媒体类型。</li>
-<li>Accept-Encoding：客户端能够解码的内容编码。</li>
-<li>Authorization：用于认证的凭证信息，比如token数据。</li>
-<li>Content-Length：请求体的长度。</li>
-<li>Content-Type：请求体的媒体类型。（如
-<code>application/json</code>、<code>text/html</code> 等）</li>
-<li>Cookie：存储在客户端的cookie数据。</li>
-<li>If-None-Match：与 <code>ETag</code> 配合使用，用于缓存控制。</li>
-<li>Connection：管理连接的选项，如 keep-alive。</li>
-</ul>
-<p>方便记忆：</p>
-<h5 id="基本身份环境信息我是谁能接受什么">1.
-<strong>基本身份/环境信息</strong>（我是谁、能接受什么）</h5>
-<ul>
-<li><code>Host</code>：我要访问哪个服务器（主机名）</li>
-<li><code>User-Agent</code>：我是哪个浏览器（可选提）</li>
-<li><code>Accept</code> /
-<code>Accept-Encoding</code>：我能接受的内容类型/压缩方式</li>
-</ul>
-<h5 id="身份认证状态维持">2. <strong>身份认证/状态维持</strong></h5>
-<ul>
-<li><code>Authorization</code>：我的身份凭证（如 token）</li>
-<li><code>Cookie</code>：我本地保存的 cookie，带回来给你看</li>
-</ul>
-<h5 id="请求体相关仅-postput-用">3. <strong>请求体相关（仅 POST/PUT
-用）</strong></h5>
-<ul>
-<li><code>Content-Type</code>：我发给你是什么格式（如 JSON）</li>
-<li><code>Content-Length</code>：我发给你的内容多大</li>
-</ul>
-<h5 id="缓存控制和上次请求有关">4.
-<strong>缓存控制（和上次请求有关）</strong></h5>
-<ul>
-<li><code>If-None-Match</code>：上次你的资源 ETag 是
-XX，看看现在变没</li>
-<li><code>If-Modified-Since</code>：上次的修改时间是
-XX，资源有变吗？</li>
-<li><code>Cache-Control</code>：我是否希望使用缓存？</li>
-</ul>
-<p><strong>空行</strong>是请求头部和请求主体之间的空行，用于分隔请求头部和请求主体。</p>
-<p><strong>请求体</strong>通常用于 POST 和 PUT
-请求，包含发送给服务器的数据。</p>
-<h4 id="响应报文">响应报文</h4>
-<p>HTTP响应报文是服务器向客户端返回的数据格式，用于传达服务器对客户端请求的处理结果以及相关的数据。一个标准的HTTP响应报文通常包含状态行、响应头、空行、响应体。</p>
-<p>状态行包含HTTP版本、状态码和状态消息。例如：HTTP/1.1 200 OK</p>
-<p>响应头部也是以键值对的形式提供的额外信息，类似于请求头部，用于告知客户端有关响应的详细信息。一些常见的响应头部字段包括：</p>
-<ul>
-<li>Content-Type：指定响应主体的媒体类型。</li>
-<li>Content-Length：指定响应主体的长度（字节数）。</li>
-<li>Server：指定服务器的信息。</li>
-<li>Expires: 响应的过期时间，之后内容被认为是过时的。</li>
-<li>ETag: 响应体的实体标签，用于缓存和条件请求。</li>
-<li>Last-Modified： 资源最后被修改的日期和时间。</li>
-<li>Location：在重定向时指定新的资源位置。</li>
-<li>Set-Cookie：在响应中设置Cookie。</li>
-<li>Access-Control-Allow-Origin:
-跨源资源共享（CORS）策略，指示哪些域可以访问资源。</li>
-</ul>
-<p>方便记忆：</p>
-<h4 id="内容信息">1. <strong>内容信息</strong></h4>
-<ul>
-<li><code>Content-Type</code>：我返回的是什么格式（如 HTML/JSON）</li>
-<li><code>Content-Length</code>：内容有多大</li>
-</ul>
-<h4 id="服务器身份">2. <strong>服务器身份</strong></h4>
-<ul>
-<li><code>Server</code>：我是哪个服务器（如 nginx）</li>
-</ul>
-<h4 id="状态维持">3. <strong>状态维持</strong></h4>
-<ul>
-<li><code>Set-Cookie</code>：设置 cookie，下次你带回来</li>
-</ul>
-<h4 id="缓存相关">4. <strong>缓存相关</strong></h4>
-<ul>
-<li><code>ETag</code>：这是资源的版本号</li>
-<li><code>Last-Modified</code>：资源上次修改时间</li>
-<li><code>Cache-Control</code> /
-<code>Expires</code>：多久前有效/过期时间</li>
-</ul>
-<h4 id="跨域和重定向">5. <strong>跨域和重定向</strong></h4>
-<ul>
-<li><code>Access-Control-Allow-Origin</code>：谁能访问我（CORS）</li>
-<li><code>Location</code>：去这个新地址吧（重定向）</li>
-</ul>
-<p>空行（Empty Line）在响应头和响应体之间，表示响应头的结束。</p>
-<p>响应体是服务端实际传输的数据，可以是文本、HTML页面、图片、视频等，也可能为空。</p>
-<h3 id="http有哪些请求方式">HTTP有哪些请求方式？</h3>
-<ul>
-<li>GET：请求指定的资源。</li>
-<li>POST：向指定资源提交数据进行处理请求（例如表单提交）。</li>
-<li>PUT：更新指定资源。</li>
-<li>DELETE：删除指定资源。</li>
-<li>HEAD：获取GET请求相同响应的报文首部，不返回报文主体。</li>
-<li>OPTIONS：查询服务器支持的请求方法。</li>
-<li>PATCH：对资源进行部分更新</li>
-</ul>
-<h3 id="get请求和post请求的区别">GET请求和POST请求的区别</h3>
-<ul>
-<li>用途：GET请求通常用于获取数据，POST请求用于提交数据。</li>
-<li>数据传输：GET请求将参数附加在URL之后，POST请求将数据放在请求体中。</li>
-<li>安全性：GET请求由于参数暴露在URL中，安全性较低；POST请求参数不会暴露在URL中，相对更安全。</li>
-<li>数据大小：GET请求受到URL长度限制，数据量有限；POST请求理论上没有大小限制。</li>
-<li>幂等性：GET请求是幂等的，即多次执行相同的GET请求，资源的状态不会改变；POST请求不是幂等的，因为每次提交都可能改变资源状态。</li>
-<li>缓存：GET请求可以被缓存，POST请求默认不会被缓存。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/25/kamacode11/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/05/25/kamacode11/" class="post-title-link" itemprop="url">代码随想录 | 刷题-二叉树</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-05-25 23:48:50" itemprop="dateCreated datePublished" datetime="2025-05-25T23:48:50+08:00">2025-05-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-26 06:01:47" itemprop="dateModified" datetime="2025-05-26T06:01:47+08:00">2025-05-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="二叉树的前序遍历">144.二叉树的前序遍历</h3>
-<h4 id="递归法">递归法</h4>
-<p>注意边界条件，root为空指针时不再向下迭代叶子节点 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">preTree</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root)&#123;</span><br><span class="line">            vec.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">            <span class="built_in">preTree</span>(root-&gt;left, vec);</span><br><span class="line">            <span class="built_in">preTree</span>(root-&gt;right, vec);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="built_in">preTree</span>(root, result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="迭代法">迭代法</h4>
-<p>注意栈先入先出的特性对入栈顺序的影响 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        stack&lt;TreeNode*&gt; st;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> result;</span><br><span class="line">        st.<span class="built_in">push</span>(root);</span><br><span class="line">        <span class="keyword">while</span>(!st.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            TreeNode* rt = st.<span class="built_in">top</span>();</span><br><span class="line">            st.<span class="built_in">pop</span>();</span><br><span class="line">            result.<span class="built_in">push_back</span>(rt-&gt;val);</span><br><span class="line">            <span class="keyword">if</span>(rt-&gt;right)st.<span class="built_in">push</span>(rt-&gt;right);</span><br><span class="line">            <span class="keyword">if</span>(rt-&gt;left)st.<span class="built_in">push</span>(rt-&gt;left);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="二叉树的后序遍历">145.二叉树的后序遍历</h3>
-<h4 id="递归法-1">递归法</h4>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">postTree</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">postTree</span>(root-&gt;left, vec);</span><br><span class="line">        <span class="built_in">postTree</span>(root-&gt;right, vec);</span><br><span class="line">        vec.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="built_in">postTree</span>(root, result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h4 id="迭代法-1">迭代法</h4>
-<p>注意栈先入先出的特性对入栈顺序的影响 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> result;</span><br><span class="line">        stack&lt;TreeNode*&gt; st;</span><br><span class="line">        st.<span class="built_in">push</span>(root);</span><br><span class="line">        <span class="keyword">while</span>(!st.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            TreeNode* cur = st.<span class="built_in">top</span>();</span><br><span class="line">            st.<span class="built_in">pop</span>();</span><br><span class="line">            result.<span class="built_in">push_back</span>(cur-&gt;val);</span><br><span class="line">            <span class="keyword">if</span>(cur-&gt;left)st.<span class="built_in">push</span>(cur-&gt;left);</span><br><span class="line">            <span class="keyword">if</span>(cur-&gt;right)st.<span class="built_in">push</span>(cur-&gt;right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">reverse</span>(result.<span class="built_in">begin</span>(),result.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="二叉树的中序遍历">94.二叉树的中序遍历</h3>
-<h4 id="递归法-2">递归法</h4>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">inTree</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!root)<span class="keyword">return</span>;</span><br><span class="line">            <span class="built_in">inTree</span>(root-&gt;left, vec);</span><br><span class="line">            vec.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">            <span class="built_in">inTree</span>(root-&gt;right, vec);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">inorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="built_in">inTree</span>(root, result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h4 id="迭代法-2">迭代法</h4>
-<p>写答案的时候一直在想，因为想处理左子树方便，我想stack里面初始没有node，这样该如何定义while的初始条件？看了题解发现可以<code>while (cur != nullptr || !NodeStack.empty())</code>（但是还是写了麻烦的写法）<br />
-一直没想明白递归到弹出第一个左叶子之后如何避免在弹出中间节点时再把左叶子压栈，看了题解发现<code>cur = cur-&gt;right;</code>此时cur为空指针，直接跳过下一个while即可
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">inorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        stack&lt;TreeNode*&gt; NodeStack;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> result;</span><br><span class="line">        NodeStack.<span class="built_in">push</span>(root);</span><br><span class="line">        TreeNode* cur = root;</span><br><span class="line">        <span class="keyword">while</span>(!NodeStack.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="keyword">while</span>(cur &amp;&amp; cur-&gt;left != <span class="literal">nullptr</span>)&#123;</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">                NodeStack.<span class="built_in">push</span>(cur);</span><br><span class="line">            &#125;</span><br><span class="line">            cur = NodeStack.<span class="built_in">top</span>();</span><br><span class="line">            result.<span class="built_in">push_back</span>(cur-&gt;val);</span><br><span class="line">            NodeStack.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="keyword">if</span>(cur-&gt;right)&#123;</span><br><span class="line">                NodeStack.<span class="built_in">push</span>(cur-&gt;right);</span><br><span class="line">            &#125;</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

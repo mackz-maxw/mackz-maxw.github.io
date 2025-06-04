@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="77. 组合 虽然runtime离谱地高，但是俺居然自己寻思出了怎么回溯，可喜可贺： 1234567891011121314151617181920212223class Solution &amp;#123;    public:        vector&lt;vector&lt;int&gt;&gt; res;        void comb(vector&lt;int&gt; curNum">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码随想录 | 刷题-回溯算法1">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/03/kamacode19/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="77. 组合 虽然runtime离谱地高，但是俺居然自己寻思出了怎么回溯，可喜可贺： 1234567891011121314151617181920212223class Solution &amp;#123;    public:        vector&lt;vector&lt;int&gt;&gt; res;        void comb(vector&lt;int&gt; curNum">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-03T22:42:17.876Z">
+<meta property="article:modified_time" content="2025-06-04T02:17:32.302Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/03/kamacode19/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/03/kamacode19/","path":"2025/06/03/kamacode19/","title":"代码随想录 | 刷题-回溯算法1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>代码随想录 | 刷题-回溯算法1 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88"><span class="nav-number">1.</span> <span class="nav-text">77. 组合</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BB%A3%E7%A0%81%E5%81%9A%E7%9A%84%E4%BA%8B%E6%83%85"><span class="nav-number">1.1.</span> <span class="nav-text">🚩实际代码做的事情：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%98%AF"><span class="nav-number">1.2.</span> <span class="nav-text">✅ 正确时间复杂度是：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%82%A3%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E7%9C%8B%E5%88%B0-on-2n-%E7%9A%84%E8%AF%B4%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">❓那为什么会看到
+O(n * 2^n) 的说法？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8Ciii"><span class="nav-number">2.</span> <span class="nav-text">216.组合总和III</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88"><span class="nav-number">3.</span> <span class="nav-text">17.电话号码的字母组合</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/03/kamacode19/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="代码随想录 | 刷题-回溯算法1 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代码随想录 | 刷题-回溯算法1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-04 06:42:17 / 修改时间：10:17:32" itemprop="dateCreated datePublished" datetime="2025-06-04T06:42:17+08:00">2025-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="组合">77. 组合</h3>
+<p>虽然runtime离谱地高，但是俺居然自己寻思出了怎么回溯，可喜可贺：
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(vector&lt;<span class="type">int</span>&gt; curNums, <span class="type">int</span> l, <span class="type">int</span> r,<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(curNums.<span class="built_in">size</span>() == k)&#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(curNums);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// for(int i = l; i&lt;= r;i++)&#123;// 能想明白l和r的关系我已经很不容易了</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = l; i&lt;= r-(k-curNums.<span class="built_in">size</span>())+<span class="number">1</span>;i++)&#123; </span><br><span class="line">                <span class="comment">// 👆 看了题解发现我想不明白的地方（i最大取多少）应该每次循环重新算而不是代入递归，用于剪枝</span></span><br><span class="line">                curNums.<span class="built_in">push_back</span>(i);</span><br><span class="line">                <span class="built_in">comb</span>(curNums, i+<span class="number">1</span>, r, k);</span><br><span class="line">                curNums.<span class="built_in">pop_back</span>();<span class="comment">// 最重要的一句</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combine</span>(<span class="type">int</span> n, <span class="type">int</span> k) &#123;</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; cur;</span><br><span class="line">            <span class="built_in">comb</span>(cur, <span class="number">1</span>, n, k);</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> 这种写法的时间复杂度<strong>不是</strong>
+<code>O(n * 2^n)</code></p>
+<h4 id="实际代码做的事情">🚩实际代码做的事情：</h4>
+<p>这段代码实现的是 <strong>从 <code>1</code> 到 <code>n</code> 中选择
+<code>k</code> 个数的所有组合</strong>，即 <strong>组合数 C(n,
+k)</strong>。</p>
+<p>所以：</p>
+<h4 id="正确时间复杂度是">✅ 正确时间复杂度是：</h4>
+<p><span class="math display">\[O(C(n, k) \cdot k)\]</span></p>
+<p>解释如下：</p>
+<ul>
+<li><p>一共会生成 <span class="math inline">\(C(n, k)\)</span>
+个组合，每个组合长度是 <code>k</code></p></li>
+<li><p>每次 <code>curNums</code> 达到长度 <code>k</code> 就复制一次
+<code>curNums</code> 到结果 <code>res</code> 中</p></li>
+<li><p>每次复制 <code>k</code> 个元素，因此时间复杂度为 <span
+class="math inline">\(O(k)\)</span></p></li>
+<li><p>总时间复杂度为： <span class="math display">\[O(C(n, k) \cdot
+k)\]</span></p></li>
+</ul>
+<h4 id="那为什么会看到-on-2n-的说法">❓那为什么会看到
+<code>O(n * 2^n)</code> 的说法？</h4>
+<p>这个复杂度常出现在<strong>子集枚举</strong>问题（power
+set）中，比如“所有子集”或“子集和”等问题，使用类似回溯结构但<strong>允许选择/不选择每个元素</strong>，即二叉树结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt;= r; i++) &#123; </span><br><span class="line">   <span class="comment">// include or skip i —&gt; 2^n branches</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>选出来的每个子集的<strong>长度</strong>是<strong>从1到n</strong>的，而本题组合问题选出来的组合长度固定为<strong>K</strong></p>
+<h3 id="组合总和iii">216.组合总和III</h3>
+<p>和上题基本思想差不多，多了一些限制条件 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(vector&lt;<span class="type">int</span>&gt; nums, <span class="type">int</span> k, <span class="type">int</span> l, <span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(k == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(n == <span class="number">0</span>)&#123;</span><br><span class="line">                result.<span class="built_in">push_back</span>(nums);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> r = <span class="built_in">min</span>(<span class="number">9</span>, n);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = l; i&lt;=r;i++)&#123;</span><br><span class="line">            nums.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="built_in">comb</span>(nums, k<span class="number">-1</span>,i+<span class="number">1</span>, n-i);</span><br><span class="line">            nums.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">combinationSum3</span>(<span class="type">int</span> k, <span class="type">int</span> n) &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; nums;</span><br><span class="line">        <span class="built_in">comb</span>(nums,k,<span class="number">1</span>,n);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="电话号码的字母组合">17.电话号码的字母组合</h3>
+<p>注意终止条件是索引数加一 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">const</span> string digToStr[<span class="number">10</span>] = &#123;</span><br><span class="line">        <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">        <span class="string">&quot;def&quot;</span>,</span><br><span class="line">        <span class="string">&quot;ghi&quot;</span>,</span><br><span class="line">        <span class="string">&quot;jkl&quot;</span>,</span><br><span class="line">        <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pqrs&quot;</span>,</span><br><span class="line">        <span class="string">&quot;tuv&quot;</span>,</span><br><span class="line">        <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    vector&lt;string&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">comb</span><span class="params">(string str, string digits, <span class="type">int</span> ind)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(ind == digits.<span class="built_in">size</span>())&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(str);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> d = digits[ind] - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">        ind++;</span><br><span class="line">        string s = digToStr[d];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c : s)&#123;</span><br><span class="line">            str.<span class="built_in">push_back</span>(c);</span><br><span class="line">            <span class="built_in">comb</span>(str, digits, ind);</span><br><span class="line">            str.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;string&gt; <span class="title">letterCombinations</span><span class="params">(string digits)</span> </span>&#123;</span><br><span class="line">        string str;</span><br><span class="line">        <span class="keyword">if</span>(digits.<span class="built_in">empty</span>())<span class="keyword">return</span> result;</span><br><span class="line">        <span class="built_in">comb</span>(str, digits, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/01/kamacode18/" rel="prev" title="代码随想录 | 刷题-二叉树8">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-二叉树8
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/04/kamacode20/" rel="next" title="代码随想录 | 刷题-回溯算法2">
+                  代码随想录 | 刷题-回溯算法2 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/06/03/kamacode19/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/06/03/kamacode19/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

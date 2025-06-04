@@ -1,3 +1,5 @@
+https://mackz-maxw.github.io/2025/06/04/kamacode20/
+https://mackz-maxw.github.io/2025/06/03/kamacode19/
 https://mackz-maxw.github.io/2025/06/01/kamacode18/
 https://mackz-maxw.github.io/2025/06/01/kamacode17/
 https://mackz-maxw.github.io/2025/06/01/kamabagu3/
@@ -44,6 +46,6 @@ https://mackz-maxw.github.io/links/index.html
 https://mackz-maxw.github.io/comment/index.html
 https://mackz-maxw.github.io/
 https://mackz-maxw.github.io/categories/leetcode/
-https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/linux-tricks/
+https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/comp-basic/
