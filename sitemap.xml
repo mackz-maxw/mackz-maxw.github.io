@@ -2,18 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/04/kamacode20/</loc>
+    <loc>https://mackz-maxw.github.io/2025/06/03/kamacode19/</loc>
     
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/03/kamacode19/</loc>
+    <loc>https://mackz-maxw.github.io/2025/06/06/kamacode22/</loc>
     
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/06/05/kamacode21/</loc>
+    
+    <lastmod>2025-06-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/06/04/kamacode20/</loc>
+    
+    <lastmod>2025-06-05</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -418,7 +436,7 @@
 
   <url>
     <loc>https://mackz-maxw.github.io/</loc>
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -428,28 +446,28 @@
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/leetcode/</loc>
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/linux-tricks/</loc>
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/realtime-sched/</loc>
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/comp-basic/</loc>
-    <lastmod>2025-06-04</lastmod>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

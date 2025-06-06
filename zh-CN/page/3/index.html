@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,298 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamacode5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/21/kamacode5/" class="post-title-link" itemprop="url">代码随想录 | 刷题-哈希表</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:19:56" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="数据结构">数据结构</h3>
+<p>在C++中，set 和 map
+分别提供以下三种数据结构，其底层实现以及优劣如下表所示：</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>集合</th>
+<th>底层实现</th>
+<th>是否有序</th>
+<th>数值是否可以重复</th>
+<th>能否更改数值</th>
+<th>查询效率</th>
+<th>增删效率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std::set</td>
+<td>红黑树</td>
+<td>有序</td>
+<td>否</td>
+<td>否</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>std::multiset</td>
+<td>红黑树</td>
+<td>有序</td>
+<td>是</td>
+<td>否</td>
+<td>O(logn)</td>
+<td>O(logn)</td>
+</tr>
+<tr>
+<td>std::unordered_set</td>
+<td>哈希表</td>
+<td>无序</td>
+<td>否</td>
+<td>否</td>
+<td>O(1)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<p>std::unordered_set底层实现为哈希表，std::set 和std::multiset
+的底层实现是红黑树，红黑树是一种平衡二叉搜索树，所以key值是有序的，但key不可以修改，改动key值会导致整棵树的错乱，所以只能删除和增加。</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>映射</th>
+<th>底层实现</th>
+<th>是否有序</th>
+<th>数值是否可以重复</th>
+<th>能否更改数值</th>
+<th>查询效率</th>
+<th>增删效率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std::map</td>
+<td>红黑树</td>
+<td>key有序</td>
+<td>key不可重复</td>
+<td>key不可修改</td>
+<td>O(logn)</td>
+<td>O(logn)</td>
+</tr>
+<tr>
+<td>std::multimap</td>
+<td>红黑树</td>
+<td>key有序</td>
+<td>key可重复</td>
+<td>key不可修改</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>std::unordered_map</td>
+<td>哈希表</td>
+<td>key无序</td>
+<td>key不可重复</td>
+<td>key不可修改</td>
+<td>O(1)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<p>std::unordered_map 底层实现为哈希表，std::map 和std::multimap
+的底层实现是红黑树。同理，std::map 和std::multimap 的key也是有序的</p>
+<h3 id="有效的字母异位词">242.有效的字母异位词</h3>
+<p>基本上都是语法问题了，比如<code>m[c]</code>自动初始化（int则为0），pair的first和second都是成员变量
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isAnagram</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">char</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: s)&#123;</span><br><span class="line">            m[c]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: t)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!m[c])<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            m[c]--;</span><br><span class="line">            <span class="keyword">if</span>(m[c]&lt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(pair&lt;<span class="type">char</span>, <span class="type">int</span>&gt; p: m)&#123;</span><br><span class="line">            <span class="keyword">if</span>(p.second&gt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 349. 两个数组的交集</p>
+<p>绞尽脑汁想半天如果结果有重复数字怎么办，结果是去重的。。。以后看题要更仔细呀！<br />
+题解里使用set的特性去重也挺巧思的 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">intersection</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">m</span><span class="params">(nums1.begin(), nums1.end())</span></span>;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; r;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n: nums2)&#123;</span><br><span class="line">            <span class="keyword">if</span>(m.<span class="built_in">find</span>(n)!=m.<span class="built_in">end</span>())&#123;</span><br><span class="line">                r.<span class="built_in">insert</span>(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(r.<span class="built_in">begin</span>(),r.<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 202. 快乐数</p>
+<p>思路差不多了，还是有代码实现的问题，例如<code>to_string(int)</code>的用法,如何char转int等
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isHappy</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; nums;</span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">while</span>(nums.<span class="built_in">find</span>(n) == nums.<span class="built_in">end</span>())&#123;</span><br><span class="line">            nums.<span class="built_in">insert</span>(n);</span><br><span class="line">            string s = <span class="built_in">to_string</span>(n);</span><br><span class="line">            <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">char</span> c:s)&#123;</span><br><span class="line">                <span class="type">int</span> num = c - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                sum += num*num;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(sum == <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            n = sum;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 1. 两数之和</p>
+<p>看到题目例子的时候我就觉得数组如果有两个一样的值，用哈希表就比较麻烦。先存数组所有值再判断会出现索引相等的问题。使用一个循环，先判断是否已有互补值，再存当前值进map，可以避免配对同一个元素
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; r;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="type">int</span> v = target - nums[i];</span><br><span class="line">            <span class="keyword">if</span>(m.<span class="built_in">find</span>(v) != m.<span class="built_in">end</span>())&#123;</span><br><span class="line">                r.<span class="built_in">push_back</span>(i);</span><br><span class="line">                r.<span class="built_in">push_back</span>(m[v]);</span><br><span class="line">                <span class="keyword">return</span> r;</span><br><span class="line">            &#125;</span><br><span class="line">            m[nums[i]] = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/16/kamacode4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/16/kamacode4/" class="post-title-link" itemprop="url">代码随想录 | 刷题-链表2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-16 23:56:32" itemprop="dateCreated datePublished" datetime="2025-05-16T23:56:32+08:00">2025-05-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-21 22:19:39" itemprop="dateModified" datetime="2025-05-21T22:19:39+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="两两交换链表中的节点">24. 两两交换链表中的节点</h3>
+<p>翻转链表加强版 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">swapPairs</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!head || !head-&gt;next)<span class="keyword">return</span> head;</span><br><span class="line">        ListNode* d = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>, head);</span><br><span class="line">        ListNode* n = <span class="built_in">swapPairs</span>(head-&gt;next-&gt;next);</span><br><span class="line">        ListNode* r_pair = head-&gt;next;</span><br><span class="line">        d-&gt;next = r_pair;</span><br><span class="line">        r_pair-&gt;next = head;</span><br><span class="line">        head-&gt;next = n;</span><br><span class="line">        <span class="keyword">return</span> d-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 19.删除链表的倒数第N个节点</p>
+<p>还是那个当整个链表删除时不能直接返回head的问题，多复制几个dummy
+head就好了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        ListNode* dummy = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>, head);</span><br><span class="line">        ListNode* d = dummy;</span><br><span class="line">        ListNode* d2 = dummy;</span><br><span class="line">        <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(d-&gt;next)&#123;</span><br><span class="line">            d = d-&gt;next;</span><br><span class="line">            len++;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;len: &quot;</span>&lt;&lt;len&lt;&lt;endl;</span><br><span class="line">        <span class="type">int</span> rm = len - n<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(rm&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            cout&lt;&lt;<span class="string">&quot;rm: &quot;</span>&lt;&lt;rm&lt;&lt;<span class="string">&quot;d2 val&quot;</span>&lt;&lt;d2-&gt;val&lt;&lt;endl;</span><br><span class="line">            d2 = d2-&gt;next;</span><br><span class="line">            rm--;</span><br><span class="line">        &#125;</span><br><span class="line">        d2-&gt;next = d2-&gt;next-&gt;next;</span><br><span class="line">        <span class="keyword">return</span> dummy-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 面试题 02.07. 链表相交 (leetcode 160)</p>
+<p>本来想着可能需要挨个遍历节点是否相等找到相交节点，看了题解发现可以从共同长度同时往后搜索
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">        ListNode* cur_a = headA;</span><br><span class="line">        ListNode* cur_b = headB;</span><br><span class="line">        <span class="type">int</span> len_a = <span class="number">0</span>, len_b = <span class="number">0</span>, e = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(cur_a)&#123;</span><br><span class="line">            len_a++;</span><br><span class="line">            cur_a = cur_a-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(cur_b)&#123;</span><br><span class="line">            len_b++;</span><br><span class="line">            cur_b = cur_b-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        cur_a = headA;</span><br><span class="line">        cur_b = headB;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;len_a:&quot;</span>&lt;&lt;len_a&lt;&lt;<span class="string">&quot;len_b&quot;</span>&lt;&lt;len_b&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">if</span>(len_a &gt; len_b)&#123;</span><br><span class="line">            e = len_a - len_b;</span><br><span class="line">            cout&lt;&lt;<span class="string">&quot;e:&quot;</span>&lt;&lt;e&lt;&lt;endl;</span><br><span class="line">            <span class="keyword">while</span>(e&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                e--;</span><br><span class="line">                cur_a = cur_a-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            e = len_b - len_a;</span><br><span class="line">            cout&lt;&lt;<span class="string">&quot;e:&quot;</span>&lt;&lt;e&lt;&lt;endl;</span><br><span class="line">            <span class="keyword">while</span>(e&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                e--;</span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;whiling&quot;</span>&lt;&lt;endl;</span><br><span class="line">                cur_b = cur_b-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;caval:&quot;</span>&lt;&lt;cur_a-&gt;val&lt;&lt;<span class="string">&quot;cbval:&quot;</span>&lt;&lt;cur_b-&gt;val&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">while</span>(cur_a || cur_b)&#123;</span><br><span class="line">            <span class="keyword">if</span>(cur_a == cur_b)<span class="keyword">return</span> cur_a;</span><br><span class="line">            cur_a = cur_a-&gt;next;</span><br><span class="line">            cur_b = cur_b-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 142.环形链表II</p>
+<p>模糊记得俩指针相遇的地方有一些特性，还是得确定地记下来：
+从头结点出发一个指针，从相遇节点
+也出发一个指针，这两个指针每次只走一个节点，
+那么当这两个指针相遇的时候就是 环形入口的节点。
+两个指针都从head开始如何避免判断一开始这个点？看题解发现可以循环内先走next再判断,错误的初始化容易错过相遇点
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        ListNode* slow = head;</span><br><span class="line">        ListNode* h = head;</span><br><span class="line">        <span class="keyword">if</span>(!head || !head-&gt;next)<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        ListNode* fast = head;</span><br><span class="line">        <span class="keyword">while</span>(slow &amp;&amp; fast &amp;&amp; fast-&gt;next)&#123;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            <span class="keyword">if</span>(slow == fast)&#123;</span><br><span class="line">                ListNode* b = slow;</span><br><span class="line">                <span class="keyword">while</span>(b != h)&#123;</span><br><span class="line">                    b = b-&gt;next;</span><br><span class="line">                    h = h-&gt;next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> h;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1788,277 +2080,6 @@ id="sched_rr-策略允许我们更精确地控制进程的调度顺序和执行�
 </ul></li>
 <li><strong>引入版本</strong>：Linux 2.6.23。</li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/27/linux_sched/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/27/linux_sched/" class="post-title-link" itemprop="url">Linux调度算法相关</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-28 02:35:39" itemprop="dateCreated datePublished" datetime="2024-12-28T02:35:39+08:00">2024-12-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:30" itemprop="dateModified" datetime="2025-01-22T10:30:30+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="实时调度策略及算法概述">实时调度策略及算法概述</h1>
-<p>Linux 提供了两种实时调度策略，<code>SCHED_FIFO</code> 和
-<code>SCHED_RR</code>。非实时的普通调度策略是
-<code>SCHED_NORMAL</code>。</p>
-<p>通过调度类框架，这些实时调度策略并非由完全公平调度器（CFS）管理，而是由一个特殊的实时调度器管理，该调度器定义在
-<code>kernel/sched_rt.c</code> 文件中。</p>
-<h2 id="sched_fifo-策略">1. SCHED_FIFO 策略</h2>
-<p><code>SCHED_FIFO</code>
-实现了一种简单的先进先出（FIFO）调度算法，<strong>没有时间片限制</strong>，可以无限期运行。
-- 一个可运行的 <code>SCHED_FIFO</code> 任务始终优先于任何
-<code>SCHED_NORMAL</code> 任务。 - 当 <code>SCHED_FIFO</code>
-任务变为可运行状态时，它会一直运行，直到阻塞或显式放弃处理器。 -
-<strong>抢占规则</strong>：只有更高优先级的 <code>SCHED_FIFO</code> 或
-<code>SCHED_RR</code> 任务可以抢占当前的 <code>SCHED_FIFO</code> 任务。
-- 如果多个 <code>SCHED_FIFO</code>
-任务具有相同优先级，它们以轮转的方式运行。</p>
-<h2 id="sched_rr-策略">2. SCHED_RR 策略</h2>
-<p><code>SCHED_RR</code> 与 <code>SCHED_FIFO</code>
-类似，但有时间片限制。 -
-每个任务运行到时间片耗尽时，会被切换到同一优先级队列中的下一个任务。 -
-只有更高优先级的任务可以抢占当前任务，即使 <code>SCHED_RR</code>
-任务的时间片耗尽，低优先级的进程也无法抢占它的执行。 -
-<strong>时间片的作用</strong>：仅用于同优先级进程之间的调度。</p>
-<h2 id="静态优先级">3. 静态优先级</h2>
-<ul>
-<li>两种实时调度策略都实现了<strong>静态优先级</strong>。</li>
-<li>内核不会为实时任务计算动态优先级。</li>
-<li>给定优先级的实时任务总是会抢占低优先级的任务。</li>
-</ul>
-<h2 id="软实时与硬实时">4. 软实时与硬实时</h2>
-<ul>
-<li>Linux
-的实时调度策略提供的是<strong>软实时</strong>行为：内核会尽力在时限内调度应用程序，但不保证一定达成。</li>
-<li>硬实时系统则保证严格的时限要求，而 Linux 并不原生支持。</li>
-</ul>
-<hr />
-<h1 id="实时优先级范围">实时优先级范围</h1>
-<ul>
-<li>实时优先级范围为 <code>0</code> 到
-<code>MAX_RT_PRIO - 1</code>，默认情况下 <code>MAX_RT_PRIO</code> 为
-<code>100</code>。99为最高实时优先级。</li>
-<li>普通任务（<code>SCHED_NORMAL</code>）与实时任务共享优先级空间：
-<ul>
-<li><code>-20</code> 到 <code>+19</code> 的 nice 值映射到优先级范围
-<code>100</code> 到
-<code>139</code>。这是用户空间的进程评级，-20为最高优先级。</li>
-</ul></li>
-</ul>
-<hr />
-<h1 id="与调度器相关的系统调用">与调度器相关的系统调用</h1>
-<p>以下是管理调度参数的系统调用列表：</p>
-<table>
-<thead>
-<tr>
-<th><strong>系统调用</strong></th>
-<th><strong>描述</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nice()</code></td>
-<td>设置进程的 nice 值</td>
-</tr>
-<tr>
-<td><code>sched_setscheduler()</code></td>
-<td>设置进程的调度策略</td>
-</tr>
-<tr>
-<td><code>sched_getscheduler()</code></td>
-<td>获取进程的调度策略</td>
-</tr>
-<tr>
-<td><code>sched_setparam()</code></td>
-<td>设置进程的实时优先级</td>
-</tr>
-<tr>
-<td><code>sched_getparam()</code></td>
-<td>获取进程的实时优先级</td>
-</tr>
-<tr>
-<td><code>sched_get_priority_max()</code></td>
-<td>获取实时调度的最大优先级</td>
-</tr>
-<tr>
-<td><code>sched_get_priority_min()</code></td>
-<td>获取实时调度的最小优先级</td>
-</tr>
-<tr>
-<td><code>sched_rr_get_interval()</code></td>
-<td>获取进程的时间片值</td>
-</tr>
-<tr>
-<td><code>sched_setaffinity()</code></td>
-<td>设置进程的处理器亲和性</td>
-</tr>
-<tr>
-<td><code>sched_getaffinity()</code></td>
-<td>获取进程的处理器亲和性</td>
-</tr>
-<tr>
-<td><code>sched_yield()</code></td>
-<td>临时将处理器让给其他任务</td>
-</tr>
-</tbody>
-</table>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="gcc编译">GCC编译</h3>
-<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
-<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
-<h3 id="debug-bash脚本">debug bash脚本</h3>
-<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
-可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
-仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
-使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
-<h3 id="gdb-debug">GDB debug</h3>
-<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
-永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
-在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
