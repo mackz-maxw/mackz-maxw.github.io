@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,434 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/13/kamacode1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/13/kamacode1/" class="post-title-link" itemprop="url">代码随想录 | 刷题-数组</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-14 11:19:17" itemprop="dateCreated datePublished" datetime="2025-05-14T11:19:17+08:00">2025-05-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-21 22:19:17" itemprop="dateModified" datetime="2025-05-21T22:19:17+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="数组基础与算法实现">数组基础与算法实现</h1>
+<h2 id="数组基本特性">数组基本特性</h2>
+<ul>
+<li>数组下标从0开始</li>
+<li>数组内存空间的地址是连续的</li>
+<li>在C++中，二维数组在内存的空间地址是连续的</li>
+</ul>
+<h2 id="c常见数据类型长度">C++常见数据类型长度</h2>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 37%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>长度（字节）</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>char</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>long long</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>long double</td>
+<td>8或16</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>1</td>
+<td>实际只使用1位</td>
+</tr>
+<tr>
+<td>指针类型</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+</tbody>
+</table>
+<h2 id="算法实现">算法实现</h2>
+<h3 id="二分查找">704. 二分查找</h3>
+<h4 id="左闭右闭区间实现">左闭右闭区间实现</h4>
+<p>原本仅判断left ==
+right，后来发现在处理仅两个元素，且target小于最小元素的数组时，这样写会导致left
+= 0同时right= -1,陷入死循环，更改判断条件后就解决了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>()<span class="number">-1</span>, target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid - <span class="number">1</span>, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="左闭右开区间实现">左闭右开区间实现</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>(), target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="移除元素">27. 移除元素</h3>
+<p>当target小于所有数时，right不断左移，left不变等于0，刚好结果应该是0。当target大于所有数时，right不会动，left不断右移直到nums.length，刚好等于结果。所以未找到时应返回left</p>
+<p>我的方法从数组的两端向中间遍历，虽然也是双指针方法，但是需要不少额外判断。下一次要定义快慢指针去解题，因为实际上不用把所有查找的元素移动到数组最后，所以直接跳过这些元素复制即可：
+快指针：寻找新数组的元素 ，新数组就是不含有目标元素的数组
+慢指针：指向更新 新数组下标的位置 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeElement</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">empty</span>()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] != val &amp;&amp; left &lt; right) left++;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] == val &amp;&amp; left &lt; right) &#123;</span><br><span class="line">                nums[left] = nums[right];</span><br><span class="line">                nums[right] = val;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(nums[left] != val) <span class="keyword">return</span> left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> left == <span class="number">0</span> ? <span class="number">0</span> : left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="有序数组的平方">977. 有序数组的平方</h3>
+<p>这题我一开始总是想着在原数组中修改，于是想不出什么来。看了题解是新开一个数组，再左右指针遍历原数组，思路正确很快就做出来了：
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sortedSquares</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">res</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res_p = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(res_p &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">abs</span>(nums[left]) &lt; <span class="built_in">abs</span>(nums[right])) &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[right], <span class="number">2</span>);</span><br><span class="line">                right--;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[left], <span class="number">2</span>);</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            res_p--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="c常用数学函数">C++常用数学函数</h2>
+<ul>
+<li><code>pow(x, y)</code>：计算x的y次方</li>
+<li><code>sqrt(x)</code>：计算平方根</li>
+<li><code>abs(x)</code>：计算绝对值</li>
+<li><code>ceil(x)</code>：向上取整</li>
+<li><code>floor(x)</code>：向下取整</li>
+<li><code>round(x)</code>：四舍五入</li>
+<li><code>max(x, y)</code>/<code>min(x, y)</code>：返回较大/较小值</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/20/fed-sched-int/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/01/20/fed-sched-int/" class="post-title-link" itemprop="url">fed_sched_int</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-01-20 22:45:29" itemprop="dateCreated datePublished" datetime="2025-01-20T22:45:29+08:00">2025-01-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:04" itemprop="dateModified" datetime="2025-01-22T10:30:04+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>摘录一下Marion的论文要点，方便查阅</p>
+<hr />
+<h3 id="任务模型">任务模型</h3>
+<p>每个任务 <span class="math inline">\(\tau_i\)</span> 由一组子任务
+<span class="math inline">\(\tau_{i,j}\)</span>
+组成，并在其间具有优先关系 <span
+class="math inline">\(&lt;\)</span>。每个子任务 <span
+class="math inline">\(\tau_{i,j}\)</span> 的特征为： - 工作量 <span
+class="math inline">\(c_{i,j} \in
+\mathbb{N}\)</span>，表示其最坏情况下的执行时间。</p>
+<p>子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执行时间最长为
+<span
+class="math inline">\(c_{i,j}\)</span>。假设子任务执行是可重入的：执行可以被其他子任务抢占，且无需在系统中同一个核心上恢复。</p>
+<p>优先关系限制了子任务的执行顺序，例如 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span>，则 <span
+class="math inline">\(\tau_{i,a}\)</span> 必须在 <span
+class="math inline">\(\tau_{i,b}\)</span> 之前完全执行。我们说，当任务
+<span class="math inline">\(\tau_{i,a}\)</span> 的所有前驱任务 <span
+class="math inline">\(\tau_{i,a&#39;}\)</span> 完成时，<span
+class="math inline">\(\tau_{i,a}\)</span> 变为“可用”（available）。</p>
+<p>根据 [26]，我们将任务分为两类： 1. <strong>轻量任务（light
+tasks）</strong>：满足 <span class="math inline">\(C_i &lt;
+D_i\)</span>； 2. <strong>重量任务（heavy tasks）</strong>：满足 <span
+class="math inline">\(C_i \geq
+D_i\)</span>，此类任务必须利用其潜在的并行性才能满足调度要求。</p>
+<p>本文的重点是<strong>联合调度</strong>（federated
+scheduling），对于每个重量任务，其被分配到一个专用核心集上并独占执行。我们仅考虑截止时间
+<span class="math inline">\(D_i\)</span> 和子任务工作量 <span
+class="math inline">\(c_{i,j}\)</span>
+为正整数的任务，称为<strong>整数值任务</strong>（integer-valued
+tasks）。</p>
+<hr />
+<h3 id="优先关系的dag表示">优先关系的DAG表示</h3>
+<p>子任务执行的优先关系可表示为一个<strong>有向无环图（DAG）</strong>。对于每个并行任务
+<span class="math inline">\(\tau_i\)</span>，存在一个DAG <span
+class="math inline">\(G_i\)</span>，其包含的顶点集合为 <span
+class="math inline">\(v_{i,j}\)</span>，对应于任务 <span
+class="math inline">\(\tau_i\)</span> 的子任务 <span
+class="math inline">\(\tau_{i,j}\)</span>： - 每个顶点 <span
+class="math inline">\(v_{i,j}\)</span> 的属性为子任务的工作量 <span
+class="math inline">\(c_{i,j}\)</span>； - 边 <span
+class="math inline">\(v_{i,a} \to v_{i,b}\)</span> 存在当且仅当 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span> 且不存在 <span
+class="math inline">\(v_{i,c}\)</span> 满足 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,c} &lt;
+\tau_{i,b}\)</span>，即 <span class="math inline">\(v_{i,b}\)</span>
+直接继承 <span class="math inline">\(v_{i,a}\)</span>。</p>
+<hr />
+<h3 id="关键路径长度的定义">关键路径长度的定义</h3>
+<p>对于每个图顶点 <span
+class="math inline">\(v_{i,j}\)</span>，我们定义其<strong>关键路径长度</strong>或<strong>跨度</strong>
+<span class="math inline">\(l_{i,j} \in \mathbb{N}\)</span>
+为从该顶点起始的最长路径的长度，该路径由沿路径每个顶点的执行时间（包括起始顶点的权重
+<span class="math inline">\(c_{i,j}\)</span>）加权。</p>
+<p>对于相应的任务 <span class="math inline">\(\tau_i\)</span>，跨度
+<span class="math inline">\(L_i \in \mathbb{N}\)</span>
+是所有顶点的跨度中的最大值，即整个DAG的关键路径长度。跨度对应于任务在给定无限数量核心时相对于其激活时间的最早完成时间。</p>
+<p>显然，为使任务可调度，必须满足： <span class="math display">\[
+L_i \leq D_i
+\]</span></p>
+<h2 id="适用于整数值任务的联合调度">适用于整数值任务的联合调度</h2>
+<p>对于一个重量任务 <span
+class="math inline">\(\tau_i\)</span>，其特征为工作量 <span
+class="math inline">\(C_i\)</span>、跨度 <span
+class="math inline">\(L_i\)</span> 和截止时间 <span
+class="math inline">\(D_i\)</span>，在提供足够核心的情况下，任何工作保留型（work-conserving，即贪婪型）调度器均可调度该任务。分配给任务
+<span class="math inline">\(\tau_i\)</span> 的核心数可以表示为： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil \tag{1}
+\]</span></p>
+<p>我们在此证明，对于一个并行任务，如果其截止时间和所有子任务的工作量均为整数，则分配的核心数可以改进为：
+<span class="math display">\[
+n_i&#39; = \left\lceil \frac{C_i - L_i + 1}{D_i - L_i + 1} \right\rceil
+\]</span></p>
+<p>这一公式比方程 (1)
+在限制重量任务的核心数方面提供了实际且直观的优势。</p>
+<h2
+id="单工作量表调度unit-workload-list-scheduling">单工作量表调度（Unit-Workload
+List Scheduling）</h2>
+<p>第4节中提出的联合调度方法为高利用率的整数值任务分配了足够的处理器，以保证任何工作保留型调度器的可行性，前提是给定每个任务的工作量、关键路径长度和截止时间。然而，这种常量时间的分配方法可能会导致对重量任务的处理器过度分配，进而造成资源浪费。</p>
+<p>在 [3] 中，Graham 的表调度方法（list
+scheduling）被应用于重量任务；通过使用多种启发式方法为子任务排序，可以在更少的处理器上生成可行的调度。表调度以非抢占式方式将可用子任务分配给空闲处理器；如
+[14]
+所述，这可能导致对重量任务的处理器分配过多。然而，允许空闲子任务进行抢占可能会引入切换问题。</p>
+<h3 id="方法改进">方法改进</h3>
+<p>为了解决这个问题，我们提出了<strong>单工作量子任务的表调度</strong>。<br />
+- 一个整数值并行任务 <span class="math inline">\(\tau_i\)</span>，由DAG
+<span class="math inline">\(G_i\)</span>
+表示，可以被分解为一个包含单工作量顶点的DAG <span
+class="math inline">\(G_i^*\)</span>。<br />
+- 在 <span class="math inline">\(G_i\)</span> 中具有工作量 <span
+class="math inline">\(c\)</span> 的顶点 <span
+class="math inline">\(v_{i,j}\)</span>
+被映射为一个完全有序的顶点序列，在 <span
+class="math inline">\(G_i^*\)</span> 中形成从起点到终点的路径。</p>
+<p>对于 <span class="math inline">\(G_i^*\)</span> 中的任何边 <span
+class="math inline">\(v_{i,j}\)</span>，其连接方式如下： 1. <span
+class="math inline">\(G_i^*\)</span> 中进入 <span
+class="math inline">\(v_{i,j}\)</span>
+的任何边连接到其分解后路径中的第一个顶点； 2. 在 <span
+class="math inline">\(G_i\)</span> 中离开 <span
+class="math inline">\(v_j\)</span> 的任何边，现在连接到 <span
+class="math inline">\(v_{i,j}\)</span> 的分解路径中的最后一个顶点。</p>
+<h3 id="优势">优势</h3>
+<p>对于这样的DAG，表调度方法可以为每个单位工作量分配一个优先级；<br />
+这使得原始DAG <span class="math inline">\(G_i\)</span>
+中的相应子任务能够在单位时间步边界内被抢占。</p>
+<h3 id="常见的表调度启发式方法">5.1 常见的表调度启发式方法</h3>
+<h4 id="关键路径规则critical-path-rule-cp">关键路径规则（Critical Path
+Rule, CP）</h4>
+<p>关键路径规则用于表调度时，以<strong>最长跨度</strong>的顺序选择可用子任务进行执行。<br />
+-
+子任务跨度的分配可以以深度优先搜索的方式完成；当为每个顶点分配跨度后，图的总跨度
+<span class="math inline">\(L\)</span> 会被更新。 - 该过程的时间复杂度为
+<span class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<h4 id="dag分解">DAG分解</h4>
+<p>DAG <span class="math inline">\(G\)</span> 分解为单位工作量的 DAG
+<span class="math inline">\(G^*\)</span> 的过程表示为函数
+<strong>Convert_Unit_DAG</strong>： 1. 初始化 <span
+class="math inline">\(G^*\)</span> 为 <span
+class="math inline">\(G\)</span> 的副本。 2. 建立一个顶点集合 <span
+class="math inline">\(V^*\)</span>，其由 <span
+class="math inline">\(G^*\)</span>
+中的顶点（实际代码中可能为指向顶点的指针）组成。 3. 对于 <span
+class="math inline">\(V^*\)</span> 中的每个顶点 <span
+class="math inline">\(v_i\)</span>： - 将 <span
+class="math inline">\(v_i\)</span> 的工作量 <span
+class="math inline">\(c_i\)</span> 转化为单位工作量顶点序列，这些顶点在
+<span class="math inline">\(G^*\)</span> 中形成路径： -
+路径中的每个顶点之间用边连接，第一个顶点的跨度等于 <span
+class="math inline">\(v_i\)</span> 的跨度 <span
+class="math inline">\(l_i\)</span>； -
+每个后续顶点的跨度比前一个顶点小1。 - 删除原始顶点 <span
+class="math inline">\(v_i\)</span>。</p>
+<ol start="4" type="1">
+<li>处理完成后，<span class="math inline">\(G^*\)</span>
+中仅包含单位工作量的顶点：
+<ul>
+<li>通过分解，生成了 <span class="math inline">\(C - |V|\)</span>
+个额外顶点，以及 <span class="math inline">\(C - |V|\)</span>
+条额外边。</li>
+<li>因此，总运行时间为 <span class="math inline">\(O(|V| + C - |V| + |E|
++ C - |V|)\)</span>，简化为 <span class="math inline">\(O(C +
+|E|)\)</span>。</li>
+</ul></li>
+</ol>
+<h4
+id="后继数量规则largest-number-of-successors-rule-lns">后继数量规则（Largest
+Number of Successors Rule, LNS）</h4>
+<p>LNS规则以<strong>后继任务的总工作量</strong>为顺序，选择可用子任务进行执行：
+- 子任务 <span class="math inline">\(v_i \in G\)</span> 的后继工作量由与
+<span class="math inline">\(v_i\)</span>
+通过路径相连的所有顶点的工作量之和定义。 -
+可以通过动态规划在整个图上实现这一过程，其时间复杂度为 <span
+class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<p>LNS规则也可以应用于单位工作量子任务的表调度，并保持伪多项式时间复杂度。</p>
+<h4 id="注意">注意</h4>
+<p>将整数值任务的 DAG <span class="math inline">\(G\)</span>
+分解为单位工作量的 DAG <span class="math inline">\(G^*\)</span>
+时，还需要为每个单位工作量顶点分配一个子图工作量。这与跨度的分配类似，不会影响算法的时间复杂度。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1472,7 +1900,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1490,7 +1918,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
+          <a href="/2024/12/20/Ubuntu_setup/" class="post-title-link" itemprop="url">设置Ubuntu</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1508,16 +1936,7 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
-        </span>
+      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
     </span>
 
   
@@ -1530,127 +1949,14 @@ DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><tabl
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
-<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
-<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
-是第一个参数，依此类推。\)</span>@ - 所有参数 <span
-class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
-当前脚本的进程识别码 !! -
-完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
-sudo !!再尝试一次。 $_ -
-上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
-Esc 之后键入 . 来获取这个值。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/gametime/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/gametime/" class="post-title-link" itemprop="url">摸鱼时间</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:13" itemprop="dateModified" datetime="2025-01-22T10:30:13+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p>
-<h2 id="section">3/18</h2>
-<p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p>
-<p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），git
-bash安装了http-server，http-server可以这么启动：</p>
-<p><code>http-server [path]</code></p>
-<p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p>
-<p>下载git
-bash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p>
-<p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p>
-<p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p>
-<p>整了挺久累了，下次再更🕊~</p>
-<p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p>
-<h2 id="section-1">3/18</h2>
-<p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p>
-<blockquote>
-<p>Here's a solution:</p>
-<ol type="1">
-<li>Right click and click “Save As...”</li>
-<li>Edit the html file that just saved, overwrite jQuery reference
-<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>
-as
-<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>
-or other reference you trust.</li>
-<li>run the html.</li>
-</ol>
-</blockquote>
-<p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p>
-<p><code>E:\works\untrusted-master\scripts\build</code></p>
-<p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p>
-<p>对了，别忘了</p>
-<p><code>http-server *:/.../untrusted-master</code></p>
-<p>（*：code所在盘符，...：code所在目录）</p>
-<p>终于可以玩了！</p>
-<p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
+          <h3 id="设置apt源">设置apt源</h3>
+<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
+<h3 id="vim技巧">vim技巧</h3>
+<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
+<h3 id="设置vim">设置vim</h3>
+<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -1779,117 +2085,6 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">	void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">		reverse(matrix.begin(), matrix.end());</span><br><span class="line">		for (int i = 0; i &lt; matrix.size(); i++) &#123;</span><br><span class="line">			for (int j = i; j &lt; matrix[i].size(); j++) &#123;</span><br><span class="line">				int ori = matrix[i][j];</span><br><span class="line">				matrix[i][j] = matrix[j][i];</span><br><span class="line">				matrix[j][i] = ori;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这次我学聪明了，知道遍历三角可以<code>j = i</code>，少几行代码。不过这样写使用内存居然比第一次多！我把这个想法也改成用<code>j = 0+tri</code>的形式（其他没变），内存使用变成和第一次一样了。这是为什么呢？</p>
 <p>我想去stackoverflow上问问，就去了leetcode英文站看看英文题目描述，顺手再提交了两次题目，发现内存占用又一样了...但是我用最开始的写法时间更快。好吧，看来这或许不是我现阶段能了解的问题。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/hello-world/" class="post-title-link" itemprop="url">搭建博客</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:16" itemprop="dateModified" datetime="2025-01-22T10:30:16+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。</p>
-<p>Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择...</p>
-<h2 id="section">2/23-2/24</h2>
-<h3 id="git初试">git初试</h3>
-<p>follow <a
-target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103391101">枫叶的教程</a> problem
-occur: can' t clone existing repostory with git bash reports timeout or
-OpenSSL SSL_read: Connection was reset, errno 10054</p>
-<p>从GitHub上clone仓库的时候，试了几次，有时git
-bash报错10054，有时timeout。</p>
-<p>我先是按<a
-target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44795128/article/details/119214048?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;utm_relevant_index=1">网上教程</a>改了git的global
-config，还是报错</p>
-<p>想到自己上GitHub都要科学方法，就觉得应该是代理的问题。git应该并非使用系统代理设置，而是需要自行设置，果不其然。</p>
-<p>solve: setup proxy for git, following <a
-target="_blank" rel="noopener" href="https://www.jianshu.com/p/290152303598">git设置代理</a></p>
-<h3 id="博客搭建">博客搭建</h3>
-<p>follow <a
-target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1201860091307458560">枫叶的教程合集</a></p>
-<p>感谢枫叶大佬的教程，有时间一定上知乎评论区里发个反馈。</p>
-<p>安装node.js与插件的过程中报错属于node.js本地的文件夹无法访问。一开始觉得很奇怪，明明特意从c盘卸载了安别的盘，后来我想起来那个盘是我从c盘分出去的了，草（感叹词）。所以应该是因为也需要管理员权限（也可能是我把git安到c盘了？）。果然管理员启动bash之后，安装就顺畅了。</p>
-<p>枫叶的教程里面设置npm的环境变量那里可能有点问题，设置好之后应该是不需要像网上一些教程说的那样安装两遍npm的。npm所在目录需要保留而不是更改，再按教程添加node的目录。在系统变量里添加node的路径后，path里需要添加对应的%NODE_PATH%，这也是教程里未提及的。</p>
-<p>其他问题应该就只是跟版本有关了，比如GitHub把主分支从master改成main，创建个人网页的setting单独分页了等等。以及博客更新后无需删除.git重新上传，hexo的操作估计是有延迟的。</p>
-<p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
-<p>在菜单中增加新页面需要同时hexo new
-page以及在主题的config文件中设置（参考枫叶的教程）</p>
-<h3 id="一些感叹">一些感叹</h3>
-<p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
-<h3 id="一些bug">一些bug</h3>
-<p>git报错the remote end hung up unexpectedly：照此教程解决了：
-https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
-<h3 id="一些bug-2.0">一些bug 2.0</h3>
-<p>。。。又给git的proxy摆了一道没办法deploy博客，不想用的时候一定要记得<code>git config --global --unset http.proxy</code>重置啊！设置回来则是<code>git config --global http.proxy proxyaddress:port</code></p>
-<p>最近总感觉自己记性有点差，这是写完博客后如何deploy:
-在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
