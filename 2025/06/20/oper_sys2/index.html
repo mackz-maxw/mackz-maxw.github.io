@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="与众不同的“野兽”：内核与用户空间的区别 Linux 内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：  内核无法使用 C 标准库（libc）和标准 C 头文件。 内核使用 GNU C 语言编写。 内核没有用户空间的内存保护机制。 内核中不能轻易执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 2.2 linux内核与用户空间的不同">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/20/oper_sys2/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="与众不同的“野兽”：内核与用户空间的区别 Linux 内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：  内核无法使用 C 标准库（libc）和标准 C 头文件。 内核使用 GNU C 语言编写。 内核没有用户空间的内存保护机制。 内核中不能轻易执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-21T02:18:37.358Z">
+<meta property="article:modified_time" content="2025-06-22T00:17:17.060Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/20/oper_sys2/","path":"2025/06/20/oper_sys2/","title":"操作系统基础 | 2.2 linux内核与用户空间的不同"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 2.2 linux内核与用户空间的不同 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E4%BC%97%E4%B8%8D%E5%90%8C%E7%9A%84%E9%87%8E%E5%85%BD%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">与众不同的“野兽”：内核与用户空间的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89-libc-%E6%88%96%E6%A0%87%E5%87%86%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">没有 libc 或标准头文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.1.</span> <span class="nav-text">头文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89-printf%E7%94%A8-printk"><span class="nav-number">1.1.2.</span> <span class="nav-text">没有 printf()，用 printk()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gnu-c"><span class="nav-number">1.2.</span> <span class="nav-text">GNU C</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0inline-functions"><span class="nav-number">1.2.1.</span> <span class="nav-text">内联函数（Inline Functions）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E8%81%94%E6%B1%87%E7%BC%96inline-assembly"><span class="nav-number">1.2.2.</span> <span class="nav-text">内联汇编（Inline Assembly）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E6%B3%A8%E8%A7%A3branch-annotation"><span class="nav-number">1.2.3.</span> <span class="nav-text">分支预测注解（Branch
+Annotation）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4"><span class="nav-number">1.3.</span> <span class="nav-text">没有内存保护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%83%BD%E8%BD%BB%E6%98%93%E4%BD%BF%E7%94%A8%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97"><span class="nav-number">1.4.</span> <span class="nav-text">不能（轻易）使用浮点运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E8%80%8C%E5%9B%BA%E5%AE%9A%E7%9A%84%E6%A0%88%E7%A9%BA%E9%97%B4"><span class="nav-number">1.5.</span> <span class="nav-text">小而固定的栈空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%B9%B6%E5%8F%91"><span class="nav-number">1.6.</span> <span class="nav-text">同步与并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E7%A7%BB%E6%A4%8D%E6%80%A7%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">1.7.</span> <span class="nav-text">可移植性的重要性</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 2.2 linux内核与用户空间的不同 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 2.2 linux内核与用户空间的不同
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-21 10:18:37" itemprop="dateCreated datePublished" datetime="2025-06-21T10:18:37+08:00">2025-06-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-22 08:17:17" itemprop="dateModified" datetime="2025-06-22T08:17:17+08:00">2025-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2
+id="与众不同的野兽内核与用户空间的区别">与众不同的“野兽”：内核与用户空间的区别</h2>
+<p>Linux
+内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：</p>
+<ol type="1">
+<li><strong>内核无法使用 C 标准库（libc）和标准 C 头文件。</strong></li>
+<li><strong>内核使用 GNU C 语言编写。</strong></li>
+<li><strong>内核没有用户空间的内存保护机制。</strong></li>
+<li><strong>内核中不能轻易执行浮点运算。</strong></li>
+<li><strong>内核每个进程的栈空间很小且固定。</strong></li>
+<li><strong>由于内核有异步中断、支持抢占和多处理器（SMP），因此同步和并发问题非常重要。</strong></li>
+<li><strong>可移植性很重要。</strong></li>
+</ol>
+<p>下面简要解释这些差异：</p>
+<hr />
+<h3 id="没有-libc-或标准头文件">没有 libc 或标准头文件</h3>
+<p>与用户空间程序不同，内核不会链接标准 C
+库（libc）或其他外部库。主要原因是速度和体积——完整的 C
+库太大、效率太低，不适合内核使用。</p>
+<p>不用担心，内核自己实现了很多常用的 libc
+函数。例如，常见的字符串操作函数在 <code>lib/string.c</code>
+中实现，只需包含 <code>&lt;linux/string.h&gt;</code>
+头文件即可使用。</p>
+<h4 id="头文件">头文件</h4>
+<p>内核源码只能包含内核源码树中的头文件，不能引用外部头文件或库。<br />
+- 基础头文件位于源码根目录的 <code>include/</code>
+目录下。例如，<code>&lt;linux/inotify.h&gt;</code> 实际路径为
+<code>include/linux/inotify.h</code>。 - 架构相关的头文件位于
+<code>arch/&lt;architecture&gt;/include/asm</code>，如 x86 架构下为
+<code>arch/x86/include/asm</code>，引用时用
+<code>&lt;asm/ioctl.h&gt;</code>。</p>
+<h4 id="没有-printf用-printk">没有 printf()，用 printk()</h4>
+<p>内核没有 <code>printf()</code>，但提供了类似的 <code>printk()</code>
+用于内核日志输出。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(<span class="string">&quot;Hello world! A string &#x27;%s&#x27; and an integer &#x27;%d&#x27;\n&quot;</span>, str, i);</span><br></pre></td></tr></table></figure> 与 <code>printf()</code>
+不同，<code>printk()</code> 可以指定优先级（priority flag），用于
+syslogd 判断消息显示位置。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(KERN_ERR <span class="string">&quot;this is an error!\n&quot;</span>);</span><br></pre></td></tr></table></figure>
+注意：<code>KERN_ERR</code>
+和消息之间没有逗号，这是因为优先级标志是字符串宏，编译时会自动拼接。</p>
+<h3 id="gnu-c">GNU C</h3>
+<p>和大多数 Unix 内核一样，Linux 内核主要用 C 语言编写。但它并不是严格的
+ANSI C，而是大量使用了 gcc（GNU
+编译器套件）提供的各种语言扩展。内核开发者会用到 ISO C99 和 GNU C
+的扩展特性，这使得 Linux 内核基本只能用 gcc 编译（近年 Intel C
+编译器也支持了大部分 gcc 特性，可以编译内核）。目前推荐使用 gcc 4.4
+或更高版本。</p>
+<p>C99 的扩展比较常见，而 GNU C 的扩展则是 Linux 内核代码区别于普通 C
+项目的重要原因。下面介绍几个常见的 GNU C 扩展：</p>
+<h4 id="内联函数inline-functions">内联函数（Inline Functions）</h4>
+<p>C99 和 GNU C 都支持内联函数（inline
+function）。内联函数会在每个调用点直接插入函数体，避免了函数调用和返回的开销（如寄存器保存/恢复），有利于编译器整体优化调用者和被调用者的代码。但缺点是会增加代码体积和内存消耗。</p>
+<p>内核开发者通常只对小型、对性能要求高的函数使用内联。大函数或不常用的函数不建议内联。</p>
+<p>内联函数的声明方式如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">wolf</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> tail_size)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>static inline</code> 关键字用于定义内联函数。</li>
+<li>内联函数的声明要在使用前，否则编译器无法内联。</li>
+<li>通常内联函数会放在头文件中（因为是 static，不会导出符号）。</li>
+</ul>
+<p>内核更倾向于用内联函数而不是复杂的宏，因为内联函数有类型安全和可读性好等优点。</p>
+<h4 id="内联汇编inline-assembly">内联汇编（Inline Assembly）</h4>
+<p>gcc 支持在 C
+代码中嵌入汇编指令，这在与硬件密切相关的内核代码中很有用。用法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> low, high;</span><br><span class="line"><span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(<span class="string">&quot;rdtsc&quot;</span> : <span class="string">&quot;=a&quot;</span> (low), <span class="string">&quot;=d&quot;</span> (high))</span>;</span><br><span class="line"><span class="comment">/* low 和 high 现在分别保存了 64 位 tsc 的低 32 位和高 32 位 */</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>asm</code> 关键字用于插入汇编代码。</li>
+<li>这种用法主要用于体系结构相关或对性能极致要求的代码。</li>
+<li>大部分内核代码还是用 C 语言编写，汇编只用于底层和关键路径。</li>
+</ul>
+<h4 id="分支预测注解branch-annotation">分支预测注解（Branch
+Annotation）</h4>
+<p>gcc
+提供了分支预测指令，可以告诉编译器某个条件分支更可能被执行，从而优化生成的代码。内核通过
+<code>likely()</code> 和 <code>unlikely()</code> 宏来使用这些特性。</p>
+<p>例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unlikely(error)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 error 很少为真 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (likely(success)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 success 几乎总为真 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> - 只有在分支方向非常明确时才建议使用这些宏。 -
+如果预测正确，可以提升性能；预测错误则可能降低性能。 -
+在内核中，<code>unlikely()</code>
+常用于错误处理分支，因为大多数情况下不会出错。</p>
+<h3 id="没有内存保护">没有内存保护</h3>
+<p>当用户空间程序非法访问内存时，内核可以捕获错误，发送 SIGSEGV
+信号并终止该进程。但如果内核自身非法访问内存，后果就不可控了（毕竟，谁来保护内核呢？）。内核中的内存违规会导致
+oops（严重内核错误）。因此，在内核中绝不能非法访问内存，比如解引用 NULL
+指针——在内核里，这样的错误代价更高！</p>
+<p>另外，内核内存是不可换页的（not
+pageable），即内核占用的每一字节物理内存都不能被换出。你在内核里多用一点内存，系统可用物理内存就少一点。每次想给内核加新功能时，请记住这一点！</p>
+<h3 id="不能轻易使用浮点运算">不能（轻易）使用浮点运算</h3>
+<p>用户空间进程使用浮点指令时，内核会负责从整数模式切换到浮点模式。具体做法依赖于体系结构，通常是通过陷阱（trap）实现的。</p>
+<p>但内核自身不能像用户空间那样方便地使用浮点运算，因为内核无法轻松地“陷阱”自己。内核里用浮点数需要手动保存和恢复浮点寄存器等操作，非常麻烦。<strong>简而言之：不要在内核里用浮点运算！</strong>
+除极少数特殊情况外，内核代码中基本没有浮点操作。</p>
+<h3 id="小而固定的栈空间">小而固定的栈空间</h3>
+<p>用户空间可以在栈上分配大量变量，包括大结构体和大数组，因为用户空间的栈很大且可以动态增长。但内核栈既不大也不能动态扩展，而是小且固定的。</p>
+<ul>
+<li>栈的具体大小依赖于体系结构。例如 x86 架构下，栈大小可在编译时配置为
+4KB 或 8KB。</li>
+<li>通常，32 位系统为 8KB，64 位系统为
+16KB，每个进程有自己的内核栈，这个大小是固定的。</li>
+</ul>
+<p>因此，内核开发时要避免在栈上分配大对象。</p>
+<h3 id="同步与并发">同步与并发</h3>
+<p>内核容易出现竞态条件（race
+condition）。与单线程的用户空间程序不同，内核有多种并发访问共享资源的情况，必须通过同步机制防止竞态：</p>
+<ul>
+<li>Linux
+是抢占式多任务操作系统，进程会被调度器随时切换，内核需要在这些任务间同步。</li>
+<li>Linux
+支持对称多处理（SMP），多个处理器上的内核代码可能同时访问同一资源。</li>
+<li>中断是异步发生的，可能在访问资源时被打断，导致中断处理程序也访问同一资源。</li>
+<li>内核本身是可抢占的，内核代码可能被抢占，切换到另一个访问同一资源的代码。</li>
+</ul>
+<p>常见的同步机制有自旋锁（spinlock）和信号量（semaphore）。后续章节会详细介绍。</p>
+<h3 id="可移植性的重要性">可移植性的重要性</h3>
+<p>虽然用户空间程序不一定要追求可移植性，但 Linux
+作为一个可移植操作系统，必须保证代码能在多种体系结构上正确编译和运行。体系结构相关的代码要放在专门的目录下，体系结构无关的代码要保持通用。</p>
+<p>一些基本规则包括：保持字节序中立、支持 64
+位、不要假设字长或页面大小等。后续章节会详细讨论可移植性。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/20/oper_sys1/" rel="prev" title="操作系统基础 | 2. 初试linux内核">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 2. 初试linux内核
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/21/oper_sys3/" rel="next" title="操作系统基础 | 2.3 初试linux内核实验">
+                  操作系统基础 | 2.3 初试linux内核实验 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/06/20/oper_sys2/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/06/20/oper_sys2/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
