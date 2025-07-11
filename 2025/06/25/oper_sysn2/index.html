@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="可移植性问题（Portability Issues） 特性测试宏（Feature Test Macros）  系统调用和库函数 API 的行为受多种标准规范（如 The Open Group 的 Single UNIX Specification、BSD、System V Release 4 及其接口定义）约束。 为了让头文件只暴露符合某一标准的定义（如常量、函数原型等），可以在编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 系统编程常用设置2">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/25/oper_sysn2/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="可移植性问题（Portability Issues） 特性测试宏（Feature Test Macros）  系统调用和库函数 API 的行为受多种标准规范（如 The Open Group 的 Single UNIX Specification、BSD、System V Release 4 及其接口定义）约束。 为了让头文件只暴露符合某一标准的定义（如常量、函数原型等），可以在编">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-25T21:46:20.493Z">
+<meta property="article:modified_time" content="2025-06-25T23:49:32.944Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/25/oper_sysn2/","path":"2025/06/25/oper_sysn2/","title":"操作系统基础 | 系统编程常用设置2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 系统编程常用设置2 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E7%A7%BB%E6%A4%8D%E6%80%A7%E9%97%AE%E9%A2%98portability-issues"><span class="nav-number">1.</span> <span class="nav-text">可移植性问题（Portability
+Issues）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95%E5%AE%8Ffeature-test-macros"><span class="nav-number">1.1.</span> <span class="nav-text">特性测试宏（Feature Test
+Macros）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95%E5%AE%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">常用特性测试宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#glibc-%E7%89%B9%E6%9C%89%E7%9A%84%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95%E5%AE%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">glibc 特有的特性测试宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA%E4%B8%8E%E5%AE%8F%E7%BB%84%E5%90%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">默认行为与宏组合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#posix.1sus-%E7%9B%B8%E5%85%B3%E5%AE%8F"><span class="nav-number">1.1.4.</span> <span class="nav-text">POSIX.1&#x2F;SUS 相关宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E4%B8%8E%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95%E5%AE%8F"><span class="nav-number">1.1.5.</span> <span class="nav-text">示例代码与函数原型中的特性测试宏</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Bsystem-data-types"><span class="nav-number">1.2.</span> <span class="nav-text">系统数据类型（System Data
+Types）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%BE%E4%BE%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">常用系统数据类型举例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8D%B0%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E5%80%BC"><span class="nav-number">1.3.</span> <span class="nav-text">打印系统数据类型的数值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E7%A7%BB%E6%A4%8D%E6%80%A7%E9%97%AE%E9%A2%98miscellaneous-portability-issues"><span class="nav-number">1.4.</span> <span class="nav-text">其他可移植性问题（Miscellaneous
+Portability Issues）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.4.1.</span> <span class="nav-text">结构体的初始化与使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%90%E4%BA%9B%E5%AE%8F%E5%8F%AF%E8%83%BD%E5%B9%B6%E9%9D%9E%E6%89%80%E6%9C%89%E5%AE%9E%E7%8E%B0%E9%83%BD%E6%94%AF%E6%8C%81"><span class="nav-number">1.4.2.</span> <span class="nav-text">某些宏可能并非所有实现都支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%AE%9E%E7%8E%B0%E5%AF%B9%E5%A4%B4%E6%96%87%E4%BB%B6%E7%9A%84%E8%A6%81%E6%B1%82%E4%B8%8D%E5%90%8C"><span class="nav-number">1.4.3.</span> <span class="nav-text">不同实现对头文件的要求不同</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 系统编程常用设置2 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 系统编程常用设置2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 05:46:20 / 修改时间：07:49:32" itemprop="dateCreated datePublished" datetime="2025-06-26T05:46:20+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="可移植性问题portability-issues">可移植性问题（Portability
+Issues）</h2>
+<h3 id="特性测试宏feature-test-macros">特性测试宏（Feature Test
+Macros）</h3>
+<ul>
+<li>系统调用和库函数 API 的行为受多种标准规范（如 The Open Group 的
+Single UNIX Specification、BSD、System V Release 4
+及其接口定义）约束。</li>
+<li>为了让头文件只暴露符合某一标准的定义（如常量、函数原型等），可以在编译时定义一个或多个特性测试宏。定义方式有两种：
+<ol type="1">
+<li>在源代码中包含头文件前定义宏： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE 1</span></span><br></pre></td></tr></table></figure></li>
+<li>用编译器的 <code>-D</code> 选项定义： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_BSD_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
+</ol></li>
+<li>“特性测试宏”这个名字的由来是：实现会通过 <code>#if</code>
+判断这些宏的值，决定头文件中哪些特性对应用可见。</li>
+</ul>
+<h4 id="常用特性测试宏">常用特性测试宏</h4>
+<p>这些宏由相关标准规定，适用于所有支持这些标准的系统：</p>
+<ul>
+<li><code>_POSIX_SOURCE</code><br />
+定义后暴露符合 POSIX.1-1990 和 ISO C (1990) 的定义。已被
+<code>_POSIX_C_SOURCE</code> 取代。</li>
+<li><code>_POSIX_C_SOURCE</code>
+<ul>
+<li>值为 1 时，效果同 <code>_POSIX_SOURCE</code>。</li>
+<li>值 ≥ 199309 时，暴露 POSIX.1b（实时）定义。</li>
+<li>值 ≥ 199506 时，暴露 POSIX.1c（线程）定义。</li>
+<li>值为 200112 时，暴露 POSIX.1-2001 基础规范（不含 XSI 扩展）。</li>
+<li>值为 200809 时，暴露 POSIX.1-2008 基础规范。</li>
+</ul></li>
+<li><code>_XOPEN_SOURCE</code>
+<ul>
+<li>定义后暴露 POSIX.1、POSIX.2 和 X/Open (XPG4) 定义。</li>
+<li>值 ≥ 500 时，暴露 SUSv2（UNIX 98 和 XPG5）扩展。</li>
+<li>值 ≥ 600 时，暴露 SUSv3 XSI（UNIX 03）和 C99 扩展。</li>
+<li>值 ≥ 700 时，暴露 SUSv4 XSI 扩展。</li>
+</ul></li>
+</ul>
+<h4 id="glibc-特有的特性测试宏">glibc 特有的特性测试宏</h4>
+<ul>
+<li><code>_BSD_SOURCE</code><br />
+定义后暴露 BSD 定义，同时定义
+<code>_POSIX_C_SOURCE=199506</code>。如只定义此宏，部分标准冲突时优先
+BSD 定义。</li>
+<li><code>_SVID_SOURCE</code><br />
+定义后暴露 System V 接口定义（SVID）。</li>
+<li><code>_GNU_SOURCE</code><br />
+定义后暴露所有上述宏的定义及 GNU 扩展。</li>
+</ul>
+<h4 id="默认行为与宏组合">默认行为与宏组合</h4>
+<ul>
+<li>默认情况下，GNU C 编译器会定义
+<code>_POSIX_SOURCE</code>、<code>_POSIX_C_SOURCE=200809</code>（或更早版本的
+200112/199506）、<code>_BSD_SOURCE</code> 和
+<code>_SVID_SOURCE</code>。</li>
+<li>如果单独定义了某些宏，或用标准模式（如 <code>cc -ansi</code> 或
+<code>cc -std=c99</code>）编译，则只暴露请求的定义。</li>
+<li>多个宏可以叠加定义。例如： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_POSIX_SOURCE -D_POSIX_C_SOURCE=199506 -D_BSD_SOURCE -D_SVID_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
+<li><code>&lt;features.h&gt;</code> 头文件和
+<code>feature_test_macros(7)</code> 手册页有详细说明。</li>
+</ul>
+<h4 id="posix.1sus-相关宏">POSIX.1/SUS 相关宏</h4>
+<ul>
+<li>POSIX.1-2001/SUSv3 只规定了 <code>_POSIX_C_SOURCE</code> 和
+<code>_XOPEN_SOURCE</code> 两个宏，要求值分别为 200112 和 600。</li>
+<li>POSIX.1-2008/SUSv4 要求值分别为 200809 和 700。</li>
+<li>设置 <code>_XOPEN_SOURCE=600</code> 应包含
+<code>_POSIX_C_SOURCE=200112</code> 的所有特性，SUSv4
+也有类似要求。</li>
+</ul>
+<h4
+id="示例代码与函数原型中的特性测试宏">示例代码与函数原型中的特性测试宏</h4>
+<ul>
+<li>手册页会说明使用某个常量或函数声明时需要定义哪些特性测试宏。</li>
+<li>本书示例代码可用默认 GNU C 编译器选项或如下方式编译：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -std=c99 -D_XOPEN_SOURCE=600</span><br></pre></td></tr></table></figure></li>
+<li>书中每个函数原型都会注明需要定义哪些特性测试宏。</li>
+<li>手册页有更详细的宏需求说明。</li>
+</ul>
+<h3 id="系统数据类型system-data-types">系统数据类型（System Data
+Types）</h3>
+<p>在 UNIX
+系统中，许多实现相关的数据类型（如进程ID、用户ID、文件偏移量等）都用标准
+C 类型来表示。虽然可以直接用 int、long
+等基本类型声明这些变量，但这样会降低程序的可移植性，原因包括：</p>
+<ul>
+<li>不同 UNIX 实现中基本类型的大小可能不同（如 long
+在某些系统上是4字节，在另一些系统上是8字节），甚至同一系统的不同编译环境也可能不同。</li>
+<li>不同实现可能用不同类型表示相同的信息。例如，进程ID在某些系统上是
+int，在另一些系统上是 long。</li>
+<li>同一实现的不同版本也可能改变类型定义。例如，Linux 2.2
+及以前用户和组ID是16位，2.4及以后是32位。</li>
+</ul>
+<p>为避免这些移植性问题，SUSv3（Single UNIX Specification, Version
+3）规定了一系列标准系统数据类型，并要求实现时正确使用这些类型。这些类型通常用
+C 的 typedef 定义。例如，pid_t 用于表示进程ID，在 Linux/x86-32
+上定义为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> <span class="type">pid_t</span>;</span><br></pre></td></tr></table></figure> 大多数标准系统数据类型以 <code>_t</code>
+结尾，通常声明在 <code>&lt;sys/types.h&gt;</code>
+头文件中，部分类型在其他头文件中定义。</p>
+<p><strong>建议：</strong>
+应用程序应使用这些类型来声明变量，以保证在所有符合 SUSv3
+的系统上都能正确运行。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br></pre></td></tr></table></figure></p>
+<h4 id="常用系统数据类型举例">常用系统数据类型举例</h4>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>类型要求</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pid_t</td>
+<td>有符号整数</td>
+<td>进程ID、进程组ID、会话ID</td>
+</tr>
+<tr>
+<td>uid_t</td>
+<td>整数</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td>gid_t</td>
+<td>整数</td>
+<td>组ID</td>
+</tr>
+<tr>
+<td>size_t</td>
+<td>无符号整数</td>
+<td>对象字节大小</td>
+</tr>
+<tr>
+<td>ssize_t</td>
+<td>有符号整数</td>
+<td>字节计数或错误指示</td>
+</tr>
+<tr>
+<td>off_t</td>
+<td>有符号整数</td>
+<td>文件偏移量或文件大小</td>
+</tr>
+<tr>
+<td>time_t</td>
+<td>整数或实数</td>
+<td>自 Epoch 起的秒数</td>
+</tr>
+<tr>
+<td>mode_t</td>
+<td>整数</td>
+<td>文件权限和类型</td>
+</tr>
+<tr>
+<td>dev_t</td>
+<td>算术类型</td>
+<td>设备号（主次设备号）</td>
+</tr>
+<tr>
+<td>ino_t</td>
+<td>无符号整数</td>
+<td>文件 i-node 号</td>
+</tr>
+<tr>
+<td>socklen_t</td>
+<td>至少32位整数</td>
+<td>套接字地址结构体大小</td>
+</tr>
+</tbody>
+</table>
+<h3 id="打印系统数据类型的数值">打印系统数据类型的数值</h3>
+<ul>
+<li><p>在用 <code>printf()</code> 打印表3-1中这些数值型系统数据类型（如
+<code>pid_t</code>、<code>uid_t</code>）时，要避免实现相关的依赖问题。</p></li>
+<li><p>由于 C 的参数提升规则，<code>short</code> 类型会被提升为
+<code>int</code>，但 <code>int</code> 和 <code>long</code>
+类型保持不变。因此，系统数据类型的底层实现不同，传递给
+<code>printf()</code> 的参数类型可能是 <code>int</code> 或
+<code>long</code>。</p></li>
+<li><p>由于 <code>printf()</code>
+在运行时无法判断参数类型，调用者必须用合适的格式说明符（如
+<code>%d</code> 或
+<code>%ld</code>）明确指定类型。但直接写死某个说明符会导致实现依赖。</p></li>
+<li><p>通常的解决办法是统一用 <code>%ld</code>，并将对应的值强制转换为
+<code>long</code>，例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br><span class="line">mypid = getpid();  <span class="comment">/* 获取当前进程ID */</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;My PID is %ld\n&quot;</span>, (<span class="type">long</span>) mypid);</span><br></pre></td></tr></table></figure></p></li>
+<li><p>有一个例外：<code>off_t</code> 类型在某些环境下是
+<code>long long</code>，因此应强制转换为 <code>long long</code> 并用
+<code>%lld</code> 打印（详见5.10节）。</p></li>
+<li><p>C99 标准定义了 <code>z</code> 长度修饰符，用于
+<code>size_t</code> 或 <code>ssize_t</code> 类型，可以用
+<code>%zd</code> 替代 <code>%ld</code>+强转。但该说明符并非所有 UNIX
+实现都支持，所以本书避免使用。</p></li>
+<li><p>C99 还定义了 <code>j</code> 长度修饰符，指定参数为
+<code>intmax_t</code>（或
+<code>uintmax_t</code>），这种类型足够大，可以表示任何整数类型。理论上，使用
+<code>(intmax_t)</code> 强转加 <code>%jd</code> 是最通用的做法，能处理
+<code>long long</code> 及扩展整数类型（如
+<code>int128_t</code>）。但由于并非所有 UNIX
+实现都支持，本书也避免使用这种方式。</p></li>
+</ul>
+<h3
+id="其他可移植性问题miscellaneous-portability-issues">其他可移植性问题（Miscellaneous
+Portability Issues）</h3>
+<h4 id="结构体的初始化与使用">结构体的初始化与使用</h4>
+<ul>
+<li>各 UNIX
+实现规定了一系列标准结构体，用于系统调用和库函数。例如，<code>sembuf</code>
+结构体用于信号量操作（semop）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> &#123;</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">short</span> sem_num;  <span class="comment">/* 信号量编号 */</span></span><br><span class="line">  <span class="type">short</span>          sem_op;   <span class="comment">/* 要执行的操作 */</span></span><br><span class="line">  <span class="type">short</span>          sem_flg;  <span class="comment">/* 操作标志 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>虽然 SUSv3 规定了这些结构体，但需要注意：
+<ul>
+<li>一般来说，结构体成员的顺序未必有标准规定。</li>
+<li>某些实现可能会在结构体中添加额外的字段。</li>
+</ul></li>
+<li>因此，<strong>不建议</strong>用如下方式初始化结构体（因为不同实现成员顺序可能不同）：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; <span class="number">3</span>, <span class="number">-1</span>, SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure> 这种写法在 Linux
+下可用，但在其他实现中可能出错。<strong>可移植的做法</strong>是用显式赋值：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span>;</span></span><br><span class="line">s.sem_num = <span class="number">3</span>;</span><br><span class="line">s.sem_op  = <span class="number">-1</span>;</span><br><span class="line">s.sem_flg = SEM_UNDO;</span><br></pre></td></tr></table></figure> 如果使用 C99，可以用新的结构体初始化语法：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; .sem_num = <span class="number">3</span>, .sem_op = <span class="number">-1</span>, .sem_flg = SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure></li>
+<li>如果要将结构体内容写入文件，也要注意成员顺序。不能直接二进制写入结构体，而应按指定顺序逐个字段写入（最好用文本形式）。</li>
+</ul>
+<h4 id="某些宏可能并非所有实现都支持">某些宏可能并非所有实现都支持</h4>
+<ul>
+<li>有些宏在所有 UNIX 实现中并不一定存在。例如，<code>WCOREDUMP()</code>
+宏（用于检测子进程是否产生 core dump 文件）虽然常见，但 SUSv3
+并未规定，因此某些系统可能没有。</li>
+<li>可移植的做法是用 <code>#ifdef</code> 判断宏是否存在：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> WCOREDUMP</span></span><br><span class="line">  <span class="comment">/* 使用 WCOREDUMP() 宏 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="不同实现对头文件的要求不同">不同实现对头文件的要求不同</h4>
+<ul>
+<li>某些系统调用和库函数所需的头文件在不同 UNIX 实现中可能不同。本书以
+Linux 为主，并注明与 SUSv3 的差异。</li>
+<li>书中部分函数原型会注明某个头文件后加注释
+<code>/* For portability */</code>，表示该头文件在 Linux 或 SUSv3
+下不是必需的，但为了兼容其他（尤其是老旧）实现，建议在可移植程序中包含。</li>
+<li>POSIX.1-1990 要求在包含与某些函数相关的头文件前，先包含
+<code>&lt;sys/types.h&gt;</code>，但这一要求后来被 SUSv1
+移除。尽管如此，为了可移植性，建议将 <code>&lt;sys/types.h&gt;</code>
+作为首个头文件包含（本书示例为简洁起见省略了它）。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/25/oper_sysn/" rel="prev" title="操作系统基础 | 系统编程常用设置">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 系统编程常用设置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/27/oper_sys10/" rel="next" title="操作系统基础 | 3. 系统调用">
+                  操作系统基础 | 3. 系统调用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/06/25/oper_sysn2/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/06/25/oper_sysn2/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

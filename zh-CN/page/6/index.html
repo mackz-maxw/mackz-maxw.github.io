@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">72</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/14/kamacode2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -177,7 +177,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/hello-world/" class="post-title-link" itemprop="url">搭建博客</a>
+          <a href="/2025/05/14/kamacode2/" class="post-title-link" itemprop="url">代码随想录 | 刷题-数组2</a>
         </h2>
 
         <div class="post-meta-container">
@@ -188,14 +188,23 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-05-15 02:46:08" itemprop="dateCreated datePublished" datetime="2025-05-15T02:46:08+08:00">2025-05-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:16" itemprop="dateModified" datetime="2025-01-22T10:30:16+08:00">2025-01-22</time>
+      <time title="修改时间：2025-05-21 22:19:21" itemprop="dateModified" datetime="2025-05-21T22:19:21+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
     </span>
 
   
@@ -208,42 +217,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。</p>
-<p>Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择...</p>
-<h2 id="section">2/23-2/24</h2>
-<h3 id="git初试">git初试</h3>
-<p>follow <a
-target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103391101">枫叶的教程</a> problem
-occur: can' t clone existing repostory with git bash reports timeout or
-OpenSSL SSL_read: Connection was reset, errno 10054</p>
-<p>从GitHub上clone仓库的时候，试了几次，有时git
-bash报错10054，有时timeout。</p>
-<p>我先是按<a
-target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44795128/article/details/119214048?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;utm_relevant_index=1">网上教程</a>改了git的global
-config，还是报错</p>
-<p>想到自己上GitHub都要科学方法，就觉得应该是代理的问题。git应该并非使用系统代理设置，而是需要自行设置，果不其然。</p>
-<p>solve: setup proxy for git, following <a
-target="_blank" rel="noopener" href="https://www.jianshu.com/p/290152303598">git设置代理</a></p>
-<h3 id="博客搭建">博客搭建</h3>
-<p>follow <a
-target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1201860091307458560">枫叶的教程合集</a></p>
-<p>感谢枫叶大佬的教程，有时间一定上知乎评论区里发个反馈。</p>
-<p>安装node.js与插件的过程中报错属于node.js本地的文件夹无法访问。一开始觉得很奇怪，明明特意从c盘卸载了安别的盘，后来我想起来那个盘是我从c盘分出去的了，草（感叹词）。所以应该是因为也需要管理员权限（也可能是我把git安到c盘了？）。果然管理员启动bash之后，安装就顺畅了。</p>
-<p>枫叶的教程里面设置npm的环境变量那里可能有点问题，设置好之后应该是不需要像网上一些教程说的那样安装两遍npm的。npm所在目录需要保留而不是更改，再按教程添加node的目录。在系统变量里添加node的路径后，path里需要添加对应的%NODE_PATH%，这也是教程里未提及的。</p>
-<p>其他问题应该就只是跟版本有关了，比如GitHub把主分支从master改成main，创建个人网页的setting单独分页了等等。以及博客更新后无需删除.git重新上传，hexo的操作估计是有延迟的。</p>
-<p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
-<p>在菜单中增加新页面需要同时hexo new
-page以及在主题的config文件中设置（参考枫叶的教程）</p>
-<h3 id="一些感叹">一些感叹</h3>
-<p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
-<h3 id="一些bug">一些bug</h3>
-<p>git报错the remote end hung up unexpectedly：照此教程解决了：
-https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
-<h3 id="一些bug-2.0">一些bug 2.0</h3>
-<p>。。。又给git的proxy摆了一道没办法deploy博客，不想用的时候一定要记得<code>git config --global --unset http.proxy</code>重置啊！设置回来则是<code>git config --global http.proxy proxyaddress:port</code></p>
-<p>最近总感觉自己记性有点差，这是写完博客后如何deploy:
-在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
+          <h3 id="长度最小的子数组">209.长度最小的子数组</h3>
+<p>不看题解的时候我的想法是在一个大循环里使用三个循环，先移动两个指针里右边指针的位置到和大于等于target，然后移动左指针到小于等于target,再开始移动右边指针。看了题解了解到可以在两个循环里操作两个指针完成上述操作，避免到处找边界条件。
+实际写的时候还是犯了一些小错误，例如sum的累加初始值，sum应该在何时减少等等，今后在更改代码的时候还是要注意细节。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;climits&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minSubArrayLen</span><span class="params">(<span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>, sum = <span class="number">0</span>, k = INT_MAX;</span><br><span class="line">        <span class="keyword">for</span>(;right&lt;nums.<span class="built_in">size</span>();right++)&#123;</span><br><span class="line">            sum += nums[right];</span><br><span class="line">            <span class="type">int</span> len;</span><br><span class="line">            <span class="keyword">while</span>(sum &gt;= target)&#123;</span><br><span class="line">                len = right - left + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(len &lt; k)k = len;</span><br><span class="line">                sum -= nums[left];</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// printf(&quot;left: %d, right: %d, len: %d, k:%d\n&quot;, left, right,len, k);</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> k == INT_MAX ? <span class="number">0</span> : k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 59.螺旋矩阵II</p>
+<p>看到这道题目我的第一想法是整理出移动方向和当前数字所在位置i，j的关系。尝试写了一下感觉太复杂了，看了题解发现是每圈一次循环，每次循环处理四条边
+自己尝试着写了一下发现被每次循环加减的边界绕进去了，还是题解的方式比较清晰。题解强调的区间问题也要注意，不仅仅是每条边的循环条件，每次循环终止如何过渡到下次循环开始也是问题。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">generateMatrix</span>(<span class="type">int</span> n) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; mat;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;n;i++)&#123;</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">row</span><span class="params">(n, <span class="number">0</span>)</span></span>;</span><br><span class="line">            mat.<span class="built_in">push_back</span>(row);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> row = <span class="number">0</span>, col = <span class="number">0</span>, p = <span class="number">1</span>, c = n / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> startx = <span class="number">0</span>, starty = <span class="number">0</span>, offset = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(c--)&#123;</span><br><span class="line">            row = starty;</span><br><span class="line">            col = startx;</span><br><span class="line">            <span class="keyword">for</span>(;col&lt;(n-offset);col++)&#123;</span><br><span class="line">                mat[row][col] = p;</span><br><span class="line">                p++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(;row&lt;(n-offset);row++)&#123;</span><br><span class="line">                mat[row][col] = p;</span><br><span class="line">                p++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(;col&gt;startx;col--)&#123;</span><br><span class="line">                mat[row][col] = p;</span><br><span class="line">                p++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(;row&gt;starty;row--)&#123;</span><br><span class="line">                mat[row][col] = p;</span><br><span class="line">                p++;</span><br><span class="line">            &#125;</span><br><span class="line">            startx++;</span><br><span class="line">            starty++;</span><br><span class="line">            offset++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(n % <span class="number">2</span> == <span class="number">1</span>)mat[n/<span class="number">2</span>][n/<span class="number">2</span>] = p;</span><br><span class="line">        <span class="keyword">return</span> mat;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -270,7 +250,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/13/kamacode1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -288,7 +268,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
+          <a href="/2025/05/13/kamacode1/" class="post-title-link" itemprop="url">代码随想录 | 刷题-数组</a>
         </h2>
 
         <div class="post-meta-container">
@@ -299,14 +279,23 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-05-14 11:19:17" itemprop="dateCreated datePublished" datetime="2025-05-14T11:19:17+08:00">2025-05-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:22" itemprop="dateModified" datetime="2025-01-22T10:30:22+08:00">2025-01-22</time>
+      <time title="修改时间：2025-06-21 00:04:37" itemprop="dateModified" datetime="2025-06-21T00:04:37+08:00">2025-06-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
     </span>
 
   
@@ -319,20 +308,196 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="依赖问题">依赖问题</h3>
-<p>由于安装的老版本（humble）ros2,
-很多必需包直接安装会报依赖小版本号不一致错误，使用apt
-install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
-在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
-<h3 id="swap空间不足">swap空间不足</h3>
-<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
-很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
-<p>这个时候就需要给wsl2扩swap空间， 在
-c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
-在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
-<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
-<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
+          <h1 id="数组基础与算法实现">数组基础与算法实现</h1>
+<h2 id="数组基本特性">数组基本特性</h2>
+<ul>
+<li>数组下标从0开始</li>
+<li>数组内存空间的地址是连续的</li>
+<li>在C++中，二维数组在内存的空间地址是连续的</li>
+</ul>
+<h2 id="c常见数据类型长度">C++常见数据类型长度</h2>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 37%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>长度（字节）</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>char</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>long long</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>long double</td>
+<td>8或16</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>1</td>
+<td>实际只使用1位</td>
+</tr>
+<tr>
+<td>指针类型</td>
+<td>4或8</td>
+<td>取决于编译器和操作系统</td>
+</tr>
+</tbody>
+</table>
+<p>在C++中，声明数组和向量（vector）有多种方式。以下分别详细说明：</p>
+<h2 id="数组声明">数组声明</h2>
+<h3
+id="数组array的声明方式"><strong>数组（Array）的声明方式</strong></h3>
+<p>数组是固定大小的连续内存序列，大小在编译时确定。</p>
+<ol type="1">
+<li><p><strong>指定大小（不初始化）</strong><br />
+元素值未定义（随机值）： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr1[<span class="number">5</span>];  <span class="comment">// 5个int类型元素，值未初始化</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>指定大小并完全初始化</strong><br />
+显式初始化所有元素： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr2[<span class="number">3</span>] = &#123;<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>&#125;;  <span class="comment">// 初始化所有元素</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>指定大小并部分初始化</strong><br />
+未显式初始化的元素设为0： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr3[<span class="number">5</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;  <span class="comment">// [1, 2, 0, 0, 0]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>自动推断大小</strong><br />
+编译器根据初始化列表确定数组大小： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr4[] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// 大小自动推断为3</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>统一初始化（C++11）</strong><br />
+省略等号，使用花括号： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr5[]&#123;<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;;  <span class="comment">// 大小推断为3</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>多维数组</strong><br />
+声明二维/三维数组： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> matrix[<span class="number">2</span>][<span class="number">3</span>] = &#123;&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;, &#123;<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;&#125;;</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<hr />
+<h3
+id="向量vector的声明方式"><strong>向量（Vector）的声明方式</strong></h3>
+<p>向量是动态数组（标准库容器），大小可在运行时改变，需包含头文件
+<code>&lt;vector&gt;</code>。</p>
+<ol type="1">
+<li><p><strong>空向量</strong><br />
+创建不含元素的空向量： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec1;  <span class="comment">// 空向量</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>指定大小</strong><br />
+创建含 <code>n</code> 个默认初始化元素的向量（如 <code>int</code>
+初始化为0）： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec2</span><span class="params">(<span class="number">5</span>)</span></span>;     <span class="comment">// 5个0: [0, 0, 0, 0, 0]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>指定大小和初始值</strong><br />
+创建含 <code>n</code> 个指定值的元素： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec3</span><span class="params">(<span class="number">4</span>, <span class="number">100</span>)</span></span>;  <span class="comment">// 4个100: [100, 100, 100, 100]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>通过初始化列表（C++11）</strong><br />
+直接初始化元素值： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec4 = &#123;<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>&#125;;  <span class="comment">// 列表初始化</span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec5&#123;<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>&#125;;   <span class="comment">// 直接花括号初始化</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>通过迭代器范围</strong><br />
+复制另一个容器的部分或全部元素： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; src = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec6</span><span class="params">(src.begin(), src.end())</span></span>;  <span class="comment">// 复制整个src</span></span><br><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec7</span><span class="params">(src.begin(), src.begin() + <span class="number">2</span>)</span></span>;  <span class="comment">// 复制前2个元素: [1, 2]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>拷贝构造</strong><br />
+复制另一个向量的内容： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; original = &#123;<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec8</span><span class="params">(original)</span></span>;  <span class="comment">// 拷贝: [5, 6, 7]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>移动构造（C++11）</strong><br />
+高效转移另一个向量的资源（原向量被置空）： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; temp = &#123;<span class="number">9</span>, <span class="number">10</span>&#125;;</span><br><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">vec9</span><span class="params">(std::move(temp))</span></span>;  <span class="comment">// vec9接管资源，temp变为空</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>多维向量</strong><br />
+声明二维向量（向量嵌套）： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::vector&lt;<span class="type">int</span>&gt;&gt; matrix = &#123;&#123;<span class="number">1</span>, <span class="number">2</span>&#125;, &#123;<span class="number">3</span>, <span class="number">4</span>&#125;, &#123;<span class="number">5</span>, <span class="number">6</span>&#125;&#125;;</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<hr />
+<h3 id="关键区别"><strong>关键区别</strong></h3>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 40%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>数组</strong></th>
+<th><strong>向量</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>大小</strong></td>
+<td>固定（编译时确定）</td>
+<td>动态（运行时可调整）</td>
+</tr>
+<tr>
+<td><strong>内存管理</strong></td>
+<td>栈或静态内存</td>
+<td>堆内存（自动管理）</td>
+</tr>
+<tr>
+<td><strong>作为参数传递</strong></td>
+<td>退化为指针</td>
+<td>可安全传递（保持大小信息）</td>
+</tr>
+<tr>
+<td><strong>越界访问</strong></td>
+<td>未定义行为（可能崩溃）</td>
+<td>使用<code>at()</code>会抛出异常</td>
+</tr>
+<tr>
+<td><strong>功能扩展</strong></td>
+<td>无内置方法</td>
+<td>支持<code>push_back()</code>、<code>size()</code>等方法</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="示例代码"><strong>示例代码</strong></h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 数组示例</span></span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// 自动推断大小</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;数组大小: &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(arr)/<span class="built_in">sizeof</span>(arr[<span class="number">0</span>]) &lt;&lt; <span class="string">&quot;\n&quot;</span>; <span class="comment">// 输出3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 向量示例</span></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; vec = &#123;<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;;</span><br><span class="line">    vec.<span class="built_in">push_back</span>(<span class="number">7</span>);  <span class="comment">// 动态添加元素</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;向量大小: &quot;</span> &lt;&lt; vec.<span class="built_in">size</span>();  <span class="comment">// 输出4</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据需求选择：<strong>数组</strong>适用于固定大小且性能敏感的场景；<strong>向量</strong>则提供灵活性和安全性，适合大多数动态需求。</p>
+<h2 id="算法实现">算法实现</h2>
+<h3 id="二分查找">704. 二分查找</h3>
+<h4 id="左闭右闭区间实现">左闭右闭区间实现</h4>
+<p>原本仅判断left ==
+right，后来发现在处理仅两个元素，且target小于最小元素的数组时，这样写会导致left
+= 0同时right= -1,陷入死循环，更改判断条件后就解决了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>()<span class="number">-1</span>, target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid - <span class="number">1</span>, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="左闭右开区间实现">左闭右开区间实现</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">searchid</span>(<span class="number">0</span>, nums.<span class="built_in">size</span>(), target, nums);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchid</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> target, vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left + right - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(left, mid, target, nums);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchid</span>(mid + <span class="number">1</span>, right, target, nums);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="移除元素">27. 移除元素</h3>
+<p>当target小于所有数时，right不断左移，left不变等于0，刚好结果应该是0。当target大于所有数时，right不会动，left不断右移直到nums.length，刚好等于结果。所以未找到时应返回left</p>
+<p>我的方法从数组的两端向中间遍历，虽然也是双指针方法，但是需要不少额外判断。下一次要定义快慢指针去解题，因为实际上不用把所有查找的元素移动到数组最后，所以直接跳过这些元素复制即可：
+快指针：寻找新数组的元素 ，新数组就是不含有目标元素的数组
+慢指针：指向更新 新数组下标的位置 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeElement</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">empty</span>()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] != val &amp;&amp; left &lt; right) left++;</span><br><span class="line">            <span class="keyword">while</span>(nums[left] == val &amp;&amp; left &lt; right) &#123;</span><br><span class="line">                nums[left] = nums[right];</span><br><span class="line">                nums[right] = val;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(nums[left] != val) <span class="keyword">return</span> left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> left == <span class="number">0</span> ? <span class="number">0</span> : left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="有序数组的平方">977. 有序数组的平方</h3>
+<p>这题我一开始总是想着在原数组中修改，于是想不出什么来。看了题解是新开一个数组，再左右指针遍历原数组，思路正确很快就做出来了：
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sortedSquares</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">res</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res_p = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(res_p &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">abs</span>(nums[left]) &lt; <span class="built_in">abs</span>(nums[right])) &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[right], <span class="number">2</span>);</span><br><span class="line">                right--;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res[res_p] = <span class="built_in">pow</span>(nums[left], <span class="number">2</span>);</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            res_p--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="c常用数学函数">C++常用数学函数</h2>
+<ul>
+<li><code>pow(x, y)</code>：计算x的y次方</li>
+<li><code>sqrt(x)</code>：计算平方根</li>
+<li><code>abs(x)</code>：计算绝对值</li>
+<li><code>ceil(x)</code>：向上取整</li>
+<li><code>floor(x)</code>：向下取整</li>
+<li><code>round(x)</code>：四舍五入</li>
+<li><code>max(x, y)</code>/<code>min(x, y)</code>：返回较大/较小值</li>
+</ul>
 
       
     </div>
@@ -359,7 +524,7 @@ c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，�
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/20/fed-sched-int/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -377,7 +542,7 @@ c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，�
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
+          <a href="/2025/01/20/fed-sched-int/" class="post-title-link" itemprop="url">fed_sched_int</a>
         </h2>
 
         <div class="post-meta-container">
@@ -388,14 +553,23 @@ c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，�
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-01-20 22:45:29" itemprop="dateCreated datePublished" datetime="2025-01-20T22:45:29+08:00">2025-01-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:19" itemprop="dateModified" datetime="2025-01-22T10:30:19+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:04" itemprop="dateModified" datetime="2025-01-22T10:30:04+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
     </span>
 
   
@@ -408,23 +582,166 @@ c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，�
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
-<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
-<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
-以上代码分别：设置了GTK（GIMP
-Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
-Window
-System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
-<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
-<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
-<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
-选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
-默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
-<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
-target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
+          <p>摘录一下Marion的论文要点，方便查阅</p>
+<hr />
+<h3 id="任务模型">任务模型</h3>
+<p>每个任务 <span class="math inline">\(\tau_i\)</span> 由一组子任务
+<span class="math inline">\(\tau_{i,j}\)</span>
+组成，并在其间具有优先关系 <span
+class="math inline">\(&lt;\)</span>。每个子任务 <span
+class="math inline">\(\tau_{i,j}\)</span> 的特征为： - 工作量 <span
+class="math inline">\(c_{i,j} \in
+\mathbb{N}\)</span>，表示其最坏情况下的执行时间。</p>
+<p>子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执行时间最长为
+<span
+class="math inline">\(c_{i,j}\)</span>。假设子任务执行是可重入的：执行可以被其他子任务抢占，且无需在系统中同一个核心上恢复。</p>
+<p>优先关系限制了子任务的执行顺序，例如 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span>，则 <span
+class="math inline">\(\tau_{i,a}\)</span> 必须在 <span
+class="math inline">\(\tau_{i,b}\)</span> 之前完全执行。我们说，当任务
+<span class="math inline">\(\tau_{i,a}\)</span> 的所有前驱任务 <span
+class="math inline">\(\tau_{i,a&#39;}\)</span> 完成时，<span
+class="math inline">\(\tau_{i,a}\)</span> 变为“可用”（available）。</p>
+<p>根据 [26]，我们将任务分为两类： 1. <strong>轻量任务（light
+tasks）</strong>：满足 <span class="math inline">\(C_i &lt;
+D_i\)</span>； 2. <strong>重量任务（heavy tasks）</strong>：满足 <span
+class="math inline">\(C_i \geq
+D_i\)</span>，此类任务必须利用其潜在的并行性才能满足调度要求。</p>
+<p>本文的重点是<strong>联合调度</strong>（federated
+scheduling），对于每个重量任务，其被分配到一个专用核心集上并独占执行。我们仅考虑截止时间
+<span class="math inline">\(D_i\)</span> 和子任务工作量 <span
+class="math inline">\(c_{i,j}\)</span>
+为正整数的任务，称为<strong>整数值任务</strong>（integer-valued
+tasks）。</p>
+<hr />
+<h3 id="优先关系的dag表示">优先关系的DAG表示</h3>
+<p>子任务执行的优先关系可表示为一个<strong>有向无环图（DAG）</strong>。对于每个并行任务
+<span class="math inline">\(\tau_i\)</span>，存在一个DAG <span
+class="math inline">\(G_i\)</span>，其包含的顶点集合为 <span
+class="math inline">\(v_{i,j}\)</span>，对应于任务 <span
+class="math inline">\(\tau_i\)</span> 的子任务 <span
+class="math inline">\(\tau_{i,j}\)</span>： - 每个顶点 <span
+class="math inline">\(v_{i,j}\)</span> 的属性为子任务的工作量 <span
+class="math inline">\(c_{i,j}\)</span>； - 边 <span
+class="math inline">\(v_{i,a} \to v_{i,b}\)</span> 存在当且仅当 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span> 且不存在 <span
+class="math inline">\(v_{i,c}\)</span> 满足 <span
+class="math inline">\(\tau_{i,a} &lt; \tau_{i,c} &lt;
+\tau_{i,b}\)</span>，即 <span class="math inline">\(v_{i,b}\)</span>
+直接继承 <span class="math inline">\(v_{i,a}\)</span>。</p>
+<hr />
+<h3 id="关键路径长度的定义">关键路径长度的定义</h3>
+<p>对于每个图顶点 <span
+class="math inline">\(v_{i,j}\)</span>，我们定义其<strong>关键路径长度</strong>或<strong>跨度</strong>
+<span class="math inline">\(l_{i,j} \in \mathbb{N}\)</span>
+为从该顶点起始的最长路径的长度，该路径由沿路径每个顶点的执行时间（包括起始顶点的权重
+<span class="math inline">\(c_{i,j}\)</span>）加权。</p>
+<p>对于相应的任务 <span class="math inline">\(\tau_i\)</span>，跨度
+<span class="math inline">\(L_i \in \mathbb{N}\)</span>
+是所有顶点的跨度中的最大值，即整个DAG的关键路径长度。跨度对应于任务在给定无限数量核心时相对于其激活时间的最早完成时间。</p>
+<p>显然，为使任务可调度，必须满足： <span class="math display">\[
+L_i \leq D_i
+\]</span></p>
+<h2 id="适用于整数值任务的联合调度">适用于整数值任务的联合调度</h2>
+<p>对于一个重量任务 <span
+class="math inline">\(\tau_i\)</span>，其特征为工作量 <span
+class="math inline">\(C_i\)</span>、跨度 <span
+class="math inline">\(L_i\)</span> 和截止时间 <span
+class="math inline">\(D_i\)</span>，在提供足够核心的情况下，任何工作保留型（work-conserving，即贪婪型）调度器均可调度该任务。分配给任务
+<span class="math inline">\(\tau_i\)</span> 的核心数可以表示为： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil \tag{1}
+\]</span></p>
+<p>我们在此证明，对于一个并行任务，如果其截止时间和所有子任务的工作量均为整数，则分配的核心数可以改进为：
+<span class="math display">\[
+n_i&#39; = \left\lceil \frac{C_i - L_i + 1}{D_i - L_i + 1} \right\rceil
+\]</span></p>
+<p>这一公式比方程 (1)
+在限制重量任务的核心数方面提供了实际且直观的优势。</p>
+<h2
+id="单工作量表调度unit-workload-list-scheduling">单工作量表调度（Unit-Workload
+List Scheduling）</h2>
+<p>第4节中提出的联合调度方法为高利用率的整数值任务分配了足够的处理器，以保证任何工作保留型调度器的可行性，前提是给定每个任务的工作量、关键路径长度和截止时间。然而，这种常量时间的分配方法可能会导致对重量任务的处理器过度分配，进而造成资源浪费。</p>
+<p>在 [3] 中，Graham 的表调度方法（list
+scheduling）被应用于重量任务；通过使用多种启发式方法为子任务排序，可以在更少的处理器上生成可行的调度。表调度以非抢占式方式将可用子任务分配给空闲处理器；如
+[14]
+所述，这可能导致对重量任务的处理器分配过多。然而，允许空闲子任务进行抢占可能会引入切换问题。</p>
+<h3 id="方法改进">方法改进</h3>
+<p>为了解决这个问题，我们提出了<strong>单工作量子任务的表调度</strong>。<br />
+- 一个整数值并行任务 <span class="math inline">\(\tau_i\)</span>，由DAG
+<span class="math inline">\(G_i\)</span>
+表示，可以被分解为一个包含单工作量顶点的DAG <span
+class="math inline">\(G_i^*\)</span>。<br />
+- 在 <span class="math inline">\(G_i\)</span> 中具有工作量 <span
+class="math inline">\(c\)</span> 的顶点 <span
+class="math inline">\(v_{i,j}\)</span>
+被映射为一个完全有序的顶点序列，在 <span
+class="math inline">\(G_i^*\)</span> 中形成从起点到终点的路径。</p>
+<p>对于 <span class="math inline">\(G_i^*\)</span> 中的任何边 <span
+class="math inline">\(v_{i,j}\)</span>，其连接方式如下： 1. <span
+class="math inline">\(G_i^*\)</span> 中进入 <span
+class="math inline">\(v_{i,j}\)</span>
+的任何边连接到其分解后路径中的第一个顶点； 2. 在 <span
+class="math inline">\(G_i\)</span> 中离开 <span
+class="math inline">\(v_j\)</span> 的任何边，现在连接到 <span
+class="math inline">\(v_{i,j}\)</span> 的分解路径中的最后一个顶点。</p>
+<h3 id="优势">优势</h3>
+<p>对于这样的DAG，表调度方法可以为每个单位工作量分配一个优先级；<br />
+这使得原始DAG <span class="math inline">\(G_i\)</span>
+中的相应子任务能够在单位时间步边界内被抢占。</p>
+<h3 id="常见的表调度启发式方法">5.1 常见的表调度启发式方法</h3>
+<h4 id="关键路径规则critical-path-rule-cp">关键路径规则（Critical Path
+Rule, CP）</h4>
+<p>关键路径规则用于表调度时，以<strong>最长跨度</strong>的顺序选择可用子任务进行执行。<br />
+-
+子任务跨度的分配可以以深度优先搜索的方式完成；当为每个顶点分配跨度后，图的总跨度
+<span class="math inline">\(L\)</span> 会被更新。 - 该过程的时间复杂度为
+<span class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<h4 id="dag分解">DAG分解</h4>
+<p>DAG <span class="math inline">\(G\)</span> 分解为单位工作量的 DAG
+<span class="math inline">\(G^*\)</span> 的过程表示为函数
+<strong>Convert_Unit_DAG</strong>： 1. 初始化 <span
+class="math inline">\(G^*\)</span> 为 <span
+class="math inline">\(G\)</span> 的副本。 2. 建立一个顶点集合 <span
+class="math inline">\(V^*\)</span>，其由 <span
+class="math inline">\(G^*\)</span>
+中的顶点（实际代码中可能为指向顶点的指针）组成。 3. 对于 <span
+class="math inline">\(V^*\)</span> 中的每个顶点 <span
+class="math inline">\(v_i\)</span>： - 将 <span
+class="math inline">\(v_i\)</span> 的工作量 <span
+class="math inline">\(c_i\)</span> 转化为单位工作量顶点序列，这些顶点在
+<span class="math inline">\(G^*\)</span> 中形成路径： -
+路径中的每个顶点之间用边连接，第一个顶点的跨度等于 <span
+class="math inline">\(v_i\)</span> 的跨度 <span
+class="math inline">\(l_i\)</span>； -
+每个后续顶点的跨度比前一个顶点小1。 - 删除原始顶点 <span
+class="math inline">\(v_i\)</span>。</p>
+<ol start="4" type="1">
+<li>处理完成后，<span class="math inline">\(G^*\)</span>
+中仅包含单位工作量的顶点：
+<ul>
+<li>通过分解，生成了 <span class="math inline">\(C - |V|\)</span>
+个额外顶点，以及 <span class="math inline">\(C - |V|\)</span>
+条额外边。</li>
+<li>因此，总运行时间为 <span class="math inline">\(O(|V| + C - |V| + |E|
++ C - |V|)\)</span>，简化为 <span class="math inline">\(O(C +
+|E|)\)</span>。</li>
+</ul></li>
+</ol>
+<h4
+id="后继数量规则largest-number-of-successors-rule-lns">后继数量规则（Largest
+Number of Successors Rule, LNS）</h4>
+<p>LNS规则以<strong>后继任务的总工作量</strong>为顺序，选择可用子任务进行执行：
+- 子任务 <span class="math inline">\(v_i \in G\)</span> 的后继工作量由与
+<span class="math inline">\(v_i\)</span>
+通过路径相连的所有顶点的工作量之和定义。 -
+可以通过动态规划在整个图上实现这一过程，其时间复杂度为 <span
+class="math inline">\(O(|V| + |E|)\)</span>。</p>
+<p>LNS规则也可以应用于单位工作量子任务的表调度，并保持伪多项式时间复杂度。</p>
+<h4 id="注意">注意</h4>
+<p>将整数值任务的 DAG <span class="math inline">\(G\)</span>
+分解为单位工作量的 DAG <span class="math inline">\(G^*\)</span>
+时，还需要为每个单位工作量顶点分配一个子图工作量。这与跨度的分配类似，不会影响算法的时间复杂度。</p>
 
       
     </div>
@@ -451,7 +768,7 @@ target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-id
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/mvvm-frtnd/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/18/federated_sched/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -469,7 +786,7 @@ target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-id
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
+          <a href="/2025/01/18/federated_sched/" class="post-title-link" itemprop="url">Linux联合调度相关</a>
         </h2>
 
         <div class="post-meta-container">
@@ -480,14 +797,23 @@ target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-id
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-01-19 03:39:54" itemprop="dateCreated datePublished" datetime="2025-01-19T03:39:54+08:00">2025-01-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:46" itemprop="dateModified" datetime="2025-01-22T10:30:46+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:10" itemprop="dateModified" datetime="2025-01-22T10:30:10+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
+        </span>
     </span>
 
   
@@ -500,14 +826,262 @@ target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-id
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实现一个简单的MVVM框架</p>
-<h2 id="section">6/30</h2>
-<p>纯javascript实现双向数据绑定：https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</p>
-<p>javascript
-MVVM框架介绍：https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</p>
-<p>谢谢你，<a
-target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr
-Kopytin</a>大神！</p>
+          <p>摘录一下Jing Li的论文要点，方便查阅</p>
+<hr />
+<h2 id="性能界限的定义">性能界限的定义</h2>
+<p>通常，可以为实时调度器推导出两种类型的性能界限：</p>
+<ol type="1">
+<li><strong>资源增益界限</strong>（Resource Augmentation Bound）：<br />
+调度器 <span class="math inline">\(S\)</span> 提供一个资源增益界限 <span
+class="math inline">\(b \geq 1\)</span>，如果理想调度器能够在 <span
+class="math inline">\(m\)</span> 个速度为 1 的核心上调度任何任务集 <span
+class="math inline">\(\tau\)</span>，它能够在 <span
+class="math inline">\(m\)</span> 个速度为 <span
+class="math inline">\(b\)</span> 的核心上成功调度 <span
+class="math inline">\(\tau\)</span>。
+<ul>
+<li>资源增益界限很好地反映了调度器与最优调度的接近程度，但有一个缺点：理想调度器只是一个假设的调度器，它总能找到一个可行调度（如果存在）。<br />
+</li>
+<li>由于无法验证理想调度器是否能够在单位速度核心上调度给定任务集，因此资源增益界限无法提供可调度性测试。</li>
+</ul></li>
+<li><strong>利用率界限</strong>（Utilization Bound）：<br />
+调度器 <span class="math inline">\(S\)</span> 提供一个利用率界限 <span
+class="math inline">\(b\)</span>，如果它能够在 <span
+class="math inline">\(m\)</span>
+个核心上成功调度任何任务集，其总利用率不超过 <span
+class="math inline">\(m/b\)</span>。
+<ul>
+<li>利用率界限比资源增益界限提供了更多信息：任何保证利用率界限 <span
+class="math inline">\(b\)</span> 的调度器都会自动保证资源增益界限 <span
+class="math inline">\(b\)</span>。<br />
+</li>
+<li>此外，利用率界限本身是一种简单的可调度性测试，因为任务集的总利用率可以在线性时间内计算，并与
+<span class="math inline">\(m/b\)</span> 进行比较。</li>
+</ul></li>
+</ol>
+<p>注意这些界限讨论的是调度的相对效率，而不是程序执行的速度，所以b值越小，调度更有效率。</p>
+<ol start="3" type="1">
+<li><strong>容量增益界限</strong> Li 等人 [35]
+定义了一个名为<strong>容量增益界限</strong>（capacity augmentation
+bound）的概念，这一概念与利用率界限类似，但增加了一个新条件：<br />
+调度器 <span class="math inline">\(S\)</span> 提供容量增益界限 <span
+class="math inline">\(b\)</span>，如果它能够调度满足以下两个条件的任何任务集
+<span class="math inline">\(\tau\)</span>：</li>
+</ol>
+<ul>
+<li><span class="math inline">\(\tau\)</span> 的总利用率最多为 <span
+class="math inline">\(m/b\)</span>；</li>
+<li>每个任务的最差情况关键路径长度 <span
+class="math inline">\(L_i\)</span>（即在无限核心上的执行时间）最多为其截止时间的
+<span class="math inline">\(1/b\)</span> 的比例。</li>
+</ul>
+<p>容量增益界限与利用率界限非常相似，但它提供的信息比资源增益界限更多：<br />
+- 任何保证容量增益界限为 <span class="math inline">\(b\)</span>
+的调度器也自动保证资源增益界限为 <span
+class="math inline">\(b\)</span>。<br />
+-
+它同样可以作为一种简单的可调度性测试，并提供对系统可承受负载的估计。</p>
+<hr />
+<h2 id="策略分类">策略分类</h2>
+<p>最近的研究主要集中在为并行任务的各种调度策略证明<strong>资源增益界限</strong>和<strong>容量增益界限</strong>。这些工作可以分为两类：
+1. <strong>基于分解的策略</strong>（Decomposition-based
+strategies）：<br />
+并行任务被分解为一组顺序任务，并使用现有的顺序任务调度策略在多处理器上进行调度。这些策略通常需要事先明确DAG的结构，以便进行分解。</p>
+<ol start="2" type="1">
+<li><strong>非分解策略</strong>（Non-decomposition-based
+strategies）：<br />
+程序可以动态展开，因此不需要离线知识。研究主要集中在两种调度策略上：</li>
+</ol>
+<hr />
+<h2 id="主要贡献">主要贡献</h2>
+<p>本文的主要贡献如下： 1.
+<strong>提出了一种新的联合调度策略</strong>（federated scheduling
+strategy）：<br />
+- 在此策略中，每个<strong>高利用率任务</strong>（利用率 ≥
+1）被分配到一个专用的核心集（cluster）。<br />
+-
+一个多处理器调度算法用于调度所有<strong>低利用率任务</strong>，这些任务依次运行在由剩余核心组成的共享核心集上。<br />
+- 联合调度可以看作是分区调度策略的推广，适用于并行任务。<br />
+- 这是目前已知的针对任意并行 DAG 调度器的最佳容量增益界限。</p>
+<ol start="2" type="1">
+<li><p><strong>证明联合调度的容量增益界限为 2</strong>：<br />
+此外，我们还证明了没有任何调度器能够为并行任务提供比 <span
+class="math inline">\(2 - 1/m\)</span> 更好的容量增益界限。<br />
+因此，当 <span class="math inline">\(m\)</span>
+足够大时，联合调度的界限为 2 是最优的。</p></li>
+<li><p><strong>改进了 G-EDF 的容量增益界限</strong>：<br />
+对于 DAG 任务，G-EDF 的容量增益界限被改进为<br />
+<span class="math display">\[
+\frac{3 + \sqrt{5}}{2} \approx 2.618
+\]</span> 当 <span class="math inline">\(m\)</span> 足够大时，G-EDF
+的容量增益界限达到这一匹配的下界。因此，这一结果填补了大 <span
+class="math inline">\(m\)</span>
+场景下的间隙，这是目前已知针对任意全局调度器的最佳容量增益界限。</p></li>
+<li><p><strong>证明 G-RM 的容量增益界限为</strong> <span
+class="math inline">\(2 + \sqrt{3} \approx 3.732\)</span> ：</p>
+<ul>
+<li>这是目前已知针对任何固定优先级调度器的 DAG
+任务的最佳容量增益界限。<br />
+</li>
+<li>即使仅限于同步任务，这仍是基于全局固定优先级调度（且无需分解）的最佳界限。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="系统模型">系统模型</h2>
+<p>我们现在详细描述并行任务的DAG模型以及一些附加定义。</p>
+<p>我们考虑一个由 <span class="math inline">\(n\)</span>
+个独立的间歇性实时任务 <span class="math inline">\(\tau = \{\tau_1,
+\tau_2, \dots, \tau_n\}\)</span> 组成的任务集。任务 <span
+class="math inline">\(\tau_i\)</span>
+表示任务实例（也称为作业）的无限到达和执行序列。我们考虑<strong>间歇性任务模型</strong>，其中对于任务
+<span class="math inline">\(\tau_i\)</span>： -
+<strong>最小间隔时间</strong>（或周期）<span
+class="math inline">\(T_i\)</span> 表示连续任务实例到达之间的时间； -
+<strong>相对截止时间</strong> <span class="math inline">\(D_i\)</span>
+表示完成作业的时间约束。</p>
+<p>如果任务实例 <span class="math inline">\(\tau_i\)</span> 在时间 <span
+class="math inline">\(t\)</span> 到达，则其执行必须在绝对截止时间 <span
+class="math inline">\(t + D_i\)</span>
+之前完成，且下一个任务实例不能早于 <span class="math inline">\(t +
+T_i\)</span> 到达。<br />
+在本文中，我们考虑<strong>隐式截止时间任务</strong>，即每个任务 <span
+class="math inline">\(\tau_i\)</span> 的相对截止时间 <span
+class="math inline">\(D_i\)</span> 等于其最小间隔时间 <span
+class="math inline">\(T_i\)</span>，即 <span class="math inline">\(T_i =
+D_i\)</span>。</p>
+<p>我们研究在具有 <span class="math inline">\(m\)</span>
+个相同核心的多核系统上调度这些任务集的可调度性。</p>
+<h3 id="dag任务的特性">DAG任务的特性</h3>
+<p>每个任务 <span class="math inline">\(\tau_i \in \tau\)</span>
+是一个并行任务，并被描述为一个<strong>有向无环图（DAG）</strong>。<br />
+- DAG
+中的每个节点（子任务）表示指令序列（一个线程），每条边表示节点之间的依赖关系。
+- 当一个节点的所有前驱节点完成时，该节点准备好执行。</p>
+<p>在本文中，由于不需要基于DAG的具体结构进行分析，仅定义了与任务 <span
+class="math inline">\(\tau_i\)</span> 的执行模式相关的两个参数：</p>
+<ol type="1">
+<li><p><strong>总执行时间（或工作量）<span
+class="math inline">\(C_i\)</span></strong>：<br />
+这是任务 <span class="math inline">\(\tau_i\)</span>
+的所有子任务在最坏情况下的执行时间总和。</p></li>
+<li><p><strong>关键路径长度 <span
+class="math inline">\(L_i\)</span></strong>：<br />
+在给定DAG中，这是关键路径的长度，其中每个节点由对应子任务的最坏情况下执行时间表示。<br />
+关键路径长度是任务在无限核心下的最坏情况下执行时间。</p></li>
+</ol>
+<p>给定一个DAG，计算 <span class="math inline">\(C_i\)</span> 和 <span
+class="math inline">\(L_i\)</span> 都可以在线性时间内完成。</p>
+<h3 id="任务的利用率">任务的利用率</h3>
+<ul>
+<li>任务 <span class="math inline">\(\tau_i\)</span>
+的<strong>利用率</strong>定义为 <span class="math inline">\(u_i =
+\frac{C_i}{T_i} = \frac{C_i}{D_i}\)</span>。<br />
+</li>
+<li>任务集的总利用率表示为： <span class="math display">\[
+U_\Sigma = \sum_{\tau_i \in \tau} u_i
+\]</span></li>
+</ul>
+<hr />
+<h2 id="基于利用率的可调度性测试">基于利用率的可调度性测试</h2>
+<p>在本文中，我们从容量增益界限的角度分析调度器。形式化定义如下：</p>
+<h3 id="定义-1">定义 1</h3>
+<p>给定总利用率为 <span class="math inline">\(U_\Sigma\)</span> 的任务集
+<span class="math inline">\(\tau\)</span>，如果调度算法 <span
+class="math inline">\(S\)</span> 在 <span
+class="math inline">\(m\)</span> 个速度为 <span
+class="math inline">\(b\)</span> 的核心上总能调度 <span
+class="math inline">\(\tau\)</span>，且满足以下条件，则其容量增益界限为
+<span class="math inline">\(b\)</span>：</p>
+<ol type="1">
+<li><p><strong>利用率限制条件</strong>：<br />
+<span class="math display">\[
+\sum_{\tau_i \in \tau} u_i \leq \frac{m}{b}
+\]</span></p></li>
+<li><p><strong>关键路径限制条件</strong>：<br />
+对于每个任务 <span class="math inline">\(\tau_i \in \tau\)</span>：
+<span class="math display">\[
+L_i \leq \frac{D_i}{b}
+\]</span></p></li>
+</ol>
+<h3 id="说明">说明</h3>
+<ul>
+<li>条件 (1) 表示任务集的总利用率不超过 <span
+class="math inline">\(m/b\)</span>。</li>
+<li>条件 (2) 表示每个任务的关键路径长度不超过其相对截止时间的 <span
+class="math inline">\(1/b\)</span>。</li>
+</ul>
+<p>因此，为了验证任务集是否可调度，我们只需知道任务集的总利用率和最大关键路径利用率即可。</p>
+<p>当 <span class="math inline">\(b = 1\)</span> 时，<span
+class="math inline">\(S\)</span> 是一个理想调度器；调度器的 <span
+class="math inline">\(b\)</span> 越小，其性能越优。</p>
+<h2 id="iii.-联合调度federated-scheduling">III. 联合调度（Federated
+Scheduling）</h2>
+<h3 id="a.-联合调度算法federated-scheduling-algorithm">A.
+联合调度算法（Federated Scheduling Algorithm）</h3>
+<p>给定任务集 <span
+class="math inline">\(\tau\)</span>，联合调度算法的工作流程如下：</p>
+<ol type="1">
+<li>首先，将任务划分为两个不相交的集合：
+<ul>
+<li><span class="math inline">\(\tau_{\text{high}}\)</span>
+包含所有<strong>高利用率任务</strong>，即利用率至少为 1 的任务（<span
+class="math inline">\(u_i \geq 1\)</span>）。<br />
+</li>
+<li><span class="math inline">\(\tau_{\text{low}}\)</span>
+包含所有剩余的<strong>低利用率任务</strong>。</li>
+</ul></li>
+</ol>
+<p>考虑一个高利用率任务 <span
+class="math inline">\(\tau_i\)</span>，其最坏情况下执行时间为 <span
+class="math inline">\(C_i\)</span>，关键路径长度为 <span
+class="math inline">\(L_i\)</span>，截止时间为 <span
+class="math inline">\(D_i\)</span>（与其周期 <span
+class="math inline">\(T_i\)</span> 相等）。我们为任务 <span
+class="math inline">\(\tau_i\)</span> 分配 <span
+class="math inline">\(n_i\)</span> 个专用核心，其中： <span
+class="math display">\[
+n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil
+\]</span></p>
+<ol start="2" type="1">
+<li><p>我们使用以下公式计算分配给高利用率任务的核心总数： <span
+class="math display">\[
+n_{\text{high}} = \sum_{\tau_i \in \tau_{\text{high}}} n_i
+\]</span></p></li>
+<li><p>剩余的核心被分配给所有低利用率任务 <span
+class="math inline">\(\tau_{\text{low}}\)</span>，其核心数为： <span
+class="math display">\[
+n_{\text{low}} = m - n_{\text{high}}
+\]</span></p></li>
+</ol>
+<p>如果 <span class="math inline">\(n_{\text{low}}\)</span>
+非负且满足以下条件： <span class="math display">\[
+n_{\text{low}} \geq 2 \sum_{\tau_i \in \tau_{\text{low}}} u_i
+\]</span> 则联合调度算法接受任务集 <span
+class="math inline">\(\tau\)</span>。</p>
+<h3 id="运行时调度runtime-scheduling">运行时调度（Runtime
+Scheduling）</h3>
+<p>在有效的核心分配之后，运行时调度过程如下：</p>
+<ol type="1">
+<li><strong>高利用率任务的调度</strong>：
+<ul>
+<li>使用任何贪婪调度器（greedy scheduler）对高利用率任务 <span
+class="math inline">\(\tau_i\)</span> 进行调度。<br />
+</li>
+<li>贪婪调度器确保当某节点准备好执行时，不会让核心处于空闲状态。</li>
+</ul></li>
+<li><strong>低利用率任务的调度</strong>：
+<ul>
+<li>将低利用率任务视为顺序任务，并使用任何多处理器调度算法（如分区EDF或速率单调调度器）进行调度。<br />
+</li>
+<li>低利用率任务的总利用率最多为 <span
+class="math inline">\(1/2\)</span>，因此可以在分配的 <span
+class="math inline">\(n_{\text{low}}\)</span> 核心上进行调度。</li>
+</ul></li>
+</ol>
+<h3 id="关键点">关键点</h3>
+<p>联合调度算法的一个重要特性是：我们可以安全地将低利用率任务视为顺序任务，因为
+<span class="math inline">\(C_i \leq
+D_i\)</span>，这表明这些任务在其截止时间内完成时不需要并行执行。</p>
 
       
     </div>
@@ -534,7 +1108,7 @@ Kopytin</a>大神！</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/network/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/04/linux_sched4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -552,7 +1126,7 @@ Kopytin</a>大神！</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/network/" class="post-title-link" itemprop="url">计算机网络相关</a>
+          <a href="/2025/01/04/linux_sched4/" class="post-title-link" itemprop="url">Linux调度算法相关4</a>
         </h2>
 
         <div class="post-meta-container">
@@ -563,14 +1137,14 @@ Kopytin</a>大神！</p>
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-01-05 11:00:13" itemprop="dateCreated datePublished" datetime="2025-01-05T11:00:13+08:00">2025-01-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:49" itemprop="dateModified" datetime="2025-01-22T10:30:49+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:43" itemprop="dateModified" datetime="2025-01-22T10:30:43+08:00">2025-01-22</time>
     </span>
 
   
@@ -583,21 +1157,144 @@ Kopytin</a>大神！</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在b站看斯坦福CS144作为教程，打算后期跟着《计算机网络
-自顶向下方法》（Kurose&amp;Ross版）再过一过。</p>
-<p>突然发现看了英文教程再看中文版书有点不理解一些概念用语😂，想看纯英文版的书又怕自己看不懂，纠结了。</p>
-<h2 id="section">3/17</h2>
-<p>（摘自Kurose&amp;Ross的《计算机网络 自顶向下方法》）</p>
-<p>什么是套接字（socket）：</p>
-<p>套接字说同一台主机内应用层与传输层之间的接口，由于该套接字是在网络上建立网络应用程序的可编程接口，因此也将套接字称为应用程序和网络之间的应用程序编程接口（Application
-Programming Interface，API）。</p>
-<p>什么是传输层的多路复用（multiplexing）和解复用（demultiplexing，多路分解）：</p>
-<p>多路复用和多路分解是因特网中的基本传输层服务。</p>
-<p>从源主机的不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在多路分解时使用）从而生成报文段，然后将报文段传递到网络层的工作称为多路复用。</p>
-<p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
-<h2 id="section-1">4/22</h2>
-<p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
-<p>绝了！</p>
+          <h3 id="检索调度策略和优先级">检索调度策略和优先级</h3>
+<ol type="1">
+<li><strong><code>sched_getscheduler()</code> 和
+<code>sched_getparam()</code> 系统调用</strong>：
+<ul>
+<li>这两个系统调用可以检索进程的调度策略和优先级。</li>
+</ul></li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_getscheduler</span><span class="params">(<span class="type">pid_t</span> pid)</span>;</span><br><span class="line"><span class="comment">//返回调度策略，成功时返回调度策略标识符，出错时返回 -1。</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_getparam</span><span class="params">(<span class="type">pid_t</span> pid, <span class="keyword">struct</span> sched_param *param)</span>;</span><br><span class="line"><span class="comment">//成功时返回 0，出错时返回 -1。</span></span><br></pre></td></tr></table></figure>
+<h3
+id="调度参数和优先级获取的系统调用说明">调度参数和优先级获取的系统调用说明</h3>
+<p>对于这两个系统调用（<code>sched_getscheduler</code> 和
+<code>sched_getparam</code>），<code>pid</code> 指定了要获取信息的进程
+ID。如果 <code>pid</code> 为 0，则获取调用进程的信息。<br />
+不论是否具有特权，这两个系统调用都可用于非特权进程，以获取任何进程的信息，无需凭证。</p>
+<p><code>sched_getparam()</code> 系统调用在 <code>sched_param</code>
+结构体中的 <code>sched_priority</code>
+字段中返回指定进程的实时优先级。</p>
+<hr />
+<h3 id="示例用法">示例用法</h3>
+<p>成功执行后，<code>sched_getscheduler()</code> 返回表 35-1
+中列出的策略之一。<br />
+Listing 35-3 中的程序使用 <code>sched_getscheduler()</code> 和
+<code>sched_getparam()</code>
+来获取命令行参数指定的所有进程的调度策略和优先级。<br />
+下面的 shell 会话演示了该程序和 Listing 35-2 中的程序的使用方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ su  </span><br><span class="line">Password:  </span><br><span class="line"><span class="comment"># sleep 100 &amp;    # 创建一个进程</span></span><br><span class="line">[1] 2006  </span><br><span class="line"><span class="comment"># ./sched_view 2006    # 查看 sleep 进程的初始调度策略和优先级</span></span><br><span class="line">2006: OTHER 0  </span><br><span class="line"><span class="comment"># ./sched_set f 25 2006    # 将进程 2006 切换为 SCHED_FIFO 策略，优先级为 25</span></span><br><span class="line"><span class="comment"># ./sched_view 2006        # 验证修改</span></span><br><span class="line">2006: FIFO 25  </span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> j, pol;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">sp</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt; argc; j++) &#123;</span><br><span class="line">        pol = sched_getscheduler(getLong(argv[j], <span class="number">0</span>, <span class="string">&quot;pid&quot;</span>)); <span class="comment">// 获取调度策略</span></span><br><span class="line">        <span class="keyword">if</span> (pol == <span class="number">-1</span>)</span><br><span class="line">            errExit(<span class="string">&quot;sched_getscheduler&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sched_getparam(getLong(argv[j], <span class="number">0</span>, <span class="string">&quot;pid&quot;</span>), &amp;sp) == <span class="number">-1</span>) <span class="comment">// 获取调度参数</span></span><br><span class="line">            errExit(<span class="string">&quot;sched_getparam&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s: %-5s %2d\n&quot;</span>, argv[j],</span><br><span class="line">            (pol == SCHED_OTHER) ? <span class="string">&quot;OTHER&quot;</span> :     <span class="comment">// 普通调度策略</span></span><br><span class="line">            (pol == SCHED_RR) ? <span class="string">&quot;RR&quot;</span> :          <span class="comment">// 轮转调度策略</span></span><br><span class="line">            (pol == SCHED_FIFO) ? <span class="string">&quot;FIFO&quot;</span> :      <span class="comment">// 先进先出调度策略</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_BATCH                            <span class="comment">// Linux特定调度策略</span></span></span><br><span class="line">            (pol == SCHED_BATCH) ? <span class="string">&quot;BATCH&quot;</span> :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_IDLE                             <span class="comment">// Linux特定空闲调度策略</span></span></span><br><span class="line">            (pol == SCHED_IDLE) ? <span class="string">&quot;IDLE&quot;</span> :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">            <span class="string">&quot;???&quot;</span>,                             <span class="comment">// 未知调度策略</span></span><br><span class="line">            sp.sched_priority);                <span class="comment">// 优先级</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="防止实时进程锁死系统">防止实时进程锁死系统</h3>
+<p>由于 <strong>SCHED_RR</strong> 和 <strong>SCHED_FIFO</strong>
+进程会抢占任何低优先级的进程（例如运行程序的shell），在开发使用这些策略的应用程序时，我们需要注意一个可能的风险：一个失控的实时进程可能会通过占用CPU导致系统锁死。为避免这种情况，可以采用以下几种方法：</p>
+<ul>
+<li><p><strong>设置一个足够低的软CPU时间资源限制（<code>RLIMIT_CPU</code>）</strong><br />
+使用 <code>setrlimit()</code>
+函数（参考第36.3节）来设置。如果进程消耗了过多的CPU时间，将会被发送一个
+<code>SIGXCPU</code> 信号，该信号默认会杀死进程。</p></li>
+<li><p><strong>使用 <code>alarm()</code> 设置报警计时器</strong><br />
+如果进程运行的实际时间超过了 <code>alarm()</code>
+调用中指定的秒数，则会被发送一个 <code>SIGALRM</code>
+信号并被终止。</p></li>
+<li><p><strong>创建一个具有高实时优先级的守护进程</strong><br />
+该进程可以循环运行，按照指定的间隔睡眠，然后唤醒并监视其他进程的状态。此类监视可以包括：</p>
+<ul>
+<li>检查每个进程的CPU时间时钟值（参考23.5.3节中的
+<code>clock_getcpuclockid()</code> 函数）；</li>
+<li>使用 <code>sched_getscheduler()</code> 和
+<code>sched_getparam()</code> 检查其调度策略和优先级。<br />
+如果某个进程被认为行为异常，守护线程可以通过降低其优先级或发送适当的信号终止该进程来控制它。</li>
+</ul></li>
+<li><p><strong>从Linux内核2.6.25开始，提供了非标准的资源限制
+<code>RLIMIT_RTTIME</code></strong><br />
+该限制用于控制实时调度策略进程在单次连续运行中可以消耗的CPU时间，单位为微秒。</p>
+<ul>
+<li><code>RLIMIT_RTTIME</code>
+限制了进程在不执行阻塞系统调用时所能消耗的CPU时间总量。<br />
+</li>
+<li>当进程执行阻塞系统调用时，消耗的CPU时间计数会被重置为0。<br />
+</li>
+<li>如果进程被更高优先级的进程抢占、由于时间片到期（<strong>SCHED_RR</strong>
+进程）或调用
+<code>sched_yield()</code>（第35.3.3节）而被调度出CPU，则计数也会被重置。<br />
+</li>
+<li>如果进程达到 <code>RLIMIT_CPU</code> 限制，将收到一个
+<code>SIGXCPU</code> 信号，默认情况下会杀死进程。</li>
+</ul></li>
+</ul>
+<h4 id="注意">注意</h4>
+<p>内核2.6.25中的改动也有助于防止失控的实时进程锁死系统。有关详细信息，请参阅内核源代码文档：<code>scheduler/sched-rt-group.txt</code>。</p>
+<h3 id="防止子进程继承特权调度策略">防止子进程继承特权调度策略</h3>
+<p>Linux 2.6.32 引入了 <code>SCHED_RESET_ON_FORK</code> 作为可以在调用
+<code>sched_setscheduler()</code> 时指定的策略值之一。<br />
+这是一个标志值，它会与表35-1中的策略之一进行位或操作。如果设置了此标志，则由此进程通过
+<code>fork()</code>
+创建的子进程不会继承特权调度策略和优先级。规则如下：</p>
+<ul>
+<li>如果调用进程具有实时调度策略（<strong>SCHED_RR</strong> 或
+<strong>SCHED_FIFO</strong>），那么子进程的调度策略将被重置为标准的时间片轮转策略，<strong>SCHED_OTHER</strong>。</li>
+<li>如果进程具有负的（即较高的）nice 值，则子进程的 nice
+值将被重置为0。</li>
+</ul>
+<h3 id="sched_reset_on_fork-的作用"><code>SCHED_RESET_ON_FORK</code>
+的作用</h3>
+<p><code>SCHED_RESET_ON_FORK</code>
+标志旨在用于媒体播放等应用场景。它允许创建具有实时调度策略的单个进程，而这些策略不会传递给子进程。<br />
+使用 <code>SCHED_RESET_ON_FORK</code>
+标志可以防止通过创建多个运行在实时调度策略下的子进程来试图规避
+<strong>RLIMIT_RTTIME</strong> 资源限制的 fork 炸弹攻击。</p>
+<p>一旦为一个进程启用了 <code>SCHED_RESET_ON_FORK</code>
+标志，只有具备特权的进程（即具有 <strong>CAP_SYS_NICE</strong>
+权限的进程）可以禁用它。 此时当创建子进程时，其 reset-on-fork
+标志会被禁用。</p>
+<hr />
+<h3 id="让出-cpu">让出 CPU</h3>
+<p>一个实时进程可以通过以下两种方式主动让出 CPU： 1.
+调用一个会阻塞进程的系统调用（例如，从终端执行 <code>read()</code>）。
+2. 调用 <code>sched_yield()</code>。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_yield</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="comment">//成功时返回 0，出错时返回 -1。</span></span><br></pre></td></tr></table></figure> ###
+<code>sched_yield()</code> 的操作</p>
+<p><code>sched_yield()</code>
+的操作非常简单。如果有其他与调用进程处于相同优先级队列中的可运行进程，则调用进程会被放到队列的末尾，并由队列头部的进程被调度使用
+CPU。<br />
+如果在此优先级上没有其他可运行进程排队，那么 <code>sched_yield()</code>
+什么都不做；调用进程将继续使用 CPU。</p>
+<p>尽管 SUSv3 允许 <code>sched_yield()</code> 返回可能的错误，但在 Linux
+以及许多其他 UNIX 实现中，此系统调用始终成功。<br />
+然而，可移植的应用程序仍应始终检查是否有错误返回。</p>
+<p>对于非实时进程使用 <code>sched_yield()</code> 的行为是未定义的。</p>
+<hr />
+<h3 id="sched_rr-时间片"><strong><code>SCHED_RR</code>
+时间片</strong></h3>
+<p><code>sched_rr_get_interval()</code> 系统调用使我们能够确定为
+<code>SCHED_RR</code> 进程每次被分配使用 CPU 时的时间片长度。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_rr_get_interval</span><span class="params">(<span class="type">pid_t</span> pid, <span class="keyword">struct</span> timespec *tp)</span>;</span><br><span class="line"><span class="comment">//成功时返回 0，出错时返回 -1。</span></span><br></pre></td></tr></table></figure> 与其他进程调度系统调用一样，<code>pid</code>
+用于标识我们希望获取信息的进程。指定 <code>pid</code> 为 0
+表示当前调用进程。<br />
+时间片的长度通过指向 <code>tp</code> 的 <code>timespec</code>
+结构返回：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> &#123;</span></span><br><span class="line">    <span class="type">time_t</span> tv_sec;   <span class="comment">/* 秒 */</span></span><br><span class="line">    <span class="type">long</span>   tv_nsec;  <span class="comment">/* 纳秒 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在最近的 2.6 内核中，实时轮转调度（SCHED_RR）的时间片为 0.1 秒。 ###
+总结</p>
+<p>默认的内核调度算法采用的是轮转时间共享策略。在这种策略下，所有进程默认可以平等地访问
+CPU。不过，我们可以通过将进程的 nice 值设置为 -20（高优先级）到
++19（低优先级）的范围内的数字，从而使调度器偏爱或减少对该进程的调度。然而，即使我们将进程设置为最低优先级，它也不会完全失去对
+CPU 的访问。</p>
+<p>Linux 还实现了 POSIX 实时调度扩展，这允许应用程序精确控制进程对 CPU
+的分配。在实时调度的两种策略下运行的进程，<strong>SCHED_RR</strong>（轮转调度）和
+<strong>SCHED_FIFO</strong>（先进先出），总是优先于运行在非实时策略下的进程。实时进程的优先级范围是
+1（低优先级）到
+99（高优先级）。只要高优先级进程可运行，它就会完全排除低优先级进程对 CPU
+的访问。</p>
+<p>在 <strong>SCHED_FIFO</strong> 策略下运行的进程会独占
+CPU，直到进程终止、自愿释放
+CPU，或者被一个更高优先级的进程抢占。同样的规则适用于
+<strong>SCHED_RR</strong>
+策略，不同之处在于，如果多个进程具有相同的优先级，则 CPU
+在这些进程之间以轮转方式共享。</p>
+<p>此外，可以使用进程的 CPU 亲和性掩码（CPU affinity
+mask）来限制进程仅运行在多处理器系统的某些 CPU
+上。这有助于提高某些应用程序类型的性能。</p>
 
       
     </div>
@@ -624,7 +1321,7 @@ Programming Interface，API）。</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/thoughts_0927/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/02/linux_sched3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -642,7 +1339,7 @@ Programming Interface，API）。</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/thoughts_0927/" class="post-title-link" itemprop="url">杂记</a>
+          <a href="/2025/01/02/linux_sched3/" class="post-title-link" itemprop="url">Linux调度算法相关3</a>
         </h2>
 
         <div class="post-meta-container">
@@ -653,14 +1350,14 @@ Programming Interface，API）。</p>
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+      <time title="创建时间：2025-01-03 09:43:33" itemprop="dateCreated datePublished" datetime="2025-01-03T09:43:33+08:00">2025-01-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:53" itemprop="dateModified" datetime="2025-01-22T10:30:53+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:40" itemprop="dateModified" datetime="2025-01-22T10:30:40+08:00">2025-01-22</time>
     </span>
 
   
@@ -673,13 +1370,208 @@ Programming Interface，API）。</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="一些感慨">一些感慨</h3>
-<p>最近学了好多好多东西，有gdb debug, 有rust,
-也刷了些题。正在看很有意思的操作系统网课，还有项目组要求看的书...感觉这些事情都忙不过来了，更别说整理成博客。我这个博客网站的archive也一直没好好利用。</p>
-<p>完全提不起兴致玩游戏，心理上好累又睡不着。大概是最近游戏不好玩吧，大概是没有朋友和我一起玩？大概是游戏打多了忙一忙就觉得游戏好玩了...好多年前我就只有听着Owl
-City的歌才能睡着了，但那个时候只觉得是自己压力太大。三两年前觉着是实验室事情太多，是画图太累，后来安慰自己年轻人熬熬夜怎么了。</p>
-<p>很多年前还小的时候我就总觉着，如果社交上出现一些问题，那个念头就会总在脑子里转动消不去，到了有点影响生活的地步了。我总被这样的思绪叨扰，我没办法解释这种事情，只好跟家长说我头疼。我以为是我性格太执拗，是我太内向，是我表达的方式不对...哦，我该改改总是自我检讨的毛病，所作所为，留予世人评好了</p>
-<p>好歹还能感受到朋友的关心，好歹还有兴致吃点什么，好歹今天中午睡得不错。</p>
+          <h1 id="实时进程调度-api">实时进程调度 API</h1>
+<p>我们现在来看一下组成实时进程调度 API
+的各种系统调用。这些系统调用允许我们控制进程的调度策略和优先级。</p>
+<h2 id="实时优先级范围">实时优先级范围</h2>
+<p><code>sched_get_priority_min()</code> 和
+<code>sched_get_priority_max()</code>
+系统调用返回特定调度策略的可用优先级范围。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_get_priority_min</span><span class="params">(<span class="type">int</span> policy)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_get_priority_max</span><span class="params">(<span class="type">int</span> policy)</span>;</span><br><span class="line"><span class="comment">//返回值：成功时返回非负整数优先级，出错时返回 -1。</span></span><br></pre></td></tr></table></figure> -
+对于这两个系统调用，<code>policy</code>
+指定我们想要获取信息的调度策略。我们可以指定 <code>SCHED_RR</code> 或
+<code>SCHED_FIFO</code>。 - <code>sched_get_priority_min()</code>
+系统调用返回指定策略的最小优先级，<code>sched_get_priority_max()</code>
+返回最大优先级。 - 在 Linux 系统中，这两个系统调用分别返回数字 1 和
+99，适用于 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code> 策略。 -
+换句话说，<code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+的优先级范围完全相同，<code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+的进程在同一优先级时是同样有资格被调度的。首先调度哪个进程取决于它们在该优先级队列中的顺序。</p>
+<h3 id="实时优先级范围的差异">实时优先级范围的差异</h3>
+<ul>
+<li>实时优先级范围在不同的 UNIX
+实现中有所不同。因此，在应用程序中避免硬编码优先级值时，我们应该根据从这些函数返回的值来指定优先级。</li>
+<li>例如，最低的 <code>SCHED_RR</code> 优先级可以指定为
+<code>sched_get_priority_min(SCHED_RR)</code>，下一个较高的优先级可以指定为
+<code>sched_get_priority_min(SCHED_RR) + 1</code>，以此类推。</li>
+</ul>
+<h3 id="susv3-和-unix-实现的差异">SUSv3 和 UNIX 实现的差异</h3>
+<ul>
+<li>SUSv3 并不要求 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+策略使用相同的优先级范围，但在大多数 UNIX 实现中，它们是相同的。</li>
+<li>例如，在 Solaris 8 中，两个策略的优先级范围为 0 到 59，而在 FreeBSD
+6.1 中为 0 到 31。</li>
+</ul>
+<h1 id="修改和检索调度策略及优先级">修改和检索调度策略及优先级</h1>
+<h2 id="修改调度策略和优先级">修改调度策略和优先级</h2>
+<p><code>sched_setscheduler()</code> 系统调用可以更改指定进程（通过
+<code>pid</code> 参数指定）的调度策略和优先级。</p>
+<ul>
+<li><strong>参数说明</strong>：
+<ul>
+<li>如果 <code>pid</code> 参数被设置为
+<code>0</code>，则更改的是调用该系统调用的当前进程的属性。</li>
+</ul></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_setscheduler</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> policy, <span class="type">const</span> <span class="keyword">struct</span> sched_param *param)</span>;</span><br></pre></td></tr></table></figure>
+<p>成功时返回 0。出错时返回 -1。</p>
+<p>param：指向如下包含调度优先级信息的结构体的指针。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> sched_priority;  <span class="comment">/* 调度优先级 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> SUSv3
+定义了 <code>param</code>
+参数为一个结构体，以允许实现包括特定于实现的额外字段，这在提供额外的调度策略时可能很有用。然而，与大多数
+UNIX 实现一样，Linux 仅提供了 <code>sched_priority</code>
+字段，用于指定调度优先级。</p>
+<p>对于 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+策略，该字段的值必须位于由 <code>sched_get_priority_min()</code> 和
+<code>sched_get_priority_max()</code>
+确定的范围内；对于其他策略，该优先级必须为 0。</p>
+<p><code>policy</code>
+参数决定了进程的调度策略。它可以是以下策略之一（如表 35-1 所示）：</p>
+<h3 id="表-35-1linux-的实时和非实时调度策略">表 35-1：Linux
+的实时和非实时调度策略</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr>
+<th>策略</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SCHED_FIFO</code></td>
+<td>实时先进先出（First-in First-out）</td>
+</tr>
+<tr>
+<td><code>SCHED_RR</code></td>
+<td>实时轮转（Round-robin）</td>
+</tr>
+<tr>
+<td><code>SCHED_OTHER</code></td>
+<td>标准轮转时间共享</td>
+</tr>
+<tr>
+<td><code>SCHED_BATCH</code></td>
+<td>类似于 <code>SCHED_OTHER</code>，但用于批处理（自 Linux 2.6.16
+起提供）</td>
+</tr>
+<tr>
+<td><code>SCHED_IDLE</code></td>
+<td>类似于 <code>SCHED_OTHER</code>，但优先级比 <code>nice +19</code>
+更低（自 Linux 2.6.23 起提供）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sched_setscheduler-系统调用"><code>sched_setscheduler()</code>
+系统调用</h3>
+<ul>
+<li>成功的 <code>sched_setscheduler()</code> 调用会将指定的进程（由
+<code>pid</code> 参数指定）移动到其优先级队列的末尾。</li>
+</ul>
+<p>SUSv3 指定，成功的 <code>sched_setscheduler()</code>
+调用应返回之前的调度策略。然而，Linux 与标准不同，成功调用时返回值为
+<code>0</code>。<br />
+便携式应用程序应通过检查返回值是否为 <code>-1</code>
+来判断是否成功。</p>
+<ul>
+<li>子进程通过 <code>fork()</code>
+继承其父进程的调度策略和优先级，并在调用 <code>exec()</code>
+时保留这些属性。</li>
+</ul>
+<h3 id="sched_setparam-系统调用"><code>sched_setparam()</code>
+系统调用</h3>
+<ul>
+<li><p><code>sched_setparam()</code> 系统调用提供了
+<code>sched_setscheduler()</code> 功能的子集：</p>
+<ul>
+<li>它可以修改进程的调度优先级，但不会更改其调度策略。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_setparam</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">const</span> <span class="keyword">struct</span> sched_param *param)</span>;</span><br></pre></td></tr></table></figure>
+成功时返回 0。出错时返回 -1。 <code>pid</code> 和 <code>param</code>
+参数的含义与 <code>sched_setscheduler()</code> 中的相同。</li>
+</ul></li>
+<li><p><strong>成功的 <code>sched_setparam()</code>
+调用</strong>：<br />
+成功调用 <code>sched_setparam()</code> 后，指定的进程（通过
+<code>pid</code> 参数指定）会被移动到其优先级队列的队尾。</p></li>
+<li><p><strong>代码示例</strong>：<br />
+以下程序使用 <code>sched_setscheduler()</code>
+来根据命令行参数设置指定进程的调度策略和优先级。</p>
+<ul>
+<li><strong>参数说明</strong>：
+<ol type="1">
+<li>第一个参数是一个字母，用于指定调度策略（如 <code>SCHED_RR</code> 或
+<code>SCHED_FIFO</code>）。</li>
+<li>第二个参数是一个整数，用于指定调度优先级。</li>
+<li>剩余参数是需要更改调度属性的进程 ID 列表。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span><span class="comment">//自定义的头文件，提供错误处理和辅助函数</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> &#123;</span><br><span class="line">    <span class="type">int</span> j, pol;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">sp</span>;</span></span><br><span class="line">    <span class="keyword">if</span> (argc &lt; <span class="number">3</span> || <span class="built_in">strchr</span>(<span class="string">&quot;rfobi&quot;</span>, argv[<span class="number">1</span>][<span class="number">0</span>]) == <span class="literal">NULL</span>)</span><br><span class="line">        usageErr(<span class="string">&quot;%s policy priority [pid...]\n&quot;</span></span><br><span class="line">                 <span class="string">&quot;    policy is &#x27;r&#x27; (RR), &#x27;f&#x27; (FIFO), &quot;</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_BATCH</span></span><br><span class="line">                 <span class="string">&quot; &#x27;b&#x27; (BATCH), &quot;</span> <span class="comment">/* Linux-specific */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_IDLE</span></span><br><span class="line">                 <span class="string">&quot; &#x27;i&#x27; (IDLE), &quot;</span>  <span class="comment">/* Linux-specific */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">                 <span class="string">&quot;or &#x27;o&#x27; (OTHER)\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析调度策略</span></span><br><span class="line">    pol = (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;r&#x27;</span>) ? SCHED_RR :</span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;f&#x27;</span>) ? SCHED_FIFO :</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_BATCH</span></span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;b&#x27;</span>) ? SCHED_BATCH :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_IDLE</span></span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;i&#x27;</span>) ? SCHED_IDLE :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">          SCHED_OTHER;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析优先级</span></span><br><span class="line">    sp.sched_priority = getInt(argv[<span class="number">2</span>], <span class="number">0</span>, <span class="string">&quot;priority&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置每个指定进程的调度策略和优先级</span></span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">3</span>; j &lt; argc; j++)</span><br><span class="line">        <span class="keyword">if</span> (sched_setscheduler(getLong(argv[j], <span class="number">0</span>, <span class="string">&quot;pid&quot;</span>), pol, &amp;sp) == <span class="number">-1</span>)</span><br><span class="line">            errExit(<span class="string">&quot;sched_setscheduler&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ###
+权限和资源限制对调度参数更改的影响</li>
+</ol></li>
+</ul></li>
+</ul>
+<h4 id="版本之前的内核行为">1. <strong>2.6.12
+版本之前的内核行为</strong></h4>
+<ul>
+<li>在 Linux 2.6.12
+内核之前，进程通常需要具有特权（<code>CAP_SYS_NICE</code>）才能更改调度策略和优先级。</li>
+<li>唯一的例外是：如果调用者的有效用户 ID 与目标进程的真实或有效用户 ID
+匹配，则非特权进程可以将目标进程的调度策略更改为
+<code>SCHED_OTHER</code>。</li>
+</ul>
+<h4 id="版本及之后的内核行为">2. <strong>2.6.12
+版本及之后的内核行为</strong></h4>
+<ul>
+<li>自 Linux 2.6.12 起，引入了一个新的非标准资源限制
+<code>RLIMIT_RTPRIO</code>，调整了实时调度策略和优先级的设置规则：
+<ul>
+<li>拥有特权的进程（<code>CAP_SYS_NICE</code>）可以对任意进程的调度策略和优先级进行更改。</li>
+<li>非特权进程也可以根据以下规则更改调度策略和优先级：</li>
+</ul></li>
+</ul>
+<ol type="1">
+<li><strong><code>RLIMIT_RTPRIO</code> 的非零软限制</strong>：
+<ul>
+<li>如果进程具有非零的 <code>RLIMIT_RTPRIO</code>
+软限制，则可以任意更改其调度策略和优先级。</li>
+<li>但有以下限制：
+<ul>
+<li>实时优先级的最大值不能超过当前实时优先级和
+<code>RLIMIT_RTPRIO</code> 软限制中的较大值。</li>
+</ul></li>
+</ul></li>
+<li><strong>如果<code>RLIMIT_RTPRIO</code> 的软限制为零</strong>：
+<ul>
+<li>唯一可以进行的更改是：
+<ul>
+<li>将实时优先级降低。</li>
+<li>或从实时调度策略切换到非实时调度策略。</li>
+</ul></li>
+</ul></li>
+<li><strong><code>SCHED_IDLE</code> 策略的特殊性</strong>：
+<ul>
+<li>运行在 <code>SCHED_IDLE</code> 策略下的进程无法更改其调度策略，无论
+<code>RLIMIT_RTPRIO</code> 的值如何。</li>
+</ul></li>
+<li><strong>从其他非特权进程进行更改</strong>：
+<ul>
+<li>如果调用者的有效用户 ID 与目标进程的真实或有效用户 ID
+匹配，则可以更改目标进程的调度策略和优先级。</li>
+</ul></li>
+<li><strong><code>RLIMIT_RTPRIO</code> 软限制的作用</strong>：
+<ul>
+<li>仅决定进程对自身或其它非特权进程对该进程调度策略和优先级的更改。</li>
+<li>一个非零限制并不赋予非特权进程对其他进程的调度策略和优先级进行更改的能力。</li>
+</ul></li>
+</ol>
+<h3 id="特殊说明">特殊说明</h3>
+<ul>
+<li>自 Linux 2.6.25 起，添加了实时调度组（Realtime Scheduling
+Groups）的概念：
+<ul>
+<li>可通过 <code>CONFIG_RT_GROUP_SCHED</code> 内核选项进行配置。</li>
+<li>这一选项影响设置实时调度策略时可以进行的更改。</li>
+<li>详情请参阅内核源码文档
+<code>Documentation/scheduler/sched-rt-group.txt</code>。</li>
+</ul></li>
+</ul>
 
       
     </div>
@@ -706,7 +1598,7 @@ City的歌才能睡着了，但那个时候只觉得是自己压力太大。三�
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/wx-frtnd/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/28/linux_sched2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -724,7 +1616,399 @@ City的歌才能睡着了，但那个时候只觉得是自己压力太大。三�
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/wx-frtnd/" class="post-title-link" itemprop="url">微信小程序项目</a>
+          <a href="/2024/12/28/linux_sched2/" class="post-title-link" itemprop="url">Linux调度算法相关2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-29 00:10:36" itemprop="dateCreated datePublished" datetime="2024-12-29T00:10:36+08:00">2024-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:36" itemprop="dateModified" datetime="2025-01-22T10:30:36+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="实时进程调度概述">实时进程调度概述</h1>
+<h2 id="标准调度与实时调度的差异">标准调度与实时调度的差异</h2>
+<p>标准内核调度算法通常可以为交互式和后台进程的混合提供足够的性能和响应能力。然而，实时应用程序对调度器的需求更加严格</p>
+<h3 id="提供外部输入的最大响应时间保证">1.
+提供外部输入的最大响应时间保证</h3>
+<ul>
+<li>实时应用程序必须保证对外部输入的最大响应时间。在许多情况下，这些最大响应时间需要非常短，例如在毫秒或几分之一秒的级别。</li>
+</ul>
+<h4 id="附加措施">附加措施</h4>
+<ul>
+<li>一些时间关键型的应用可能需要采取其他措施来避免不可接受的延迟。例如：
+<ul>
+<li>使用 <code>mlock()</code> 或 <code>mlockall()</code>
+将应用程序的所有虚拟内存锁定到 RAM 中，避免页面错误造成的延迟。</li>
+</ul></li>
+</ul>
+<h3 id="保持对-cpu-的独占访问权">2. 保持对 CPU 的独占访问权</h3>
+<ul>
+<li>高优先级进程在完成任务或自愿放弃 CPU 之前，应该能够独占地使用
+CPU，确保任务的顺利执行。 ### 3. 进程顺序控制</li>
+<li><h2
+id="实时应用程序需要对其成员进程精确顺序的调度权">实时应用程序需要对其成员进程精确顺序的调度权。</h2></li>
+</ul>
+<h1 id="实时调度的-posix-api">实时调度的 POSIX API</h1>
+<h2 id="susv3-的实时调度-api">SUSv3 的实时调度 API</h2>
+<p>SUSv3 定义了一个实时进程调度 API，部分满足了实时应用的严格需求： -
+提供两种实时调度策略： - <code>SCHED_FIFO</code>（先进先出） -
+<code>SCHED_RR</code>（轮转） - 使用这些策略的进程优先级总是高于采用
+<code>SCHED_OTHER</code>（普通时间共享）的进程。</p>
+<h2 id="实时优先级范围">实时优先级范围</h2>
+<ul>
+<li>每种实时调度策略至少需要支持 32 个离散优先级。</li>
+<li>高优先级的进程总是优先于低优先级的进程。</li>
+</ul>
+<h3 id="多处理器系统中的调度行为">多处理器系统中的调度行为</h3>
+<p>在多处理器系统（包括超线程系统）中，调度行为有一些特殊性： 1. 每个
+CPU
+维护一个独立的运行队列。这种设计优于单一的系统级运行队列，可以提高性能。
+2. 进程只能在其所属 CPU 的运行队列中被调度。 3. <strong>举例</strong>：
+- 在一个双处理器系统中，如果有三个进程： - 进程 A：实时优先级为 20； -
+进程 B：实时优先级为 30； - 进程 C：实时优先级为 10； - 如果当前 CPU0
+正在运行 B，A 只能等待 CPU0 空闲，即使 A 的优先级高于 CPU1 上正在运行的
+C。</p>
+<p>Linux 提供了 99 个实时优先级，从 1（最低）到
+99（最高）。这一区间适用于两种实时调度策略（<code>SCHED_RR</code> 和
+<code>SCHED_FIFO</code>）。两种策略中的优先级是等效的。</p>
+<p>这意味着： - 如果两个进程具有相同的优先级，一个使用
+<code>SCHED_RR</code> 策略，另一个使用 <code>SCHED_FIFO</code>
+策略，那么哪个进程会被调度取决于它们被放入队列的顺序。</p>
+<p>实际上，每个优先级都维护着一个可运行进程的队列。 -
+调度时，系统会从最高优先级的非空队列中选择队列头部的进程来运行。 ---</p>
+<h1 id="posix-实时-vs-硬实时">POSIX 实时 vs 硬实时</h1>
+<h3 id="posix-实时软实时">POSIX 实时（软实时）</h3>
+<p>POSIX 提供的是软实时调度功能，具体表现为： - 可以控制进程何时被调度。
+- 不能完全保证处理输入时的响应时间。 -
+适用于绝大多数实时场景，但无法满足某些严格的硬实时需求。</p>
+<h3 id="硬实时">硬实时</h3>
+<ul>
+<li>硬实时系统保证所有任务在规定的时限内完成。</li>
+<li>实现硬实时通常需要操作系统支持额外的功能，而 Linux 默认不支持。</li>
+<li>Linux 内核自 2.6.18
+版本以来添加了一些功能，目标是原生支持硬实时应用，但仍需配置和优化。</li>
+</ul>
+<hr />
+<h1 id="sched_rr-策略详解">SCHED_RR 策略详解</h1>
+<h3 id="基本规则">基本规则</h3>
+<p>在 <code>SCHED_RR</code> 策略下： - 同一优先级的任务按照轮转方式共享
+CPU，每个任务在每次使用 CPU 时获得一个固定长度的时间片。</p>
+<h3 id="执行控制">执行控制</h3>
+<p>任务保持对 CPU 的控制直到以下任一情况发生： 1. 时间片耗尽： -
+任务被移至同一优先级队列的末尾，其他同优先级任务可以被调度。 2. 自愿放弃
+CPU： - 例如，调用了 <code>sched_yield()</code> 或执行了阻塞操作。 3.
+任务终止。 4. 被更高优先级的任务抢占。</p>
+<p>对于前两个事件（时间片耗尽或主动放弃 CPU）中的情况，当运行在
+<code>SCHED_RR</code> 策略下的进程失去对 CPU
+的访问权限时，它会被移至其优先级队列的末尾。<br />
+在最后一种情况中（被更高优先级的进程抢占），当高优先级进程结束执行后，被抢占的进程会继续运行，使用其剩余的时间片（即被抢占的进程会回到其优先级队列的头部）。</p>
+<h3 id="sched_rr-和-sched_fifo"><code>SCHED_RR</code> 和
+<code>SCHED_FIFO</code></h3>
+<p>在 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+策略中，当前运行中的进程可能因以下原因之一被抢占： 1.
+一个更高优先级的进程从阻塞状态变为非阻塞状态（例如，I/O 操作完成）。 2.
+另一个进程的优先级被提升到高于当前运行进程的优先级。 3.
+当前运行进程的优先级被降低到低于某些其他可运行进程的优先级。</p>
+<p><code>SCHED_RR</code>
+策略类似于标准的轮转时间共享调度算法（<code>SCHED_OTHER</code>），它允许一组相同优先级的进程共享
+CPU。</p>
+<h3 id="两者的主要区别">两者的主要区别：</h3>
+<ol type="1">
+<li><strong>优先级规则</strong>：
+<ul>
+<li><code>SCHED_RR</code>
+策略严格区分优先级，高优先级的进程总是优先于低优先级的进程。</li>
+<li>而 <code>SCHED_OTHER</code> 策略中，较低的 <code>nice</code>
+值（即较高的优先级）虽然增加了调度权重，但不能保证独占 CPU。</li>
+</ul></li>
+<li><strong>时间片保障</strong>：
+<ul>
+<li>在 <code>SCHED_OTHER</code> 策略中，任何具有低优先级（高
+<code>nice</code> 值）的进程始终可以获得一定的 CPU 时间。</li>
+<li><h2
+id="sched_rr-策略允许我们更精确地控制进程的调度顺序和执行时间"><code>SCHED_RR</code>
+策略允许我们更精确地控制进程的调度顺序和执行时间。</h2></li>
+</ul></li>
+</ol>
+<h1 id="sched_fifo-策略详解">SCHED_FIFO 策略详解</h1>
+<h3 id="基本规则-1">基本规则</h3>
+<p><code>SCHED_FIFO</code>（先进先出）策略与 <code>SCHED_RR</code>
+类似，但没有时间片限制。 - 任务可以一直运行，直到以下任一情况发生： 1.
+主动放弃 CPU（例如阻塞操作）。 2. 任务终止。 3.
+被更高优先级任务抢占。</p>
+<p>在第一种情况下，进程会被放置到其优先级队列的末尾。
+在最后一种情况下，当高优先级的进程停止执行（例如由于阻塞或终止）时，被抢占的进程会继续执行（即，被抢占的进程会保持在其优先级队列的队首）。</p>
+<hr />
+<h1 id="sched_batch-和-sched_idle-策略">SCHED_BATCH 和 SCHED_IDLE
+策略</h1>
+<h2 id="sched_batch-策略">SCHED_BATCH 策略</h2>
+<ul>
+<li><strong>功能</strong>：用于批处理型任务。</li>
+<li><strong>特点</strong>：
+<ul>
+<li>适用于 CPU 密集型任务。</li>
+<li>对调度延迟不敏感。</li>
+<li>调度器会根据任务的 <code>nice</code> 值决定优先级。</li>
+</ul></li>
+<li><strong>引入版本</strong>：Linux 2.6.16。</li>
+</ul>
+<h2 id="sched_idle-策略">SCHED_IDLE 策略</h2>
+<ul>
+<li><strong>功能</strong>：用于低优先级任务，仅在系统完全空闲时执行。</li>
+<li><strong>特点</strong>：
+<ul>
+<li>优先级比所有其他任务都低（甚至低于 <code>nice +19</code>）。</li>
+<li><code>nice</code> 值对该策略没有影响。</li>
+</ul></li>
+<li><strong>引入版本</strong>：Linux 2.6.23。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/27/linux_sched/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/27/linux_sched/" class="post-title-link" itemprop="url">Linux调度算法相关</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-28 02:35:39" itemprop="dateCreated datePublished" datetime="2024-12-28T02:35:39+08:00">2024-12-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:30" itemprop="dateModified" datetime="2025-01-22T10:30:30+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="实时调度策略及算法概述">实时调度策略及算法概述</h1>
+<p>Linux 提供了两种实时调度策略，<code>SCHED_FIFO</code> 和
+<code>SCHED_RR</code>。非实时的普通调度策略是
+<code>SCHED_NORMAL</code>。</p>
+<p>通过调度类框架，这些实时调度策略并非由完全公平调度器（CFS）管理，而是由一个特殊的实时调度器管理，该调度器定义在
+<code>kernel/sched_rt.c</code> 文件中。</p>
+<h2 id="sched_fifo-策略">1. SCHED_FIFO 策略</h2>
+<p><code>SCHED_FIFO</code>
+实现了一种简单的先进先出（FIFO）调度算法，<strong>没有时间片限制</strong>，可以无限期运行。
+- 一个可运行的 <code>SCHED_FIFO</code> 任务始终优先于任何
+<code>SCHED_NORMAL</code> 任务。 - 当 <code>SCHED_FIFO</code>
+任务变为可运行状态时，它会一直运行，直到阻塞或显式放弃处理器。 -
+<strong>抢占规则</strong>：只有更高优先级的 <code>SCHED_FIFO</code> 或
+<code>SCHED_RR</code> 任务可以抢占当前的 <code>SCHED_FIFO</code> 任务。
+- 如果多个 <code>SCHED_FIFO</code>
+任务具有相同优先级，它们以轮转的方式运行。</p>
+<h2 id="sched_rr-策略">2. SCHED_RR 策略</h2>
+<p><code>SCHED_RR</code> 与 <code>SCHED_FIFO</code>
+类似，但有时间片限制。 -
+每个任务运行到时间片耗尽时，会被切换到同一优先级队列中的下一个任务。 -
+只有更高优先级的任务可以抢占当前任务，即使 <code>SCHED_RR</code>
+任务的时间片耗尽，低优先级的进程也无法抢占它的执行。 -
+<strong>时间片的作用</strong>：仅用于同优先级进程之间的调度。</p>
+<h2 id="静态优先级">3. 静态优先级</h2>
+<ul>
+<li>两种实时调度策略都实现了<strong>静态优先级</strong>。</li>
+<li>内核不会为实时任务计算动态优先级。</li>
+<li>给定优先级的实时任务总是会抢占低优先级的任务。</li>
+</ul>
+<h2 id="软实时与硬实时">4. 软实时与硬实时</h2>
+<ul>
+<li>Linux
+的实时调度策略提供的是<strong>软实时</strong>行为：内核会尽力在时限内调度应用程序，但不保证一定达成。</li>
+<li>硬实时系统则保证严格的时限要求，而 Linux 并不原生支持。</li>
+</ul>
+<hr />
+<h1 id="实时优先级范围">实时优先级范围</h1>
+<ul>
+<li>实时优先级范围为 <code>0</code> 到
+<code>MAX_RT_PRIO - 1</code>，默认情况下 <code>MAX_RT_PRIO</code> 为
+<code>100</code>。99为最高实时优先级。</li>
+<li>普通任务（<code>SCHED_NORMAL</code>）与实时任务共享优先级空间：
+<ul>
+<li><code>-20</code> 到 <code>+19</code> 的 nice 值映射到优先级范围
+<code>100</code> 到
+<code>139</code>。这是用户空间的进程评级，-20为最高优先级。</li>
+</ul></li>
+</ul>
+<hr />
+<h1 id="与调度器相关的系统调用">与调度器相关的系统调用</h1>
+<p>以下是管理调度参数的系统调用列表：</p>
+<table>
+<thead>
+<tr>
+<th><strong>系统调用</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nice()</code></td>
+<td>设置进程的 nice 值</td>
+</tr>
+<tr>
+<td><code>sched_setscheduler()</code></td>
+<td>设置进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_getscheduler()</code></td>
+<td>获取进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_setparam()</code></td>
+<td>设置进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_getparam()</code></td>
+<td>获取进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_max()</code></td>
+<td>获取实时调度的最大优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_min()</code></td>
+<td>获取实时调度的最小优先级</td>
+</tr>
+<tr>
+<td><code>sched_rr_get_interval()</code></td>
+<td>获取进程的时间片值</td>
+</tr>
+<tr>
+<td><code>sched_setaffinity()</code></td>
+<td>设置进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_getaffinity()</code></td>
+<td>获取进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_yield()</code></td>
+<td>临时将处理器让给其他任务</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
         </h2>
 
         <div class="post-meta-container">
@@ -742,7 +2026,7 @@ City的歌才能睡着了，但那个时候只觉得是自己压力太大。三�
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:59" itemprop="dateModified" datetime="2025-01-22T10:30:59+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
     </span>
 
   
@@ -755,19 +2039,105 @@ City的歌才能睡着了，但那个时候只觉得是自己压力太大。三�
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>试着做一个微信小程序的项目，还不知道会遇到多少坑......</p>
-<h2 id="section">4/26</h2>
-<p>网页后端体系架构（自下而上）：</p>
-<p><strong>数据库</strong>：存储字段（列）组成的实体集（表）</p>
-<p>通过MyBatisPlus将数据库实体集与Java对象建立联系，其中实体集中的字段与Java类中的属性一一对应。</p>
-<p><strong>DAO层/Mapper层</strong>：提供CRUD的Java方法，处理/提供data
-object</p>
-<p>DO即数据库实体集对应的Java对象。</p>
-<p><strong>Service层：</strong>统一业务逻辑处理，为不同服务提供可复用的调用接口；为CRUD方法赋予实际业务意义；处理param数据，提供VO对象</p>
-<p>将从controller层拿到的param数据转化成DO对象，传至DAO层；将DAO层提供的DO对象转化成VO对象，提供给controller层。</p>
-<p><strong>Controller层：</strong>分配URL，接受来自页面的请求，向下处理后，拿到返回数据返回页面。</p>
-<p>从页面拿到param数据提供给service层，接受service层传递的VO对象给页面展示。</p>
-<p>更多关于数据结构层的介绍：https://blog.csdn.net/qq_27022241/article/details/112002345</p>
+          <h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Ubuntu_setup/" class="post-title-link" itemprop="url">设置Ubuntu</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="设置apt源">设置apt源</h3>
+<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
+<h3 id="vim技巧">vim技巧</h3>
+<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
+<h3 id="设置vim">设置vim</h3>
+<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -787,7 +2157,7 @@ object</p>
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/zh-CN/page/7/">7</a><a class="page-number" href="/zh-CN/page/8/">8</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/zh-CN/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -863,7 +2233,7 @@ object</p>
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

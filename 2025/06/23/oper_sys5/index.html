@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Shell（壳&#x2F;命令行解释器） Shell 是一种专门的程序，用于读取用户输入的命令，并根据这些命令执行相应的程序。Shell 也被称为命令解释器（command interpreter）。  登录 Shell（login shell）：指用户首次登录时系统为其启动的运行 Shell 的进程。  在某些操作系统中，命令解释器是内核的一部分；但在 UNIX 系统中，Shell 是一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 2.5 linux组成概述">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/23/oper_sys5/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="Shell（壳&#x2F;命令行解释器） Shell 是一种专门的程序，用于读取用户输入的命令，并根据这些命令执行相应的程序。Shell 也被称为命令解释器（command interpreter）。  登录 Shell（login shell）：指用户首次登录时系统为其启动的运行 Shell 的进程。  在某些操作系统中，命令解释器是内核的一部分；但在 UNIX 系统中，Shell 是一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T20:32:33.012Z">
+<meta property="article:modified_time" content="2025-06-23T21:05:54.103Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/23/oper_sys5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/23/oper_sys5/","path":"2025/06/23/oper_sys5/","title":"操作系统基础 | 2.5 linux组成概述"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 2.5 linux组成概述 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#shell%E5%A3%B3%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E9%87%8A%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">Shell（壳&#x2F;命令行解释器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%B8%8E%E7%94%A8%E6%88%B7%E7%BB%84users-and-groups"><span class="nav-number">2.</span> <span class="nav-text">用户与用户组（Users and
+Groups）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7users"><span class="nav-number">2.1.</span> <span class="nav-text">用户（Users）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84groups"><span class="nav-number">2.2.</span> <span class="nav-text">用户组（Groups）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7superuser"><span class="nav-number">2.3.</span> <span class="nav-text">超级用户（Superuser）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E7%9B%AE%E5%BD%95%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84%E7%9B%AE%E5%BD%95%E9%93%BE%E6%8E%A5%E4%B8%8E%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">单一目录层次结构、目录、链接与文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">文件类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E4%B8%8E%E9%93%BE%E6%8E%A5"><span class="nav-number">3.2.</span> <span class="nav-text">目录与链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5symbolic-link"><span class="nav-number">3.3.</span> <span class="nav-text">符号链接（Symbolic Link）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%90%8Dfilenames"><span class="nav-number">3.4.</span> <span class="nav-text">文件名（Filenames）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%90%8Dpathnames"><span class="nav-number">3.5.</span> <span class="nav-text">路径名（Pathnames）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95current-working-directory"><span class="nav-number">3.6.</span> <span class="nav-text">当前工作目录（Current
+working directory）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E6%9D%83%E4%B8%8E%E6%9D%83%E9%99%90file-ownership-and-permissions"><span class="nav-number">3.7.</span> <span class="nav-text">文件所有权与权限（File
+ownership and permissions）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6-io-%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">文件 I&#x2F;O 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#io-%E7%9A%84%E9%80%9A%E7%94%A8%E6%80%A7"><span class="nav-number">4.1.</span> <span class="nav-text">I&#x2F;O 的通用性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6file-descriptors"><span class="nav-number">4.2.</span> <span class="nav-text">文件描述符（File descriptors）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdio-%E5%BA%93"><span class="nav-number">4.3.</span> <span class="nav-text">stdio 库</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 2.5 linux组成概述 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 2.5 linux组成概述
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-24 04:32:33 / 修改时间：05:05:54" itemprop="dateCreated datePublished" datetime="2025-06-24T04:32:33+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="shell壳命令行解释器">Shell（壳/命令行解释器）</h3>
+<p>Shell
+是一种专门的程序，用于读取用户输入的命令，并根据这些命令执行相应的程序。Shell
+也被称为命令解释器（command interpreter）。</p>
+<ul>
+<li><strong>登录 Shell（login
+shell）</strong>：指用户首次登录时系统为其启动的运行 Shell 的进程。</li>
+</ul>
+<p>在某些操作系统中，命令解释器是内核的一部分；但在 UNIX 系统中，Shell
+是一个普通的用户进程。UNIX 系统支持多种
+Shell，不同用户（甚至同一用户的不同会话）可以同时使用不同的 Shell。</p>
+<h3 id="用户与用户组users-and-groups">用户与用户组（Users and
+Groups）</h3>
+<h4 id="用户users">用户（Users）</h4>
+<ul>
+<li>系统中的每个用户都有唯一的登录名（username）和对应的数字用户ID（UID）。</li>
+<li>每个用户的信息都记录在 <code>/etc/passwd</code>
+文件的一行中，内容包括：
+<ul>
+<li>用户名</li>
+<li>用户ID（UID）</li>
+<li>所属的第一个用户组的组ID（GID）</li>
+<li>家目录（home directory）：用户登录后进入的初始目录</li>
+<li>登录Shell：用于解释用户命令的程序名</li>
+<li>密码（通常为加密形式），但出于安全考虑，密码一般存储在只有特权用户可读的
+shadow 密码文件中。</li>
+</ul></li>
+</ul>
+<h4 id="用户组groups">用户组（Groups）</h4>
+<ul>
+<li>为了管理和控制对文件及其他系统资源的访问，用户可以被组织到用户组中。</li>
+<li>例如，一个项目组的成员可以被加入同一个用户组，以便共享文件。</li>
+<li>早期 UNIX 系统中，一个用户只能属于一个组。BSD 及后来的 UNIX 和 POSIX
+标准允许用户同时属于多个组。</li>
+<li>每个用户组的信息记录在 <code>/etc/group</code>
+文件的一行中，内容包括：
+<ul>
+<li>组名（唯一）</li>
+<li>组ID（GID）</li>
+<li>用户列表：以逗号分隔的用户名列表，表示属于该组的用户（不包括那些通过
+<code>/etc/passwd</code> 文件的 GID 字段已属于该组的用户）</li>
+</ul></li>
+</ul>
+<h4 id="超级用户superuser">超级用户（Superuser）</h4>
+<ul>
+<li>系统中有一个特殊用户，称为超级用户（superuser），拥有系统内的特殊权限。</li>
+<li>超级用户的用户ID为0，通常用户名为 root。</li>
+<li>超级用户可以绕过系统的所有权限检查。例如，可以访问系统中的任何文件、向任何进程发送信号等。</li>
+<li>系统管理员使用超级用户账户执行各种系统管理任务。</li>
+</ul>
+<h3
+id="单一目录层次结构目录链接与文件">单一目录层次结构、目录、链接与文件</h3>
+<p>Linux
+内核维护着一个<strong>单一的分层目录结构</strong>来组织系统中的所有文件（与
+Windows 等操作系统每个磁盘有独立目录树不同）。这个层次结构的顶端是根目录
+<code>/</code>，所有文件和目录都是根目录的子孙。</p>
+<h4 id="文件类型">文件类型</h4>
+<ul>
+<li><strong>普通文件（regular file）</strong>：普通数据文件。</li>
+<li><strong>目录（directory）</strong>：特殊文件，内容是文件名和对应文件引用的表。</li>
+<li><strong>其他类型</strong>：还包括设备文件、管道、套接字、符号链接等。</li>
+</ul>
+<h4 id="目录与链接">目录与链接</h4>
+<ul>
+<li>目录是特殊文件，内容是“文件名+引用”的表，这种关联称为<strong>链接（link）</strong>。</li>
+<li>一个文件可以有多个链接（即多个名字），可以存在于同一目录或不同目录。</li>
+<li>目录可以包含指向文件和其他目录的链接，形成树状层次结构。</li>
+<li>每个目录至少有两个特殊条目：
+<ul>
+<li><code>.</code> ：指向自身</li>
+<li><code>..</code> ：指向父目录（根目录的 <code>..</code>
+也指向自身）</li>
+</ul></li>
+</ul>
+<h4 id="符号链接symbolic-link">符号链接（Symbolic Link）</h4>
+<ul>
+<li>符号链接（软链接，soft
+link）是一个特殊文件，内容是另一个文件的路径名。</li>
+<li>当系统调用中指定路径时，内核会自动解析（跟随）符号链接，直到找到目标文件（递归解析，内核会限制递归次数以防死循环）。</li>
+<li>如果符号链接指向的目标不存在，则称为<strong>悬挂链接（dangling
+link）</strong>。</li>
+<li><strong>硬链接（hard link）</strong>和<strong>软链接（soft
+link）</strong>是两种不同的链接类型。</li>
+</ul>
+<h4 id="文件名filenames">文件名（Filenames）</h4>
+<ul>
+<li>在大多数 Linux 文件系统中，文件名最长可达 255 个字符。</li>
+<li>文件名可以包含除斜杠（/）和空字符（\0）以外的任意字符。</li>
+<li>建议只使用字母、数字、点（.）、下划线（_）和连字符（-），即字符集
+<code>[-._a-zA-Z0-9]</code>，这被称为 SUSv3
+标准的“可移植文件名字符集”。</li>
+<li>避免使用不在可移植字符集内的字符，因为这些字符在
+shell、正则表达式等环境下可能有特殊含义。如果必须使用，需要用反斜杠（）转义，否则可能无法正确使用。</li>
+<li>避免以连字符（-）开头的文件名，因为在 shell
+命令中可能被误认为是选项。</li>
+</ul>
+<h4 id="路径名pathnames">路径名（Pathnames）</h4>
+<ul>
+<li>路径名是由可选的开头斜杠（/）和一系列用斜杠分隔的文件名组成的字符串。</li>
+<li>除最后一个部分外，路径中的每个部分都应是目录（或能解析为目录的符号链接），最后一个部分可以是任意类型的文件。</li>
+<li>路径名分为两类：
+<ul>
+<li><strong>绝对路径名</strong>：以斜杠（/）开头，从根目录开始定位文件。例如
+<code>/home/mtk/.bashrc</code>、<code>/usr/include</code>、<code>/</code>。</li>
+<li><strong>相对路径名</strong>：不以斜杠开头，相对于当前工作目录。例如，从
+<code>usr</code> 目录访问 <code>types.h</code> 可用
+<code>include/sys/types.h</code>，从 <code>avr</code> 目录访问
+<code>.bashrc</code> 可用 <code>../mtk/.bashrc</code>。</li>
+</ul></li>
+<li>路径名可以包含 <code>..</code>，表示上一级目录。</li>
+</ul>
+<h4 id="当前工作目录current-working-directory">当前工作目录（Current
+working directory）</h4>
+<ul>
+<li>每个进程都有一个当前工作目录（current working
+directory），即进程在目录树中的“当前位置”，相对路径名都是基于这个目录解析的。</li>
+<li>进程的当前工作目录由父进程继承。登录 shell 的初始工作目录由
+<code>/etc/passwd</code> 文件中的 home 字段指定。</li>
+<li>可以用 <code>cd</code> 命令更改当前工作目录。</li>
+</ul>
+<h4
+id="文件所有权与权限file-ownership-and-permissions">文件所有权与权限（File
+ownership and permissions）</h4>
+<ul>
+<li>每个文件都有一个关联的用户ID（UID）和组ID（GID），分别表示文件的所有者和所属组。</li>
+<li>文件的所有权决定了哪些用户可以访问该文件。</li>
+<li>系统将用户分为三类：
+<ol type="1">
+<li>文件所有者（user）</li>
+<li>与文件组ID匹配的组成员（group）</li>
+<li>其他所有用户（other）</li>
+</ol></li>
+<li>每类用户有三种权限（共九个权限位）：
+<ul>
+<li>读（read）：允许读取文件内容</li>
+<li>写（write）：允许修改文件内容</li>
+<li>执行（execute）：允许执行该文件（如程序或脚本）</li>
+</ul></li>
+<li>目录的权限含义略有不同：
+<ul>
+<li>读：允许列出目录内容（文件名）</li>
+<li>写：允许修改目录内容（添加、删除、重命名文件）</li>
+<li>执行（或称搜索）：允许访问目录中的文件（前提是对文件本身也有权限）</li>
+</ul></li>
+</ul>
+<h3 id="文件-io-模型">文件 I/O 模型</h3>
+<h4 id="io-的通用性">I/O 的通用性</h4>
+<p>UNIX 系统 I/O 模型的一个显著特点是<strong>I/O
+的通用性</strong>。这意味着同一组系统调用（如
+<code>open()</code>、<code>read()</code>、<code>write()</code>、<code>close()</code>
+等）可以用于所有类型的文件，包括设备文件。内核会将应用程序的 I/O
+请求转换为相应的文件系统或设备驱动操作，从而对目标文件或设备进行实际的
+I/O 操作。因此，使用这些系统调用的程序可以对任何类型的文件进行操作。</p>
+<p>内核本质上只提供一种文件类型：<strong>按字节顺序排列的字节流</strong>。对于磁盘文件、磁盘和磁带设备，可以通过
+<code>lseek()</code> 系统调用实现随机访问。</p>
+<p>许多应用和库将换行符（ASCII 码
+10，linefeed）视为一行文本的结束和下一行的开始。UNIX
+系统没有专门的文件结束符（EOF），文件结束通过 <code>read()</code>
+返回无数据来检测。</p>
+<h4 id="文件描述符file-descriptors">文件描述符（File descriptors）</h4>
+<p>I/O 系统调用通过<strong>文件描述符</strong>（file
+descriptor）来引用已打开的文件。文件描述符是一个（通常很小的）非负整数。通常通过
+<code>open()</code> 调用获得文件描述符，<code>open()</code>
+需要一个路径名参数，指定要进行 I/O 操作的文件。</p>
+<p>当进程由 shell 启动时，通常会继承三个已打开的文件描述符： -
+<strong>0</strong>：标准输入（standard input），进程从中读取输入 -
+<strong>1</strong>：标准输出（standard output），进程向其写入输出 -
+<strong>2</strong>：标准错误（standard
+error），进程向其写入错误信息和异常通知</p>
+<p>在交互式 shell 或程序中，这三个描述符通常都连接到终端。在 stdio
+库中，它们分别对应于 <code>stdin</code>、<code>stdout</code> 和
+<code>stderr</code>。</p>
+<h4 id="stdio-库">stdio 库</h4>
+<p>C 语言程序通常使用标准 C 库中的 I/O 函数（即 stdio 库）进行文件
+I/O。常用的 stdio 函数包括
+<code>fopen()</code>、<code>fclose()</code>、<code>scanf()</code>、<code>printf()</code>、<code>fgets()</code>、<code>fputs()</code>
+等。这些 stdio 函数是建立在底层 I/O 系统调用（如
+<code>open()</code>、<code>close()</code>、<code>read()</code>、<code>write()</code>
+等）之上的。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/22/oper_sys4/" rel="prev" title="操作系统基础 | 2.4 初试linux内核实验">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 2.4 初试linux内核实验
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/23/oper_sys6/" rel="next" title="操作系统基础 | 2.6 linux组成概述2">
+                  操作系统基础 | 2.6 linux组成概述2 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/06/23/oper_sys5/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/06/23/oper_sys5/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

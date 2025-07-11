@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="HTTP中常见的状态码有哪些？ HTTP 状态码用于表明特定HTTP请求是否完成 1xx 信息响应（100–199）  ✅“我听到了，继续吧”  表示请求已接收，继续处理  100 Continue：初始部分已接收，客户端应继续发送。 101 Switching Protocols：服务器：同意更改协议。 102 Processing：服务器：已收到，正在处理。  2x">
+    <meta name="description" content="HTTP中常见的状态码有哪些？ HTTP 状态码用于表明特定HTTP请求是否完成 1xx 信息响应（100–199）  ✅“我听到了，继续吧”  表示请求已接收，继续处理  100 Continue：初始部分已接收，客户端应继续发送。 101 Switching Protocols：服务器：同意更改协议。 &gt; - WebSocket：最常见，HTTP 升级为 WebS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码随想录 | 八股-HTTP请求2">
 <meta property="og:url" content="https://mackz-maxw.github.io/2025/06/01/kamabagu3/index.html">
 <meta property="og:site_name" content="Maxw的小站">
-<meta property="og:description" content="HTTP中常见的状态码有哪些？ HTTP 状态码用于表明特定HTTP请求是否完成 1xx 信息响应（100–199）  ✅“我听到了，继续吧”  表示请求已接收，继续处理  100 Continue：初始部分已接收，客户端应继续发送。 101 Switching Protocols：服务器：同意更改协议。 102 Processing：服务器：已收到，正在处理。  2x">
+<meta property="og:description" content="HTTP中常见的状态码有哪些？ HTTP 状态码用于表明特定HTTP请求是否完成 1xx 信息响应（100–199）  ✅“我听到了，继续吧”  表示请求已接收，继续处理  100 Continue：初始部分已接收，客户端应继续发送。 101 Switching Protocols：服务器：同意更改协议。 &gt; - WebSocket：最常见，HTTP 升级为 WebS">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-01T15:16:58.534Z">
-<meta property="article:modified_time" content="2025-05-31T20:34:32.000Z">
+<meta property="article:modified_time" content="2025-07-04T00:05:52.667Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
@@ -125,7 +125,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">72</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -191,9 +191,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-06-01 23:16:58 / 修改时间：04:34:32" itemprop="dateCreated datePublished" datetime="2025-06-01T23:16:58+08:00">2025-06-01</time>
+      <time title="创建时间：2025-06-01 23:16:58" itemprop="dateCreated datePublished" datetime="2025-06-01T23:16:58+08:00">2025-06-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-04 08:05:52" itemprop="dateModified" datetime="2025-07-04T08:05:52+08:00">2025-07-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -224,8 +230,12 @@
 <ul>
 <li><strong>100
 Continue</strong>：初始部分已接收，客户端应继续发送。</li>
-<li><strong>101 Switching
-Protocols</strong>：服务器：同意更改协议。</li>
+<li><strong>101 Switching Protocols</strong>：服务器：同意更改协议。
+&gt; - <strong>WebSocket</strong>：最常见，HTTP 升级为
+WebSocket，实现持久化的全双工通信。 &gt; -
+<strong>HTTP/2</strong>：部分场景下可以通过 Upgrade 机制从 HTTP/1.1
+升级到 HTTP/2。 &gt; - <strong>TLS/SSL</strong>：早期可以通过 Upgrade
+升级到加密连接（现在一般用 HTTPS 直接建立）。</li>
 <li><strong>102 Processing</strong>：服务器：已收到，正在处理。</li>
 </ul>
 <h4 id="xx-成功响应200299">2xx 成功响应（200–299）</h4>
@@ -296,7 +306,8 @@ Timeout</strong>：服务器作为网关或代理，未及时从上游服务器�
 <ul>
 <li>浏览器<strong>直接使用本地缓存资源</strong>。</li>
 <li>不向服务器发请求。</li>
-<li>若命中强缓存，状态码为 <code>200 (from memory cache)</code> 或
+<li>若命中强缓存，浏览器将会本地模拟一个状态码
+<code>200 (from memory cache)</code> 或
 <code>200 (from disk cache)</code>。</li>
 </ul>
 <h5 id="实现方式">📌 实现方式：</h5>

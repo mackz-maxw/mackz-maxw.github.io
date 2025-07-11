@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="HTTP1.0和HTTP1.1的区别  🚗 连接方式：从“一次一清”到“多次复用”  HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码随想录 | 八股-HTTP版本">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/07/03/kamabagu4/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="HTTP1.0和HTTP1.1的区别  🚗 连接方式：从“一次一清”到“多次复用”  HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-04T00:06:11.270Z">
+<meta property="article:modified_time" content="2025-07-11T02:05:49.917Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/07/03/kamabagu4/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/07/03/kamabagu4/","path":"2025/07/03/kamabagu4/","title":"代码随想录 | 八股-HTTP版本"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>代码随想录 | 八股-HTTP版本 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#http1.0%E5%92%8Chttp1.1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">HTTP1.0和HTTP1.1的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http2.0%E4%B8%8Ehttp1.1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">HTTP2.0与HTTP1.1的区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E6%96%B9%E5%BC%8F%E4%BB%8E%E6%96%87%E6%9C%AC%E6%8E%92%E9%98%9F%E5%88%B0%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7"><span class="nav-number">2.1.</span> <span class="nav-text">1️⃣
+传输方式：从“文本排队”到“二进制分帧”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E4%BB%8E%E5%A4%9A%E8%B7%AF%E6%8E%92%E9%98%9F%E5%88%B0%E7%9C%9F%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">2️⃣
+连接方式：从“多路排队”到“真·多路复用”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B4%E9%83%A8%E4%BF%A1%E6%81%AF%E4%BB%8E%E9%87%8D%E5%A4%8D%E8%87%83%E8%82%BF%E5%88%B0%E9%AB%98%E6%95%88%E5%8E%8B%E7%BC%A9"><span class="nav-number">2.3.</span> <span class="nav-text">3️⃣
+头部信息：从“重复臃肿”到“高效压缩”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%BB%E5%8A%A8%E6%8E%A8%E9%80%81%E4%BB%8E%E8%A2%AB%E5%8A%A8%E5%93%8D%E5%BA%94%E5%88%B0%E4%B8%BB%E5%8A%A8%E9%80%81%E8%B4%A7"><span class="nav-number">2.4.</span> <span class="nav-text">4️⃣
+服务器主动推送：从“被动响应”到“主动送货”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E4%B8%8E%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E6%9B%B4%E6%99%BA%E8%83%BD%E7%9A%84%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6"><span class="nav-number">2.5.</span> <span class="nav-text">5️⃣
+优先级与流量控制：更智能的资源调度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">2.6.</span> <span class="nav-text">⚠️ 注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http3.0%E6%9C%89%E4%BA%86%E8%A7%A3%E8%BF%87%E5%90%97"><span class="nav-number">3.</span> <span class="nav-text">HTTP3.0有了解过吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%8D%8F%E8%AE%AE%E9%9D%A9%E5%91%BD%E4%BB%8E-tcp-%E5%88%B0-quic%E5%9F%BA%E4%BA%8Eudp"><span class="nav-number">3.1.</span> <span class="nav-text">1️⃣ 底层协议革命：从
+TCP 到 QUIC（基于UDP）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E8%BF%9E%E9%80%9F%E5%BA%A6%E9%A3%9E%E8%B7%830-rtt-%E4%B8%8E-1-rtt-%E6%8F%A1%E6%89%8B"><span class="nav-number">3.2.</span> <span class="nav-text">2️⃣ 建连速度飞跃：0-RTT
+与 1-RTT 握手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%81%E7%A7%BB%E7%BD%91%E7%BB%9C%E5%88%87%E6%8D%A2%E4%B8%8D%E6%96%AD%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">3️⃣
+连接迁移：网络切换不断线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%B5%8C%E5%8A%A0%E5%AF%86%E5%AE%89%E5%85%A8%E6%98%AF%E5%BC%BA%E5%88%B6%E8%A6%81%E6%B1%82"><span class="nav-number">3.4.</span> <span class="nav-text">4️⃣
+内嵌加密：安全是强制要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-%E5%A4%B4%E9%83%A8%E5%8E%8B%E7%BC%A9"><span class="nav-number">3.5.</span> <span class="nav-text">5️⃣ 改进的多路复用 &amp;
+头部压缩</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/03/kamabagu4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="代码随想录 | 八股-HTTP版本 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代码随想录 | 八股-HTTP版本
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-04 08:06:11" itemprop="dateCreated datePublished" datetime="2025-07-04T08:06:11+08:00">2025-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-11 10:05:49" itemprop="dateModified" datetime="2025-07-11T10:05:49+08:00">2025-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="http1.0和http1.1的区别">HTTP1.0和HTTP1.1的区别</h3>
+<ol type="1">
+<li><strong>🚗 连接方式：从“一次一清”到“多次复用”</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。</li>
+<li><strong>HTTP 1.1：</strong>
+<strong>默认持久连接</strong>。浏览器和服务器建立一个TCP连接后，可以在这个连接上<strong>连续发送多个请求和接收多个响应</strong>通过Connection:
+keep-alive头来实现持久连接。</li>
+</ul></li>
+<li><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。</li>
+<li><strong>HTTP 1.1：</strong>
+<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。想象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</li>
+</ul></li>
+<li><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。</li>
+<li><strong>HTTP 1.1：</strong>
+引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public</code>/<code>private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></li>
+</ul></li>
+<li><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+如果下载大文件中断，<strong>必须从头开始重新下载</strong>。</li>
+<li><strong>HTTP 1.1：</strong>
+支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头返回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</li>
+</ul></li>
+<li><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。</li>
+<li><strong>HTTP 1.1：</strong>
+支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，但出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></li>
+</ul></li>
+<li><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong>
+<ul>
+<li><strong>HTTP 1.0：</strong>
+服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。</li>
+<li><strong>HTTP 1.1：</strong>
+引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边做菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></li>
+</ul></li>
+<li><strong>📝 错误处理：从“模糊”到“更明确”</strong>
+<ul>
+<li><strong>HTTP 1.1：</strong> 新增了一些状态码，提供更精确的错误信息：
+<ul>
+<li><code>409 Conflict</code>：请求与服务器当前状态冲突。</li>
+<li><code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。</li>
+<li><code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。</li>
+</ul></li>
+<li><strong>响应格式：</strong> HTTP 1.1
+要求响应行中必须包含<strong>原因短语</strong>（如
+<code>HTTP/1.1 200 OK</code>），而 1.0
+只要求状态码是可选的（虽然实践中通常都有）。</li>
+</ul></li>
+</ol>
+<h3 id="http2.0与http1.1的区别">HTTP2.0与HTTP1.1的区别？</h3>
+<blockquote>
+<p><strong>一句话记忆：HTTP/2 = 更快、更智能、更省资源！</strong></p>
+</blockquote>
+<h4 id="传输方式从文本排队到二进制分帧">1️⃣
+<strong>传输方式：从“文本排队”到“二进制分帧”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>用<strong>纯文本格式</strong>发送请求和响应（比如
+<code>GET /index.html HTTP/1.1</code>）。<br />
+</li>
+<li>多个请求必须<strong>排队串行处理</strong>（即使开了管道化也有队头阻塞问题）。<br />
+</li>
+<li><strong>想象：</strong>
+邮局用明信片寄信，一次只能寄一张，必须等回信才能寄下一张，效率低。✉️➡️✉️➡️✉️</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>将数据拆分成更小的<strong>二进制帧（Frame）</strong>（头部帧 HEADERS
++ 数据帧 DATA）。<br />
+</li>
+<li>同一个连接上，<strong>多个请求/响应的帧可以混合发送、并行传输</strong>，互不阻塞！<br />
+</li>
+<li><strong>想象：</strong>
+快递公司把包裹拆成小件，打上标签，通过立体分拣通道同时运输，到目的地再组装。📦📦📦
+→ 🚚💨</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：彻底解决队头阻塞，大幅提升并发效率！</strong></p>
+<h4 id="连接方式从多路排队到真多路复用">2️⃣
+<strong>连接方式：从“多路排队”到“真·多路复用”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>虽然支持持久连接（一个TCP连多个请求），但<strong>响应必须按顺序返回</strong>（队头阻塞）。<br />
+</li>
+<li>浏览器通常开 <strong>6~8个TCP连接</strong>
+并行请求资源（但占用资源多）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li><strong>一个TCP连接</strong> 上即可实现
+<strong>成百上千个流的并行传输</strong>（每个流是一个请求/响应）。<br />
+</li>
+<li>帧自带流ID标识，接收方能按ID重组数据，无需排队等待！<br />
+</li>
+<li><strong>想象：</strong> 从多条乡间小路 →
+升级成一条双向十车道高速路，所有车辆（请求）畅通无阻。🛣️🚗🚙🚕</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：一个连接解决所有请求，省资源、低延迟！</strong></p>
+<h4 id="头部信息从重复臃肿到高效压缩">3️⃣
+<strong>头部信息：从“重复臃肿”到“高效压缩”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>每次请求都携带大量<strong>重复的文本头部</strong>（如Cookie、User-Agent），不压缩。<br />
+</li>
+<li><strong>浪费带宽</strong>（尤其小文件请求时，头部可能比数据还大）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>使用 <strong>HPACK 算法压缩头部</strong>：
+<ul>
+<li>客户端和服务端维护<strong>“头部字典”</strong>，相同头部只传索引；<br />
+</li>
+<li>用霍夫曼编码压缩文本。<br />
+</li>
+</ul></li>
+<li><strong>头部大小减少 30%~90%</strong>！<br />
+</li>
+<li><strong>想象：</strong> 从每次寄信都手写完整地址 →
+改用电子二维码扫码寄件，地址库自动匹配。📮→📲</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：大幅节省带宽，加快小资源加载！</strong></p>
+<h4 id="服务器主动推送从被动响应到主动送货">4️⃣
+<strong>服务器主动推送：从“被动响应”到“主动送货”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>服务器<strong>只能被动响应</strong>客户端请求。<br />
+</li>
+<li>浏览器需解析HTML后，再请求CSS/JS/图片等依赖资源。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>服务器可<strong>主动推送</strong>客户端可能需要的资源（如CSS/JS）！<br />
+</li>
+<li>客户端可缓存推送内容，下次直接使用。<br />
+</li>
+<li><strong>想象：</strong>
+点外卖时，商家不仅送米饭，还主动附赠了筷子和纸巾（你知道你一定会需要）。🍚+🥢+🧻</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：减少请求往返次数，加速页面渲染！</strong></p>
+<h4 id="优先级与流量控制更智能的资源调度">5️⃣
+<strong>优先级与流量控制：更智能的资源调度</strong></h4>
+<ul>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>客户端可为请求标记<strong>优先级</strong>（如CSS &gt;
+图片），服务器优先处理高优先级流。<br />
+</li>
+<li>支持精细的<strong>流量控制</strong>（基于每个流控制传输速率）。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/1.1：</strong>
+无法真正实现优先级调度（依赖浏览器启发式策略）。</li>
+</ul>
+<h4 id="注意">⚠️ 注意：</h4>
+<ol type="1">
+<li>HTTP/2 <strong>未加密</strong>，但所有主流浏览器只支持
+<strong>HTTP/2 Over TLS</strong>（即 HTTPS）。<br />
+</li>
+<li>HTTP/2 解决了应用层队头阻塞，但 <strong>TCP
+层仍有队头阻塞</strong>（丢包会阻塞所有流）。<br />
+</li>
+<li>这是 HTTP/3（基于QUIC/UDP）要解决的下一代问题！</li>
+</ol>
+<h3 id="http3.0有了解过吗">HTTP3.0有了解过吗？</h3>
+<p>🚀 <strong>核心一句话：HTTP/3 = 抛弃TCP！拥抱QUIC！</strong> &gt;
+<strong>解决 HTTP/2 的终极痛点：TCP 的队头阻塞！</strong></p>
+<h4 id="底层协议革命从-tcp-到-quic基于udp">1️⃣ <strong>底层协议革命：从
+TCP 到 QUIC（基于UDP）</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong> 都跑在 <strong>TCP</strong>
+协议之上。
+<ul>
+<li><strong>TCP 问题：</strong>
+如果传输中<strong>丢了一个包</strong>，后续所有包都要等待重传（即使它们属于不同请求），这就是
+<strong>TCP 队头阻塞</strong>。<br />
+</li>
+<li><strong>想象：</strong>
+快递车队走一条单行道，前一辆车抛锚，后面所有车都得堵着等（无论是不是同一批货物）。🚚❌🚛🚗🚐<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3：</strong> 彻底抛弃 TCP，改用全新协议
+<strong>QUIC（Quick UDP Internet Connections）</strong>，运行在
+<strong>UDP</strong> 之上。
+<ul>
+<li><strong>QUIC 优势：</strong>
+每个请求/响应流是<strong>独立传输的</strong>，丢包只影响当前流，其他流畅通无阻！<br />
+</li>
+<li><strong>想象：</strong>
+快递改用无人机配送，每件包裹独立飞行路线，一个包裹出问题，其他包裹照常送达。✈️📦➡️🏠
+| ✈️📦➡️🏠 | 💥📦❌ | ✈️📦➡️🏠<br />
+👉
+<strong>核心价值：彻底消灭传输层队头阻塞，网络波动时性能大幅提升！</strong></li>
+</ul></li>
+</ul>
+<h4 id="建连速度飞跃0-rtt-与-1-rtt-握手">2️⃣ <strong>建连速度飞跃：0-RTT
+与 1-RTT 握手</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2（TCP+TLS）：</strong>
+<ul>
+<li>首次连接需 <strong>TCP 三次握手（1.5 RTT） + TLS 握手（1~2 RTT） =
+总计 2~3.5 RTT</strong> 延迟才能发送数据。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li><strong>首次连接：1-RTT 握手</strong>（QUIC
+将传输和加密握手合并）。<br />
+</li>
+<li><strong>重连用户：0-RTT
+握手</strong>！客户端缓存了服务器密钥，首次请求可直接带上加密数据。<br />
+</li>
+<li><strong>想象：</strong>
+进地铁站——旧方式：先排队买票（TCP握手），再安检（TLS握手）；新方式：刷脸直接进（0-RTT）！🎫→🛂→🚇
+→ 😃🔜🚇<br />
+👉 <strong>核心价值：首次访问更快，重复访问“闪电启动”！</strong></li>
+</ul></li>
+</ul>
+<h4 id="连接迁移网络切换不断线">3️⃣
+<strong>连接迁移：网络切换不断线</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong>
+<ul>
+<li>连接绑定 <strong>IP + 端口 +
+TCP协议</strong>。切换网络（如WiFi→4G）会导致IP变化，连接必须重建！<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li>使用 <strong>连接ID（Connection ID）</strong> 唯一标识连接。<br />
+</li>
+<li>切换网络时，只要客户端能通信，连接ID不变，会话无缝延续！<br />
+</li>
+<li><strong>想象：</strong>
+旧手机卡换手机要重新插卡激活；eSIM卡换手机自动联网，号码不变。📱➡️📱 =
+❌ vs 📱➡️📱 = ✅<br />
+👉
+<strong>核心价值：移动端福音！地铁进隧道、WiFi切5G，视频会议不中断！</strong></li>
+</ul></li>
+</ul>
+<h4 id="内嵌加密安全是强制要求">4️⃣
+<strong>内嵌加密：安全是强制要求</strong></h4>
+<ul>
+<li><strong>QUIC 协议设计之初就强制加密</strong>（使用 TLS 1.3）。<br />
+</li>
+<li><strong>没有明文的 QUIC！</strong> 所有头部和载荷默认加密。<br />
+</li>
+<li><strong>对比：</strong> HTTP/2
+的加密（HTTPS）是可选但事实强制，HTTP/3 直接内嵌到协议层。<br />
+👉
+<strong>核心价值：提升安全性，防止运营商劫持、降低中间设备干扰。</strong></li>
+</ul>
+<h4 id="改进的多路复用-头部压缩">5️⃣ <strong>改进的多路复用 &amp;
+头部压缩</strong></h4>
+<ul>
+<li><strong>多路复用：</strong> 继承 HTTP/2
+的流多路复用（一个连接并发多个流），且由于基于
+QUIC，<strong>无队头阻塞</strong>。<br />
+</li>
+<li><strong>头部压缩：</strong> 升级为 <strong>QPACK</strong> 算法（类似
+HTTP/2 的 HPACK，但适应 QUIC 乱序特性）。<br />
+👉 <strong>核心价值：在 HTTP/2 高效基础上，更稳定！</strong></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/29/kamacode30/" rel="prev" title="代码随想录 | 刷题-动态规划3">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-动态规划3
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/04/oper_sys13/" rel="next" title="操作系统基础 | 信号量和条件变量">
+                  操作系统基础 | 信号量和条件变量 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/07/03/kamabagu4/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/07/03/kamabagu4/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
