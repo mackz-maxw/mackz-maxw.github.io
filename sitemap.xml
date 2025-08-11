@@ -2,9 +2,135 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mackz-maxw.github.io/2025/08/05/kamacode34/</loc>
+    
+    <lastmod>2025-08-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/08/oper_sys17/</loc>
+    
+    <lastmod>2025-08-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/07/oper_sys16/</loc>
+    
+    <lastmod>2025-08-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/06/oper_sys15/</loc>
+    
+    <lastmod>2025-08-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/22/oper_sys14/</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/22/kamacode33/</loc>
+    
+    <lastmod>2025-08-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/31/kamabagu6/</loc>
+    
+    <lastmod>2025-08-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/30/kamabagu5/</loc>
+    
+    <lastmod>2025-07-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mackz-maxw.github.io/2025/07/03/kamabagu4/</loc>
     
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-07-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/25/kamabagu26/</loc>
+    
+    <lastmod>2025-07-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/06/21/oper_sys3/</loc>
+    
+    <lastmod>2025-07-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/06/22/oper_sys4/</loc>
+    
+    <lastmod>2025-07-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/12/kamacode32/</loc>
+    
+    <lastmod>2025-07-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/06/06/mockintv/</loc>
+    
+    <lastmod>2025-07-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/07/18/rust_os/</loc>
+    
+    <lastmod>2025-07-18</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +139,7 @@
   <url>
     <loc>https://mackz-maxw.github.io/2025/07/10/kamacode31/</loc>
     
-    <lastmod>2025-07-10</lastmod>
+    <lastmod>2025-07-12</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -155,24 +281,6 @@
   </url>
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/22/oper_sys4/</loc>
-    
-    <lastmod>2025-06-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mackz-maxw.github.io/2025/06/21/oper_sys3/</loc>
-    
-    <lastmod>2025-06-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mackz-maxw.github.io/2025/06/20/oper_sys1/</loc>
     
     <lastmod>2025-06-22</lastmod>
@@ -248,15 +356,6 @@
     <loc>https://mackz-maxw.github.io/2025/06/09/kamacode24/</loc>
     
     <lastmod>2025-06-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mackz-maxw.github.io/2025/06/06/mockintv/</loc>
-    
-    <lastmod>2025-06-11</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -679,7 +778,7 @@
 
   <url>
     <loc>https://mackz-maxw.github.io/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -689,42 +788,56 @@
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/leetcode/</loc>
-    <lastmod>2025-07-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mackz-maxw.github.io/categories/realtime-sched/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/linux-tricks/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/categories/realtime-sched/</loc>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/comp-basic/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/interview/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/os-basic/</loc>
-    <lastmod>2025-07-11</lastmod>
+    <lastmod>2025-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/categories/os-basic/lab/</loc>
+    <lastmod>2025-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/categories/rust-os/</loc>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

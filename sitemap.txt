@@ -1,4 +1,18 @@
+https://mackz-maxw.github.io/2025/08/05/kamacode34/
+https://mackz-maxw.github.io/2025/08/08/oper_sys17/
+https://mackz-maxw.github.io/2025/08/07/oper_sys16/
+https://mackz-maxw.github.io/2025/08/06/oper_sys15/
+https://mackz-maxw.github.io/2025/07/22/oper_sys14/
+https://mackz-maxw.github.io/2025/07/22/kamacode33/
+https://mackz-maxw.github.io/2025/07/31/kamabagu6/
+https://mackz-maxw.github.io/2025/07/30/kamabagu5/
 https://mackz-maxw.github.io/2025/07/03/kamabagu4/
+https://mackz-maxw.github.io/2025/07/25/kamabagu26/
+https://mackz-maxw.github.io/2025/06/21/oper_sys3/
+https://mackz-maxw.github.io/2025/06/22/oper_sys4/
+https://mackz-maxw.github.io/2025/07/12/kamacode32/
+https://mackz-maxw.github.io/2025/06/06/mockintv/
+https://mackz-maxw.github.io/2025/07/18/rust_os/
 https://mackz-maxw.github.io/2025/07/10/kamacode31/
 https://mackz-maxw.github.io/2025/07/04/oper_sys13/
 https://mackz-maxw.github.io/2025/06/01/kamabagu3/
@@ -15,8 +29,6 @@ https://mackz-maxw.github.io/2025/06/23/oper_sys7/
 https://mackz-maxw.github.io/2025/06/23/oper_sys6/
 https://mackz-maxw.github.io/2025/06/23/oper_sys5/
 https://mackz-maxw.github.io/2025/06/18/oper_sys0/
-https://mackz-maxw.github.io/2025/06/22/oper_sys4/
-https://mackz-maxw.github.io/2025/06/21/oper_sys3/
 https://mackz-maxw.github.io/2025/06/20/oper_sys1/
 https://mackz-maxw.github.io/2025/06/20/oper_sys2/
 https://mackz-maxw.github.io/2025/06/17/kamacode29/
@@ -26,7 +38,6 @@ https://mackz-maxw.github.io/2025/06/14/kamacode27/
 https://mackz-maxw.github.io/2025/06/13/kamacode26/
 https://mackz-maxw.github.io/2025/06/12/kamacode25/
 https://mackz-maxw.github.io/2025/06/09/kamacode24/
-https://mackz-maxw.github.io/2025/06/06/mockintv/
 https://mackz-maxw.github.io/2025/06/08/kamacode23/
 https://mackz-maxw.github.io/2025/06/03/kamacode19/
 https://mackz-maxw.github.io/2025/06/05/kamacode21/
@@ -75,8 +86,10 @@ https://mackz-maxw.github.io/links/index.html
 https://mackz-maxw.github.io/comment/index.html
 https://mackz-maxw.github.io/
 https://mackz-maxw.github.io/categories/leetcode/
-https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/linux-tricks/
+https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/comp-basic/
 https://mackz-maxw.github.io/categories/interview/
 https://mackz-maxw.github.io/categories/os-basic/
+https://mackz-maxw.github.io/categories/os-basic/lab/
+https://mackz-maxw.github.io/categories/rust-os/

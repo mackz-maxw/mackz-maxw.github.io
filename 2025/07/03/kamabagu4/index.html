@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="HTTP1.0和HTTP1.1的区别  🚗 连接方式：从“一次一清”到“多次复用”  HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
+    <meta name="description" content="HTTP1.0和HTTP1.1的区别 🚗 连接方式：从“一次一请”到“多次复用” * HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 * HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码随想录 | 八股-HTTP版本">
 <meta property="og:url" content="https://mackz-maxw.github.io/2025/07/03/kamabagu4/index.html">
 <meta property="og:site_name" content="Maxw的小站">
-<meta property="og:description" content="HTTP1.0和HTTP1.1的区别  🚗 连接方式：从“一次一清”到“多次复用”  HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
+<meta property="og:description" content="HTTP1.0和HTTP1.1的区别 🚗 连接方式：从“一次一请”到“多次复用” * HTTP 1.0： 默认短连接。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器建立一次新的TCP连接，用完后立即关闭。 * HTTP 1.1： 默认持久连接。浏览器和服务器建立一个TCP连接后，可以在这个连接上连续发送多个请求和接收多个响应通过Connection: keep-alive">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-04T00:06:11.270Z">
-<meta property="article:modified_time" content="2025-07-11T02:05:49.917Z">
+<meta property="article:modified_time" content="2025-07-26T20:18:53.264Z">
 <meta property="article:author" content="Mackz-Maxw">
 <meta name="twitter:card" content="summary">
 
@@ -135,13 +135,13 @@ TCP 到 QUIC（基于UDP）</span></a></li><li class="nav-item nav-level-4"><a c
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -209,7 +209,7 @@ TCP 到 QUIC（基于UDP）</span></a></li><li class="nav-item nav-level-4"><a c
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-11 10:05:49" itemprop="dateModified" datetime="2025-07-11T10:05:49+08:00">2025-07-11</time>
+      <time title="修改时间：2025-07-27 04:18:53" itemprop="dateModified" datetime="2025-07-27T04:18:53+08:00">2025-07-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -231,64 +231,47 @@ TCP 到 QUIC（基于UDP）</span></a></li><li class="nav-item nav-level-4"><a c
     
     
     <div class="post-body" itemprop="articleBody"><h3 id="http1.0和http1.1的区别">HTTP1.0和HTTP1.1的区别</h3>
-<ol type="1">
-<li><strong>🚗 连接方式：从“一次一清”到“多次复用”</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。</li>
-<li><strong>HTTP 1.1：</strong>
+<p><strong>🚗 连接方式：从“一次一请”到“多次复用”</strong> * <strong>HTTP
+1.0：</strong>
+<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。
+* <strong>HTTP 1.1：</strong>
 <strong>默认持久连接</strong>。浏览器和服务器建立一个TCP连接后，可以在这个连接上<strong>连续发送多个请求和接收多个响应</strong>通过Connection:
-keep-alive头来实现持久连接。</li>
-</ul></li>
-<li><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。</li>
-<li><strong>HTTP 1.1：</strong>
-<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。想象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</li>
-</ul></li>
-<li><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。</li>
-<li><strong>HTTP 1.1：</strong>
-引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public</code>/<code>private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></li>
-</ul></li>
-<li><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-如果下载大文件中断，<strong>必须从头开始重新下载</strong>。</li>
-<li><strong>HTTP 1.1：</strong>
-支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头返回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</li>
-</ul></li>
-<li><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。</li>
-<li><strong>HTTP 1.1：</strong>
-支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，但出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></li>
-</ul></li>
-<li><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong>
-<ul>
-<li><strong>HTTP 1.0：</strong>
-服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。</li>
-<li><strong>HTTP 1.1：</strong>
-引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边做菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></li>
-</ul></li>
-<li><strong>📝 错误处理：从“模糊”到“更明确”</strong>
-<ul>
-<li><strong>HTTP 1.1：</strong> 新增了一些状态码，提供更精确的错误信息：
-<ul>
-<li><code>409 Conflict</code>：请求与服务器当前状态冲突。</li>
-<li><code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。</li>
-<li><code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。</li>
-</ul></li>
-<li><strong>响应格式：</strong> HTTP 1.1
+keep-alive头来实现持久连接。</p>
+<p><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong> * <strong>HTTP
+1.0：</strong>
+请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。
+* <strong>HTTP 1.1：</strong>
+<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</p>
+<p><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong> *
+<strong>HTTP 1.0：</strong>
+客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。
+* <strong>HTTP 1.1：</strong>
+支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></p>
+<p><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong> * <strong>HTTP
+1.0：</strong>
+主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。
+* <strong>HTTP 1.1：</strong>
+引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public``private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></p>
+<p><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong> * <strong>HTTP
+1.0：</strong>
+如果下载大文件中断，<strong>必须从头开始重新下载</strong>。 *
+<strong>HTTP 1.1：</strong>
+支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</p>
+<p><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong> * <strong>HTTP
+1.0：</strong>
+服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。
+* <strong>HTTP 1.1：</strong>
+引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></p>
+<p><strong>📝 错误处理：从“模糊”到“更明确”</strong> * <strong>HTTP
+1.1：</strong> 新增了一些状态码，提供更精确的错误信息： *
+<code>409 Conflict</code>：请求与服务器当前状态冲突。 *
+<code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。
+*
+<code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。
+* <strong>响应格式：</strong> HTTP 1.1
 要求响应行中必须包含<strong>原因短语</strong>（如
 <code>HTTP/1.1 200 OK</code>），而 1.0
-只要求状态码是可选的（虽然实践中通常都有）。</li>
-</ul></li>
-</ol>
+只要求状态码是可选的（虽然实践中通常都有）。</p>
 <h3 id="http2.0与http1.1的区别">HTTP2.0与HTTP1.1的区别？</h3>
 <blockquote>
 <p><strong>一句话记忆：HTTP/2 = 更快、更智能、更省资源！</strong></p>

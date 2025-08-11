@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="new和malloc有什么区别 new和malloc在C++中都用于动态内存分配，但它们之间有几个关键的区别： 语法层面： new是C++的操作符，可以直接用来分配对象或数组。 malloc是一个函数，通常需要包含头文件，并且只分配原始内存。 类型安全： new是类型安全的，它会根据分配的对象类型进行正确的内存分配和构造函数调用。 malloc 不是类型安全的，它只分配原始内存，不调用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码随想录 | 八股-c++动态内存分配">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/07/25/kamabagu26/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="new和malloc有什么区别 new和malloc在C++中都用于动态内存分配，但它们之间有几个关键的区别： 语法层面： new是C++的操作符，可以直接用来分配对象或数组。 malloc是一个函数，通常需要包含头文件，并且只分配原始内存。 类型安全： new是类型安全的，它会根据分配的对象类型进行正确的内存分配和构造函数调用。 malloc 不是类型安全的，它只分配原始内存，不调用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-26T01:32:48.081Z">
+<meta property="article:modified_time" content="2025-07-26T02:04:00.839Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/07/25/kamabagu26/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/07/25/kamabagu26/","path":"2025/07/25/kamabagu26/","title":"代码随想录 | 八股-c++动态内存分配"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>代码随想录 | 八股-c++动态内存分配 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#new%E5%92%8Cmalloc%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">new和malloc有什么区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delete-%E5%92%8C-free-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">delete 和 free 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">堆区和栈区的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%B9%89%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E6%88%96%E6%A0%88%E4%B8%8A%E7%94%9F%E6%88%90%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">补充：
+如何定义只能在堆上或栈上生成对象的类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%A6%81%E6%AD%A2%E6%A0%88%E4%B8%8A%E5%88%9B%E5%BB%BA"><span class="nav-number">4.1.</span> <span class="nav-text">1.
+只能在堆上创建对象（禁止栈上创建）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AA%E8%83%BD%E5%9C%A8%E6%A0%88%E4%B8%8A%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%A6%81%E6%AD%A2%E5%A0%86%E4%B8%8A%E5%88%9B%E5%BB%BA"><span class="nav-number">4.2.</span> <span class="nav-text">2.
+只能在栈上创建对象（禁止堆上创建）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/25/kamabagu26/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="代码随想录 | 八股-c++动态内存分配 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          代码随想录 | 八股-c++动态内存分配
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-26 09:32:48 / 修改时间：10:04:00" itemprop="dateCreated datePublished" datetime="2025-07-26T09:32:48+08:00">2025-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="new和malloc有什么区别">new和malloc有什么区别</h3>
+<p>new和malloc在C++中都用于动态内存分配，但它们之间有几个关键的区别：</p>
+<p>语法层面： new是C++的操作符，可以直接用来分配对象或数组。
+malloc是一个函数，通常需要包含头文件<cstdlib>，并且只分配原始内存。
+类型安全：
+new是类型安全的，它会根据分配的对象类型进行正确的内存分配和构造函数调用。
+malloc 不是类型安全的，它只分配原始内存，不调用构造函数。返回类型是
+void*，需要强制类型转换为具体的指针类型。 构造与析构： 使用 new
+分配的对象在对象生命周期结束时需要使用 delete 来释放，delete
+会自动调用对象的析构函数。 使用 malloc 分配的内存需要使用 free
+来释放，free
+不会自动调用析构函数，因此如果分配的是对象数组，需要手动调用析构函数。
+异常安全性： new在分配失败时会抛出std::bad_alloc异常。
+malloc在分配失败时返回NULL指针。 管理机制：
+C++中的new和delete通常由编译器实现，可能包含一些额外的内存管理机制。
+C语言的malloc和free由C标准库提供，与编译器无关。
+总结来说，new和malloc都是动态内存分配的手段，但new提供了类型安全和构造/析构的自动化，而malloc则提供了更底层的内存分配方式，需要手动管理构造和析构。在C++中，推荐使用new来分配对象，以保持类型安全和自动化的资源管理。</p>
+<h3 id="delete-和-free-有什么区别">delete 和 free 有什么区别？</h3>
+<p>delete和free都是用来释放动态分配的内存，但它们有不同的使用方式：</p>
+<p>语法：</p>
+<p>delete是C++中的关键字，用于释放由new分配的对象。
+free是C语言中的函数，通常包含在&lt;stdlib.h&gt;头文件中，用于释放由malloc分配的内存。
+对象销毁：</p>
+<p>当使用 delete 释放对象内存时，C++
+编译器会自动调用对象的析构函数，释放与对象相关的资源，并执行对象的清理工作。
+free 仅释放内存，不调用析构函数。因此，如果使用 malloc 分配了 C++
+对象的内存，需要手动调用析构函数后再调用 free。 数组处理：</p>
+<p>如果是数组，C++提供了delete[]来释放整个数组的内存，而C语言中仍然使用free，没有区分单个对象和数组。
+返回值:</p>
+<p>free 没有返回值，即使内存释放失败，也不会反馈任何信息。</p>
+<p>delete 之后，指针会自动置为 nullptr</p>
+<p>类型检查:</p>
+<p>delete 进行类型检查，确保删除的对象类型与 new 分配时的类型一致。</p>
+<p>free 不进行类型检查，因为它只处理 void* 类型的指针。</p>
+<p>总结来说，delete和free都是用来释放动态内存的，但它们分别用于C++和C语言中的内存管理。delete适用于C++对象，会自动调用析构函数；而free适用于C语言分配的内存，不涉及对象的析构。</p>
+<h3 id="堆区和栈区的区别">堆区和栈区的区别</h3>
+<p>堆 （Heap） 和栈 （Stack） 是程序运行时两种不同的内存分配区域</p>
+<p>内存分配：</p>
+<p>栈 是由编译器自动管理的，用于存储局部变量和函数调用的上下文信息。
+栈上的对象在定义它们的块或函数调用结束后自动销毁。
+栈的内存分配和释放速度很快，因为栈的内存管理是连续的，不需要搜索空闲内存。
+堆 由程序员手动管理的，用于存储动态分配的对象。
+堆上的对象需要程序员手动释放，否则可能导致内存泄漏。
+堆的内存分配和释放速度通常比栈慢，因为可能需要搜索合适的内存块，并且涉及内存碎片整理。
+大小限制：</p>
+<p>栈的大小通常有限制，远小于堆的大小，且在不同系统和编译器中可能不同。
+堆的大小通常很大，受限于系统可用内存。 使用场景：</p>
+<p>栈主要用于存储函数参数、局部变量等。
+堆用于存储生存期不受限于单个函数调用的对象，如使用 new 或 malloc
+分配的对象。</p>
+<h3 id="补充-如何定义只能在堆上或栈上生成对象的类">补充：
+如何定义只能在堆上或栈上生成对象的类</h3>
+<p>在 C++
+中，可以通过控制构造函数和析构函数的访问权限来限制对象只能在堆上或栈上创建。以下是两种实现方式的详细说明和代码示例：</p>
+<h4 id="只能在堆上创建对象禁止栈上创建">1.
+只能在堆上创建对象（禁止栈上创建）</h4>
+<p><strong>核心原理</strong>：私有析构函数 + 智能指针管理生命周期<br />
+<strong>关键点</strong>： - 私有析构函数阻止栈对象自动销毁 -
+静态工厂函数返回智能指针 - 智能指针自定义删除器调用
+<code>destroy()</code> - <code>destroy()</code> 调用
+<code>delete this</code>（需谨慎使用） - 禁用拷贝构造/赋值</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HeapOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 工厂函数：返回带有自定义删除器的 unique_ptr</span></span><br><span class="line">    <span class="function"><span class="type">static</span> std::unique_ptr&lt;HeapOnly, <span class="title">void</span><span class="params">(*)</span><span class="params">(HeapOnly*)</span>&gt; <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="built_in">HeapOnly</span>(), </span><br><span class="line">            [](HeapOnly* p) &#123; p-&gt;<span class="built_in">destroy</span>(); &#125; <span class="comment">// 自定义删除器</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 销毁函数（必须公开）</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>; <span class="comment">// 调用私有析构函数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 禁用拷贝操作</span></span><br><span class="line">    <span class="built_in">HeapOnly</span>(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    HeapOnly&amp; <span class="keyword">operator</span>=(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;       <span class="comment">// 私有构造</span></span><br><span class="line">    ~<span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;      <span class="comment">// 私有析构</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">auto</span> obj = HeapOnly::<span class="built_in">create</span>();  <span class="comment">// 只能在堆上创建</span></span><br></pre></td></tr></table></figure>
+<h4 id="只能在栈上创建对象禁止堆上创建">2.
+只能在栈上创建对象（禁止堆上创建）</h4>
+<p><strong>核心原理</strong>：禁用 <code>new</code> 操作符</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StackOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 禁用 new 操作符</span></span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line">    <span class="type">void</span>* <span class="keyword">operator</span> <span class="keyword">new</span>[](<span class="type">size_t</span>) = <span class="keyword">delete</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>, <span class="type">void</span>* p)</span> </span>= <span class="keyword">delete</span>; <span class="comment">// 禁用 malloc + placement new</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line">StackOnly stackObj;           <span class="comment">// 合法：栈上创建</span></span><br><span class="line"><span class="comment">// auto heapObj = new StackOnly(); // 编译错误：new 被禁用</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>⚠️ 注意：<code>delete this</code> 是特殊技术，必须确保： - 对象通过
+<code>new</code> 创建 - 调用 <code>delete this</code> 后不再访问任何成员
+- 通常只用于精确控制生命周期的场景</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/22/oper_sys14/" rel="prev" title="操作系统基础 | 3.4 系统调用实验">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 3.4 系统调用实验
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/30/kamabagu5/" rel="next" title="代码随想录 | 八股-HTTP安全与TCP连接">
+                  代码随想录 | 八股-HTTP安全与TCP连接 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/07/25/kamabagu26/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/07/25/kamabagu26/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

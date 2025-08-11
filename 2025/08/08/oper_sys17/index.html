@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="映射（Maps） 基本概念 映射（又称关联数组）是由唯一键组成的集合，每个键关联一个特定值。键与值的关系称为映射关系，支持以下基本操作： - 添加（Add）：插入键值对 - 移除（Remove）：删除指定键 - 查找（Lookup）：通过键获取值 尽管哈希表是一种映射实现，但并非所有映射都基于哈希。映射也可使用自平衡二叉搜索树存储数据： - 哈希表：平均时间复杂度更优（O(1)），">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 4.3 内核数据结构-映射">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/08/08/oper_sys17/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="映射（Maps） 基本概念 映射（又称关联数组）是由唯一键组成的集合，每个键关联一个特定值。键与值的关系称为映射关系，支持以下基本操作： - 添加（Add）：插入键值对 - 移除（Remove）：删除指定键 - 查找（Lookup）：通过键获取值 尽管哈希表是一种映射实现，但并非所有映射都基于哈希。映射也可使用自平衡二叉搜索树存储数据： - 哈希表：平均时间复杂度更优（O(1)），">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-08T18:01:45.484Z">
+<meta property="article:modified_time" content="2025-08-10T16:18:43.222Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/08/08/oper_sys17/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/08/08/oper_sys17/","path":"2025/08/08/oper_sys17/","title":"操作系统基础 | 4.3 内核数据结构-映射"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 4.3 内核数据结构-映射 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84maps"><span class="nav-number">1.</span> <span class="nav-text">映射（Maps）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96idr"><span class="nav-number">1.2.</span> <span class="nav-text">初始化idr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E9%85%8Duid"><span class="nav-number">1.3.</span> <span class="nav-text">分配UID</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%84%E5%88%86%E9%85%8D%E8%B5%84%E6%BA%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 预分配资源</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E6%8C%87%E5%AE%9A%E6%9C%80%E5%B0%8Fuid"><span class="nav-number">1.3.2.</span> <span class="nav-text">分配指定最小UID</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#xarray%E6%96%B9%E5%BC%8F-linux-4.2%E4%BB%A5%E5%90%8E"><span class="nav-number">1.3.3.</span> <span class="nav-text">XArray方式 (Linux 4.2以后)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E4%B8%8E%E5%88%A0%E9%99%A4"><span class="nav-number">1.4.</span> <span class="nav-text">查找与删除</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E6%89%BEuid"><span class="nav-number">1.4.1.</span> <span class="nav-text">查找UID</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%80%E6%AF%81"><span class="nav-number">1.5.</span> <span class="nav-text">销毁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#xarray%E6%96%B9%E5%BC%8F"><span class="nav-number">1.5.1.</span> <span class="nav-text">XArray方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">1.6.</span> <span class="nav-text">关键注意事项</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/08/oper_sys17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 4.3 内核数据结构-映射 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 4.3 内核数据结构-映射
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-09 02:01:45" itemprop="dateCreated datePublished" datetime="2025-08-09T02:01:45+08:00">2025-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-11 00:18:43" itemprop="dateModified" datetime="2025-08-11T00:18:43+08:00">2025-08-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="映射maps">映射（Maps）</h3>
+<h4 id="基本概念">基本概念</h4>
+<p>映射（又称关联数组）是由唯一键组成的集合，每个键关联一个特定值。键与值的关系称为<strong>映射关系</strong>，支持以下基本操作：<br />
+- <strong>添加</strong>（Add）：插入键值对<br />
+- <strong>移除</strong>（Remove）：删除指定键<br />
+- <strong>查找</strong>（Lookup）：通过键获取值</p>
+<p>尽管哈希表是一种映射实现，但并非所有映射都基于哈希。映射也可使用<strong>自平衡二叉搜索树</strong>存储数据：<br />
+-
+<strong>哈希表</strong>：平均时间复杂度更优（O(1)），但最坏情况为线性（O(n)）<br />
+- <strong>二叉搜索树</strong>：最坏情况为对数复杂度（O(log
+n)），且支持有序遍历，无需哈希函数（仅需定义比较操作符）</p>
+<p>在Linux内核中，映射的特定实现称为<code>idr</code>（ID Radix
+Tree-旧版实现，现为XArray），专用于将唯一ID（UID）映射到指针。</p>
+<hr />
+<h4 id="初始化idr">初始化idr</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/idr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">id_huh</span>;</span>       <span class="comment">// 静态定义  </span></span><br><span class="line">idr_init(&amp;id_huh);      <span class="comment">// 初始化  </span></span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="分配uid">分配UID</h4>
+<h5 id="预分配资源">1. 预分配资源</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_pre_get</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">gfp_t</span> gfp_mask)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：必要时调整底层树结构，准备分配新UID  </span><br><span class="line">- **参数**：  </span><br><span class="line">  - `idp`：目标idr结构  </span><br><span class="line">  - `gfp_mask`：内存分配标志（如`GFP_KERNEL`）  </span><br><span class="line">- **返回值**：成功返回<span class="number">1</span>，失败返回<span class="number">0</span>（与其他内核函数相反！）  </span><br><span class="line"></span><br><span class="line">##### <span class="number">2.</span> 分配UID并关联指针  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配新UID，将其与`ptr`关联  </span><br><span class="line">- **返回值**：  </span><br><span class="line">  - 成功：返回<span class="number">0</span>，UID存储在`id`中  </span><br><span class="line">  - 失败：返回`-EAGAIN`（需重试`idr_pre_get`）或`-ENOSPC`（idr已满）  </span><br><span class="line"></span><br><span class="line">##### 示例：分配UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> id, ret;</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!idr_pre_get(&amp;id_huh, GFP_KERNEL)) </span><br><span class="line">        <span class="keyword">return</span> -ENOSPC;</span><br><span class="line">    ret = idr_get_new(&amp;id_huh, ptr, &amp;id); </span><br><span class="line">&#125; <span class="keyword">while</span> (ret == -EAGAIN);</span><br></pre></td></tr></table></figure>
+<h5 id="分配指定最小uid">分配指定最小UID</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new_above</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> starting_id, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配不小于`starting_id`的UID，确保UID单调递增  </span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> next_id = <span class="number">1</span>;  <span class="comment">// 全局计数器</span></span><br><span class="line"><span class="keyword">if</span> (!idr_get_new_above(&amp;id_huh, ptr, next_id, &amp;id))</span><br><span class="line">    next_id = id + <span class="number">1</span>;    <span class="comment">// 更新下一个起始ID  </span></span><br></pre></td></tr></table></figure>
+<h5 id="xarray方式-linux-4.2以后">XArray方式 (Linux 4.2以后)</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 原子分配 (无需预分配) */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">xa_alloc</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">int</span> *id, </span></span><br><span class="line"><span class="params">             <span class="type">void</span> *entry, <span class="keyword">struct</span> xa_limit limit, <span class="type">gfp_t</span> gfp)</span>;</span><br><span class="line"><span class="comment">/* 分配递增ID示例 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> next_id = <span class="number">1</span>;</span><br><span class="line">xa_alloc(&amp;xa_huh, &amp;next_id, ptr, XA_LIMIT(next_id, UINT_MAX), GFP_KERNEL);</span><br><span class="line"><span class="comment">// 成功后 next_id 自动递增</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="查找与删除">查找与删除</h4>
+<h5 id="查找uid">查找UID</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">idr_find</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **返回值**：成功返回关联指针，失败返回`<span class="literal">NULL</span>`  </span><br><span class="line">- **注意**：在分配UID时，禁止将`<span class="literal">NULL</span>`作为有效idr值映射，否则无法区分查找失败与有效`<span class="literal">NULL</span>`  </span><br><span class="line"></span><br><span class="line">##### 移除UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **注意**：无错误返回值，需调用者确保UID存在  </span><br><span class="line"></span><br><span class="line">##### XArray方式</span><br><span class="line">```c</span><br><span class="line"><span class="comment">/* 查找 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_load</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br><span class="line"><span class="comment">/* 删除并返回删除项 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_erase</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="销毁">销毁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">idr_destroy</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;                  <span class="comment">// 释放未使用内存  </span></span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove_all</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;               <span class="comment">// 强制移除所有UID  </span></span><br><span class="line">```  </span><br><span class="line">**典型流程**：  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">idr_remove_all</span><span class="params">(&amp;id_huh)</span>;  <span class="comment">// 先清空所有映射  </span></span><br><span class="line">idr_destroy(&amp;id_huh);     <span class="comment">// 再释放内存，确保所有idr内存被释放  </span></span><br><span class="line">kfree(user_data_ptr);  <span class="comment">// 释放实际业务数据</span></span><br></pre></td></tr></table></figure>
+<h5 id="xarray方式">XArray方式</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 销毁并释放所有资源 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">xa_destroy</span><span class="params">(<span class="keyword">struct</span> xarray *xa)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 安全销毁流程示例 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">module_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> id;</span><br><span class="line">    <span class="type">void</span> *entry;</span><br><span class="line">    <span class="comment">// 遍历释放关联资源</span></span><br><span class="line">    xa_for_each(&amp;xa_huh, id, entry) &#123;</span><br><span class="line">        xa_erase(&amp;xa_huh, id);</span><br><span class="line">        kfree(entry);</span><br><span class="line">    &#125;</span><br><span class="line">    xa_destroy(&amp;xa_huh); <span class="comment">// 释放XArray管理内存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="关键注意事项">关键注意事项</h4>
+<ol type="1">
+<li><strong>并发控制</strong>：
+<ul>
+<li><code>idr_pre_get</code>无需加锁<br />
+</li>
+<li><code>idr_get_new</code>等操作需自旋锁保护（参见第9/10章）</li>
+</ul></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/07/oper_sys16/" rel="prev" title="操作系统基础 | 4.2 内核数据结构-队列">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 4.2 内核数据结构-队列
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/08/08/oper_sys17/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/08/08/oper_sys17/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

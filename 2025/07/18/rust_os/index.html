@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="使用 perf 验证性能瓶颈 用 perf 找系统慢在哪，就像给系统做一次‘全身CT扫描’加‘血液化验’。在我那个操作系统框架项目里，我们特别关心调度算法在任务多到快‘撑爆’的时候表现如何（超负荷场景）。这个过程大概是这样的：  ‘挂号’与‘检查’ (启动Perf &amp; 记录数据)：  我先给系统‘挂号’，告诉 perf 我要检查什么：CPU 干了啥、内存怎么用的、任务等了多久">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统项目 | perf验证性能瓶颈">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/07/18/rust_os/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="使用 perf 验证性能瓶颈 用 perf 找系统慢在哪，就像给系统做一次‘全身CT扫描’加‘血液化验’。在我那个操作系统框架项目里，我们特别关心调度算法在任务多到快‘撑爆’的时候表现如何（超负荷场景）。这个过程大概是这样的：  ‘挂号’与‘检查’ (启动Perf &amp; 记录数据)：  我先给系统‘挂号’，告诉 perf 我要检查什么：CPU 干了啥、内存怎么用的、任务等了多久">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-18T19:58:52.686Z">
+<meta property="article:modified_time" content="2025-07-18T20:01:06.221Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/07/18/rust_os/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/07/18/rust_os/","path":"2025/07/18/rust_os/","title":"操作系统项目 | perf验证性能瓶颈"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统项目 | perf验证性能瓶颈 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-perf-%E9%AA%8C%E8%AF%81%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="nav-number">1.</span> <span class="nav-text">使用 perf 验证性能瓶颈</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/18/rust_os/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统项目 | perf验证性能瓶颈 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统项目 | perf验证性能瓶颈
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-19 03:58:52 / 修改时间：04:01:06" itemprop="dateCreated datePublished" datetime="2025-07-19T03:58:52+08:00">2025-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/rust-os/" itemprop="url" rel="index"><span itemprop="name">rust os</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="使用-perf-验证性能瓶颈">使用 <code>perf</code> 验证性能瓶颈</h3>
+<p>用 <code>perf</code>
+找系统慢在哪，就像给系统做一次‘全身CT扫描’加‘血液化验’。在我那个操作系统框架项目里，我们特别关心调度算法在任务多到快‘撑爆’的时候表现如何（超负荷场景）。这个过程大概是这样的：</p>
+<ol type="1">
+<li><strong>‘挂号’与‘检查’ (启动Perf &amp; 记录数据)：</strong>
+<ul>
+<li>我先给系统‘挂号’，告诉 <code>perf</code> 我要检查什么：CPU
+干了啥、内存怎么用的、任务等了多久、程序内部函数调用了多少次等等。这些信息就是‘检查项目’（<code>perf</code>
+事件，如 <code>cycles</code>, <code>instructions</code>,
+<code>cache-misses</code>, <code>context-switches</code>,
+<code>sched:sched_stat_runtime</code>,
+<code>sched:sched_stat_wait</code> 等）。</li>
+<li>然后，我让系统开始‘干活’（运行特定负载，模拟超负荷），同时
+<code>perf</code>
+就像个精密的仪器在旁边‘抽血化验’、‘拍片子’，全程记录下所有关键指标（<code>perf record -e &lt;事件列表&gt; -ag -- sleep 30</code>
+或针对特定进程/命令）。</li>
+<li>这个负载是精心设计的，包含不同类型（CPU计算狂、慢悠悠的I/O读写手、要求准时完成的‘急脾气’任务）和不同数量的任务，把它们一股脑儿塞给系统，看它啥时候‘顶不住’。</li>
+</ul></li>
+<li><strong>‘看化验单’与‘读CT片’ (分析Perf报告)：</strong>
+<ul>
+<li>等系统跑完，<code>perf</code>
+会生成一份厚厚的‘检查报告’（<code>perf report</code>）。这份报告特别有用：
+<ul>
+<li><strong>‘谁最累？’ (CPU时间分布)：</strong>
+报告会列出哪个程序、哪个函数吃掉最多的CPU时间（<code>Overhead</code>
+列）。如果某个调度器函数或者内核里处理任务切换/通信(IPC)的函数占比异常高，那它可能就是‘罪魁祸首’。</li>
+<li><strong>‘效率高不高？’ (指令效率)：</strong> 我重点看
+<code>CPI</code> 或 <code>IPC</code>。<code>CPI</code>
+是说CPU执行一条指令平均花了多少个时钟周期，<code>IPC</code>
+是反过来（一个周期执行多少条指令）。<strong>理想值：</strong>
+现代CPU在跑得很顺的代码时，<code>IPC</code>
+应该接近1甚至更高（比如1.5-2.0+）。<strong>瓶颈信号：</strong>
+如果整个系统或者关键函数的 <code>IPC</code>
+掉得很低（比如低于0.5），或者 <code>CPI</code>
+飙升（比如&gt;2.0），那CPU可能没在高效干活，而是在‘空等’或者‘干杂活’。</li>
+<li><strong>‘等得久不久？’ (调度延迟)：</strong>
+报告里能看到任务从‘准备好’到‘真正上CPU跑’等了多久（<code>sched:sched_stat_wait</code>）。<strong>合理范围：</strong>
+在超负荷前，这个等待时间应该比较稳定且符合预期（比如微秒到毫秒级，看系统要求）。<strong>瓶颈信号：</strong>
+如果这个等待时间在超负荷时急剧增加（比如从毫秒级跳到几十甚至几百毫秒），或者大量时间花在
+<code>sched</code>
+相关的内核函数上，说明调度器本身或者任务太多成了瓶颈，任务在‘排队等CPU等太久’。</li>
+<li><strong>‘找东西慢不慢？’ (缓存失效)：</strong>
+<code>cache-misses</code>
+事件特别重要。CPU从自己高速缓存(<code>L1/L2/L3</code>)拿数据比去慢悠悠的主内存(<code>RAM</code>)拿快百倍。<strong>合理范围：</strong>
+有一定比例的 <code>cache-misses</code>
+是正常的。<strong>瓶颈信号：</strong> 如果 <code>cache-misses</code>
+率非常高（比如LLC Last Level Cache miss rate &gt;
+5-10%，具体看CPU和负载），或者某个关键数据结构相关的代码段
+<code>cache-misses</code>
+特别多，说明CPU经常‘找不到需要的东西’，得跑去慢速内存取，这会<strong>严重拖慢速度</strong>，是内存访问瓶颈的典型标志。</li>
+<li><strong>‘沟通顺畅吗？’ (IPC开销)：</strong>
+在微内核里，任务间沟通(<code>IPC</code>)是大事。我会专门看花在内核处理IPC消息的函数（比如消息复制、权限检查、调度切换）上的时间占比。<strong>合理范围：</strong>
+IPC本身就有成本，时间占比应该相对稳定。<strong>瓶颈信号：</strong>
+如果IPC处理时间占比在超负荷时不成比例地暴增，或者
+<code>context-switches</code> (上下文切换次数)
+高得吓人，说明系统资源大量消耗在‘传话’和‘换人’上了，任务本身的‘正事’反而没时间做，这就是<strong>通信开销过大或调度切换太频繁</strong>的瓶颈。</li>
+</ul></li>
+</ul></li>
+<li><strong>‘病灶’在哪？ (我们发现的瓶颈)：</strong>
+在我们的超负荷测试中，<code>perf</code>
+的‘化验单’清晰地指出了几个‘病灶’：
+<ul>
+<li><strong>‘沟通成本’太高 (IPC开销陡增)：</strong>
+当任务数量超过某个阈值，花在内核处理IPC上的CPU时间占比从正常的 ~15%
+一下子跳到 40%+！<code>perf report</code> 显示 <code>ipc_send</code>,
+<code>ipc_receive</code> 及相关内核锁函数耗时剧增。同时
+<code>context-switches</code>
+也翻倍了。这说明微内核架构的‘双刃剑’——隔离性好但沟通成本高——在重压下成了主要瓶颈。</li>
+<li><strong>‘找东西’越来越慢 (Cache效率下降)：</strong>
+<code>LLC cache-misses</code> 率在超负荷时从 ~3% 升高到 12%+。结合
+<code>annotate</code>
+功能看热点代码，发现是调度器内部的任务队列数据结构访问冲突加剧，导致多个CPU核心频繁互相使对方的缓存失效
+(<code>False Sharing</code>)，逼得CPU频繁去慢速内存找数据。</li>
+<li><strong>‘急脾气’任务被耽误 (调度延迟波动)：</strong>
+<code>sched:sched_stat_wait</code>
+显示实时任务的等待时间方差(<code>jitter</code>)在超负荷时变得很大，偶尔出现远超截止期限的等待峰值。<code>perf</code>
+指向调度器在重载下决策变慢，以及非实时任务过多挤占了CPU资源。</li>
+</ul></li>
+<li><strong>‘化验单’靠谱吗？ (判断数据合理性)：</strong>
+光看一次‘化验’结果不行，得判断数据靠不靠谱：
+<ul>
+<li><strong>‘对照实验’：</strong>
+我会在<strong>相同硬件、相同负载</strong>下，跑不同的调度算法配置或内核版本，用
+<code>perf</code> 收集数据对比。如果瓶颈指标（如IPC耗时、Cache
+Miss率）的变化趋势一致，且能解释性能差异（如吞吐量下降、延迟上升），数据就合理。</li>
+<li><strong>‘符合常识’：</strong> 数据要符合计算机原理。比如：
+<ul>
+<li><code>CPI</code> 不可能无限低（受限于CPU物理极限）。</li>
+<li>一个纯计算任务如果 <code>IPC</code> 很低且 <code>cache-misses</code>
+不高，那瓶颈可能在指令依赖或分支预测失败(<code>branch-misses</code>)。</li>
+<li>调度延迟不可能为0，总有个基础开销。</li>
+</ul></li>
+<li><strong>‘多指标印证’：</strong> 单一指标可能误导。比如高
+<code>%sys</code> (内核态CPU占用) 是瓶颈信号，但必须结合
+<code>perf report</code> 看具体是内核哪部分耗时。高
+<code>cache-misses</code> 是信号，但要看 <code>annotate</code>
+确认热点代码位置是否合理。</li>
+<li><strong>‘可重复性’：</strong>
+多次运行测试，关键指标（如平均延迟、最大延迟、瓶颈函数占比）的波动应在小范围内，结果要能稳定复现。</li>
+<li><strong>‘符合理论模型’ (效用边界分析)：</strong> 我们用
+<code>perf</code>
+采集的响应时间、CPU利用率等数据，输入到调度理论模型（如排队论模型）中计算‘效用边界’。如果模型预测的系统饱和点、性能拐点与
+<code>perf</code>
+观测到的实际瓶颈出现点（如IPC开销暴增、延迟突变的负载阈值）能<strong>吻合</strong>，那这些
+<code>perf</code> 数据及其揭示的瓶颈就非常可信了。</li>
+</ul></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/12/kamacode32/" rel="prev" title="代码随想录 | 刷题-动态规划5">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-动态规划5
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/22/kamacode33/" rel="next" title="代码随想录 | 刷题-动态规划6">
+                  代码随想录 | 刷题-动态规划6 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/07/18/rust_os/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/07/18/rust_os/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
