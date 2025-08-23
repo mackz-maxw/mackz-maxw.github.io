@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="二叉树 1. 二叉搜索树（BST）核心特性 123根节点左子树的所有节点值 &lt; 根节点值根节点右子树的所有节点值 &gt; 根节点值所有子树都是二叉搜索树  操作复杂度：  查找：O(log n)  有序遍历：O(n)  缺陷：不平衡树可能导致操作退化到O(n)  2. 自平衡二叉搜索树 1叶子节点深度差 ≤ 1   →   树高度 &#x3D; O(log n)  平衡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 4.4 内核数据结构-二叉树">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/08/12/oper_sys18/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="二叉树 1. 二叉搜索树（BST）核心特性 123根节点左子树的所有节点值 &lt; 根节点值根节点右子树的所有节点值 &gt; 根节点值所有子树都是二叉搜索树  操作复杂度：  查找：O(log n)  有序遍历：O(n)  缺陷：不平衡树可能导致操作退化到O(n)  2. 自平衡二叉搜索树 1叶子节点深度差 ≤ 1   →   树高度 &#x3D; O(log n)  平衡">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-12T14:25:51.460Z">
+<meta property="article:modified_time" content="2025-08-12T16:13:25.752Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/08/12/oper_sys18/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/08/12/oper_sys18/","path":"2025/08/12/oper_sys18/","title":"操作系统基础 | 4.4 内核数据结构-二叉树"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 4.4 内核数据结构-二叉树 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91bst%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">1. 二叉搜索树（BST）核心特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="nav-number">1.2.</span> <span class="nav-text">2. 自平衡二叉搜索树</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91red-black-trees"><span class="nav-number">2.</span> <span class="nav-text">红黑树（Red-Black Trees）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E5%A4%A7%E7%BA%A6%E6%9D%9F%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">六大约束条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">2.2.</span> <span class="nav-text">优势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%AE%9E%E7%8E%B0rbtree"><span class="nav-number">3.</span> <span class="nav-text">Linux实现（rbtree）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-number">3.2.</span> <span class="nav-text">节点定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%AE%9E%E7%8E%B0%E9%A1%B5%E7%BC%93%E5%AD%98%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.</span> <span class="nav-text">查找实现（页缓存示例）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.4.</span> <span class="nav-text">插入实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xarray%E5%AF%B9%E6%AF%94%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">XArray对比说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%B7%AE%E5%BC%82"><span class="nav-number">4.1.</span> <span class="nav-text">适用场景差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">4.2.</span> <span class="nav-text">性能对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xarray%E6%9B%BF%E4%BB%A3%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.3.</span> <span class="nav-text">XArray替代红黑树的条件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA"><span class="nav-number">5.</span> <span class="nav-text">关键结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/12/oper_sys18/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 4.4 内核数据结构-二叉树 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 4.4 内核数据结构-二叉树
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-12 22:25:51" itemprop="dateCreated datePublished" datetime="2025-08-12T22:25:51+08:00">2025-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-13 00:13:25" itemprop="dateModified" datetime="2025-08-13T00:13:25+08:00">2025-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="二叉树">二叉树</h3>
+<h4 id="二叉搜索树bst核心特性">1. 二叉搜索树（BST）核心特性</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">根节点左子树的所有节点值 &lt; 根节点值</span><br><span class="line">根节点右子树的所有节点值 &gt; 根节点值</span><br><span class="line">所有子树都是二叉搜索树</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>操作复杂度</strong>：
+<ul>
+<li>查找：O(log n)<br />
+</li>
+<li>有序遍历：O(n)</li>
+</ul></li>
+<li><strong>缺陷</strong>：不平衡树可能导致操作退化到O(n)</li>
+</ul>
+<h4 id="自平衡二叉搜索树">2. 自平衡二叉搜索树</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">叶子节点深度差 ≤ 1   →   树高度 = O(log n)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>平衡机制</strong>：在插入/删除时自动调整结构</li>
+<li><strong>常见类型</strong>：
+<ul>
+<li>AVL树（严格平衡）</li>
+<li><strong>红黑树</strong>（半平衡，Linux首选）</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="红黑树red-black-trees">红黑树（Red-Black Trees）</h3>
+<h4 id="六大约束条件">六大约束条件</h4>
+<ol type="1">
+<li>节点非红即黑</li>
+<li>叶子节点（NIL）为黑</li>
+<li>叶子节点不存储数据</li>
+<li>非叶子节点必有双子</li>
+<li><strong>红节点的子节点必为黑</strong>（核心约束）</li>
+<li>根到任意叶子的黑节点数相同</li>
+</ol>
+<h4 id="优势">优势</h4>
+<ul>
+<li>插入/删除只需O(1)次旋转（AVL需O(log n)）</li>
+<li>查找效率稳定在O(log n)</li>
+<li>内存开销小（仅1bit存储颜色）</li>
+</ul>
+<hr />
+<h3 id="linux实现rbtree">Linux实现（rbtree）</h3>
+<h4 id="初始化">初始化</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/rbtree.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">rb_root</span> <span class="title">root</span> =</span> RB_ROOT;  <span class="comment">// 声明并初始化根节点</span></span><br></pre></td></tr></table></figure>
+<h4 id="节点定义">节点定义</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_node</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> <span class="title">rb</span>;</span>  <span class="comment">// 嵌入红黑树节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="查找实现页缓存示例">查找实现（页缓存示例）</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> page *<span class="title function_">rb_search_page_cache</span><span class="params">(<span class="keyword">struct</span> inode *inode, <span class="type">unsigned</span> <span class="type">long</span> offset)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> *<span class="title">n</span> =</span> inode-&gt;i_rb_page_cache.rb_node;</span><br><span class="line">    <span class="keyword">while</span> (n) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span> =</span> rb_entry(n, <span class="keyword">struct</span> page, rb_page_cache);</span><br><span class="line">        <span class="keyword">if</span> (offset &lt; page-&gt;offset)</span><br><span class="line">            n = n-&gt;rb_left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (offset &gt; page-&gt;offset)</span><br><span class="line">            n = n-&gt;rb_right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> page;  <span class="comment">// 命中</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">// 未命中</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="插入实现">插入实现</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> page *<span class="title function_">rb_insert_page_cache</span><span class="params">(<span class="keyword">struct</span> inode *inode, <span class="type">unsigned</span> <span class="type">long</span> offset, </span></span><br><span class="line"><span class="params">                                  <span class="keyword">struct</span> rb_node *node)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> **<span class="title">p</span> =</span> &amp;inode-&gt;i_rb_page_cache.rb_node;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> *<span class="title">parent</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 查找插入位置</span></span><br><span class="line">    <span class="keyword">while</span> (*p) &#123;</span><br><span class="line">        parent = *p;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span> =</span> rb_entry(parent, <span class="keyword">struct</span> page, rb_page_cache);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (offset &lt; page-&gt;offset)</span><br><span class="line">            p = &amp;(*p)-&gt;rb_left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (offset &gt; page-&gt;offset)</span><br><span class="line">            p = &amp;(*p)-&gt;rb_right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> page;  <span class="comment">// 已存在</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 执行插入</span></span><br><span class="line">    rb_link_node(node, parent, p);      <span class="comment">// 链接新节点</span></span><br><span class="line">    rb_insert_color(node, &amp;inode-&gt;i_rb_page_cache);  <span class="comment">// 重平衡</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">// 插入成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="xarray对比说明">XArray对比说明</h3>
+<h4 id="适用场景差异">适用场景差异</h4>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 34%" />
+<col style="width: 26%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>数据结构</strong></th>
+<th><strong>最佳场景</strong></th>
+<th><strong>内核应用实例</strong></th>
+<th><strong>XArray替代性</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>红黑树</td>
+<td>范围查询/有序遍历</td>
+<td>进程调度CFS</td>
+<td>❌ 不可替代</td>
+</tr>
+<tr>
+<td>XArray</td>
+<td>稀疏ID映射/快速点查</td>
+<td>页缓存/文件描述符</td>
+<td>✅ 专精领域</td>
+</tr>
+</tbody>
+</table>
+<h4 id="性能对比">性能对比</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">操作        红黑树        XArray</span><br><span class="line">---------------------------------</span><br><span class="line">插入        O(log n)      O(k)  // k=键长</span><br><span class="line">范围查询     O(log n + m)  O(m)  // m=结果数</span><br><span class="line">内存开销     40字节/节点   8字节/条目</span><br></pre></td></tr></table></figure>
+<h4 id="xarray替代红黑树的条件">XArray替代红黑树的条件</h4>
+<ol type="1">
+<li><strong>键为整数类型</strong>（非复杂比较键）</li>
+<li><strong>无需有序遍历</strong></li>
+<li><strong>超高并发需求</strong>（XArray内置RCU） <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// XArray实现类似功能</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_store</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index, <span class="type">void</span> *entry)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_load</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr />
+<h3 id="关键结论">关键结论</h3>
+<ol type="1">
+<li><strong>红黑树适用场景</strong>：
+<ul>
+<li>VFS目录树（<code>dentry</code>缓存）</li>
+<li>进程调度器（CFS运行队列）</li>
+<li>EPoll事件管理</li>
+</ul></li>
+<li><strong>XArray优先场景</strong>：
+<ul>
+<li>文件页缓存（<code>address_space</code>）</li>
+<li>内存反向映射</li>
+<li>UID到指针映射</li>
+</ul></li>
+</ol>
+<blockquote>
+<p><strong>迁移建议</strong>：新代码中整数键映射优先采用XArray；复杂键/范围查询仍需红黑树。<br />
+<strong>性能数据</strong>：XArray在ext4文件系统中减少40%缓存操作耗时（内核5.15测试）</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/11/kamacode35/" rel="prev" title="代码随想录 | 刷题-动态规划8">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-动态规划8
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/08/12/oper_sys19/" rel="next" title="操作系统基础 | 4.5 内核数据结构-内核模块">
+                  操作系统基础 | 4.5 内核数据结构-内核模块 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/08/12/oper_sys18/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/08/12/oper_sys18/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

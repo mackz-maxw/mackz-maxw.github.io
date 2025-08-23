@@ -22,7 +22,7 @@
     <meta name="description" content="内核源码相关 获取内核源码 当前的 Linux 源代码总是可以在 http:&#x2F;&#x2F;www.kernel.org 官方网站上以完整的 tarball（用 tar 命令创建的归档文件）和增量补丁的形式获得。 可以利用Elixir Cross Referencer网站在线查看源码 使用 Git 你可以用 Git 获取 Linus 主线最新的源码树： 1git clone git:&#x2F;&#x2F;git.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统基础 | 2. 初试linux内核">
-<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/20/oper_sys1/index.html">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/index.html">
 <meta property="og:site_name" content="Maxw的小站">
 <meta property="og:description" content="内核源码相关 获取内核源码 当前的 Linux 源代码总是可以在 http:&#x2F;&#x2F;www.kernel.org 官方网站上以完整的 tarball（用 tar 命令创建的归档文件）和增量补丁的形式获得。 可以利用Elixir Cross Referencer网站在线查看源码 使用 Git 你可以用 Git 获取 Linus 主线最新的源码树： 1git clone git:&#x2F;&#x2F;git.">
 <meta property="og:locale" content="zh_CN">
@@ -32,10 +32,10 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1/">
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/20/oper_sys1/","path":"2025/06/20/oper_sys1/","title":"操作系统基础 | 2. 初试linux内核"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/","path":"2025/06/20/oper_sys1初试linux内核/","title":"操作系统基础 | 2. 初试linux内核"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>操作系统基础 | 2. 初试linux内核 | Maxw的小站</title>
@@ -130,7 +130,7 @@ New Kernel）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -168,7 +168,7 @@ New Kernel）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -465,12 +465,12 @@ loader），请查阅对应引导程序的文档。</p>
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/06/18/oper_sys0/" rel="prev" title="操作系统基础 | 1. linux内核简介">
+                <a href="/2025/06/18/oper_sys0linux%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B/" rel="prev" title="操作系统基础 | 1. linux内核简介">
                   <i class="fa fa-angle-left"></i> 操作系统基础 | 1. linux内核简介
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/06/20/oper_sys2/" rel="next" title="操作系统基础 | 2.2 linux内核与用户空间的不同">
+                <a href="/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/" rel="next" title="操作系统基础 | 2.2 linux内核与用户空间的不同">
                   操作系统基础 | 2.2 linux内核与用户空间的不同 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -497,11 +497,11 @@ loader），请查阅对应引导程序的文档。</p>
     </label>
     <select class="lang-select" data-canonical="" aria-label="选择语言">
       
-        <option value="zh-CN" data-href="/2025/06/20/oper_sys1/" selected="">
+        <option value="zh-CN" data-href="/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/" selected="">
           简体中文
         </option>
       
-        <option value="en" data-href="/en/2025/06/20/oper_sys1/" selected="">
+        <option value="en" data-href="/en/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/" selected="">
           English
         </option>
       

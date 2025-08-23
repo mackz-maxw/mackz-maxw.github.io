@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/wx-frtnd/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -177,7 +177,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/wx-frtnd/" class="post-title-link" itemprop="url">微信小程序项目</a>
+          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
         </h2>
 
         <div class="post-meta-container">
@@ -195,7 +195,16 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:59" itemprop="dateModified" datetime="2025-01-22T10:30:59+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
+        </span>
     </span>
 
   
@@ -208,19 +217,720 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>试着做一个微信小程序的项目，还不知道会遇到多少坑......</p>
-<h2 id="section">4/26</h2>
-<p>网页后端体系架构（自下而上）：</p>
-<p><strong>数据库</strong>：存储字段（列）组成的实体集（表）</p>
-<p>通过MyBatisPlus将数据库实体集与Java对象建立联系，其中实体集中的字段与Java类中的属性一一对应。</p>
-<p><strong>DAO层/Mapper层</strong>：提供CRUD的Java方法，处理/提供data
-object</p>
-<p>DO即数据库实体集对应的Java对象。</p>
-<p><strong>Service层：</strong>统一业务逻辑处理，为不同服务提供可复用的调用接口；为CRUD方法赋予实际业务意义；处理param数据，提供VO对象</p>
-<p>将从controller层拿到的param数据转化成DO对象，传至DAO层；将DAO层提供的DO对象转化成VO对象，提供给controller层。</p>
-<p><strong>Controller层：</strong>分配URL，接受来自页面的请求，向下处理后，拿到返回数据返回页面。</p>
-<p>从页面拿到param数据提供给service层，接受service层传递的VO对象给页面展示。</p>
-<p>更多关于数据结构层的介绍：https://blog.csdn.net/qq_27022241/article/details/112002345</p>
+          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
+<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
+<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
+是第一个参数，依此类推。\)</span>@ - 所有参数 <span
+class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
+当前脚本的进程识别码 !! -
+完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
+sudo !!再尝试一次。 $_ -
+上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
+Esc 之后键入 . 来获取这个值。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/algorithm1/" class="post-title-link" itemprop="url">刷题-初级算法：数组</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:29:42" itemprop="dateModified" datetime="2025-01-22T10:29:42+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>刷了有快一周leetcode题目了，感觉算法这块进度偏慢，一天可能刷一两道题就是极限了。</p>
+<p>刷的是leetcode学习栏里的初级算法选题。有时候感觉自己的记忆力真是差到一定程度了，有好两道题刷完后才发现自己在算法竞赛入门里看过，就是记不起来，结果还是用了最笨的方法...</p>
+<p>可以预感到自己学了有些方法，例如双指针，之后还需要适应...太难了！一步一步来吧</p>
+<p>(以下所有题目来源力扣cn官网)</p>
+<h2 id="section">2/25-3/1</h2>
+<h4 id="lc26.-删除有序数组中的重复项">LC26. 删除有序数组中的重复项</h4>
+<p>给你一个 升序排列 的数组 nums ，请你 原地
+删除重复出现的元素，使每个元素 只出现一次
+，返回删除后数组的新长度。元素的 相对顺序 应该保持 一致 。</p>
+<p>由于在某些语言中不能改变数组的长度，所以必须将结果放在数组nums的第一部分。更规范地说，如果在删除重复项之后有
+k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
+<p>将最终结果插入 nums 的前 k 个位置后返回 k 。</p>
+<p>不要使用额外的空间，你必须在 原地 修改输入数组 并在使用 O(1)
+额外空间的条件下完成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeDuplicates</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> b=nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(b&lt;=<span class="number">1</span>) <span class="keyword">return</span> b;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(b<span class="number">-1</span>);i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]!=nums[i+<span class="number">1</span>])&#123;</span><br><span class="line">                nums[a]=nums[i];</span><br><span class="line">                a++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[a]=nums[b<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">return</span> a+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里（重新）学到了双指针的思想，熟悉了下许久未见的cpp。选cpp语言来学其实只是因为自己以前选的好几本（算法跟opencv）教程都是cpp的，虽然听说cpp面试在语言特性上挺严格的，但是感觉比起另一个我学过一点的python，这个更能展现一些语言内部的设定吧，python总感觉隐去了不少细节，对我之后代码风格不是太有利。</p>
+<p>这道题其实还好，后面有在原值上修改的题，就一定要用<code>vector&lt;int&gt;&amp; nums</code>这种传引用的方式。</p>
+<p>在写这道题的时候发现自己各种函数都快忘完了，<code>.size()/memset()/.length()</code>都不记得了，哎。</p>
+<h4 id="买卖股票的最佳时机-ii">122. 买卖股票的最佳时机 II</h4>
+<p>给定一个数组 prices ，其中 prices[i] 表示股票第 i 天的价格。</p>
+<p>在每一天，你可能会决定购买和/或出售股票。你在任何时候 最多 只能持有
+一股 股票。你也可以购买它，然后在 同一天 出售。 返回 你能获得的 最大
+利润 。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> day=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">        <span class="type">bool</span> st=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>()==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&lt;prices[i+<span class="number">1</span>]&amp;&amp;i+<span class="number">1</span>!=prices.<span class="built_in">size</span>()<span class="number">-1</span>&amp;&amp;st==<span class="literal">false</span>)&#123;</span><br><span class="line">                day=i;</span><br><span class="line">                st=<span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&gt;prices[i+<span class="number">1</span>]&amp;&amp;st==<span class="literal">true</span>)&#123;</span><br><span class="line">                count+=prices[i]-prices[day];</span><br><span class="line">                st=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&lt;=prices[i+<span class="number">1</span>]&amp;&amp;i+<span class="number">1</span>==prices.<span class="built_in">size</span>()<span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(st==<span class="literal">true</span>)count+=prices[i+<span class="number">1</span>]-prices[day];</span><br><span class="line">                <span class="keyword">if</span>(st==<span class="literal">false</span>)count+=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>做这道题的时候我想到了要在下降的最低日买，上升的最高日卖，然后就捅了if窝......不过这几个条件想合并确实有点难吧。</p>
+<p>然后我一想到这个解决方法就乐起来了，完全没想到自己之前在教程里看过一个更简单的解法，就是求每一个前后两日差，然后求其中正数的和。其实我思考题目的时候想到了是不是可以利用每一段买入到卖出可以拆解成这段时间每天都买入卖出，但是没想到啥好的利用方法。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            prices[i]=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> pf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(prices[j]&gt;<span class="number">0</span>)pf+=prices[j];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>哦对，还可以代码复用一下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> pf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;prices.<span class="built_in">size</span>()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            prices[i]=prices[i+<span class="number">1</span>]-prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[i]&gt;<span class="number">0</span>)pf+=prices[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样看起来就简洁多了！需要注意的是最后一天没有别的天数来减（买了不卖也是亏），在第二个循环中不用加上。</p>
+<h4 id="旋转图像">48.旋转图像</h4>
+<p>给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转
+90 度。</p>
+<p>你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要
+使用另一个矩阵来旋转图像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]</span><br><span class="line">输出：[[7,4,1],[8,5,2],[9,6,3]]</span><br></pre></td></tr></table></figure>
+<p>这题显然是有一定的规律可以利用的，否则一边一边写旋转，代码有点太多了。看到题目强调矩阵这个概念，我就想到了可以把矩阵操作一下，比如转置之类的。</p>
+<p>第一次做这题时，我想到可以先转置，再看看怎么调整。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">        int n = matrix.size();</span><br><span class="line">        int tri = 0;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            for (int j = 0+tri; j &lt; n; j++) &#123;</span><br><span class="line">                int tr=matrix[i][j];</span><br><span class="line">                matrix[i][j] = matrix[j][i];</span><br><span class="line">                matrix[j][i] = tr;</span><br><span class="line">            &#125;</span><br><span class="line">            tri++;</span><br><span class="line">        &#125;</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            reverse(matrix[i].begin(),matrix[i].end());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>果然，转置过后，每一行reverse一下就行了。不过需要注意的是转置时遍历一个三角即可，不然是转置两次。</p>
+<p>后来重做了一遍，我是倒过来想的，先reverse列，再转置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">	void rotate(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">		reverse(matrix.begin(), matrix.end());</span><br><span class="line">		for (int i = 0; i &lt; matrix.size(); i++) &#123;</span><br><span class="line">			for (int j = i; j &lt; matrix[i].size(); j++) &#123;</span><br><span class="line">				int ori = matrix[i][j];</span><br><span class="line">				matrix[i][j] = matrix[j][i];</span><br><span class="line">				matrix[j][i] = ori;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这次我学聪明了，知道遍历三角可以<code>j = i</code>，少几行代码。不过这样写使用内存居然比第一次多！我把这个想法也改成用<code>j = 0+tri</code>的形式（其他没变），内存使用变成和第一次一样了。这是为什么呢？</p>
+<p>我想去stackoverflow上问问，就去了leetcode英文站看看英文题目描述，顺手再提交了两次题目，发现内存占用又一样了...但是我用最开始的写法时间更快。好吧，看来这或许不是我现阶段能了解的问题。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:19" itemprop="dateModified" datetime="2025-01-22T10:30:19+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
+<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
+以上代码分别：设置了GTK（GIMP
+Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
+Window
+System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
+<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
+<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
+<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
+选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
+默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
+<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
+target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/gametime/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/gametime/" class="post-title-link" itemprop="url">摸鱼时间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:13" itemprop="dateModified" datetime="2025-01-22T10:30:13+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p>
+<h2 id="section">3/18</h2>
+<p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p>
+<p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），git
+bash安装了http-server，http-server可以这么启动：</p>
+<p><code>http-server [path]</code></p>
+<p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p>
+<p>下载git
+bash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p>
+<p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p>
+<p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p>
+<p>整了挺久累了，下次再更🕊~</p>
+<p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p>
+<h2 id="section-1">3/18</h2>
+<p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p>
+<blockquote>
+<p>Here's a solution:</p>
+<ol type="1">
+<li>Right click and click “Save As...”</li>
+<li>Edit the html file that just saved, overwrite jQuery reference
+<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>
+as
+<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>
+or other reference you trust.</li>
+<li>run the html.</li>
+</ol>
+</blockquote>
+<p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p>
+<p><code>E:\works\untrusted-master\scripts\build</code></p>
+<p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p>
+<p>对了，别忘了</p>
+<p><code>http-server *:/.../untrusted-master</code></p>
+<p>（*：code所在盘符，...：code所在目录）</p>
+<p>终于可以玩了！</p>
+<p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/hello-world/" class="post-title-link" itemprop="url">搭建博客</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:16" itemprop="dateModified" datetime="2025-01-22T10:30:16+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。</p>
+<p>Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择...</p>
+<h2 id="section">2/23-2/24</h2>
+<h3 id="git初试">git初试</h3>
+<p>follow <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103391101">枫叶的教程</a> problem
+occur: can' t clone existing repostory with git bash reports timeout or
+OpenSSL SSL_read: Connection was reset, errno 10054</p>
+<p>从GitHub上clone仓库的时候，试了几次，有时git
+bash报错10054，有时timeout。</p>
+<p>我先是按<a
+target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44795128/article/details/119214048?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;utm_relevant_index=1">网上教程</a>改了git的global
+config，还是报错</p>
+<p>想到自己上GitHub都要科学方法，就觉得应该是代理的问题。git应该并非使用系统代理设置，而是需要自行设置，果不其然。</p>
+<p>solve: setup proxy for git, following <a
+target="_blank" rel="noopener" href="https://www.jianshu.com/p/290152303598">git设置代理</a></p>
+<h3 id="博客搭建">博客搭建</h3>
+<p>follow <a
+target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1201860091307458560">枫叶的教程合集</a></p>
+<p>感谢枫叶大佬的教程，有时间一定上知乎评论区里发个反馈。</p>
+<p>安装node.js与插件的过程中报错属于node.js本地的文件夹无法访问。一开始觉得很奇怪，明明特意从c盘卸载了安别的盘，后来我想起来那个盘是我从c盘分出去的了，草（感叹词）。所以应该是因为也需要管理员权限（也可能是我把git安到c盘了？）。果然管理员启动bash之后，安装就顺畅了。</p>
+<p>枫叶的教程里面设置npm的环境变量那里可能有点问题，设置好之后应该是不需要像网上一些教程说的那样安装两遍npm的。npm所在目录需要保留而不是更改，再按教程添加node的目录。在系统变量里添加node的路径后，path里需要添加对应的%NODE_PATH%，这也是教程里未提及的。</p>
+<p>其他问题应该就只是跟版本有关了，比如GitHub把主分支从master改成main，创建个人网页的setting单独分页了等等。以及博客更新后无需删除.git重新上传，hexo的操作估计是有延迟的。</p>
+<p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
+<p>在菜单中增加新页面需要同时hexo new
+page以及在主题的config文件中设置（参考枫叶的教程）</p>
+<h3 id="一些感叹">一些感叹</h3>
+<p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
+<h3 id="一些bug">一些bug</h3>
+<p>git报错the remote end hung up unexpectedly：照此教程解决了：
+https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
+<h3 id="一些bug-2.0">一些bug 2.0</h3>
+<p>。。。又给git的proxy摆了一道没办法deploy博客，不想用的时候一定要记得<code>git config --global --unset http.proxy</code>重置啊！设置回来则是<code>git config --global http.proxy proxyaddress:port</code></p>
+<p>最近总感觉自己记性有点差，这是写完博客后如何deploy:
+在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:22" itemprop="dateModified" datetime="2025-01-22T10:30:22+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="依赖问题">依赖问题</h3>
+<p>由于安装的老版本（humble）ros2,
+很多必需包直接安装会报依赖小版本号不一致错误，使用apt
+install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
+在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
+<h3 id="swap空间不足">swap空间不足</h3>
+<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
+很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
+<p>这个时候就需要给wsl2扩swap空间， 在
+c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
+在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
+<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
+<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/mvvm-frtnd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:46" itemprop="dateModified" datetime="2025-01-22T10:30:46+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>实现一个简单的MVVM框架</p>
+<h2 id="section">6/30</h2>
+<p>纯javascript实现双向数据绑定：https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</p>
+<p>javascript
+MVVM框架介绍：https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</p>
+<p>谢谢你，<a
+target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr
+Kopytin</a>大神！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/network/" class="post-title-link" itemprop="url">计算机网络相关</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:49" itemprop="dateModified" datetime="2025-01-22T10:30:49+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在b站看斯坦福CS144作为教程，打算后期跟着《计算机网络
+自顶向下方法》（Kurose&amp;Ross版）再过一过。</p>
+<p>突然发现看了英文教程再看中文版书有点不理解一些概念用语😂，想看纯英文版的书又怕自己看不懂，纠结了。</p>
+<h2 id="section">3/17</h2>
+<p>（摘自Kurose&amp;Ross的《计算机网络 自顶向下方法》）</p>
+<p>什么是套接字（socket）：</p>
+<p>套接字说同一台主机内应用层与传输层之间的接口，由于该套接字是在网络上建立网络应用程序的可编程接口，因此也将套接字称为应用程序和网络之间的应用程序编程接口（Application
+Programming Interface，API）。</p>
+<p>什么是传输层的多路复用（multiplexing）和解复用（demultiplexing，多路分解）：</p>
+<p>多路复用和多路分解是因特网中的基本传输层服务。</p>
+<p>从源主机的不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在多路分解时使用）从而生成报文段，然后将报文段传递到网络层的工作称为多路复用。</p>
+<p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
+<h2 id="section-1">4/22</h2>
+<p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
+<p>绝了！</p>
 
       
     </div>
@@ -303,6 +1013,94 @@ object</p>
 City的歌才能睡着了，但那个时候只觉得是自己压力太大。三两年前觉着是实验室事情太多，是画图太累，后来安慰自己年轻人熬熬夜怎么了。</p>
 <p>很多年前还小的时候我就总觉着，如果社交上出现一些问题，那个念头就会总在脑子里转动消不去，到了有点影响生活的地步了。我总被这样的思绪叨扰，我没办法解释这种事情，只好跟家长说我头疼。我以为是我性格太执拗，是我太内向，是我表达的方式不对...哦，我该改改总是自我检讨的毛病，所作所为，留予世人评好了</p>
 <p>好歹还能感受到朋友的关心，好歹还有兴致吃点什么，好歹今天中午睡得不错。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/wx-frtnd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/wx-frtnd/" class="post-title-link" itemprop="url">微信小程序项目</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:59" itemprop="dateModified" datetime="2025-01-22T10:30:59+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>试着做一个微信小程序的项目，还不知道会遇到多少坑......</p>
+<h2 id="section">4/26</h2>
+<p>网页后端体系架构（自下而上）：</p>
+<p><strong>数据库</strong>：存储字段（列）组成的实体集（表）</p>
+<p>通过MyBatisPlus将数据库实体集与Java对象建立联系，其中实体集中的字段与Java类中的属性一一对应。</p>
+<p><strong>DAO层/Mapper层</strong>：提供CRUD的Java方法，处理/提供data
+object</p>
+<p>DO即数据库实体集对应的Java对象。</p>
+<p><strong>Service层：</strong>统一业务逻辑处理，为不同服务提供可复用的调用接口；为CRUD方法赋予实际业务意义；处理param数据，提供VO对象</p>
+<p>将从controller层拿到的param数据转化成DO对象，传至DAO层；将DAO层提供的DO对象转化成VO对象，提供给controller层。</p>
+<p><strong>Controller层：</strong>分配URL，接受来自页面的请求，向下处理后，拿到返回数据返回页面。</p>
+<p>从页面拿到param数据提供给service层，接受service层传递的VO对象给页面展示。</p>
+<p>更多关于数据结构层的介绍：https://blog.csdn.net/qq_27022241/article/details/112002345</p>
 
       
     </div>

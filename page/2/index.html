@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,1273 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/06/oper_sys15/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/06/oper_sys15/" class="post-title-link" itemprop="url">操作系统基础 | 4.1 内核数据结构-链表</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-07 00:30:09" itemprop="dateCreated datePublished" datetime="2025-08-07T00:30:09+08:00">2025-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-08 00:27:55" itemprop="dateModified" datetime="2025-08-08T00:27:55+08:00">2025-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="链表linked-lists">链表（Linked Lists）</h3>
+<h4 id="单链表与双链表">单链表与双链表</h4>
+<ul>
+<li><strong>单链表</strong>：每个节点只包含指向下一个节点的指针。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> *data;                   <span class="comment">// 数据</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">next</span>;</span>    <span class="comment">// 指向下一个节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li><strong>双链表</strong>：每个节点包含指向前一个和后一个节点的指针。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> *data;                   <span class="comment">// 数据</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">next</span>;</span>    <span class="comment">// 指向下一个节点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">prev</span>;</span>    <span class="comment">// 指向前一个节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="循环链表circular-linked-lists">循环链表（Circular Linked
+Lists）</h4>
+<ul>
+<li>普通链表的最后一个节点的 next 指针通常指向 NULL，表示结束。</li>
+<li>循环链表的最后一个节点的 next
+指针指向第一个节点，形成环状结构。循环链表可以是单向或双向的。</li>
+<li>Linux 内核的链表实现本质上是循环双链表，灵活性最高。</li>
+</ul>
+<h4 id="链表的遍历">链表的遍历</h4>
+<ul>
+<li>链表的遍历是线性的：从头节点开始，依次通过 next
+指针访问每个节点。</li>
+<li>非循环链表的最后一个节点 next 为 NULL；循环链表的最后一个节点 next
+指向头节点。</li>
+<li>双链表可以支持从尾节点向前遍历。</li>
+<li>链表适合需要频繁插入、删除和遍历全部元素的场景，不适合随机访问。</li>
+</ul>
+<h3 id="linux-内核链表实现方式">Linux 内核链表实现方式</h3>
+<h4 id="与传统链表的区别">1. 与传统链表的区别</h4>
+<ul>
+<li>传统链表通常是在数据结构里直接加 <code>next</code> 和
+<code>prev</code> 指针，把结构本身变成链表节点。</li>
+<li>Linux
+内核采用<strong>嵌入链表节点</strong>的方式：在自定义结构体里嵌入一个
+<code>struct list_head</code> 成员，而不是直接用
+<code>next</code>/<code>prev</code> 指针。</li>
+</ul>
+<h4 id="内核链表节点结构">2. 内核链表节点结构</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">next</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">prev</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>只包含指向前后节点的指针，不存储数据。</li>
+</ul>
+<h4 id="如何使用">3. 如何使用</h4>
+<ul>
+<li>在你的结构体里嵌入 <code>struct list_head</code> 成员，例如：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> &#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> tail_length;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> weight;</span><br><span class="line">    <span class="type">bool</span> is_fantastic;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span> <span class="comment">// 链表节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>这样，<code>fox.list.next</code> 指向下一个
+fox，<code>fox.list.prev</code> 指向上一个 fox。</li>
+</ul>
+<h4 id="链表操作">4. 链表操作</h4>
+<ul>
+<li>内核提供了丰富的链表操作函数（如
+<code>list_add()</code>），这些函数只操作
+<code>list_head</code>，不关心具体数据类型。</li>
+<li>通过 <code>container_of</code> 宏，可以从 <code>list_head</code>
+指针反查到包含它的结构体： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> container_of(ptr, type, member) \</span></span><br><span class="line"><span class="meta">    ((type *)((char *)(ptr) - offsetof(type, member)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> list_entry(ptr, type, member) \</span></span><br><span class="line"><span class="meta">    container_of(ptr, type, member)</span></span><br></pre></td></tr></table></figure></li>
+<li>用 <code>list_entry()</code>
+可以从链表节点指针获取到完整的结构体数据。</li>
+</ul>
+<h4 id="链表初始化">5. 链表初始化</h4>
+<ul>
+<li>动态分配结构体后，用 <code>INIT_LIST_HEAD(&amp;obj-&gt;list)</code>
+在运行时初始化链表节点。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">fox</span> *red_fox; </span><br><span class="line">red_fox = <span class="built_in">kmalloc</span>(<span class="built_in">sizeof</span>(*red_fox), GFP_KERNEL); </span><br><span class="line">red_fox-&gt;tail_length = <span class="number">40</span>; </span><br><span class="line">red_fox-&gt;weight = <span class="number">6</span>; </span><br><span class="line">red_fox-&gt;is_fantastic = <span class="literal">false</span>; </span><br><span class="line"><span class="built_in">INIT_LIST_HEAD</span>(&amp;red_fox-&gt;list);</span><br></pre></td></tr></table></figure></li>
+<li>静态定义时可用 <code>LIST_HEAD_INIT()</code> 宏在编译时初始化。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">fox</span> red_fox = &#123; </span><br><span class="line">   .tail_length = <span class="number">40</span>, </span><br><span class="line">   .weight = <span class="number">6</span>, </span><br><span class="line">   .list  = <span class="built_in">LIST_HEAD_INIT</span>(red_fox.list),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="链表头">6. 链表头</h4>
+<ul>
+<li>通常会定义一个专门的 <code>list_head</code>
+变量作为链表头，用于管理整个链表： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="title function_">LIST_HEAD</span><span class="params">(fox_list)</span>;</span><br></pre></td></tr></table></figure></li>
+<li>这个链表头本质上也是一个 <code>list_head</code>
+节点，但不存储实际数据，只作为入口。</li>
+</ul>
+<h3 id="linux-内核链表的操作方法">Linux 内核链表的操作方法</h3>
+<ol type="1">
+<li><p><strong>所有链表操作函数都只操作 <code>struct list_head</code>
+指针，和具体数据类型无关。</strong></p>
+<ul>
+<li>这些函数都定义在
+<code>&lt;linux/list.h&gt;</code>，实现为内联函数，效率高。</li>
+<li>所有操作都是 O(1)
+常数时间，无论链表长度如何，插入、删除等操作速度都一样。</li>
+</ul></li>
+<li><p><strong>常用操作函数：</strong></p>
+<ul>
+<li><strong>添加节点</strong>（底层的循环链表特性，每一个节点都可以填入head）
+<ul>
+<li><code>list_add(new, head)</code>：把新节点插入到 head
+节点之后（将最后一个节点填入head，实现栈）。</li>
+<li><code>list_add_tail(new, head)</code>：把新节点插入到 head
+节点之前（将第一个节点填入head，实现队列）。</li>
+</ul></li>
+<li><strong>删除节点</strong>
+<ul>
+<li><code>list_del(entry)</code>：把 entry
+节点从链表中移除，但不释放内存。</li>
+<li><code>list_del_init(entry)</code>：移除节点并重新初始化它，方便后续复用。</li>
+</ul></li>
+<li><strong>移动节点</strong>
+<ul>
+<li><code>list_move(list, head)</code>：把节点 list 移到 head
+节点之后。</li>
+<li><code>list_move_tail(list, head)</code>：把节点 list 移到 head
+节点之前。</li>
+</ul></li>
+<li><strong>拼接链表</strong>
+<ul>
+<li><code>list_splice(list, head)</code>：把 list 指向的链表拼接到 head
+节点之后。</li>
+<li><code>list_splice_init(list, head)</code>：拼接后把原链表重新初始化。</li>
+</ul></li>
+<li><strong>判断链表是否为空</strong>
+<ul>
+<li><code>list_empty(head)</code>：判断链表是否为空，返回非零表示空。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>内部函数优化</strong></p>
+<ul>
+<li>如果你已经有了节点的 next 和 prev 指针，可以直接调用内部函数（如
+<code>__list_del(prev, next)</code>），省去多余的指针解引用。</li>
+<li>这些内部函数一般以双下划线 <code>__</code>
+开头，只有在你已经拿到指针时才建议用。</li>
+</ul></li>
+</ol>
+<h3 id="linux-内核链表的遍历">Linux 内核链表的遍历</h3>
+<p>完整遍历包含n个节点的链表是O(n)时间复杂度操作。</p>
+<h4 id="基础遍历方法">基础遍历方法</h4>
+<p>最基础的遍历宏是<code>list_for_each()</code>，接收两个<code>list_head</code>参数：
+-
+<strong>第一个参数</strong>：指向当前项的指针（需调用者提供的临时变量）
+- <strong>第二个参数</strong>：要遍历的链表头节点</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">p</span>;</span></span><br><span class="line">list_for_each(p, fox_list) &#123;</span><br><span class="line">    <span class="comment">/* p指向链表中的某个节点 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但仅获取<code>list_head</code>指针通常无用，我们需要的是包含该链表节点的结构体（前文已讨论）指针。此时应使用<code>list_entry()</code>宏：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">p</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> *<span class="title">f</span>;</span></span><br><span class="line">list_for_each(p, &amp;fox_list) &#123;</span><br><span class="line">    f = list_entry(p, <span class="keyword">struct</span> fox, <span class="built_in">list</span>); <span class="comment">// 获取包含list_head的fox结构体</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="实用遍历方法">实用遍历方法</h4>
+<p>上述方法不够直观，因此内核主要使用<code>list_for_each_entry()</code>宏，该宏自动完成<code>list_entry()</code>转换：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry(pos, head, member)</span><br></pre></td></tr></table></figure>
+<p>参数说明： -
+<code>pos</code>：包含<code>list_head</code>的结构体指针（相当于<code>list_entry()</code>返回值）
+- <code>head</code>：链表头节点指针（如<code>fox_list</code>） -
+<code>member</code>：<code>list_head</code>在结构体中的成员名（如<code>list</code>）</p>
+<p>示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> *<span class="title">f</span>;</span></span><br><span class="line">list_for_each_entry(f, &amp;fox_list, <span class="built_in">list</span>) &#123;</span><br><span class="line">    <span class="comment">/* 每次迭代f指向下一个fox结构体 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>实际案例</strong>（来自内核文件系统通知系统inotify）：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> inotify_watch *<span class="title function_">inode_find_handle</span><span class="params">(<span class="keyword">struct</span> inode *inode, </span></span><br><span class="line"><span class="params">                                              <span class="keyword">struct</span> inotify_handle *ih)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inotify_watch</span> *<span class="title">watch</span>;</span></span><br><span class="line">    list_for_each_entry(watch, &amp;inode-&gt;inotify_watches, i_list) &#123;</span><br><span class="line">        <span class="keyword">if</span> (watch-&gt;ih == ih)</span><br><span class="line">            <span class="keyword">return</span> watch;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+此函数遍历<code>inode-&gt;inotify_watches</code>链表，查找匹配<code>inotify_handle</code>的节点。</p>
+<h4 id="反向遍历">反向遍历</h4>
+<p><code>list_for_each_entry_reverse()</code>功能与正向遍历相同，但沿<code>prev</code>指针逆向移动：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_reverse(pos, head, member)</span><br></pre></td></tr></table></figure> 适用场景： 1. 性能优化：当目标节点更靠近链表尾部时 2.
+顺序要求：如实现LIFO栈操作 若无特殊需求，建议使用正向遍历。</p>
+<h4 id="安全删除遍历">安全删除遍历</h4>
+<p>标准遍历方法在迭代过程中删除节点会导致问题（后续迭代无法获取正确的next/prev指针）。内核提供安全版本：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_safe(pos, next, head, member)</span><br></pre></td></tr></table></figure>
+参数<code>next</code>用于临时存储下一节点指针，确保当前节点可安全删除。</p>
+<p><strong>inotify示例</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">inotify_inode_is_dead</span><span class="params">(<span class="keyword">struct</span> inode *inode)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inotify_watch</span> *<span class="title">watch</span>, *<span class="title">next</span>;</span></span><br><span class="line">    mutex_lock(&amp;inode-&gt;inotify_mutex);</span><br><span class="line">    list_for_each_entry_safe(watch, next, &amp;inode-&gt;inotify_watches, i_list) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">inotify_handle</span> *<span class="title">ih</span> =</span> watch-&gt;ih;</span><br><span class="line">        mutex_lock(&amp;ih-&gt;mutex);</span><br><span class="line">        inotify_remove_watch_locked(ih, watch); <span class="comment">// 删除watch节点</span></span><br><span class="line">        mutex_unlock(&amp;ih-&gt;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    mutex_unlock(&amp;inode-&gt;inotify_mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>逆向安全遍历版本： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_safe_reverse(pos, n, head, member)</span><br></pre></td></tr></table></figure></p>
+<h4 id="注意事项">注意事项</h4>
+<ol type="1">
+<li>"safe"宏仅防护循环体内的删除操作，若存在并发操作仍需加锁</li>
+<li>更多链表操作方法详见<code>&lt;linux/list.h&gt;</code></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/05/kamacode34/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/05/kamacode34/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划7</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-06 04:52:02" itemprop="dateCreated datePublished" datetime="2025-08-06T04:52:02+08:00">2025-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-12 00:45:01" itemprop="dateModified" datetime="2025-08-12T00:45:01+08:00">2025-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="打家劫舍">198.打家劫舍</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rob</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size()+<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">1</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>; i &lt;= nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i<span class="number">-2</span>]+nums[i<span class="number">-1</span>], dp[i<span class="number">-1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[nums.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="打家劫舍ii">213.打家劫舍II</h3>
+<p>三种情况的动态规划： - 不考虑头尾元素 - 考虑头元素，不考虑尾元素 -
+考虑尾元素，不考虑头元素</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rob</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> nums[nums.<span class="built_in">size</span>()<span class="number">-1</span>];</span><br><span class="line">        <span class="type">int</span> res_front = <span class="built_in">rob_range</span>(nums, <span class="number">0</span>, nums.<span class="built_in">size</span>()<span class="number">-2</span>);</span><br><span class="line">        <span class="type">int</span> res_back = <span class="built_in">rob_range</span>(nums, <span class="number">1</span>, nums.<span class="built_in">size</span>()<span class="number">-1</span>);</span><br><span class="line">        <span class="type">int</span> res = <span class="built_in">max</span>(res_front, res_back);</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>() &gt;= <span class="number">3</span>)res = <span class="built_in">max</span>(res,<span class="built_in">rob_range</span>(nums, <span class="number">1</span>, nums.<span class="built_in">size</span>()<span class="number">-2</span>));</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rob_range</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> start, <span class="type">int</span> end)</span></span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size()+<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="keyword">if</span>(start == end)<span class="keyword">return</span> nums[start];</span><br><span class="line">        dp[start] = nums[start];</span><br><span class="line">        dp[start+<span class="number">1</span>] = <span class="built_in">max</span>(nums[start], nums[start+<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span>((start+<span class="number">1</span>) == end)<span class="keyword">return</span> dp[start+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = start+<span class="number">2</span>; i&lt;=end; i++)&#123;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i<span class="number">-2</span>]+nums[i], dp[i<span class="number">-1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[end];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="打家劫舍iii">337.打家劫舍III</h3>
+<p>直接使用递归，计算抢当前节点还是不抢当前节点时，对相同的子树进行了多次独立的递归调用。会超时，推荐记忆化：
+利用递归，每层返回一个保存当前节点偷还是不偷的数组 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// struct TreeNode&#123;</span></span><br><span class="line"><span class="comment">//     int val;</span></span><br><span class="line"><span class="comment">//     TreeNode* left;</span></span><br><span class="line"><span class="comment">//     TreeNode* right;</span></span><br><span class="line"><span class="comment">//     TreeNode(int v) : val(v), left(nullptr), right(nullptr)&#123;&#125;</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">rob_tree</span><span class="params">(TreeNode* root)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt;&#123;<span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; left = <span class="built_in">rob_tree</span>(root-&gt;left);</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; right = <span class="built_in">rob_tree</span>(root-&gt;right);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↓不抢当前节点时，既可以选择抢子节点，也可选择不抢，可能会有跳过两个节点抢更优的情况</span></span><br><span class="line">        <span class="type">int</span> next_h = <span class="built_in">max</span>(left[<span class="number">0</span>], left[<span class="number">1</span>])+<span class="built_in">max</span>(right[<span class="number">0</span>], right[<span class="number">1</span>]);</span><br><span class="line">        <span class="type">int</span> this_h = root-&gt;val+left[<span class="number">0</span>]+right[<span class="number">0</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;next_h, this_h&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rob</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res = <span class="built_in">rob_tree</span>(root);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(res[<span class="number">0</span>], res[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/31/kamabagu6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/31/kamabagu6/" class="post-title-link" itemprop="url">代码随想录 | 八股-TCP机制</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-01 00:14:16" itemprop="dateCreated datePublished" datetime="2025-08-01T00:14:16+08:00">2025-08-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-02 09:01:52" itemprop="dateModified" datetime="2025-08-02T09:01:52+08:00">2025-08-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="tcp连接如何确保可靠性">TCP连接如何确保可靠性</h3>
+<p><strong>序列号与确认应答：</strong> * <strong>序列号：</strong>
+发送方为每个<strong>字节</strong>的数据分配一个唯一的序列号。TCP报文段的首部包含该报文段中<strong>第一个数据字节的序列号</strong>。
+* <strong>确认号：</strong>
+接收方收到数据后，会发送一个<strong>确认报文段</strong>。该报文段中的<strong>确认号</strong>字段表示接收方<strong>期望收到的下一个字节的序列号</strong>。例如，接收方正确收到了序列号为
+1001-2000 的数据，它会发送确认号 2001，表示“我已正确收到序列号 2000
+及之前的所有字节，请从序列号 2001 开始发送”。 * <strong>机制：</strong>
+发送方发送数据后，会等待接收方的确认。如果收到预期的确认，说明数据已成功送达。这是可靠性的基石。</p>
+<p><strong>校验和：</strong> * <strong>计算：</strong>
+发送方在发送数据前，会计算报文段（首部和数据）的<strong>校验和</strong>，并将结果放入首部的校验和字段。
+* <strong>验证：</strong>
+接收方收到报文段后，会使用相同的算法重新计算校验和。 *
+<strong>丢弃：</strong>
+如果接收方计算出的校验和与报文段首部中的校验和不匹配，说明数据在传输过程中发生了比特错误（比特翻转）。接收方会<strong>丢弃</strong>该损坏的报文段，并且<strong>不会发送任何确认</strong>。
+* <strong>触发重传：</strong>
+由于发送方没有收到确认（见第1、2点），最终会触发超时重传。</p>
+<p><strong>流量控制：</strong> * <strong>目的：</strong>
+防止发送方发送数据过快，导致接收方缓冲区溢出而丢失数据。 *
+<strong>滑动窗口：</strong>
+接收方通过TCP首部中的<strong>窗口大小</strong>字段告知发送方自己当前<strong>接收缓冲区</strong>的可用空间大小。这个值称为<strong>接收窗口</strong>。
+* <strong>发送窗口限制：</strong>
+发送方维护一个<strong>发送窗口</strong>，其大小不能超过接收方通告的接收窗口大小。发送窗口内的数据是允许发送但尚未被确认的数据。
+* <strong>动态调整：</strong>
+随着接收方处理数据并释放缓冲区空间，它会通过后续的确认报文段更新其通告的窗口大小，发送方据此调整自己的发送窗口。这确保了发送速率不会超过接收方的处理能力。</p>
+<p><strong>拥塞控制：</strong> * <strong>目的：</strong>
+防止发送方发送数据过快，导致网络中间设备（如路由器）的缓冲区溢出，引发网络拥塞和数据包丢失。这是对整个网络的保护机制。
+* <strong>核心机制：</strong>
+发送方维护一个<strong>拥塞窗口</strong>，它限制了在任何时候可以发送但未被确认的数据量。发送窗口的实际大小是<code>min(接收窗口, 拥塞窗口)</code>。</p>
+<p><strong>超时重传：</strong> * <strong>核心思想：</strong>
+发送方发送一个报文段后启动一个<strong>重传计时器</strong>。如果在计时器超时之前没有收到该报文段的确认，发送方就认为该报文段已丢失或损坏，会<strong>重新发送</strong>该报文段。
+* <strong>动态计算超时时间：</strong>
+超时时间是根据历史数据包往返时间动态计算出来的，称为<strong>RTO</strong>。这确保了在网络状况变化时也能有效工作。</p>
+<h3 id="拥塞控制是怎么实现的">拥塞控制是怎么实现的</h3>
+<ul>
+<li><strong>慢启动：</strong>
+连接开始时，拥塞窗口从一个很小的值开始，并随着每个成功确认的报文段而<strong>指数增长</strong>（每收到一个ACK，cwnd增加1个MSS），快速探测可用带宽。</li>
+<li><strong>拥塞避免：</strong>
+当拥塞窗口增长到某个<strong>阈值</strong>时，进入拥塞避免阶段，窗口变为<strong>线性增长</strong>（每收到一个RTT内的所有ACK，cwnd增加1个MSS），增速放缓。</li>
+<li><strong>拥塞检测：</strong>
+<ul>
+<li><strong>超时：</strong>
+如果发生超时（表明有严重丢包），阈值被设置为当前拥塞窗口的一半（<code>ssthresh = cwnd / 2</code>），拥塞窗口被重置为1（或一个很小的值），重新进入慢启动。</li>
+<li><strong>快速重传与快速恢复：</strong>
+如果发送方收到<strong>3个重复的ACK</strong>（表明有单个数据包丢失，但后续数据包接收方还能收到），它立即重传丢失的报文段（快速重传），并将阈值设置为当前拥塞窗口的一半（<code>ssthresh = cwnd / 2</code>），拥塞窗口设置为阈值加3（或类似算法），然后进入<strong>快速恢复</strong>阶段。在快速恢复阶段，每收到一个重复ACK，拥塞窗口增加1个MSS。当收到一个新数据的ACK时（表明重传成功），退出快速恢复，将拥塞窗口设置为阈值大小，进入拥塞避免阶段。这比超时恢复要快得多。</li>
+</ul></li>
+</ul>
+<h3 id="tcp流量控制是怎么实现的">TCP流量控制是怎么实现的</h3>
+<p>TCP流量控制的实现核心在于<strong>滑动窗口协议（Sliding Window
+Protocol）</strong>，其目的是<strong>防止发送方发送数据过快导致接收方缓冲区溢出</strong>。这是通过接收方动态通告其<strong>接收窗口大小</strong>来实现的。</p>
+<ol type="1">
+<li><strong>初始通告：</strong>
+<ul>
+<li>连接建立时（三次握手阶段），接收方在其<code>SYN+ACK</code>报文段中设置<code>窗口大小</code>字段，告知发送方其初始接收缓冲区大小。</li>
+</ul></li>
+<li><strong>动态窗口通告：</strong>
+<ul>
+<li><strong>接收方处理数据：</strong>
+当接收方应用程序从缓冲区读取数据后，缓冲区空间被释放，可用空间增加。</li>
+<li><strong>发送更新窗口：</strong>
+接收方在发送给发送方的<strong>任何报文段</strong>（包括数据报文段、纯ACK确认报文段）中，都会携带最新的<code>窗口大小</code>值。</li>
+<li><strong>即时生效：</strong>
+发送方收到包含新窗口大小的报文段后，<strong>立即更新</strong>其对接收方接收窗口的理解。</li>
+</ul></li>
+<li><strong>发送方行为 - 滑动窗口：</strong>
+<ul>
+<li><strong>维护状态：</strong> 发送方维护三个指针：
+<ul>
+<li><code>SND.UNA</code>：最早未确认字节的序列号。</li>
+<li><code>SND.NXT</code>：下一个要发送字节的序列号。</li>
+<li><strong>发送窗口大小
+(<code>swnd</code>)</strong>：<code>swnd = min(接收方通告的接收窗口, 拥塞窗口)</code>。流量控制关注的是接收窗口部分。</li>
+</ul></li>
+<li><strong>发送约束：</strong> 发送方只能发送序列号在
+<code>[SND.UNA, SND.UNA + swnd)</code> 范围内的数据。</li>
+<li><strong>窗口滑动：</strong>
+<ul>
+<li>当发送方收到新的ACK确认（推进了<code>SND.UNA</code>），并且接收方通告了新的（可能更大的）窗口大小时，发送窗口会向右“滑动”。</li>
+<li>滑动后，<code>SND.NXT</code>可能可以继续发送新的数据（如果可用窗口
+&gt; 0）。</li>
+</ul></li>
+</ul></li>
+<li><strong>关键操作示例：</strong>
+<ul>
+<li>假设接收方初始通告<code>rwnd = 4000</code>字节。</li>
+<li>发送方发送2000字节（<code>SND.NXT</code>前进2000）。</li>
+<li>接收方收到这2000字节，但应用程序只读取了1000字节。此时接收缓冲区：
+<ul>
+<li>已用空间 = 1000字节（2000收到 - 1000被读走）</li>
+<li>可用空间 = 3000字节（初始4000 - 1000占用）。</li>
+<li>接收方在ACK中设置<code>rwnd = 3000</code>。</li>
+</ul></li>
+<li>发送方收到ACK和<code>rwnd=3000</code>：
+<ul>
+<li><code>SND.UNA</code>前进2000（假设ACK确认了前2000字节）。</li>
+<li>更新<code>swnd = min(3000, cwnd)</code>。</li>
+<li>新发送窗口变为 <code>[新SND.UNA, 新SND.UNA + 3000)</code>。</li>
+<li><code>SND.NXT</code>可能指向新窗口内的位置，允许发送最多3000字节新数据（减去已在传输中的）。</li>
+</ul></li>
+</ul></li>
+<li><strong>处理零窗口 - 死锁预防：</strong>
+<ul>
+<li><strong>问题：</strong>
+如果接收方缓冲区满，它会通告<code>rwnd = 0</code>。发送方必须立即停止发送数据。但如果之后接收方应用程序读取数据释放了缓冲区，它需要通知发送方<code>rwnd &gt; 0</code>。如果这个通知（携带新<code>rwnd</code>的ACK）丢失了怎么办？双方会陷入死锁：发送方在等待窗口更新，接收方以为发送方知道窗口已打开。</li>
+<li><strong>解决方案：零窗口探测：</strong>
+<ul>
+<li>当发送方收到<code>rwnd = 0</code>时，启动一个<strong>持续计时器</strong>。</li>
+<li>计时器超时后，发送方发送一个<strong>1字节的探测报文段</strong>。</li>
+<li>接收方收到探测报文段：
+<ul>
+<li>如果缓冲区仍满，再次回复<code>rwnd = 0</code>，发送方重置持续计时器。</li>
+<li>如果缓冲区已有空间，回复包含当前<code>rwnd &gt; 0</code>的ACK。</li>
+</ul></li>
+<li>探测报文段确保即使窗口更新ACK丢失，死锁也能被打破。</li>
+</ul></li>
+</ul></li>
+</ol>
+<h3 id="udp怎么实现可靠传输">UDP怎么实现可靠传输</h3>
+<p>（参考QUIC）</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/30/kamabagu5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/30/kamabagu5/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP安全与TCP连接</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-31 04:30:07 / 修改时间：11:43:31" itemprop="dateCreated datePublished" datetime="2025-07-31T04:30:07+08:00">2025-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="https和http有哪些区别">HTTPS和HTTP有哪些区别</h3>
+<ol type="1">
+<li><strong>加密性</strong>
+<ul>
+<li>HTTP：数据明文传输，容易被窃听和篡改。<br />
+</li>
+<li>HTTPS：在 HTTP 基础上增加了 SSL/TLS 加密层，数据传输安全。</li>
+</ul></li>
+<li><strong>连接建立流程</strong>
+<ul>
+<li>HTTP：TCP 三次握手后即可传输数据。<br />
+</li>
+<li>HTTPS：TCP 三次握手后，还需进行 SSL/TLS
+握手，协商密钥后才能加密传输数据。</li>
+</ul></li>
+<li><strong>端口号</strong>
+<ul>
+<li>HTTP：默认端口 80<br />
+</li>
+<li>HTTPS：默认端口 443</li>
+</ul></li>
+<li><strong>证书机制</strong>
+<ul>
+<li>HTTP：不需要证书。<br />
+</li>
+<li>HTTPS：需要向 CA 申请数字证书，验证服务器身份，防止伪造。</li>
+</ul></li>
+</ol>
+<h3
+id="https的工作原理https建立连接的过程">HTTPS的工作原理（HTTPS建立连接的过程）</h3>
+<ol type="1">
+<li><p><strong>密钥交换</strong><br />
+客户端发起HTTPS请求，服务器发送公钥证书给客户端。</p></li>
+<li><p><strong>证书验证</strong><br />
+客户端验证服务器证书是否由受信任的CA签发，并检查证书有效性。</p></li>
+<li><p><strong>加密通信协商</strong><br />
+客户端生成一个随机的对称加密密钥，用服务器公钥加密后发送给服务器。</p></li>
+<li><p><strong>建立安全连接</strong><br />
+服务器用私钥解密，得到对称加密密钥。此时双方拥有相同密钥，可以进行加密通信。</p></li>
+<li><p><strong>数据传输</strong><br />
+双方用对称加密密钥对数据进行加密传输，保证安全性。</p></li>
+<li><p><strong>完整性校验</strong><br />
+SSL/TLS协议还会对数据进行完整性校验，防止数据被篡改。</p></li>
+<li><p><strong>结束连接</strong><br />
+通信结束后，会话密钥被销毁，避免安全隐患。</p></li>
+</ol>
+<h3 id="tcp和udp的区别">TCP和UDP的区别</h3>
+<ol type="1">
+<li><strong>连接方式</strong>
+<ul>
+<li>TCP：面向连接，传输前需建立连接（三次握手）。<br />
+</li>
+<li>UDP：无连接，直接发送数据。</li>
+</ul></li>
+<li><strong>可靠性</strong>
+<ul>
+<li>TCP：可靠传输，保证数据顺序和完整性，丢包会重传。<br />
+</li>
+<li>UDP：不保证可靠性，可能丢包、乱序、不重传。</li>
+</ul></li>
+<li><strong>流量与拥塞控制</strong>
+<ul>
+<li>TCP：有流量控制（滑动窗口）和拥塞控制，能根据网络状况调整速率。<br />
+</li>
+<li>UDP：没有流量和拥塞控制，发送速率固定。</li>
+</ul></li>
+<li><strong>报文头部</strong>
+<ul>
+<li>TCP：头部复杂，包含序列号、确认号等。<br />
+</li>
+<li>UDP：头部简单，只有基本信息。</li>
+</ul></li>
+<li><strong>性能开销</strong>
+<ul>
+<li>TCP：机制多，性能开销大，延迟高。<br />
+</li>
+<li>UDP：机制简单，开销小，延迟低。</li>
+</ul></li>
+<li><strong>适用场景</strong>
+<ul>
+<li>TCP：适合需要可靠传输的场景，如网页浏览、文件传输等。<br />
+</li>
+<li>UDP：适合对实时性要求高的场景，如语音通话、视频会议等。</li>
+</ul></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/25/kamabagu26/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/25/kamabagu26/" class="post-title-link" itemprop="url">代码随想录 | 八股-c++动态内存分配</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-26 09:32:48 / 修改时间：10:04:00" itemprop="dateCreated datePublished" datetime="2025-07-26T09:32:48+08:00">2025-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="new和malloc有什么区别">new和malloc有什么区别</h3>
+<p>new和malloc在C++中都用于动态内存分配，但它们之间有几个关键的区别：</p>
+<p>语法层面： new是C++的操作符，可以直接用来分配对象或数组。
+malloc是一个函数，通常需要包含头文件<cstdlib>，并且只分配原始内存。
+类型安全：
+new是类型安全的，它会根据分配的对象类型进行正确的内存分配和构造函数调用。
+malloc 不是类型安全的，它只分配原始内存，不调用构造函数。返回类型是
+void*，需要强制类型转换为具体的指针类型。 构造与析构： 使用 new
+分配的对象在对象生命周期结束时需要使用 delete 来释放，delete
+会自动调用对象的析构函数。 使用 malloc 分配的内存需要使用 free
+来释放，free
+不会自动调用析构函数，因此如果分配的是对象数组，需要手动调用析构函数。
+异常安全性： new在分配失败时会抛出std::bad_alloc异常。
+malloc在分配失败时返回NULL指针。 管理机制：
+C++中的new和delete通常由编译器实现，可能包含一些额外的内存管理机制。
+C语言的malloc和free由C标准库提供，与编译器无关。
+总结来说，new和malloc都是动态内存分配的手段，但new提供了类型安全和构造/析构的自动化，而malloc则提供了更底层的内存分配方式，需要手动管理构造和析构。在C++中，推荐使用new来分配对象，以保持类型安全和自动化的资源管理。</p>
+<h3 id="delete-和-free-有什么区别">delete 和 free 有什么区别？</h3>
+<p>delete和free都是用来释放动态分配的内存，但它们有不同的使用方式：</p>
+<p>语法：</p>
+<p>delete是C++中的关键字，用于释放由new分配的对象。
+free是C语言中的函数，通常包含在&lt;stdlib.h&gt;头文件中，用于释放由malloc分配的内存。
+对象销毁：</p>
+<p>当使用 delete 释放对象内存时，C++
+编译器会自动调用对象的析构函数，释放与对象相关的资源，并执行对象的清理工作。
+free 仅释放内存，不调用析构函数。因此，如果使用 malloc 分配了 C++
+对象的内存，需要手动调用析构函数后再调用 free。 数组处理：</p>
+<p>如果是数组，C++提供了delete[]来释放整个数组的内存，而C语言中仍然使用free，没有区分单个对象和数组。
+返回值:</p>
+<p>free 没有返回值，即使内存释放失败，也不会反馈任何信息。</p>
+<p>delete 之后，指针会自动置为 nullptr</p>
+<p>类型检查:</p>
+<p>delete 进行类型检查，确保删除的对象类型与 new 分配时的类型一致。</p>
+<p>free 不进行类型检查，因为它只处理 void* 类型的指针。</p>
+<p>总结来说，delete和free都是用来释放动态内存的，但它们分别用于C++和C语言中的内存管理。delete适用于C++对象，会自动调用析构函数；而free适用于C语言分配的内存，不涉及对象的析构。</p>
+<h3 id="堆区和栈区的区别">堆区和栈区的区别</h3>
+<p>堆 （Heap） 和栈 （Stack） 是程序运行时两种不同的内存分配区域</p>
+<p>内存分配：</p>
+<p>栈 是由编译器自动管理的，用于存储局部变量和函数调用的上下文信息。
+栈上的对象在定义它们的块或函数调用结束后自动销毁。
+栈的内存分配和释放速度很快，因为栈的内存管理是连续的，不需要搜索空闲内存。
+堆 由程序员手动管理的，用于存储动态分配的对象。
+堆上的对象需要程序员手动释放，否则可能导致内存泄漏。
+堆的内存分配和释放速度通常比栈慢，因为可能需要搜索合适的内存块，并且涉及内存碎片整理。
+大小限制：</p>
+<p>栈的大小通常有限制，远小于堆的大小，且在不同系统和编译器中可能不同。
+堆的大小通常很大，受限于系统可用内存。 使用场景：</p>
+<p>栈主要用于存储函数参数、局部变量等。
+堆用于存储生存期不受限于单个函数调用的对象，如使用 new 或 malloc
+分配的对象。</p>
+<h3 id="补充-如何定义只能在堆上或栈上生成对象的类">补充：
+如何定义只能在堆上或栈上生成对象的类</h3>
+<p>在 C++
+中，可以通过控制构造函数和析构函数的访问权限来限制对象只能在堆上或栈上创建。以下是两种实现方式的详细说明和代码示例：</p>
+<h4 id="只能在堆上创建对象禁止栈上创建">1.
+只能在堆上创建对象（禁止栈上创建）</h4>
+<p><strong>核心原理</strong>：私有析构函数 + 智能指针管理生命周期<br />
+<strong>关键点</strong>： - 私有析构函数阻止栈对象自动销毁 -
+静态工厂函数返回智能指针 - 智能指针自定义删除器调用
+<code>destroy()</code> - <code>destroy()</code> 调用
+<code>delete this</code>（需谨慎使用） - 禁用拷贝构造/赋值</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HeapOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 工厂函数：返回带有自定义删除器的 unique_ptr</span></span><br><span class="line">    <span class="function"><span class="type">static</span> std::unique_ptr&lt;HeapOnly, <span class="title">void</span><span class="params">(*)</span><span class="params">(HeapOnly*)</span>&gt; <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="built_in">HeapOnly</span>(), </span><br><span class="line">            [](HeapOnly* p) &#123; p-&gt;<span class="built_in">destroy</span>(); &#125; <span class="comment">// 自定义删除器</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 销毁函数（必须公开）</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>; <span class="comment">// 调用私有析构函数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 禁用拷贝操作</span></span><br><span class="line">    <span class="built_in">HeapOnly</span>(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    HeapOnly&amp; <span class="keyword">operator</span>=(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;       <span class="comment">// 私有构造</span></span><br><span class="line">    ~<span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;      <span class="comment">// 私有析构</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">auto</span> obj = HeapOnly::<span class="built_in">create</span>();  <span class="comment">// 只能在堆上创建</span></span><br></pre></td></tr></table></figure>
+<h4 id="只能在栈上创建对象禁止堆上创建">2.
+只能在栈上创建对象（禁止堆上创建）</h4>
+<p><strong>核心原理</strong>：禁用 <code>new</code> 操作符</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StackOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 禁用 new 操作符</span></span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line">    <span class="type">void</span>* <span class="keyword">operator</span> <span class="keyword">new</span>[](<span class="type">size_t</span>) = <span class="keyword">delete</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>, <span class="type">void</span>* p)</span> </span>= <span class="keyword">delete</span>; <span class="comment">// 禁用 malloc + placement new</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line">StackOnly stackObj;           <span class="comment">// 合法：栈上创建</span></span><br><span class="line"><span class="comment">// auto heapObj = new StackOnly(); // 编译错误：new 被禁用</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>⚠️ 注意：<code>delete this</code> 是特殊技术，必须确保： - 对象通过
+<code>new</code> 创建 - 调用 <code>delete this</code> 后不再访问任何成员
+- 通常只用于精确控制生命周期的场景</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/22/oper_sys14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/22/oper_sys14/" class="post-title-link" itemprop="url">操作系统基础 | 3.4 系统调用实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-23 04:34:49" itemprop="dateCreated datePublished" datetime="2025-07-23T04:34:49+08:00">2025-07-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-06 11:11:14" itemprop="dateModified" datetime="2025-08-06T11:11:14+08:00">2025-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="必做练习"><strong>必做练习</strong></h3>
+<p><strong>练习1</strong><br />
+准备好实验报告</p>
+<p><strong>练习2</strong><br />
+我们将通过 libc
+包装器发起系统调用（标准用户程序调用内核的方式）。系统调用完整列表可通过
+<code>man 2 syscalls</code> 查看手册页。<br />
+1. 启动树莓派，在终端中<strong>脱离 Linux
+源码目录</strong>新建用户程序目录<br />
+2. 创建文件 <code>lib_call.c</code>，编写 C 程序：<br />
+- 使用库函数 <code>getuid</code> 读取并打印用户 ID<br />
+- 尝试用 <code>setuid</code> 将 ID 设为 0（root）并报告是否成功<br />
+- 再次读取并打印用户 ID<br />
+3. 通过 <code>man 2 getuid</code> 和 <code>man 2 setuid</code>
+查阅：<br />
+- 函数调用语法和返回值类型<br />
+- 编译所需的头文件<br />
+4. 错误检查：若 <code>setuid</code> 失败，输出错误原因（使用
+<code>strerror(errno)</code>）。<br />
+- 相关手册页：<code>man 3 printf</code>, <code>man 3 strerror</code>,
+<code>man 3 errno</code><br />
+5. 在实验机上编译运行：<br />
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line">   gcc lib_call.c -o lib_call &amp;&amp; ./lib_call</span><br><span class="line">   ```  </span><br><span class="line">**提示**：</span><br><span class="line">直接写 `usr_id = getuid()` 实际上**不是直接使用系统调用**，而是调用了**libc库的封装函数**（即 glibc 提供的 getuid），它内部会帮你完成系统调用的参数准备和陷入内核的过程。</span><br><span class="line">如果想**直接使用系统调用**，需要用 `syscall` 函数或者汇编指令，并传入系统调用号（如 `__NR_getuid`），而不是用库函数。例如：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习3**  </span><br><span class="line">从树莓派用户程序目录执行：  </span><br><span class="line">1. 通过 sftp 从 `shell.cec.学校简称.edu` 获取 `lib_call.c`  </span><br><span class="line">2. 在树莓派上编译并运行程序（分别用普通用户和 `sudo` 权限运行）  </span><br><span class="line">**答案**：粘贴两种运行方式的输出，并对比实验机与树莓派的差异（编译/运行等）。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习4**  </span><br><span class="line">修改程序使用原生系统调用接口（`man 2 syscall`）：  </span><br><span class="line">1. 复制 `lib_call.c` 为 `native_call.c`  </span><br><span class="line">2. 将 `getuid/setuid` 替换为 `syscall`  </span><br><span class="line">3. 通过 Linux 源码确定 ARM 系统调用号：  </span><br><span class="line">   - 查看 `<span class="built_in">arch</span>/arm/include/uapi/asm/unistd.h`  </span><br><span class="line">   - 查看生成的 `<span class="built_in">arch</span>/arm/include/generated/uapi/asm/unistd-common.h`  </span><br><span class="line">4. **使用常量**（如 `__NR_getuid`）而非硬编码数字  </span><br><span class="line">5. 可能需包含头文件 `asm/unistd.h`  </span><br><span class="line">6. 在树莓派上编译运行  </span><br><span class="line">**答案**：粘贴新程序的输出。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习5**  </span><br><span class="line">为内核添加两个新系统调用（各打印一条内核日志）：  </span><br><span class="line">**任务清单**  </span><br><span class="line">1. 在内核中声明函数原型  </span><br><span class="line">2. 实现函数逻辑  </span><br><span class="line">3. 分配系统调用号  </span><br><span class="line">4. 更新 ARM 系统调用表  </span><br><span class="line">5. 更新系统调用总数  </span><br><span class="line"></span><br><span class="line">**操作步骤**  </span><br><span class="line">1. SSH 登录 `shell.cec.学校简称.edu` → `qlogin -q all.q` → 进入 Linux 源码目录  </span><br><span class="line">2. **修改前备份文件**（如 `<span class="built_in">cp</span> syscalls.h syscalls.h.072325`）  </span><br><span class="line"></span><br><span class="line">**声明函数原型**（在 `include/linux/syscalls.h` 底部添加）：  </span><br><span class="line">```c</span><br><span class="line">// CSE422 072325</span><br><span class="line">asmlinkage long sys_noargs(void); </span><br><span class="line">asmlinkage long sys_onearg(int arg);</span><br><span class="line">```  </span><br><span class="line">**答案**：粘贴添加的函数原型。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习6**  </span><br><span class="line">**实现系统调用函数**：  </span><br><span class="line">1. 在 `<span class="built_in">arch</span>/arm/kernel/` 创建文件：  </span><br><span class="line">   - `sys_noargs.c`（无参数函数）  </span><br><span class="line">   - `sys_onearg.c`（带参数函数）  </span><br><span class="line">2. `sys_noargs.c` 内容参考[此文件](https://example.com/sys_noargs.c)  </span><br><span class="line">3. `sys_onearg.c` 模板：  </span><br><span class="line">   ```c</span><br><span class="line">   SYSCALL_DEFINE1(sys_onearg, int, arg) &#123;</span><br><span class="line">       printk(<span class="string">&quot;Received argument: %d\n&quot;</span>, arg); </span><br><span class="line">       <span class="built_in">return</span> 0; // 返回适当值</span><br><span class="line">   &#125;</span><br><span class="line">   ```  </span><br><span class="line">**答案**：粘贴 `sys_onearg` 的实现代码。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习7**  </span><br><span class="line">**添加文件到构建系统**：  </span><br><span class="line">修改 `<span class="built_in">arch</span>/arm/kernel/Makefile`：  </span><br><span class="line">1. 备份原文件  </span><br><span class="line">2. 在 `obj-y` 列表末尾添加（**不在 `\` 后**）：  </span><br><span class="line">   ```makefile</span><br><span class="line">   obj-y += sys_noargs.o sys_onearg.o</span><br><span class="line">   ```  </span><br><span class="line">**答案**：粘贴修改后的 `obj-y` 行。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习8**  </span><br><span class="line">**更新系统调用表**：  </span><br><span class="line">修改 `<span class="built_in">arch</span>/arm/tools/syscall.tbl`：  </span><br><span class="line">1. 备份原文件  </span><br><span class="line">2. 在末尾添加（分配新调用号）：  </span><br><span class="line">   ```plaintext</span><br><span class="line">   456  common  sys_noargs    sys_noargs</span><br><span class="line">   457  common  sys_onearg     sys_onearg</span><br><span class="line">   ```  </span><br><span class="line">**答案**：粘贴添加的两行内容。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习9**  </span><br><span class="line">**编译并验证新内核**：  </span><br><span class="line">1. 在 Linux 源码根目录执行：  </span><br><span class="line">   ```bash</span><br><span class="line">   make clean</span><br><span class="line">   ```  </span><br><span class="line">2. 修改本地版本标识：  </span><br><span class="line">   - 编辑 `.config` 文件  </span><br><span class="line">   - 更新 `CONFIG_LOCALVERSION` 值（如 `-syscallstudio`）  </span><br><span class="line">3. 按实验1/2的步骤编译安装内核  </span><br><span class="line">4. 树莓派上运行：  </span><br><span class="line">   ```bash</span><br><span class="line">   <span class="built_in">uname</span> -a</span><br><span class="line">   ```  </span><br><span class="line">**答案**：粘贴 `<span class="built_in">uname</span> -a` 输出结果。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">**练习10**  </span><br><span class="line">**调用新系统调用**：  </span><br><span class="line">1. 通过 sftp 获取 `<span class="built_in">arch</span>/arm/include/generated/uapi/asm/unistd-common.h`  </span><br><span class="line">2. 复制到 GCC 头文件目录：  </span><br><span class="line">   ```bash</span><br><span class="line">   sudo <span class="built_in">cp</span> unistd-common.h /usr/include/arm-linux-gnueabihf/asm</span><br><span class="line">   ```  </span><br><span class="line">3. 创建 `new_call.c`（基于 `native_call.c`）：  </span><br><span class="line">   - 将 `getuid` 调用号替换为 `__NR_sys_noargs`  </span><br><span class="line">   - 将 `setuid` 调用号替换为 `__NR_sys_onearg`  </span><br><span class="line">   - 为单参数调用声明变量（勿直接传常量）  </span><br><span class="line">4. 编译运行后检查内核日志：  </span><br><span class="line">   ```bash</span><br><span class="line">   dmesg</span><br><span class="line">   ```  </span><br><span class="line">**答案**：粘贴 `dmesg` 中包含系统调用输出的日志行。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">### **需提交的文件**  </span></span><br><span class="line">1. 必做练习答案  </span><br><span class="line">2. 源代码：`lib_call.c`, `native_call.c`, `new_call.c`  </span><br><span class="line">3. 系统调用实现文件：`sys_noargs.c`, `sys_onearg.c`  </span><br><span class="line">4. 修改文件的 diff（对比备份）：  </span><br><span class="line">   ```bash</span><br><span class="line">   diff -up syscalls.h syscalls.h.072325 &gt; syscalls.h.diff</span><br><span class="line">   diff -up syscall.tbl syscall.tbl.072325 &gt; syscall.tbl.diff</span><br></pre></td></tr></table></figure></p>
+<hr />
+<h3 id="可选拓展练习"><strong>可选拓展练习</strong></h3>
+<p>完成任意拓展练习后简述收获（附问题答案）。</p>
+<p><strong>练习1</strong><br />
+用汇编接口实现系统调用（参考课堂 ARM 调用流程），使用 GCC
+内联汇编（<code>asm</code> 扩展）。<br />
+&gt; 提示：详细流程见 <code>man 2 syscall</code>，内核入口代码见
+<code>arch/arm/kernel/entry-common.S</code>。</p>
+<p><strong>练习2</strong><br />
+实现读取周期计数器（CCNT）的系统调用：<br />
+1. 下载<a target="_blank" rel="noopener" href="https://example.com/perf_regs.h">性能监控头文件</a> 至
+<code>arch/arm/include/asm</code><br />
+2.
+声明函数原型：<code>asmlinkage long sys_read_ccnt(unsigned long long *val)</code><br />
+3. 创建 <code>sys_read_ccnt.c</code>（参考<a
+target="_blank" rel="noopener" href="https://example.com/sys_read_ccnt.c">模板</a>）<br />
+4. 更新 <code>Makefile</code> 和 <code>syscall.tbl</code><br />
+5. 编写程序连续调用两次，计算调用耗时（周期数）<br />
+<strong>答案</strong>：报告系统调用消耗的周期数。</p>
+<p><strong>练习3</strong><br />
+修复 <code>read_ccnt</code> 的安全缺陷：<br />
+1. 使用 <code>copy_to_user()</code> 替代直接写入用户指针<br />
+2. 失败时返回 <code>-EFAULT</code><br />
+<strong>答案</strong>：粘贴修复后的 <code>sys_read_ccnt</code>
+实现代码。</p>
+<hr />
+<blockquote>
+<p>注意：<br />
+- 所有内核修改需添加注释
+<code>//CSE422 MMDDYY</code>（日期格式：月日年）<br />
+- 推荐在实验机开发代码，通过 sftp 同步至树莓派以防崩溃丢失</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/22/kamacode33/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/22/kamacode33/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划6</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-23 03:55:11" itemprop="dateCreated datePublished" datetime="2025-07-23T03:55:11+08:00">2025-07-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-06 04:43:52" itemprop="dateModified" datetime="2025-08-06T04:43:52+08:00">2025-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="零钱兑换">322. 零钱兑换</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;limits&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span> <span class="comment">// 包含 std::min 和 std::max</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">coinChange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; coins, <span class="type">int</span> amount)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(amount+<span class="number">1</span>, std::numeric_limits&lt;<span class="type">int</span>&gt;::max())</span></span>;<span class="comment">// 每个amount需要的最少coin数</span></span><br><span class="line">        <span class="comment">// 第一遍遍历需要把coins中有的coin数置1，所以dp[0] = 0方便+1</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 针对每个amount, 遍历减去coin看哪一种最少</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;=amount; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt; coins.<span class="built_in">size</span>();j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i - coins[j]) &gt;= <span class="number">0</span> &amp;&amp; dp[i - coins[j]] &lt; std::numeric_limits&lt;<span class="type">int</span>&gt;::<span class="built_in">max</span>())&#123;</span><br><span class="line">                    dp[i] = <span class="built_in">min</span>(dp[i], dp[i - coins[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[amount] == std::numeric_limits&lt;<span class="type">int</span>&gt;::<span class="built_in">max</span>() ? <span class="number">-1</span> : dp[amount];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="完全平方数">279.完全平方数</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numSquares</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完全平方数就是物品（可以无限件使用），凑个正整数n就是背包，问凑满这个背包最少有多少物品？</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, INT_MAX)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n; i++) &#123; <span class="comment">// 遍历背包</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j * j &lt;= i; j++) &#123; <span class="comment">// 遍历物品</span></span><br><span class="line">                dp[i] = <span class="built_in">min</span>(dp[i - j * j] + <span class="number">1</span>, dp[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="单词拆分">139.单词拆分</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;string&gt; <span class="title">wordSet</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(s.size()+<span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=s.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                string subS = s.<span class="built_in">substr</span>(j, i-j);</span><br><span class="line">                <span class="keyword">if</span>(wordSet.<span class="built_in">find</span>(subS) != wordSet.<span class="built_in">end</span>() &amp;&amp; dp[j])&#123;</span><br><span class="line">                    dp[i] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[s.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/18/rust_os/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/18/rust_os/" class="post-title-link" itemprop="url">操作系统项目 | perf验证性能瓶颈</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-19 03:58:52 / 修改时间：04:01:06" itemprop="dateCreated datePublished" datetime="2025-07-19T03:58:52+08:00">2025-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/rust-os/" itemprop="url" rel="index"><span itemprop="name">rust os</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="使用-perf-验证性能瓶颈">使用 <code>perf</code> 验证性能瓶颈</h3>
+<p>用 <code>perf</code>
+找系统慢在哪，就像给系统做一次‘全身CT扫描’加‘血液化验’。在我那个操作系统框架项目里，我们特别关心调度算法在任务多到快‘撑爆’的时候表现如何（超负荷场景）。这个过程大概是这样的：</p>
+<ol type="1">
+<li><strong>‘挂号’与‘检查’ (启动Perf &amp; 记录数据)：</strong>
+<ul>
+<li>我先给系统‘挂号’，告诉 <code>perf</code> 我要检查什么：CPU
+干了啥、内存怎么用的、任务等了多久、程序内部函数调用了多少次等等。这些信息就是‘检查项目’（<code>perf</code>
+事件，如 <code>cycles</code>, <code>instructions</code>,
+<code>cache-misses</code>, <code>context-switches</code>,
+<code>sched:sched_stat_runtime</code>,
+<code>sched:sched_stat_wait</code> 等）。</li>
+<li>然后，我让系统开始‘干活’（运行特定负载，模拟超负荷），同时
+<code>perf</code>
+就像个精密的仪器在旁边‘抽血化验’、‘拍片子’，全程记录下所有关键指标（<code>perf record -e &lt;事件列表&gt; -ag -- sleep 30</code>
+或针对特定进程/命令）。</li>
+<li>这个负载是精心设计的，包含不同类型（CPU计算狂、慢悠悠的I/O读写手、要求准时完成的‘急脾气’任务）和不同数量的任务，把它们一股脑儿塞给系统，看它啥时候‘顶不住’。</li>
+</ul></li>
+<li><strong>‘看化验单’与‘读CT片’ (分析Perf报告)：</strong>
+<ul>
+<li>等系统跑完，<code>perf</code>
+会生成一份厚厚的‘检查报告’（<code>perf report</code>）。这份报告特别有用：
+<ul>
+<li><strong>‘谁最累？’ (CPU时间分布)：</strong>
+报告会列出哪个程序、哪个函数吃掉最多的CPU时间（<code>Overhead</code>
+列）。如果某个调度器函数或者内核里处理任务切换/通信(IPC)的函数占比异常高，那它可能就是‘罪魁祸首’。</li>
+<li><strong>‘效率高不高？’ (指令效率)：</strong> 我重点看
+<code>CPI</code> 或 <code>IPC</code>。<code>CPI</code>
+是说CPU执行一条指令平均花了多少个时钟周期，<code>IPC</code>
+是反过来（一个周期执行多少条指令）。<strong>理想值：</strong>
+现代CPU在跑得很顺的代码时，<code>IPC</code>
+应该接近1甚至更高（比如1.5-2.0+）。<strong>瓶颈信号：</strong>
+如果整个系统或者关键函数的 <code>IPC</code>
+掉得很低（比如低于0.5），或者 <code>CPI</code>
+飙升（比如&gt;2.0），那CPU可能没在高效干活，而是在‘空等’或者‘干杂活’。</li>
+<li><strong>‘等得久不久？’ (调度延迟)：</strong>
+报告里能看到任务从‘准备好’到‘真正上CPU跑’等了多久（<code>sched:sched_stat_wait</code>）。<strong>合理范围：</strong>
+在超负荷前，这个等待时间应该比较稳定且符合预期（比如微秒到毫秒级，看系统要求）。<strong>瓶颈信号：</strong>
+如果这个等待时间在超负荷时急剧增加（比如从毫秒级跳到几十甚至几百毫秒），或者大量时间花在
+<code>sched</code>
+相关的内核函数上，说明调度器本身或者任务太多成了瓶颈，任务在‘排队等CPU等太久’。</li>
+<li><strong>‘找东西慢不慢？’ (缓存失效)：</strong>
+<code>cache-misses</code>
+事件特别重要。CPU从自己高速缓存(<code>L1/L2/L3</code>)拿数据比去慢悠悠的主内存(<code>RAM</code>)拿快百倍。<strong>合理范围：</strong>
+有一定比例的 <code>cache-misses</code>
+是正常的。<strong>瓶颈信号：</strong> 如果 <code>cache-misses</code>
+率非常高（比如LLC Last Level Cache miss rate &gt;
+5-10%，具体看CPU和负载），或者某个关键数据结构相关的代码段
+<code>cache-misses</code>
+特别多，说明CPU经常‘找不到需要的东西’，得跑去慢速内存取，这会<strong>严重拖慢速度</strong>，是内存访问瓶颈的典型标志。</li>
+<li><strong>‘沟通顺畅吗？’ (IPC开销)：</strong>
+在微内核里，任务间沟通(<code>IPC</code>)是大事。我会专门看花在内核处理IPC消息的函数（比如消息复制、权限检查、调度切换）上的时间占比。<strong>合理范围：</strong>
+IPC本身就有成本，时间占比应该相对稳定。<strong>瓶颈信号：</strong>
+如果IPC处理时间占比在超负荷时不成比例地暴增，或者
+<code>context-switches</code> (上下文切换次数)
+高得吓人，说明系统资源大量消耗在‘传话’和‘换人’上了，任务本身的‘正事’反而没时间做，这就是<strong>通信开销过大或调度切换太频繁</strong>的瓶颈。</li>
+</ul></li>
+</ul></li>
+<li><strong>‘病灶’在哪？ (我们发现的瓶颈)：</strong>
+在我们的超负荷测试中，<code>perf</code>
+的‘化验单’清晰地指出了几个‘病灶’：
+<ul>
+<li><strong>‘沟通成本’太高 (IPC开销陡增)：</strong>
+当任务数量超过某个阈值，花在内核处理IPC上的CPU时间占比从正常的 ~15%
+一下子跳到 40%+！<code>perf report</code> 显示 <code>ipc_send</code>,
+<code>ipc_receive</code> 及相关内核锁函数耗时剧增。同时
+<code>context-switches</code>
+也翻倍了。这说明微内核架构的‘双刃剑’——隔离性好但沟通成本高——在重压下成了主要瓶颈。</li>
+<li><strong>‘找东西’越来越慢 (Cache效率下降)：</strong>
+<code>LLC cache-misses</code> 率在超负荷时从 ~3% 升高到 12%+。结合
+<code>annotate</code>
+功能看热点代码，发现是调度器内部的任务队列数据结构访问冲突加剧，导致多个CPU核心频繁互相使对方的缓存失效
+(<code>False Sharing</code>)，逼得CPU频繁去慢速内存找数据。</li>
+<li><strong>‘急脾气’任务被耽误 (调度延迟波动)：</strong>
+<code>sched:sched_stat_wait</code>
+显示实时任务的等待时间方差(<code>jitter</code>)在超负荷时变得很大，偶尔出现远超截止期限的等待峰值。<code>perf</code>
+指向调度器在重载下决策变慢，以及非实时任务过多挤占了CPU资源。</li>
+</ul></li>
+<li><strong>‘化验单’靠谱吗？ (判断数据合理性)：</strong>
+光看一次‘化验’结果不行，得判断数据靠不靠谱：
+<ul>
+<li><strong>‘对照实验’：</strong>
+我会在<strong>相同硬件、相同负载</strong>下，跑不同的调度算法配置或内核版本，用
+<code>perf</code> 收集数据对比。如果瓶颈指标（如IPC耗时、Cache
+Miss率）的变化趋势一致，且能解释性能差异（如吞吐量下降、延迟上升），数据就合理。</li>
+<li><strong>‘符合常识’：</strong> 数据要符合计算机原理。比如：
+<ul>
+<li><code>CPI</code> 不可能无限低（受限于CPU物理极限）。</li>
+<li>一个纯计算任务如果 <code>IPC</code> 很低且 <code>cache-misses</code>
+不高，那瓶颈可能在指令依赖或分支预测失败(<code>branch-misses</code>)。</li>
+<li>调度延迟不可能为0，总有个基础开销。</li>
+</ul></li>
+<li><strong>‘多指标印证’：</strong> 单一指标可能误导。比如高
+<code>%sys</code> (内核态CPU占用) 是瓶颈信号，但必须结合
+<code>perf report</code> 看具体是内核哪部分耗时。高
+<code>cache-misses</code> 是信号，但要看 <code>annotate</code>
+确认热点代码位置是否合理。</li>
+<li><strong>‘可重复性’：</strong>
+多次运行测试，关键指标（如平均延迟、最大延迟、瓶颈函数占比）的波动应在小范围内，结果要能稳定复现。</li>
+<li><strong>‘符合理论模型’ (效用边界分析)：</strong> 我们用
+<code>perf</code>
+采集的响应时间、CPU利用率等数据，输入到调度理论模型（如排队论模型）中计算‘效用边界’。如果模型预测的系统饱和点、性能拐点与
+<code>perf</code>
+观测到的实际瓶颈出现点（如IPC开销暴增、延迟突变的负载阈值）能<strong>吻合</strong>，那这些
+<code>perf</code> 数据及其揭示的瓶颈就非常可信了。</li>
+</ul></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -426,1775 +1693,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/04/oper_sys13/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/04/oper_sys13/" class="post-title-link" itemprop="url">操作系统基础 | 信号量和条件变量</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-05 05:06:20" itemprop="dateCreated datePublished" datetime="2025-07-05T05:06:20+08:00">2025-07-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-08 04:36:44" itemprop="dateModified" datetime="2025-07-08T04:36:44+08:00">2025-07-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="信号量-semaphore---停车场模型">🚦 <strong>信号量 (Semaphore) -
-停车场模型</strong></h3>
-<p><strong>口诀</strong>：<strong>“计数资源，进出加减”</strong><br />
-- 像一个停车场管理员： - <code>wait()</code> =
-抬起杆子放车进（<strong>资源-1</strong>） - <code>post()</code> =
-落下杆子放车出（<strong>资源+1</strong>） -
-<strong>核心</strong>：管<strong>数量</strong>（剩余车位）</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 超简版信号量实现（C++20标准）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;semaphore&gt;</span></span></span><br><span class="line"><span class="function">std::counting_semaphore&lt;5&gt; <span class="title">parking</span><span class="params">(<span class="number">5</span>)</span></span>; <span class="comment">// 5个车位</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">car</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    parking.<span class="built_in">acquire</span>();      <span class="comment">// 等车位（杆子抬起）</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Car &quot;</span> &lt;&lt; id &lt;&lt; <span class="string">&quot; parked\n&quot;</span>;</span><br><span class="line">    parking.<span class="built_in">release</span>();      <span class="comment">// 开走（杆子落下）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h3 id="条件变量-condition-variable---奶茶店模型">🚥 <strong>条件变量
-(Condition Variable) - 奶茶店模型</strong></h3>
-<p><strong>口诀</strong>：<strong>“条件不满足，解锁等通知”</strong><br />
-- 像奶茶店取餐： - <code>wait()</code> =
-没奶茶时<strong>放下号码牌睡觉</strong> - <code>notify()</code> =
-奶茶做好后<strong>叫号唤醒顾客</strong> -
-<strong>核心</strong>：管<strong>条件</strong>（奶茶是否做好）</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 条件变量基本结构</span></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> milktea_ready = <span class="literal">false</span>; <span class="comment">// 关键条件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 顾客线程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">customer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, []&#123; <span class="keyword">return</span> milktea_ready; &#125;); <span class="comment">// 没奶茶就睡</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Got milktea!\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 店员线程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">staff</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        milktea_ready = <span class="literal">true</span>; <span class="comment">// 奶茶做好</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_all</span>(); <span class="comment">// 大喊：奶茶好了！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h3 id="对比记忆表">🔑 <strong>对比记忆表</strong></h3>
-<table>
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 41%" />
-<col style="width: 38%" />
-</colgroup>
-<thead>
-<tr>
-<th><strong>特征</strong></th>
-<th>信号量</th>
-<th>条件变量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>核心思想</strong></td>
-<td>资源计数器（还剩几个？）</td>
-<td>条件检查（事情发生了吗？）</td>
-</tr>
-<tr>
-<td><strong>操作</strong></td>
-<td><code>wait()</code>减资源，<code>post()</code>加资源</td>
-<td><code>wait()</code>休眠，<code>notify()</code>唤醒</td>
-</tr>
-<tr>
-<td><strong>锁依赖</strong></td>
-<td>自带锁机制</td>
-<td><strong>必须搭配mutex使用</strong></td>
-</tr>
-<tr>
-<td><strong>适用场景</strong></td>
-<td>连接池/限流</td>
-<td>任务协调/事件等待</td>
-</tr>
-<tr>
-<td><strong>生活比喻</strong></td>
-<td>停车场进出系统</td>
-<td>奶茶店叫号系统</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="记忆技巧">🧠 <strong>记忆技巧</strong></h3>
-<ol type="1">
-<li><strong>信号量记数字</strong>：
-<ul>
-<li>看到“允许N个线程访问” → 选信号量</li>
-<li>代码看到<code>.acquire()/.release()</code> → 信号量</li>
-</ul></li>
-<li><strong>条件变量查状态</strong>：
-<ul>
-<li>看到“当XX发生时唤醒” → 选条件变量</li>
-<li>代码看到<code>cv.wait(锁, lambda条件)</code> → 条件变量</li>
-</ul></li>
-<li><strong>必背两句话</strong>：
-<ul>
-<li>信号量：<strong>“资源不够就阻塞，释放资源就加一”</strong></li>
-<li>条件变量：<strong>“条件不满足时解锁等待，满足时加锁执行”</strong></li>
-</ul></li>
-</ol>
-<hr />
-<h3 id="分钟实战场景">🌰 1分钟实战场景</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 场景：仅允许3个线程同时下载</span></span><br><span class="line"><span class="function">std::counting_semaphore <span class="title">down_sem</span><span class="params">(<span class="number">3</span>)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">download</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    down_sem.<span class="built_in">acquire</span>();    <span class="comment">// 占位</span></span><br><span class="line">    <span class="comment">// ...下载操作...</span></span><br><span class="line">    down_sem.<span class="built_in">release</span>();    <span class="comment">// 释放</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 场景：线程等待服务器启动</span></span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> server_ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">client</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock <span class="title">lk</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lk, []&#123; <span class="keyword">return</span> server_ready; &#125;); <span class="comment">// 等就绪</span></span><br><span class="line">    <span class="comment">// ...连接服务器...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">server</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...启动服务...</span></span><br><span class="line">    server_ready = <span class="literal">true</span>;</span><br><span class="line">    cv.<span class="built_in">notify_all</span>(); <span class="comment">// 通知所有客户端</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="用条件变量实现信号量">用条件变量实现信号量</h3>
-<p>即用条件变量（condition variable）和互斥锁（mutex）来模拟信号量的 P/V
-操作。</p>
-<p>如果多个资源场景，<strong>各线程对资源的要求条件复杂，容易发生死锁</strong>的话，建议使用条件变量的实现</p>
-<p>例如哲学家吃饭问题，每个哲学家都先拿起自己右手边的叉子，就会产生死锁，没有哲学家再能拿起左手边的叉子并吃饭。</p>
-<ul>
-<li><strong>P 操作（等待/获取资源）</strong><br />
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">P</span><span class="params">(<span class="type">sem_t</span> *sem)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">hold</span>(&amp;sem-&gt;mutex) &#123;</span><br><span class="line">        <span class="keyword">while</span> (!COND)</span><br><span class="line">            <span class="built_in">cond_wait</span>(&amp;sem-&gt;cv, &amp;sem-&gt;mutex);</span><br><span class="line">        sem-&gt;count--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>先加锁（hold mutex），保证对信号量的操作是原子的。</li>
-<li>如果条件不满足（如 count &lt;=
-0），就用条件变量等待（cond_wait），并自动释放 mutex，直到被唤醒。</li>
-<li>被唤醒后再次加锁，检查条件，满足则 count--，表示获取一个资源。</li>
-</ul></li>
-<li><strong>V 操作（释放/归还资源）</strong><br />
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">V</span><span class="params">(<span class="type">sem_t</span> *sem)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">hold</span>(&amp;sem-&gt;mutex) &#123;</span><br><span class="line">        sem-&gt;count++;</span><br><span class="line">        <span class="built_in">cond_broadcast</span>(&amp;sem-&gt;cv);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>加锁，count++，表示释放一个资源。</li>
-<li>用条件变量唤醒所有等待线程（cond_broadcast）。</li>
-</ul></li>
-</ul>
-<h3 id="用信号量实现条件变量">用信号量实现条件变量</h3>
-<p>用信号量实现条件变量的 wait/broadcast 操作：</p>
-<p><strong>1. <code>wait</code> 函数</strong></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">wait</span><span class="params">(<span class="keyword">struct</span> condvar *cv, <span class="type">mutex_t</span> *mutex)</span> &#123;</span><br><span class="line">    mutex_lock(&amp;cv-&gt;lock);</span><br><span class="line">    cv-&gt;nwait++;</span><br><span class="line">    mutex_unlock(&amp;cv-&gt;lock);</span><br><span class="line"></span><br><span class="line">    mutex_unlock(mutex);</span><br><span class="line">    P(&amp;cv-&gt;sleep);</span><br><span class="line">    mutex_lock(mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>cv-&gt;nwait++</code>：记录当前有多少线程在等待条件变量（进入等待队列）。</li>
-<li><code>mutex_unlock(mutex)</code>：释放主互斥锁，允许其他线程进入临界区修改条件。</li>
-<li><code>P(&amp;cv-&gt;sleep)</code>：在信号量 sleep
-上等待（阻塞），直到被唤醒。</li>
-<li><code>mutex_lock(mutex)</code>：被唤醒后，重新获得主互斥锁，继续执行。</li>
-</ul>
-<p><strong>2. <code>broadcast</code> 函数</strong></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">broadcast</span><span class="params">(<span class="keyword">struct</span> condvar *cv)</span> &#123;</span><br><span class="line">    mutex_lock(&amp;cv-&gt;lock);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cv-&gt;nwait; i++) &#123;</span><br><span class="line">        V(&amp;cv-&gt;sleep);</span><br><span class="line">    &#125;</span><br><span class="line">    cv-&gt;nwait = <span class="number">0</span>;</span><br><span class="line">    mutex_unlock(&amp;cv-&gt;lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>mutex_lock(&amp;cv-&gt;lock)</code>：保护 nwait
-变量，防止并发修改。</li>
-<li><code>for (int i = 0; i &lt; cv-&gt;nwait; i++) V(&amp;cv-&gt;sleep);</code>：唤醒所有等待的线程（每个线程对应一次
-V 操作）。</li>
-<li><code>cv-&gt;nwait = 0;</code>：重置等待计数。</li>
-<li><code>mutex_unlock(&amp;cv-&gt;lock)</code>：释放锁。</li>
-</ul>
-<h4 id="信号量实现条件变量出现的问题">信号量实现条件变量出现的问题</h4>
-<ul>
-<li>线程T2调用wait()，此时已经把自己标记为等待（nwait++），但还没真正阻塞（还没执行P）。</li>
-<li>这时，因为其它线程的操作，另一个线程T1调用broadcast()，唤醒了所有等待线程（V操作），并继续执行。</li>
-<li>此时nwait已经归零，T2就会睡死</li>
-</ul>
-<p>从理论上来说，我们希望<code>nwait++</code>,
-<code>mutex_unlock</code>和P操作是原子性的，并且<code>mutex_unlock</code>和P操作不可以互换位置（会在睡时一直持有锁，死锁了），但是实际上我们需要操作系统用类似条件变量的机制帮我们实现wait和release的原子性，这样就套娃了</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/03/kamabagu4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/kamabagu4/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP版本</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-04 08:06:11" itemprop="dateCreated datePublished" datetime="2025-07-04T08:06:11+08:00">2025-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-27 04:18:53" itemprop="dateModified" datetime="2025-07-27T04:18:53+08:00">2025-07-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="http1.0和http1.1的区别">HTTP1.0和HTTP1.1的区别</h3>
-<p><strong>🚗 连接方式：从“一次一请”到“多次复用”</strong> * <strong>HTTP
-1.0：</strong>
-<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。
-* <strong>HTTP 1.1：</strong>
-<strong>默认持久连接</strong>。浏览器和服务器建立一个TCP连接后，可以在这个连接上<strong>连续发送多个请求和接收多个响应</strong>通过Connection:
-keep-alive头来实现持久连接。</p>
-<p><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong> * <strong>HTTP
-1.0：</strong>
-请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。
-* <strong>HTTP 1.1：</strong>
-<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</p>
-<p><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong> *
-<strong>HTTP 1.0：</strong>
-客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。
-* <strong>HTTP 1.1：</strong>
-支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></p>
-<p><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong> * <strong>HTTP
-1.0：</strong>
-主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。
-* <strong>HTTP 1.1：</strong>
-引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public``private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></p>
-<p><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong> * <strong>HTTP
-1.0：</strong>
-如果下载大文件中断，<strong>必须从头开始重新下载</strong>。 *
-<strong>HTTP 1.1：</strong>
-支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</p>
-<p><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong> * <strong>HTTP
-1.0：</strong>
-服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。
-* <strong>HTTP 1.1：</strong>
-引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></p>
-<p><strong>📝 错误处理：从“模糊”到“更明确”</strong> * <strong>HTTP
-1.1：</strong> 新增了一些状态码，提供更精确的错误信息： *
-<code>409 Conflict</code>：请求与服务器当前状态冲突。 *
-<code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。
-*
-<code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。
-* <strong>响应格式：</strong> HTTP 1.1
-要求响应行中必须包含<strong>原因短语</strong>（如
-<code>HTTP/1.1 200 OK</code>），而 1.0
-只要求状态码是可选的（虽然实践中通常都有）。</p>
-<h3 id="http2.0与http1.1的区别">HTTP2.0与HTTP1.1的区别？</h3>
-<blockquote>
-<p><strong>一句话记忆：HTTP/2 = 更快、更智能、更省资源！</strong></p>
-</blockquote>
-<h4 id="传输方式从文本排队到二进制分帧">1️⃣
-<strong>传输方式：从“文本排队”到“二进制分帧”</strong></h4>
-<ul>
-<li><strong>HTTP/1.1：</strong>
-<ul>
-<li>用<strong>纯文本格式</strong>发送请求和响应（比如
-<code>GET /index.html HTTP/1.1</code>）。<br />
-</li>
-<li>多个请求必须<strong>排队串行处理</strong>（即使开了管道化也有队头阻塞问题）。<br />
-</li>
-<li><strong>想象：</strong>
-邮局用明信片寄信，一次只能寄一张，必须等回信才能寄下一张，效率低。✉️➡️✉️➡️✉️</li>
-</ul></li>
-<li><strong>HTTP/2：</strong>
-<ul>
-<li>将数据拆分成更小的<strong>二进制帧（Frame）</strong>（头部帧 HEADERS
-+ 数据帧 DATA）。<br />
-</li>
-<li>同一个连接上，<strong>多个请求/响应的帧可以混合发送、并行传输</strong>，互不阻塞！<br />
-</li>
-<li><strong>想象：</strong>
-快递公司把包裹拆成小件，打上标签，通过立体分拣通道同时运输，到目的地再组装。📦📦📦
-→ 🚚💨</li>
-</ul></li>
-</ul>
-<p>👉
-<strong>核心价值：彻底解决队头阻塞，大幅提升并发效率！</strong></p>
-<h4 id="连接方式从多路排队到真多路复用">2️⃣
-<strong>连接方式：从“多路排队”到“真·多路复用”</strong></h4>
-<ul>
-<li><strong>HTTP/1.1：</strong>
-<ul>
-<li>虽然支持持久连接（一个TCP连多个请求），但<strong>响应必须按顺序返回</strong>（队头阻塞）。<br />
-</li>
-<li>浏览器通常开 <strong>6~8个TCP连接</strong>
-并行请求资源（但占用资源多）。</li>
-</ul></li>
-<li><strong>HTTP/2：</strong>
-<ul>
-<li><strong>一个TCP连接</strong> 上即可实现
-<strong>成百上千个流的并行传输</strong>（每个流是一个请求/响应）。<br />
-</li>
-<li>帧自带流ID标识，接收方能按ID重组数据，无需排队等待！<br />
-</li>
-<li><strong>想象：</strong> 从多条乡间小路 →
-升级成一条双向十车道高速路，所有车辆（请求）畅通无阻。🛣️🚗🚙🚕</li>
-</ul></li>
-</ul>
-<p>👉
-<strong>核心价值：一个连接解决所有请求，省资源、低延迟！</strong></p>
-<h4 id="头部信息从重复臃肿到高效压缩">3️⃣
-<strong>头部信息：从“重复臃肿”到“高效压缩”</strong></h4>
-<ul>
-<li><strong>HTTP/1.1：</strong>
-<ul>
-<li>每次请求都携带大量<strong>重复的文本头部</strong>（如Cookie、User-Agent），不压缩。<br />
-</li>
-<li><strong>浪费带宽</strong>（尤其小文件请求时，头部可能比数据还大）。</li>
-</ul></li>
-<li><strong>HTTP/2：</strong>
-<ul>
-<li>使用 <strong>HPACK 算法压缩头部</strong>：
-<ul>
-<li>客户端和服务端维护<strong>“头部字典”</strong>，相同头部只传索引；<br />
-</li>
-<li>用霍夫曼编码压缩文本。<br />
-</li>
-</ul></li>
-<li><strong>头部大小减少 30%~90%</strong>！<br />
-</li>
-<li><strong>想象：</strong> 从每次寄信都手写完整地址 →
-改用电子二维码扫码寄件，地址库自动匹配。📮→📲</li>
-</ul></li>
-</ul>
-<p>👉 <strong>核心价值：大幅节省带宽，加快小资源加载！</strong></p>
-<h4 id="服务器主动推送从被动响应到主动送货">4️⃣
-<strong>服务器主动推送：从“被动响应”到“主动送货”</strong></h4>
-<ul>
-<li><strong>HTTP/1.1：</strong>
-<ul>
-<li>服务器<strong>只能被动响应</strong>客户端请求。<br />
-</li>
-<li>浏览器需解析HTML后，再请求CSS/JS/图片等依赖资源。</li>
-</ul></li>
-<li><strong>HTTP/2：</strong>
-<ul>
-<li>服务器可<strong>主动推送</strong>客户端可能需要的资源（如CSS/JS）！<br />
-</li>
-<li>客户端可缓存推送内容，下次直接使用。<br />
-</li>
-<li><strong>想象：</strong>
-点外卖时，商家不仅送米饭，还主动附赠了筷子和纸巾（你知道你一定会需要）。🍚+🥢+🧻</li>
-</ul></li>
-</ul>
-<p>👉 <strong>核心价值：减少请求往返次数，加速页面渲染！</strong></p>
-<h4 id="优先级与流量控制更智能的资源调度">5️⃣
-<strong>优先级与流量控制：更智能的资源调度</strong></h4>
-<ul>
-<li><strong>HTTP/2：</strong>
-<ul>
-<li>客户端可为请求标记<strong>优先级</strong>（如CSS &gt;
-图片），服务器优先处理高优先级流。<br />
-</li>
-<li>支持精细的<strong>流量控制</strong>（基于每个流控制传输速率）。<br />
-</li>
-</ul></li>
-<li><strong>HTTP/1.1：</strong>
-无法真正实现优先级调度（依赖浏览器启发式策略）。</li>
-</ul>
-<h4 id="注意">⚠️ 注意：</h4>
-<ol type="1">
-<li>HTTP/2 <strong>未加密</strong>，但所有主流浏览器只支持
-<strong>HTTP/2 Over TLS</strong>（即 HTTPS）。<br />
-</li>
-<li>HTTP/2 解决了应用层队头阻塞，但 <strong>TCP
-层仍有队头阻塞</strong>（丢包会阻塞所有流）。<br />
-</li>
-<li>这是 HTTP/3（基于QUIC/UDP）要解决的下一代问题！</li>
-</ol>
-<h3 id="http3.0有了解过吗">HTTP3.0有了解过吗？</h3>
-<p>🚀 <strong>核心一句话：HTTP/3 = 抛弃TCP！拥抱QUIC！</strong> &gt;
-<strong>解决 HTTP/2 的终极痛点：TCP 的队头阻塞！</strong></p>
-<h4 id="底层协议革命从-tcp-到-quic基于udp">1️⃣ <strong>底层协议革命：从
-TCP 到 QUIC（基于UDP）</strong></h4>
-<ul>
-<li><strong>HTTP/1.1 &amp; HTTP/2：</strong> 都跑在 <strong>TCP</strong>
-协议之上。
-<ul>
-<li><strong>TCP 问题：</strong>
-如果传输中<strong>丢了一个包</strong>，后续所有包都要等待重传（即使它们属于不同请求），这就是
-<strong>TCP 队头阻塞</strong>。<br />
-</li>
-<li><strong>想象：</strong>
-快递车队走一条单行道，前一辆车抛锚，后面所有车都得堵着等（无论是不是同一批货物）。🚚❌🚛🚗🚐<br />
-</li>
-</ul></li>
-<li><strong>HTTP/3：</strong> 彻底抛弃 TCP，改用全新协议
-<strong>QUIC（Quick UDP Internet Connections）</strong>，运行在
-<strong>UDP</strong> 之上。
-<ul>
-<li><strong>QUIC 优势：</strong>
-每个请求/响应流是<strong>独立传输的</strong>，丢包只影响当前流，其他流畅通无阻！<br />
-</li>
-<li><strong>想象：</strong>
-快递改用无人机配送，每件包裹独立飞行路线，一个包裹出问题，其他包裹照常送达。✈️📦➡️🏠
-| ✈️📦➡️🏠 | 💥📦❌ | ✈️📦➡️🏠<br />
-👉
-<strong>核心价值：彻底消灭传输层队头阻塞，网络波动时性能大幅提升！</strong></li>
-</ul></li>
-</ul>
-<h4 id="建连速度飞跃0-rtt-与-1-rtt-握手">2️⃣ <strong>建连速度飞跃：0-RTT
-与 1-RTT 握手</strong></h4>
-<ul>
-<li><strong>HTTP/1.1 &amp; HTTP/2（TCP+TLS）：</strong>
-<ul>
-<li>首次连接需 <strong>TCP 三次握手（1.5 RTT） + TLS 握手（1~2 RTT） =
-总计 2~3.5 RTT</strong> 延迟才能发送数据。<br />
-</li>
-</ul></li>
-<li><strong>HTTP/3（QUIC）：</strong>
-<ul>
-<li><strong>首次连接：1-RTT 握手</strong>（QUIC
-将传输和加密握手合并）。<br />
-</li>
-<li><strong>重连用户：0-RTT
-握手</strong>！客户端缓存了服务器密钥，首次请求可直接带上加密数据。<br />
-</li>
-<li><strong>想象：</strong>
-进地铁站——旧方式：先排队买票（TCP握手），再安检（TLS握手）；新方式：刷脸直接进（0-RTT）！🎫→🛂→🚇
-→ 😃🔜🚇<br />
-👉 <strong>核心价值：首次访问更快，重复访问“闪电启动”！</strong></li>
-</ul></li>
-</ul>
-<h4 id="连接迁移网络切换不断线">3️⃣
-<strong>连接迁移：网络切换不断线</strong></h4>
-<ul>
-<li><strong>HTTP/1.1 &amp; HTTP/2：</strong>
-<ul>
-<li>连接绑定 <strong>IP + 端口 +
-TCP协议</strong>。切换网络（如WiFi→4G）会导致IP变化，连接必须重建！<br />
-</li>
-</ul></li>
-<li><strong>HTTP/3（QUIC）：</strong>
-<ul>
-<li>使用 <strong>连接ID（Connection ID）</strong> 唯一标识连接。<br />
-</li>
-<li>切换网络时，只要客户端能通信，连接ID不变，会话无缝延续！<br />
-</li>
-<li><strong>想象：</strong>
-旧手机卡换手机要重新插卡激活；eSIM卡换手机自动联网，号码不变。📱➡️📱 =
-❌ vs 📱➡️📱 = ✅<br />
-👉
-<strong>核心价值：移动端福音！地铁进隧道、WiFi切5G，视频会议不中断！</strong></li>
-</ul></li>
-</ul>
-<h4 id="内嵌加密安全是强制要求">4️⃣
-<strong>内嵌加密：安全是强制要求</strong></h4>
-<ul>
-<li><strong>QUIC 协议设计之初就强制加密</strong>（使用 TLS 1.3）。<br />
-</li>
-<li><strong>没有明文的 QUIC！</strong> 所有头部和载荷默认加密。<br />
-</li>
-<li><strong>对比：</strong> HTTP/2
-的加密（HTTPS）是可选但事实强制，HTTP/3 直接内嵌到协议层。<br />
-👉
-<strong>核心价值：提升安全性，防止运营商劫持、降低中间设备干扰。</strong></li>
-</ul>
-<h4 id="改进的多路复用-头部压缩">5️⃣ <strong>改进的多路复用 &amp;
-头部压缩</strong></h4>
-<ul>
-<li><strong>多路复用：</strong> 继承 HTTP/2
-的流多路复用（一个连接并发多个流），且由于基于
-QUIC，<strong>无队头阻塞</strong>。<br />
-</li>
-<li><strong>头部压缩：</strong> 升级为 <strong>QPACK</strong> 算法（类似
-HTTP/2 的 HPACK，但适应 QUIC 乱序特性）。<br />
-👉 <strong>核心价值：在 HTTP/2 高效基础上，更稳定！</strong></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/29/kamacode30/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/29/kamacode30/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划3</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-30 06:25:40" itemprop="dateCreated datePublished" datetime="2025-06-30T06:25:40+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-02 09:08:29" itemprop="dateModified" datetime="2025-07-02T09:08:29+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="分割等和子集">416. 分割等和子集</h3>
-<p><strong>动态规划的正确性</strong>： -
-每次迭代考虑一个新物品的所有可能组合 -
-在使用一维dp数组时，倒序遍历保证状态转移只依赖<strong>上一轮</strong>结果</p>
-<p>原始思路主要问题： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="type">int</span> cnt = target;</span><br><span class="line"><span class="keyword">for</span> (遍历每个数字) &#123;</span><br><span class="line">    <span class="keyword">if</span> (cnt &gt;= 当前数字) cnt -= 当前数字; <span class="comment">// 强制选择</span></span><br><span class="line">    <span class="keyword">if</span> (dp[cnt]) ... <span class="comment">// 但dp从未更新！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<strong>贪心选择错误</strong>：强制按顺序选择数字，不能处理非连续选择
-也可以使用布尔值判断： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">canPartition</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> eq = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n : nums)&#123;</span><br><span class="line">            eq += n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(eq % <span class="number">2</span> == <span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            eq = eq / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(eq+<span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="type">int</span> cnt = eq;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n : nums)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> e = eq; e&gt;=n; e--)&#123;</span><br><span class="line">                <span class="keyword">if</span>(dp[e - n])&#123;</span><br><span class="line">                    dp[e] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(dp[eq])<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/28/oper_sys12/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/28/oper_sys12/" class="post-title-link" itemprop="url">操作系统基础 | 3.3 系统调用实现</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-29 04:36:58 / 修改时间：23:54:21" itemprop="dateCreated datePublished" datetime="2025-06-29T04:36:58+08:00">2025-06-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="uapi-文件位置">UAPI 文件位置</h3>
-<p><strong>问题背景：</strong><br />
-内核头文件中，内联函数往往需要引用其他头文件的结构体或常量，但这些头文件之间又存在相互依赖，导致无法直接引用，只能用
-#define 代替，降低了代码质量。</p>
-<p><strong>解决方案：</strong><br />
-David 提出将内核头文件中的用户空间 API
-内容（即用户空间可见的定义）拆分到新的 uapi/
-子目录下的对应头文件中。这样做有以下好处：</p>
-<ul>
-<li>简化内核专用头文件，减少体积。</li>
-<li>明确区分用户空间与内核空间的 API，减少头文件间复杂的相互依赖。</li>
-<li>便于追踪用户空间 API 的变更，方便 C
-库维护者、脚本语言绑定、测试、文档等相关项目。</li>
-</ul>
-<p><strong>拆分方法：</strong><br />
-一般头文件结构如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 头部注释 */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> _XXXXXX_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _XXXXXX_H</span></span><br><span class="line"></span><br><span class="line">[用户空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __KERNEL__</span></span><br><span class="line"></span><br><span class="line">[内核空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* __KERNEL__ */</span></span></span><br><span class="line"></span><br><span class="line">[用户空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* _XXXXXX_H */</span></span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>所有未被 <code>#ifdef __KERNEL__</code> 包裹的内容，移动到 uapi/
-目录下的新头文件。</li>
-<li><code>#ifdef __KERNEL__</code> 内的内容保留在原头文件，但移除
-<code>#ifdef</code> 和 <code>#endif</code>。</li>
-<li>头部注释保留并复制到新文件。</li>
-<li>原头文件需添加
-<code>#include &lt;include/uapi/path/to/header.h&gt;</code>，放在已有
-<code>#include</code> 之后。</li>
-<li>若原文件没有 <code>#ifdef __KERNEL__</code>，则直接重命名为 uapi/
-文件。</li>
-</ul>
-<h4 id="技术实现要点">技术实现要点</h4>
-<ul>
-<li><strong>头文件结构调整</strong>：将所有未被
-<code>#ifdef __KERNEL__</code> 包裹的内容迁移到 <code>uapi/</code>
-目录下的新头文件，原文件只保留内核专用部分，并通过 <code>#include</code>
-引用新的 uapi 头文件。</li>
-<li><strong>自动化脚本辅助</strong>：由于头文件风格多样，David Howell
-编写了大量 shell/Perl
-脚本自动完成拆分，并对特殊情况通过预处理标记进行“辅导”。</li>
-<li><strong>兼容性与构建保证</strong>：拆分后，内核和用户空间的构建流程保持兼容，确保包含关系和功能不变。</li>
-</ul>
-<h4 id="社区讨论与挑战">社区讨论与挑战</h4>
-<ul>
-<li><strong>大规模变更的审查难题</strong>：一次性修改数千文件、数十万行代码，难以人工逐行审查。社区建议主要审查思路和脚本实现，并通过自动化构建和对比二进制产物来验证正确性。</li>
-<li><strong>头文件包含路径的争议</strong>：有开发者质疑 uapi
-头文件是否应包含内核头文件，实际实现中为兼容性和构建需要，uapi
-头文件在内核构建时会包含内核头文件，但用户空间只见到 uapi 头文件。</li>
-<li><strong>隐式依赖与编译优化</strong>：有建议借此机会清理隐式包含、优化编译速度，但这属于更大范围的重构，超出了本次拆分的目标。</li>
-<li><strong>自动化工具的局限</strong>：与 Java 等语言不同，C
-语言的预处理器和头文件机制更为复杂，自动化脚本难以覆盖所有边界情况，仍需人工干预和后续维护。</li>
-</ul>
-<h3 id="系统调用源码指引以-arm-架构为例">系统调用源码指引（以 ARM
-架构为例）</h3>
-<p>系统调用的实现高度依赖于具体架构，包括调用方式和可用的系统调用种类。以下是
-ARM 架构下与系统调用密切相关的核心源码文件：</p>
-<ul>
-<li><p><strong>include/linux/syscalls.h</strong><br />
-提供所有内核系统调用的架构无关的前向声明。该文件定义了内核内部调用系统调用函数的接口。</p></li>
-<li><p><strong>arch/arm/include/uapi/asm/unistd.h</strong><br />
-定义了 ARM 架构下系统调用号的相关内容。</p></li>
-<li><p><strong>arch/arm/kernel/entry-common.S</strong><br />
-提供 ARM 架构下系统调用的入口汇编实现。</p></li>
-<li><p><strong>arch/arm/tools/syscall.tbl</strong><br />
-负责将系统调用号及其对应的函数地址注册到 ARM
-硬件的系统调用表中。</p></li>
-</ul>
-<p>此外，以下文件虽然与系统调用无关，但涉及系统启动（这是内核执行的另一种方式）：</p>
-<ul>
-<li><p><strong>init 目录</strong><br />
-包含内核初始化相关代码。</p></li>
-<li><p><strong>init/main.c</strong><br />
-提供了 <code>start_kernel</code> 函数，这是 Linux 内核启动后执行的第一个
-C
-语言函数，且一旦调用永不返回。在此之前，内核仅通过架构相关的汇编代码和固件运行。<br />
-（参考：《Linux 设备驱动》第16章对 main.c 和 start_kernel
-的介绍）</p></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/27/oper_sys11/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/oper_sys11/" class="post-title-link" itemprop="url">操作系统基础 | 3.2 系统调用实现</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-28 07:22:48 / 修改时间：07:39:30" itemprop="dateCreated datePublished" datetime="2025-06-28T07:22:48+08:00">2025-06-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="系统调用的实现">系统调用的实现</h2>
-<p>在 Linux 中，实际实现一个系统调用时，不需要关心系统调用处理器（system
-call handler）的具体行为。因此，向 Linux
-添加一个新的系统调用相对容易。难点在于设计和实现系统调用本身，而将其注册到内核则很简单。下面是编写新系统调用的主要步骤。</p>
-<h3 id="实现系统调用的步骤">实现系统调用的步骤</h3>
-<ol type="1">
-<li><p><strong>明确目的</strong><br />
-首先要定义系统调用的用途。系统调用应该只做一件事。Linux
-不鼓励“多路复用”系统调用（即通过一个参数让同一个系统调用做完全不同的事情），如
-ioctl() 就是反面教材。</p></li>
-<li><p><strong>参数、返回值和错误码设计</strong><br />
-系统调用应有简洁、清晰的接口，参数数量应尽量少。其语义和行为必须稳定，不能随意更改，因为已有应用会依赖这些行为。要有前瞻性，考虑未来是否需要扩展功能，是否能在不破坏兼容性的前提下修复
-bug。很多系统调用会设计一个 flag
-参数，用于将来扩展功能（不是用来多路复用行为，而是为了兼容性和可扩展性）。</p></li>
-<li><p><strong>接口设计要通用、可移植</strong><br />
-不要让接口过于局限当前用途。系统调用的用途可能会变化，但其本质目的应保持不变。要考虑可移植性，不要假设特定架构的字长或字节序。Unix
-的设计哲学是“提供机制，不规定策略”。</p></li>
-<li><p><strong>关注可移植性和健壮性</strong><br />
-编写系统调用时要考虑未来的可移植性和健壮性。Unix
-的基本系统调用经受住了时间考验，几十年后依然适用。</p></li>
-</ol>
-<hr />
-<h3 id="参数校验">参数校验</h3>
-<p>系统调用必须<strong>严格校验所有参数</strong>，确保其有效和合法。系统调用在内核空间运行，如果用户能随意传递无效参数，系统的安全和稳定性会受到威胁。</p>
-<ul>
-<li><p>例如，文件 I/O
-系统调用要检查文件描述符是否有效；进程相关函数要检查 PID
-是否有效。每个参数都要验证其正确性，防止进程请求访问其无权访问的资源。</p></li>
-<li><p><strong>指针参数的校验尤为重要</strong>。如果进程能传递任意指针给内核，可能会让内核访问本不该访问的数据（如其他进程的数据或内核空间数据）。因此，在内核跟随用户空间指针前，必须确保：</p>
-<ol type="1">
-<li>指针指向用户空间内存，不能让进程让内核访问内核空间。</li>
-<li>指针指向的是本进程的地址空间，不能访问其他进程的数据。</li>
-<li>读操作时内存必须可读，写操作时必须可写，执行操作时必须可执行，不能绕过内存访问权限。</li>
-</ol></li>
-<li><p>内核提供了两种方法来进行这些检查和数据拷贝，<strong>内核代码绝不能直接跟随用户空间指针</strong>，必须使用以下两种方法之一：</p>
-<ul>
-<li><code>copy_to_user()</code>：用于将数据从内核空间写入用户空间。参数分别为用户空间目标地址、内核空间源地址、拷贝字节数。</li>
-<li><code>copy_from_user()</code>：用于从用户空间读取数据到内核空间。参数分别为内核空间目标地址、用户空间源地址、拷贝字节数。</li>
-</ul></li>
-<li><p>这两个函数在出错时返回未拷贝的字节数，成功时返回
-0。系统调用遇到这种错误时，通常返回 <code>-EFAULT</code>。</p></li>
-</ul>
-<p>下面以一个简单的系统调用 <code>silly_copy()</code>
-为例，说明如何在内核中安全地从用户空间读取和写入数据。这个系统调用的功能是：将用户空间
-<code>src</code> 指向的数据拷贝到
-<code>dst</code>，中间通过内核缓冲区作为中转。虽然实际用途不大，但有助于理解
-<code>copy_from_user()</code> 和 <code>copy_to_user()</code>
-的用法。</p>
-<p><strong>核心代码片段：</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE3(silly_copy,</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *, src, </span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *, dst, </span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> len)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> buf;</span><br><span class="line">    <span class="comment">// 从用户空间 src 拷贝 len 字节到内核缓冲区 buf</span></span><br><span class="line">    <span class="keyword">if</span> (copy_from_user(&amp;buf, src, len))</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    <span class="comment">// 从内核缓冲区 buf 拷贝 len 字节到用户空间 dst</span></span><br><span class="line">    <span class="keyword">if</span> (copy_to_user(dst, &amp;buf, len))</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    <span class="comment">// 返回拷贝的字节数</span></span><br><span class="line">    <span class="keyword">return</span> len;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> -
-<code>copy_from_user()</code>：将用户空间数据拷贝到内核空间，失败时返回未拷贝的字节数，成功返回0。
--
-<code>copy_to_user()</code>：将内核空间数据拷贝到用户空间，失败时返回未拷贝的字节数，成功返回0。
-- 如果拷贝失败，系统调用返回 <code>-EFAULT</code>。</p>
-<p><strong>注意：</strong><br />
-这两个函数在数据页不在物理内存时可能会阻塞（如数据被换出到磁盘），此时进程会休眠直到页面被调入内存。</p>
-<h3 id="权限检查与能力机制">权限检查与能力机制</h3>
-<p>在早期 Linux 版本中，系统调用如果需要超级用户权限，会用
-<code>suser()</code> 检查是否为 root。现在，Linux
-使用更细粒度的“能力（capabilities）”机制。通过 <code>capable()</code>
-函数检查调用进程是否拥有某项能力。例如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!capable(CAP_SYS_BOOT))</span><br><span class="line">    <span class="keyword">return</span> -EPERM;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>capable(CAP_SYS_BOOT)</code>
-检查调用者是否有重启系统的权限（CAP_SYS_BOOT）。</li>
-<li>超级用户（root）默认拥有所有能力，普通用户默认没有。</li>
-</ul>
-<p><strong>reboot() 系统调用部分实现：</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE4(reboot, <span class="type">int</span> magic1, <span class="type">int</span> magic2, <span class="type">unsigned</span> <span class="type">int</span> cmd, <span class="type">void</span> __user *, arg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">256</span>];</span><br><span class="line">    <span class="comment">// 只允许超级用户重启系统</span></span><br><span class="line">    <span class="keyword">if</span> (!capable(CAP_SYS_BOOT))</span><br><span class="line">        <span class="keyword">return</span> -EPERM;</span><br><span class="line">    <span class="comment">// 检查 magic 参数，防止误操作</span></span><br><span class="line">    <span class="keyword">if</span> (magic1 != LINUX_REBOOT_MAGIC1 ||</span><br><span class="line">        (magic2 != LINUX_REBOOT_MAGIC2 &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2A &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2B &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2C))</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    <span class="comment">// ... 省略后续命令处理 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> -
-首先检查权限，只有拥有 CAP_SYS_BOOT 能力的进程才能重启系统。 - 然后检查
-magic 参数，只有传入特定的“魔数”才允许执行，防止误操作。</p>
-<p><strong>能力列表</strong>可参考
-<code>&lt;linux/capability.h&gt;</code>，每种能力对应不同的系统资源访问权限。</p>
-<h3 id="系统调用上下文system-call-context">系统调用上下文（System Call
-Context）</h3>
-<p>如第3章所述，<strong>在执行系统调用期间，内核处于进程上下文（process
-context）</strong>。此时，<code>current</code>
-指针指向当前任务（即发起系统调用的进程）。</p>
-<ul>
-<li>在进程上下文中，内核<strong>可以休眠</strong>（比如系统调用阻塞或显式调用
-<code>schedule()</code>），并且是<strong>完全可抢占的</strong>。
-<ul>
-<li>能够休眠意味着系统调用可以使用大部分内核功能，这极大简化了内核编程（相比中断处理程序，中断处理程序不能休眠，功能受限）。</li>
-<li>可抢占意味着当前任务可能被其他任务抢占，新的任务可能会执行同一个系统调用，因此系统调用实现必须<strong>可重入</strong>，这和多核并发下的同步问题类似。</li>
-</ul></li>
-</ul>
-<p>当系统调用返回时，控制权回到
-<code>system_call()</code>，最终切换回用户空间，继续执行用户进程。</p>
-<h3 id="系统调用注册的最后步骤">系统调用注册的最后步骤</h3>
-<p>系统调用代码写好后，将其注册为正式系统调用的过程很简单：</p>
-<ol type="1">
-<li><strong>在系统调用表中添加条目</strong>
-<ul>
-<li>对于每个支持该系统调用的架构，都要在系统调用表（如
-entry.S）末尾添加一项。表中每一项的位置（从0开始）就是系统调用号。例如，第10项的系统调用号是9。</li>
-<li>表示例（部分）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ENTRY(sys_call_table)</span><br><span class="line">.long sys_restart_syscall    /* 0 */</span><br><span class="line">.long sys_exit</span><br><span class="line">.long sys_fork</span><br><span class="line">.long sys_read</span><br><span class="line">.long sys_write</span><br><span class="line">.long sys_open              /* 5 */</span><br><span class="line">...</span><br><span class="line">.long sys_foo               /* 新增的系统调用 */</span><br></pre></td></tr></table></figure></li>
-<li>新系统调用自动获得下一个可用的系统调用号（如338）。</li>
-</ul></li>
-<li><strong>在 &lt;asm/unistd.h&gt; 中定义系统调用号</strong>
-<ul>
-<li>每个架构都要在对应的 <code>&lt;asm/unistd.h&gt;</code>
-文件中添加宏定义。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_foo 338</span></span><br></pre></td></tr></table></figure></li>
-</ul></li>
-<li><strong>将系统调用编译进内核镜像</strong>
-<ul>
-<li>系统调用必须编译进核心内核镜像（不能作为模块）。通常把实现代码放在
-kernel/ 目录下相关的文件中，比如 sys.c。如果和调度相关，可以放在
-kernel/sched.c。</li>
-</ul></li>
-</ol>
-<p><strong>示例：实现 foo() 系统调用</strong></p>
-<ul>
-<li>在 kernel/sys.c 中实现： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/page.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * sys_foo – 返回每个进程的内核栈大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_foo</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> THREAD_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>编译并启动新内核后，用户空间即可通过系统调用号调用 foo()。</li>
-</ul>
-<h3 id="用户空间访问系统调用">用户空间访问系统调用</h3>
-<p>通常，C 标准库（如
-glibc）会为系统调用提供支持。用户程序只需包含标准头文件并链接 C
-库，就可以直接调用系统调用（或调用库函数间接使用系统调用）。但如果你刚刚实现了一个新的系统调用，glibc
-很可能还没有为它提供支持！</p>
-<p>幸运的是，Linux
-提供了一组宏来帮助用户空间访问系统调用。这些宏会设置好寄存器内容并发出陷阱指令。宏的名字为
-<code>_syscalln()</code>，其中 n 取 0 到
-6，表示系统调用参数的个数。宏需要知道参数个数，以便正确地将参数压入寄存器。</p>
-<p>例如，open() 系统调用的原型为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *filename, <span class="type">int</span> flags, <span class="type">int</span> mode)</span></span><br></pre></td></tr></table></figure>
-如果没有库支持，可以这样使用宏： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_open 5</span></span><br><span class="line">_syscall3(<span class="type">long</span>, open, <span class="type">const</span> <span class="type">char</span> *, filename, <span class="type">int</span>, flags, <span class="type">int</span>, mode)</span><br></pre></td></tr></table></figure>
-这样，应用程序就可以直接调用 open() 了。</p>
-<p>每个宏的参数为 2 + 2 ×
-n：第一个参数是返回类型，第二个是系统调用名，后面依次是每个参数的类型和名字。<code>__NR_open</code>
-定义在
-<code>&lt;asm/unistd.h&gt;</code>，表示系统调用号。<code>_syscall3</code>
-宏会展开为带有内联汇编的 C
-函数，自动完成系统调用号和参数的传递，并发出软中断进入内核。只需在应用中写这个宏，就能直接使用
-open() 系统调用。</p>
-<p><strong>示例：用户空间调用自定义 foo() 系统调用</strong>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_foo 283</span></span><br><span class="line">_syscall0(<span class="type">long</span>, foo)</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">long</span> stack_size;</span><br><span class="line">    stack_size = foo();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The kernel stack size is %ld\n&quot;</span>, stack_size);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3
-id="为什么不建议随意实现新系统调用">为什么不建议随意实现新系统调用</h3>
-<p>虽然实现新系统调用很容易，但这并不意味着你应该随意添加。实际上，添加新系统调用要非常谨慎。很多情况下，有更合适的替代方案。</p>
-<p><strong>实现新系统调用的优点：</strong> - 实现简单，使用方便。 - 在
-Linux 上系统调用性能很高。</p>
-<p><strong>缺点：</strong> - 需要分配一个系统调用号，必须官方分配。 -
-一旦进入稳定内核版本，接口就不能随意更改，否则会破坏用户空间应用的兼容性。
-- 每个架构都要单独注册和支持该系统调用。 -
-系统调用不能直接被脚本调用，也不能直接通过文件系统访问。 -
-需要分配系统调用号，难以在主线内核树之外维护和使用。 -
-对于简单信息交换，系统调用显得过于繁重。</p>
-<p><strong>常见替代方案：</strong> - 实现一个设备节点，通过
-read()/write() 进行数据交换，使用 ioctl() 操作特定设置或获取信息。 -
-某些接口（如信号量）可以用文件描述符表示并进行操作。 -
-将信息作为文件添加到 sysfs 的合适位置。</p>
-<p>对于许多接口，系统调用确实是正确的选择。但 Linux
-一直避免为每个新抽象都添加系统调用，这使得系统调用层非常简洁、稳定，很少有废弃接口。新系统调用增加速度慢，说明
-Linux 已经相对稳定且功能完善。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/27/oper_sys10/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/oper_sys10/" class="post-title-link" itemprop="url">操作系统基础 | 3. 系统调用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-28 02:34:45 / 修改时间：05:15:15" itemprop="dateCreated datePublished" datetime="2025-06-28T02:34:45+08:00">2025-06-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="与内核通信">与内核通信</h2>
-<p>系统调用（system
-call）在硬件和用户空间进程之间提供了一层抽象，这一层有三个主要作用：</p>
-<ol type="1">
-<li><p><strong>硬件抽象</strong><br />
-系统调用为用户空间提供了统一的硬件接口。例如，应用程序在读写文件时，无需关心底层的磁盘类型、介质类型，甚至文件所在的文件系统类型。</p></li>
-<li><p><strong>系统安全与稳定</strong><br />
-有了内核作为中介，内核可以根据权限、用户等标准仲裁资源访问。这防止了应用程序误用硬件、窃取其他进程资源或对系统造成破坏。</p></li>
-<li><p><strong>虚拟化与多任务支持</strong><br />
-用户空间与系统其他部分之间有统一的接口，便于实现进程虚拟化和多任务。如果应用能直接访问系统资源，将难以实现多任务和虚拟内存，更无法保证系统的稳定和安全。</p></li>
-</ol>
-<p>在 Linux
-中，系统调用是用户空间与内核交互的唯一合法入口（除了异常和陷阱）。即使是设备文件或
-<code>/proc</code>
-这样的接口，最终也要通过系统调用访问。值得一提的是，Linux
-的系统调用数量比大多数系统要少。</p>
-<h3 id="apiposix-与-c-库">API、POSIX 与 C 库</h3>
-<p>通常，应用程序是基于用户空间的
-API（应用程序编程接口）开发的，而不是直接调用系统调用。这很重要，因为
-API 与内核实际提供的接口之间不需要一一对应。API
-定义了一组供应用程序使用的编程接口，这些接口可以通过一个系统调用实现，也可以通过多个系统调用，甚至完全不依赖系统调用。这样，同样的
-API 可以在不同系统上实现，应用程序无需关心底层实现细节。</p>
-<p>在 Unix 世界中，最常见的 API 之一是基于 POSIX 标准的。POSIX 是 IEEE
-制定的一系列标准，旨在提供基于 Unix 的可移植操作系统标准。Linux
-在适用的地方努力兼容 POSIX 和 SUSv3。</p>
-<p>POSIX 很好地体现了 API 与系统调用的关系。在大多数 Unix 系统中，POSIX
-API 与系统调用高度相关，POSIX 标准本身就是参考早期 Unix
-系统接口制定的。但有些非 Unix 系统（如 Windows）也提供了 POSIX
-兼容库。</p>
-<h4 id="c-库的作用">C 库的作用</h4>
-<p>在 Linux 和大多数 Unix 系统中，C 库（如
-glibc）部分实现了系统调用接口。C 库不仅实现了标准 C
-库，还实现了系统调用接口，是所有 C 程序的基础。由于 C
-语言的特性，其他编程语言也可以很方便地调用 C 库。C 库还实现了大部分
-POSIX API。</p>
-<p>对应用开发者来说，系统调用的细节并不重要，他们只关心
-API；而内核只关心系统调用，至于哪些库函数或应用程序会用到这些系统调用，内核并不关心。不过，内核需要保证系统调用的通用性和灵活性，以适应各种用途。</p>
-<h3 id="系统调用syscalls">系统调用（Syscalls）</h3>
-<p>在 Linux 中，系统调用（syscall）通常通过 C
-库中定义的函数进行访问。系统调用可以有零个、一个或多个参数（输入），并可能产生一个或多个副作用，例如写文件或将数据复制到指定指针。系统调用还会返回一个
-long
-类型的值，用于表示成功或错误——通常（但并非总是）负值表示错误，返回值为 0
-通常（但也不是总是）表示成功。</p>
-<p>当系统调用出错时，C 库会将一个特殊的错误码写入全局变量
-<code>errno</code>。可以通过如 <code>perror()</code> 这样的库函数将
-<code>errno</code> 转换为可读的错误信息。</p>
-<p>系统调用有明确的行为定义。例如，<code>getpid()</code>
-系统调用被定义为返回当前进程的 PID。其内核实现大致如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE0(getpid) </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> task_tgid_vnr(current); <span class="comment">// 返回 current-&gt;tgid</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注：你可能会好奇为什么 <code>getpid()</code> 返回的是
-tgid（线程组ID）？在普通进程中，TGID 等于
-PID；而在线程中，同一线程组的所有线程 TGID 相同，这样所有线程调用
-<code>getpid()</code> 时返回相同的 PID。</p>
-</blockquote>
-<p>需要注意的是，定义只规定了行为，具体实现方式由内核决定，只要结果正确即可。<code>SYSCALL_DEFINE0</code>
-是一个宏，用于定义无参数的系统调用（0 表示参数个数）。展开后类似于：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_getpid</span><span class="params">(<span class="type">void</span>)</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>asmlinkage</code>
-修饰符告诉编译器只从栈上获取参数，这是所有系统调用都需要的修饰符。</li>
-<li>返回类型为 long，是为了兼容 32 位和 64 位系统。即使用户空间定义为
-int，内核中也返回 long。</li>
-<li>命名约定：内核中系统调用的实现函数名为 <code>sys_xxx()</code>，如
-<code>getpid()</code> 对应 <code>sys_getpid()</code>。</li>
-</ul>
-<h4 id="系统调用号system-call-numbers">系统调用号（System Call
-Numbers）</h4>
-<p>在 Linux 中，每个系统调用都有唯一的系统调用号（syscall
-number），用于标识具体的系统调用。用户空间进程执行系统调用时，实际上是通过系统调用号来指定调用哪个系统调用，而不是用名字。</p>
-<p>系统调用号非常重要，一旦分配就不能更改，否则已编译的应用程序会出错。同样，如果某个系统调用被移除，其编号也不能被回收，否则旧程序会调用到错误的系统调用。Linux
-提供了一个“未实现”系统调用 <code>sys_ni_syscall()</code>，它只返回
--ENOSYS（表示无效系统调用），用于填补被移除或不可用的系统调用号。</p>
-<p>内核通过系统调用表（<code>sys_call_table</code>）维护所有已注册的系统调用。在
-x86-64 架构下，这个表定义在 <code>arch/i386/kernel/syscall_64.c</code>
-文件中，每个有效的系统调用都分配有唯一的编号。</p>
-<h4 id="系统调用性能">系统调用性能</h4>
-<p>Linux 的系统调用比许多其他操作系统更快，这部分归功于 Linux
-的上下文切换速度快，进入和退出内核的过程非常简洁高效，系统调用处理器和各个系统调用本身也很简单。</p>
-<h3 id="系统调用处理器system-call-handler">系统调用处理器（System Call
-Handler）</h3>
-<p>用户空间的应用程序<strong>无法直接执行内核代码</strong>，也不能直接调用内核空间的方法，因为内核处于受保护的内存空间。如果应用可以直接读写内核地址空间，系统的安全性和稳定性将无法保证。</p>
-<p>因此，用户空间的应用程序必须通过某种方式<strong>通知内核</strong>，让系统切换到内核态，由内核代表应用程序在内核空间执行系统调用。</p>
-<h4 id="进入内核的机制">进入内核的机制</h4>
-<p>这种通知内核的机制是一种<strong>软件中断</strong>：即触发一个异常，系统会切换到内核态并执行异常处理程序。在系统调用的场景下，这个异常处理程序就是<strong>系统调用处理器</strong>（system
-call handler）。</p>
-<ul>
-<li>在 x86 架构上，定义的软件中断号为 128，通过 <code>int $0x80</code>
-指令触发。这会导致系统切换到内核态，并执行异常向量
-128（即系统调用处理器）。</li>
-<li>系统调用处理器的函数名通常为
-<code>system_call()</code>，它是与架构相关的代码（如 x86-64 下在
-<code>entry_64.S</code> 汇编文件中实现）。</li>
-<li>近年来，x86 处理器增加了 <code>sysenter</code> 指令，这是一种比
-<code>int $0x80</code>
-更快、更专用的进入内核执行系统调用的方法。内核很快就支持了这种方式。</li>
-<li>无论采用哪种方式，核心思想都是：用户空间通过异常或陷阱（trap）进入内核。</li>
-</ul>
-<h4 id="指定正确的系统调用">指定正确的系统调用</h4>
-<p>仅仅进入内核空间还不够，因为有很多不同的系统调用，它们都是通过相同的方式进入内核的。因此，<strong>必须将系统调用号传递给内核</strong>。</p>
-<ul>
-<li><p>在 x86 架构上，系统调用号通过 <code>eax</code>
-32位寄存器传递。在触发陷阱进入内核前，用户空间会把所需系统调用的编号写入
-<code>eax</code>。</p></li>
-<li><p>系统调用处理器读取 <code>eax</code> 的值，判断其有效性（与
-<code>NR_syscalls</code> 比较）。如果编号无效，返回 <code>-ENOSYS</code>
-错误；否则，通过系统调用表调用对应的系统调用函数： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call *sys_call_table(,%rax,8)</span><br></pre></td></tr></table></figure> &gt;
-rax和eax均为累加器，区别是rax是64位， eax32位</p>
-<p>这里每个表项 8 字节（64 位），所以用 8 乘以系统调用号定位表项（x86-32
-下用 4 乘以系统调用号）。</p></li>
-</ul>
-<h4 id="参数传递">参数传递</h4>
-<p>除了系统调用号，大多数系统调用还需要传递一个或多个参数。用户空间必须在陷阱捕获过程中时将参数传递给内核。</p>
-<ul>
-<li>最简单的方式是<strong>通过寄存器传递参数</strong>。在 x86-32
-架构下，<code>ebx</code>、<code>ecx</code>、<code>edx</code>、<code>esi</code>、<code>edi</code>
-依次存放前五个参数。</li>
-<li>如果参数超过五个，则用一个寄存器传递指向用户空间参数数组的指针。</li>
-<li>返回值也通过寄存器传递，x86 下写入 <code>eax</code>。</li>
-</ul>
-<p><strong>调用系统调用处理器并执行系统调用的流程</strong>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+         +-------------------+</span><br><span class="line">|    User Space     |         |   Kernel Space    |</span><br><span class="line">|-------------------|         |-------------------|</span><br><span class="line">| Application       |         | Syscall Handler   |</span><br><span class="line">|   call read()     |         |   system_call()   |</span><br><span class="line">|-------------------|         |-------------------|</span><br><span class="line">| C library         |         | sys_read()        |</span><br><span class="line">| read() wrapper    |         |                   |</span><br><span class="line">+-------------------+         +-------------------+</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>应用程序调用 <code>read()</code>，实际上先调用 C 库的
-<code>read()</code> 封装函数。</li>
-<li>C 库的 <code>read()</code> 封装函数通过软中断（如
-<code>int $0x80</code> 或 <code>sysenter</code>）进入内核，调用
-<code>system_call()</code>。</li>
-<li><code>system_call()</code> 读取系统调用号和参数，查找并调用内核中的
-<code>sys_read()</code> 实现。</li>
-<li>执行完毕后，返回值通过寄存器传回用户空间，流程反向返回到应用程序。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/oper_sysn2/" class="post-title-link" itemprop="url">操作系统基础 | 系统编程常用设置2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 05:46:20 / 修改时间：07:49:32" itemprop="dateCreated datePublished" datetime="2025-06-26T05:46:20+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="可移植性问题portability-issues">可移植性问题（Portability
-Issues）</h2>
-<h3 id="特性测试宏feature-test-macros">特性测试宏（Feature Test
-Macros）</h3>
-<ul>
-<li>系统调用和库函数 API 的行为受多种标准规范（如 The Open Group 的
-Single UNIX Specification、BSD、System V Release 4
-及其接口定义）约束。</li>
-<li>为了让头文件只暴露符合某一标准的定义（如常量、函数原型等），可以在编译时定义一个或多个特性测试宏。定义方式有两种：
-<ol type="1">
-<li>在源代码中包含头文件前定义宏： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE 1</span></span><br></pre></td></tr></table></figure></li>
-<li>用编译器的 <code>-D</code> 选项定义： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_BSD_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
-</ol></li>
-<li>“特性测试宏”这个名字的由来是：实现会通过 <code>#if</code>
-判断这些宏的值，决定头文件中哪些特性对应用可见。</li>
-</ul>
-<h4 id="常用特性测试宏">常用特性测试宏</h4>
-<p>这些宏由相关标准规定，适用于所有支持这些标准的系统：</p>
-<ul>
-<li><code>_POSIX_SOURCE</code><br />
-定义后暴露符合 POSIX.1-1990 和 ISO C (1990) 的定义。已被
-<code>_POSIX_C_SOURCE</code> 取代。</li>
-<li><code>_POSIX_C_SOURCE</code>
-<ul>
-<li>值为 1 时，效果同 <code>_POSIX_SOURCE</code>。</li>
-<li>值 ≥ 199309 时，暴露 POSIX.1b（实时）定义。</li>
-<li>值 ≥ 199506 时，暴露 POSIX.1c（线程）定义。</li>
-<li>值为 200112 时，暴露 POSIX.1-2001 基础规范（不含 XSI 扩展）。</li>
-<li>值为 200809 时，暴露 POSIX.1-2008 基础规范。</li>
-</ul></li>
-<li><code>_XOPEN_SOURCE</code>
-<ul>
-<li>定义后暴露 POSIX.1、POSIX.2 和 X/Open (XPG4) 定义。</li>
-<li>值 ≥ 500 时，暴露 SUSv2（UNIX 98 和 XPG5）扩展。</li>
-<li>值 ≥ 600 时，暴露 SUSv3 XSI（UNIX 03）和 C99 扩展。</li>
-<li>值 ≥ 700 时，暴露 SUSv4 XSI 扩展。</li>
-</ul></li>
-</ul>
-<h4 id="glibc-特有的特性测试宏">glibc 特有的特性测试宏</h4>
-<ul>
-<li><code>_BSD_SOURCE</code><br />
-定义后暴露 BSD 定义，同时定义
-<code>_POSIX_C_SOURCE=199506</code>。如只定义此宏，部分标准冲突时优先
-BSD 定义。</li>
-<li><code>_SVID_SOURCE</code><br />
-定义后暴露 System V 接口定义（SVID）。</li>
-<li><code>_GNU_SOURCE</code><br />
-定义后暴露所有上述宏的定义及 GNU 扩展。</li>
-</ul>
-<h4 id="默认行为与宏组合">默认行为与宏组合</h4>
-<ul>
-<li>默认情况下，GNU C 编译器会定义
-<code>_POSIX_SOURCE</code>、<code>_POSIX_C_SOURCE=200809</code>（或更早版本的
-200112/199506）、<code>_BSD_SOURCE</code> 和
-<code>_SVID_SOURCE</code>。</li>
-<li>如果单独定义了某些宏，或用标准模式（如 <code>cc -ansi</code> 或
-<code>cc -std=c99</code>）编译，则只暴露请求的定义。</li>
-<li>多个宏可以叠加定义。例如： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_POSIX_SOURCE -D_POSIX_C_SOURCE=199506 -D_BSD_SOURCE -D_SVID_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
-<li><code>&lt;features.h&gt;</code> 头文件和
-<code>feature_test_macros(7)</code> 手册页有详细说明。</li>
-</ul>
-<h4 id="posix.1sus-相关宏">POSIX.1/SUS 相关宏</h4>
-<ul>
-<li>POSIX.1-2001/SUSv3 只规定了 <code>_POSIX_C_SOURCE</code> 和
-<code>_XOPEN_SOURCE</code> 两个宏，要求值分别为 200112 和 600。</li>
-<li>POSIX.1-2008/SUSv4 要求值分别为 200809 和 700。</li>
-<li>设置 <code>_XOPEN_SOURCE=600</code> 应包含
-<code>_POSIX_C_SOURCE=200112</code> 的所有特性，SUSv4
-也有类似要求。</li>
-</ul>
-<h4
-id="示例代码与函数原型中的特性测试宏">示例代码与函数原型中的特性测试宏</h4>
-<ul>
-<li>手册页会说明使用某个常量或函数声明时需要定义哪些特性测试宏。</li>
-<li>本书示例代码可用默认 GNU C 编译器选项或如下方式编译：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -std=c99 -D_XOPEN_SOURCE=600</span><br></pre></td></tr></table></figure></li>
-<li>书中每个函数原型都会注明需要定义哪些特性测试宏。</li>
-<li>手册页有更详细的宏需求说明。</li>
-</ul>
-<h3 id="系统数据类型system-data-types">系统数据类型（System Data
-Types）</h3>
-<p>在 UNIX
-系统中，许多实现相关的数据类型（如进程ID、用户ID、文件偏移量等）都用标准
-C 类型来表示。虽然可以直接用 int、long
-等基本类型声明这些变量，但这样会降低程序的可移植性，原因包括：</p>
-<ul>
-<li>不同 UNIX 实现中基本类型的大小可能不同（如 long
-在某些系统上是4字节，在另一些系统上是8字节），甚至同一系统的不同编译环境也可能不同。</li>
-<li>不同实现可能用不同类型表示相同的信息。例如，进程ID在某些系统上是
-int，在另一些系统上是 long。</li>
-<li>同一实现的不同版本也可能改变类型定义。例如，Linux 2.2
-及以前用户和组ID是16位，2.4及以后是32位。</li>
-</ul>
-<p>为避免这些移植性问题，SUSv3（Single UNIX Specification, Version
-3）规定了一系列标准系统数据类型，并要求实现时正确使用这些类型。这些类型通常用
-C 的 typedef 定义。例如，pid_t 用于表示进程ID，在 Linux/x86-32
-上定义为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> <span class="type">pid_t</span>;</span><br></pre></td></tr></table></figure> 大多数标准系统数据类型以 <code>_t</code>
-结尾，通常声明在 <code>&lt;sys/types.h&gt;</code>
-头文件中，部分类型在其他头文件中定义。</p>
-<p><strong>建议：</strong>
-应用程序应使用这些类型来声明变量，以保证在所有符合 SUSv3
-的系统上都能正确运行。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br></pre></td></tr></table></figure></p>
-<h4 id="常用系统数据类型举例">常用系统数据类型举例</h4>
-<table>
-<thead>
-<tr>
-<th>数据类型</th>
-<th>类型要求</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>pid_t</td>
-<td>有符号整数</td>
-<td>进程ID、进程组ID、会话ID</td>
-</tr>
-<tr>
-<td>uid_t</td>
-<td>整数</td>
-<td>用户ID</td>
-</tr>
-<tr>
-<td>gid_t</td>
-<td>整数</td>
-<td>组ID</td>
-</tr>
-<tr>
-<td>size_t</td>
-<td>无符号整数</td>
-<td>对象字节大小</td>
-</tr>
-<tr>
-<td>ssize_t</td>
-<td>有符号整数</td>
-<td>字节计数或错误指示</td>
-</tr>
-<tr>
-<td>off_t</td>
-<td>有符号整数</td>
-<td>文件偏移量或文件大小</td>
-</tr>
-<tr>
-<td>time_t</td>
-<td>整数或实数</td>
-<td>自 Epoch 起的秒数</td>
-</tr>
-<tr>
-<td>mode_t</td>
-<td>整数</td>
-<td>文件权限和类型</td>
-</tr>
-<tr>
-<td>dev_t</td>
-<td>算术类型</td>
-<td>设备号（主次设备号）</td>
-</tr>
-<tr>
-<td>ino_t</td>
-<td>无符号整数</td>
-<td>文件 i-node 号</td>
-</tr>
-<tr>
-<td>socklen_t</td>
-<td>至少32位整数</td>
-<td>套接字地址结构体大小</td>
-</tr>
-</tbody>
-</table>
-<h3 id="打印系统数据类型的数值">打印系统数据类型的数值</h3>
-<ul>
-<li><p>在用 <code>printf()</code> 打印表3-1中这些数值型系统数据类型（如
-<code>pid_t</code>、<code>uid_t</code>）时，要避免实现相关的依赖问题。</p></li>
-<li><p>由于 C 的参数提升规则，<code>short</code> 类型会被提升为
-<code>int</code>，但 <code>int</code> 和 <code>long</code>
-类型保持不变。因此，系统数据类型的底层实现不同，传递给
-<code>printf()</code> 的参数类型可能是 <code>int</code> 或
-<code>long</code>。</p></li>
-<li><p>由于 <code>printf()</code>
-在运行时无法判断参数类型，调用者必须用合适的格式说明符（如
-<code>%d</code> 或
-<code>%ld</code>）明确指定类型。但直接写死某个说明符会导致实现依赖。</p></li>
-<li><p>通常的解决办法是统一用 <code>%ld</code>，并将对应的值强制转换为
-<code>long</code>，例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br><span class="line">mypid = getpid();  <span class="comment">/* 获取当前进程ID */</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;My PID is %ld\n&quot;</span>, (<span class="type">long</span>) mypid);</span><br></pre></td></tr></table></figure></p></li>
-<li><p>有一个例外：<code>off_t</code> 类型在某些环境下是
-<code>long long</code>，因此应强制转换为 <code>long long</code> 并用
-<code>%lld</code> 打印（详见5.10节）。</p></li>
-<li><p>C99 标准定义了 <code>z</code> 长度修饰符，用于
-<code>size_t</code> 或 <code>ssize_t</code> 类型，可以用
-<code>%zd</code> 替代 <code>%ld</code>+强转。但该说明符并非所有 UNIX
-实现都支持，所以本书避免使用。</p></li>
-<li><p>C99 还定义了 <code>j</code> 长度修饰符，指定参数为
-<code>intmax_t</code>（或
-<code>uintmax_t</code>），这种类型足够大，可以表示任何整数类型。理论上，使用
-<code>(intmax_t)</code> 强转加 <code>%jd</code> 是最通用的做法，能处理
-<code>long long</code> 及扩展整数类型（如
-<code>int128_t</code>）。但由于并非所有 UNIX
-实现都支持，本书也避免使用这种方式。</p></li>
-</ul>
-<h3
-id="其他可移植性问题miscellaneous-portability-issues">其他可移植性问题（Miscellaneous
-Portability Issues）</h3>
-<h4 id="结构体的初始化与使用">结构体的初始化与使用</h4>
-<ul>
-<li>各 UNIX
-实现规定了一系列标准结构体，用于系统调用和库函数。例如，<code>sembuf</code>
-结构体用于信号量操作（semop）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> &#123;</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">short</span> sem_num;  <span class="comment">/* 信号量编号 */</span></span><br><span class="line">  <span class="type">short</span>          sem_op;   <span class="comment">/* 要执行的操作 */</span></span><br><span class="line">  <span class="type">short</span>          sem_flg;  <span class="comment">/* 操作标志 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-<li>虽然 SUSv3 规定了这些结构体，但需要注意：
-<ul>
-<li>一般来说，结构体成员的顺序未必有标准规定。</li>
-<li>某些实现可能会在结构体中添加额外的字段。</li>
-</ul></li>
-<li>因此，<strong>不建议</strong>用如下方式初始化结构体（因为不同实现成员顺序可能不同）：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; <span class="number">3</span>, <span class="number">-1</span>, SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure> 这种写法在 Linux
-下可用，但在其他实现中可能出错。<strong>可移植的做法</strong>是用显式赋值：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span>;</span></span><br><span class="line">s.sem_num = <span class="number">3</span>;</span><br><span class="line">s.sem_op  = <span class="number">-1</span>;</span><br><span class="line">s.sem_flg = SEM_UNDO;</span><br></pre></td></tr></table></figure> 如果使用 C99，可以用新的结构体初始化语法：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; .sem_num = <span class="number">3</span>, .sem_op = <span class="number">-1</span>, .sem_flg = SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure></li>
-<li>如果要将结构体内容写入文件，也要注意成员顺序。不能直接二进制写入结构体，而应按指定顺序逐个字段写入（最好用文本形式）。</li>
-</ul>
-<h4 id="某些宏可能并非所有实现都支持">某些宏可能并非所有实现都支持</h4>
-<ul>
-<li>有些宏在所有 UNIX 实现中并不一定存在。例如，<code>WCOREDUMP()</code>
-宏（用于检测子进程是否产生 core dump 文件）虽然常见，但 SUSv3
-并未规定，因此某些系统可能没有。</li>
-<li>可移植的做法是用 <code>#ifdef</code> 判断宏是否存在：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> WCOREDUMP</span></span><br><span class="line">  <span class="comment">/* 使用 WCOREDUMP() 宏 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="不同实现对头文件的要求不同">不同实现对头文件的要求不同</h4>
-<ul>
-<li>某些系统调用和库函数所需的头文件在不同 UNIX 实现中可能不同。本书以
-Linux 为主，并注明与 SUSv3 的差异。</li>
-<li>书中部分函数原型会注明某个头文件后加注释
-<code>/* For portability */</code>，表示该头文件在 Linux 或 SUSv3
-下不是必需的，但为了兼容其他（尤其是老旧）实现，建议在可移植程序中包含。</li>
-<li>POSIX.1-1990 要求在包含与某些函数相关的头文件前，先包含
-<code>&lt;sys/types.h&gt;</code>，但这一要求后来被 SUSv1
-移除。尽管如此，为了可移植性，建议将 <code>&lt;sys/types.h&gt;</code>
-作为首个头文件包含（本书示例为简洁起见省略了它）。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/oper_sysn/" class="post-title-link" itemprop="url">操作系统基础 | 系统编程常用设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 05:27:30 / 修改时间：05:42:04" itemprop="dateCreated datePublished" datetime="2025-06-26T05:27:30+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="lpi示例程序说明">LPI示例程序说明</h2>
-<h3 id="命令行选项与参数">命令行选项与参数</h3>
-<ul>
-<li>本书中的许多示例程序依赖命令行选项和参数来决定其行为。</li>
-<li>传统 UNIX
-命令行选项格式为：一个连字符（-）加一个字母，后面可跟参数。GNU
-工具支持扩展格式：两个连字符（--）加选项名和可选参数。</li>
-<li>示例程序通常使用标准库函数 <code>getopt()</code>
-解析命令行选项（详见附录B）。</li>
-<li>只要程序的命令行语法不简单，都会实现一个帮助功能：如果用
-<code>--help</code>
-选项运行，程序会显示用法说明，指明命令行选项和参数的语法。</li>
-</ul>
-<h3 id="公共函数与头文件">公共函数与头文件</h3>
-<ul>
-<li>大多数示例程序都包含一个公共头文件，定义常用类型和宏，并引用常用的库函数和系统调用声明，使代码更简洁。</li>
-</ul>
-<h4 id="公共头文件libtlpi_hdr.h">公共头文件（lib/tlpi_hdr.h）</h4>
-<ul>
-<li><p>该头文件包含了许多常用头文件，定义了布尔类型和求最小/最大值的宏。例如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> TLPI_HDR_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TLPI_HDR_H  <span class="comment">/* 防止重复包含 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>  <span class="comment">/* 常用类型定义 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span>      <span class="comment">/* 标准I/O函数 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;get_num.h&quot;</span>    <span class="comment">/* 常用数值处理函数声明 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;error_functions.h&quot;</span>  <span class="comment">/* 错误处理函数声明 */</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span> FALSE, TRUE &#125; Boolean;</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> min(m,n) ((m) &lt; (n) ? (m) : (n))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> max(m,n) ((m) &gt; (n) ? (m) : (n))</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4
-id="错误诊断函数liberror_functions.h">错误诊断函数（lib/error_functions.h）</h4>
-<ul>
-<li><p>为简化错误处理，示例程序使用一组通用的错误诊断函数，其声明如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> ERROR_FUNCTIONS_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ERROR_FUNCTIONS_H</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errMsg</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __GNUC__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NORETURN __attribute__ ((__noreturn__))</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NORETURN</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errExit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">err_exit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExitEN</span><span class="params">(<span class="type">int</span> errnum, <span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">fatal</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">usageErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">cmdLineErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4
-id="使用-errmsgerrexiterr_exit-和-errexiten-诊断系统调用和库函数错误">使用
-errMsg()、errExit()、err_exit() 和 errExitEN()
-诊断系统调用和库函数错误</h4>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errMsg</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">err_exit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExitEN</span><span class="params">(<span class="type">int</span> errnum, <span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>errMsg()</strong><br />
-在标准错误输出错误信息。参数列表与 printf()
-相同，输出末尾自动加换行。会输出当前 errno 对应的错误文本（如错误名
-EPERM 和 strerror() 返回的描述），再加上格式化输出内容。</p></li>
-<li><p><strong>errExit()</strong><br />
-功能类似 errMsg()，但会终止程序。终止方式为调用 exit()，如果环境变量
-EF_DUMPCORE 被设置为非空字符串，则调用 abort() 生成 core dump
-文件（用于调试）。</p></li>
-<li><p><strong>err_exit()</strong><br />
-与 errExit() 类似，但有两点不同：</p>
-<ol type="1">
-<li>打印错误信息前不会刷新标准输出。</li>
-<li>通过 _exit() 终止进程，而不是 exit()，这样不会刷新 stdio
-缓冲区，也不会调用 exit 处理函数。
-这种方式适合在库函数中创建子进程后，因错误需要立即终止子进程时使用，避免影响父进程的缓冲区和退出处理。</li>
-</ol></li>
-<li><p><strong>errExitEN()</strong><br />
-与 errExit() 类似，但输出的是参数 errnum 指定的错误号对应的错误文本（EN
-代表 Error Number），而不是当前 errno 的内容。主要用于 POSIX 线程
-API（pthread）相关的程序。</p>
-<ul>
-<li>传统 UNIX 系统调用出错返回 –1，POSIX
-线程函数出错则直接返回错误号（正整数），成功返回 0。</li>
-<li>示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> s;</span><br><span class="line">s = pthread_create(&amp;thread, <span class="literal">NULL</span>, func, &amp;arg);</span><br><span class="line"><span class="keyword">if</span> (s != <span class="number">0</span>)</span><br><span class="line">  errExitEN(s, <span class="string">&quot;pthread_create&quot;</span>);</span><br></pre></td></tr></table></figure></li>
-<li>这样比直接用 errno 更高效，因为在多线程程序中 errno
-是一个宏，会展开为函数调用，返回线程私有的存储区域指针。</li>
-</ul></li>
-<li><p><strong>lvalue（左值） 说明</strong><br />
-lvalue 是指向存储区域的表达式，最常见的是变量名。某些操作符也能产生
-lvalue，比如指针解引用 *p。在 POSIX 线程 API 下，errno
-被重定义为返回线程私有存储区指针的函数。</p></li>
-</ul>
-<h4 id="诊断其他类型错误的函数">诊断其他类型错误的函数</h4>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">fatal</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">usageErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">cmdLineErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>fatal()</strong><br />
-用于诊断一般性错误，包括那些不会设置 errno 的库函数错误。参数列表与
-printf() 相同，输出自动换行。该函数会将格式化信息输出到标准错误，并像
-errExit() 一样终止程序。</p></li>
-<li><p><strong>usageErr()</strong><br />
-用于诊断命令行参数用法错误。参数同 printf()，输出以 "Usage:"
-开头，后跟格式化内容，输出到标准错误，然后调用 exit()
-终止程序。（有些示例程序会用扩展版 usageError()。）</p></li>
-<li><p><strong>cmdLineErr()</strong><br />
-类似于 usageErr()，但用于诊断命令行参数本身的错误。输出以 "Command-line
-usage error:" 开头，后跟格式化内容，输出到标准错误并终止程序。</p></li>
-</ul>
-<h4 id="错误处理函数实现说明">错误处理函数实现说明</h4>
-<ul>
-<li>错误处理函数的实现会用到 <code>ename.c.inc</code>
-文件，该文件定义了一个字符串数组 <code>ename</code>，用于将 errno
-错误号映射为符号名（如 EPERM、EAGAIN/EWOULDBLOCK 等）。</li>
-<li>这样做的好处是：strerror()
-只返回错误描述，不包含符号名，而手册页用符号名描述错误。输出符号名便于查阅手册定位错误原因。</li>
-<li><code>ename.c.inc</code> 文件内容与硬件架构相关，不同平台 errno
-值可能不同。可以用书中提供的脚本（lib/Build_ename.sh）为特定平台生成合适的版本。</li>
-<li><code>ename</code>
-数组中有些字符串为空，对应未使用的错误号；有些字符串包含两个错误名（如
-"EAGAIN/EWOULDBLOCK"），表示这两个符号对应同一个错误号。</li>
-<li>例如，EAGAIN 和 EWOULDBLOCK 在大多数 UNIX 系统上值相同，分别用于
-System V 和 BSD 的不同场景。SUSv3
-规范允许非阻塞调用返回这两个错误之一。</li>
-</ul>
-<h4 id="解析数字型命令行参数的函数">解析数字型命令行参数的函数</h4>
-<ul>
-<li>头文件（如清单3-5）声明了两个常用来解析整型命令行参数的函数：<code>getInt()</code>
-和 <code>getLong()</code>。</li>
-<li>与 <code>atoi()</code>、<code>atol()</code>、<code>strtol()</code>
-等标准函数相比，这两个函数的主要优点是能对数字参数进行基本有效性检查。</li>
-<li><code>getInt()</code> 和 <code>getLong()</code> 分别将参数
-<code>arg</code> 指向的字符串转换为 int 或 long 类型。如果
-<code>arg</code> 不是有效的整数字符串（即只包含数字和 +、-
-号），函数会输出错误信息并终止程序。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getInt</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *arg, <span class="type">int</span> flags, <span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br><span class="line"><span class="type">long</span> <span class="title function_">getLong</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *arg, <span class="type">int</span> flags, <span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br><span class="line"><span class="comment">// 返回 arg 转换后的数值</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>如果 <code>name</code> 参数非 NULL，应传入一个字符串，用于标识
-arg 参数。该字符串会包含在错误信息中，便于定位问题。</p></li>
-<li><p><code>flags</code> 参数用于控制 <code>getInt()</code> 和
-<code>getLong()</code>
-的行为。默认情况下，这两个函数期望参数为有符号十进制整数。通过将一个或多个
-GN_* 常量（见清单3-5）按位或（|）赋给
-flags，可以选择不同的进制或限制数值范围（如只允许非负数或大于0）。</p></li>
-<li><p>这两个函数的实现见清单3-6。</p></li>
-<li><p>虽然 flags
-参数可以强制范围检查，但在某些示例程序中我们并未启用这些检查。例如，在清单47-1中，未检查信号量初始值参数，用户可以输入负数，导致后续
-semctl()
-系统调用出错（ERANGE），因为信号量不能为负。省略范围检查有助于实验系统调用和库函数的正确与错误用法，便于学习。实际应用中通常会对命令行参数做更严格的检查。</p></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

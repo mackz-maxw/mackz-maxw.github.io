@@ -1,3 +1,11 @@
+https://mackz-maxw.github.io/2025/08/23/oper_sys23%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/
+https://mackz-maxw.github.io/2025/08/20/oper_sys22%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/
+https://mackz-maxw.github.io/2025/08/19/oper_sys21%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%AE%9E%E9%AA%8C/
+https://mackz-maxw.github.io/2025/08/19/oper_sys20/
+https://mackz-maxw.github.io/2025/08/19/kamacode36/
+https://mackz-maxw.github.io/2025/08/11/kamacode35/
+https://mackz-maxw.github.io/2025/08/12/oper_sys19/
+https://mackz-maxw.github.io/2025/08/12/oper_sys18/
 https://mackz-maxw.github.io/2025/08/05/kamacode34/
 https://mackz-maxw.github.io/2025/08/08/oper_sys17/
 https://mackz-maxw.github.io/2025/08/07/oper_sys16/
@@ -28,9 +36,9 @@ https://mackz-maxw.github.io/2025/06/25/oper_sys8/
 https://mackz-maxw.github.io/2025/06/23/oper_sys7/
 https://mackz-maxw.github.io/2025/06/23/oper_sys6/
 https://mackz-maxw.github.io/2025/06/23/oper_sys5/
-https://mackz-maxw.github.io/2025/06/18/oper_sys0/
-https://mackz-maxw.github.io/2025/06/20/oper_sys1/
-https://mackz-maxw.github.io/2025/06/20/oper_sys2/
+https://mackz-maxw.github.io/2025/06/18/oper_sys0linux%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B/
+https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/
+https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/
 https://mackz-maxw.github.io/2025/06/17/kamacode29/
 https://mackz-maxw.github.io/2025/05/13/kamacode1/
 https://mackz-maxw.github.io/2025/06/16/kamacode28/
@@ -86,8 +94,8 @@ https://mackz-maxw.github.io/links/index.html
 https://mackz-maxw.github.io/comment/index.html
 https://mackz-maxw.github.io/
 https://mackz-maxw.github.io/categories/leetcode/
-https://mackz-maxw.github.io/categories/linux-tricks/
 https://mackz-maxw.github.io/categories/realtime-sched/
+https://mackz-maxw.github.io/categories/linux-tricks/
 https://mackz-maxw.github.io/categories/comp-basic/
 https://mackz-maxw.github.io/categories/interview/
 https://mackz-maxw.github.io/categories/os-basic/

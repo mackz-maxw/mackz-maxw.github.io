@@ -22,7 +22,7 @@
     <meta name="description" content="与众不同的“野兽”：内核与用户空间的区别 Linux 内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：  内核无法使用 C 标准库（libc）和标准 C 头文件。 内核使用 GNU C 语言编写。 内核没有用户空间的内存保护机制。 内核中不能轻易执行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统基础 | 2.2 linux内核与用户空间的不同">
-<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/20/oper_sys2/index.html">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/index.html">
 <meta property="og:site_name" content="Maxw的小站">
 <meta property="og:description" content="与众不同的“野兽”：内核与用户空间的区别 Linux 内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：  内核无法使用 C 标准库（libc）和标准 C 头文件。 内核使用 GNU C 语言编写。 内核没有用户空间的内存保护机制。 内核中不能轻易执行">
 <meta property="og:locale" content="zh_CN">
@@ -32,10 +32,10 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2/">
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/20/oper_sys2/","path":"2025/06/20/oper_sys2/","title":"操作系统基础 | 2.2 linux内核与用户空间的不同"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/","path":"2025/06/20/oper_sys2linux内核与用户空间/","title":"操作系统基础 | 2.2 linux内核与用户空间的不同"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>操作系统基础 | 2.2 linux内核与用户空间的不同 | Maxw的小站</title>
@@ -126,7 +126,7 @@ Annotation）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -164,7 +164,7 @@ Annotation）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -348,7 +348,7 @@ condition）。与单线程的用户空间程序不同，内核有多种并发�
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/06/20/oper_sys1/" rel="prev" title="操作系统基础 | 2. 初试linux内核">
+                <a href="/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/" rel="prev" title="操作系统基础 | 2. 初试linux内核">
                   <i class="fa fa-angle-left"></i> 操作系统基础 | 2. 初试linux内核
                 </a>
             </div>
@@ -380,11 +380,11 @@ condition）。与单线程的用户空间程序不同，内核有多种并发�
     </label>
     <select class="lang-select" data-canonical="" aria-label="选择语言">
       
-        <option value="zh-CN" data-href="/2025/06/20/oper_sys2/" selected="">
+        <option value="zh-CN" data-href="/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/" selected="">
           简体中文
         </option>
       
-        <option value="en" data-href="/en/2025/06/20/oper_sys2/" selected="">
+        <option value="en" data-href="/en/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/" selected="">
           English
         </option>
       

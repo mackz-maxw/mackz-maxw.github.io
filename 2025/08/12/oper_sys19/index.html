@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Linux 内核模块开发简介 设备类型分类           类型 缩写 访问方式 典型设备 特殊文件     块设备 blkdevs 按块随机访问（支持寻址） 硬盘&#x2F;SSD&#x2F;光驱 &#x2F;dev&#x2F;sda1   字符设备 cdevs 字节流顺序访问 键盘&#x2F;打印机&#x2F;伪设备 &#x2F;dev&#x2F;ttyS0   网络设备 - 套接字API（破坏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 4.5 内核数据结构-内核模块">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/08/12/oper_sys19/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="Linux 内核模块开发简介 设备类型分类           类型 缩写 访问方式 典型设备 特殊文件     块设备 blkdevs 按块随机访问（支持寻址） 硬盘&#x2F;SSD&#x2F;光驱 &#x2F;dev&#x2F;sda1   字符设备 cdevs 字节流顺序访问 键盘&#x2F;打印机&#x2F;伪设备 &#x2F;dev&#x2F;ttyS0   网络设备 - 套接字API（破坏">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-12T16:14:02.804Z">
+<meta property="article:modified_time" content="2025-08-15T22:49:37.717Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/08/12/oper_sys19/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/08/12/oper_sys19/","path":"2025/08/12/oper_sys19/","title":"操作系统基础 | 4.5 内核数据结构-内核模块"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 4.5 内核数据结构-内核模块 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Linux 内核模块开发简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">设备类型分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">内核模块开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hello-world-%E6%A8%A1%E5%9D%97%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">Hello World 模块示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">关键机制解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97"><span class="nav-number">3.</span> <span class="nav-text">模块构建指南</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%88%B0%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E6%A0%91%E6%8E%A8%E8%8D%90"><span class="nav-number">3.1.</span> <span class="nav-text">集成到内核源码树（推荐）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E7%8B%AC%E7%AB%8B%E6%9E%84%E5%BB%BA"><span class="nav-number">3.2.</span> <span class="nav-text">外部独立构建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84%E8%A7%84%E8%8C%83"><span class="nav-number">3.3.</span> <span class="nav-text">模块安装路径规范</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">模块依赖管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E7%94%9F%E6%88%90"><span class="nav-number">4.1.</span> <span class="nav-text">1. 依赖关系生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2. 依赖存储位置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%8D%B8%E8%BD%BD"><span class="nav-number">5.</span> <span class="nav-text">模块加载与卸载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%B7%A5%E5%85%B7%E4%B8%8D%E6%8E%A8%E8%8D%90"><span class="nav-number">5.1.</span> <span class="nav-text">基础工具（不推荐）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90"><span class="nav-number">5.2.</span> <span class="nav-text">高级工具（推荐）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E9%AB%98%E7%BA%A7%E6%8C%87%E5%8D%97"><span class="nav-number">6.</span> <span class="nav-text">内核配置与模块开发高级指南</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%80%89%E9%A1%B9%E7%AE%A1%E7%90%86-kconfig"><span class="nav-number">6.1.</span> <span class="nav-text">配置选项管理 (Kconfig)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%8F%82%E6%95%B0%E7%B3%BB%E7%BB%9F"><span class="nav-number">7.</span> <span class="nav-text">模块参数系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%8F%82%E6%95%B0%E5%A3%B0%E6%98%8E"><span class="nav-number">7.1.</span> <span class="nav-text">1. 基础参数声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-number">7.2.</span> <span class="nav-text">2. 高级参数类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E6%96%B9%E5%BC%8F"><span class="nav-number">7.3.</span> <span class="nav-text">3. 参数传递方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sysfs%E9%9B%86%E6%88%90"><span class="nav-number">7.4.</span> <span class="nav-text">4. sysfs集成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E5%AF%BC%E5%87%BA%E6%9C%BA%E5%88%B6"><span class="nav-number">8.</span> <span class="nav-text">符号导出机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%AF%BC%E5%87%BA"><span class="nav-number">8.1.</span> <span class="nav-text">1. 基础导出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gpl%E5%8F%97%E9%99%90%E5%AF%BC%E5%87%BA"><span class="nav-number">8.2.</span> <span class="nav-text">2. GPL受限导出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E8%A7%84%E5%88%99"><span class="nav-number">8.3.</span> <span class="nav-text">3. 导出规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F%E5%85%83%E9%80%89%E9%A1%B9"><span class="nav-number">9.</span> <span class="nav-text">配置系统元选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">10.</span> <span class="nav-text">开发工作流示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E9%A9%B1%E5%8A%A8"><span class="nav-number">10.1.</span> <span class="nav-text">1. 添加新驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E5%8C%96%E6%A8%A1%E5%9D%97"><span class="nav-number">10.2.</span> <span class="nav-text">2. 实现参数化模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%AA%8C%E8%AF%81"><span class="nav-number">10.3.</span> <span class="nav-text">3. 编译验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">11.</span> <span class="nav-text">生产环境最佳实践</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/12/oper_sys19/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 4.5 内核数据结构-内核模块 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 4.5 内核数据结构-内核模块
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-13 00:14:02" itemprop="dateCreated datePublished" datetime="2025-08-13T00:14:02+08:00">2025-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-16 06:49:37" itemprop="dateModified" datetime="2025-08-16T06:49:37+08:00">2025-08-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="linux-内核模块开发简介">Linux 内核模块开发简介</h3>
+<h4 id="设备类型分类">设备类型分类</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 9%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>缩写</strong></th>
+<th><strong>访问方式</strong></th>
+<th><strong>典型设备</strong></th>
+<th><strong>特殊文件</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>块设备</strong></td>
+<td>blkdevs</td>
+<td>按块随机访问（支持寻址）</td>
+<td>硬盘/SSD/光驱</td>
+<td><code>/dev/sda1</code></td>
+</tr>
+<tr>
+<td><strong>字符设备</strong></td>
+<td>cdevs</td>
+<td>字节流顺序访问</td>
+<td>键盘/打印机/伪设备</td>
+<td><code>/dev/ttyS0</code></td>
+</tr>
+<tr>
+<td><strong>网络设备</strong></td>
+<td>-</td>
+<td>套接字API（破坏"一切皆文件"原则）</td>
+<td>网卡/无线适配器</td>
+<td>无设备节点</td>
+</tr>
+<tr>
+<td><strong>混杂设备</strong></td>
+<td>miscdevs</td>
+<td>字符设备简化形式</td>
+<td>简单专用设备</td>
+<td><code>/dev/random</code> 等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>伪设备示例</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/dev/random   <span class="comment"># 内核随机数生成器</span></span><br><span class="line">/dev/null     <span class="comment"># 空设备（丢弃所有写入）</span></span><br><span class="line">/dev/zero     <span class="comment"># 零设备（提供无限\0字节）</span></span><br><span class="line">/dev/full     <span class="comment"># 满设备（写入总返回ENOSPC错误）</span></span><br><span class="line">/dev/mem      <span class="comment"># 物理内存访问设备</span></span><br></pre></td></tr></table></figure></p>
+<hr />
+<h3 id="内核模块开发">内核模块开发</h3>
+<h4 id="hello-world-模块示例">Hello World 模块示例</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kernel.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块加载时执行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">hello_init</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;I bear a charmed life.\n&quot;</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 返回0表示成功</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块卸载时执行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> __exit <span class="title function_">hello_exit</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;Out, out, brief candle!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 注册入口/出口函数 */</span></span><br><span class="line">module_init(hello_init);  <span class="comment">// 不是函数调用，而是宏定义</span></span><br><span class="line">module_exit(hello_exit);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块元信息 */</span></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);                  <span class="comment">// 必须声明许可证</span></span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;Shakespeare&quot;</span>);           <span class="comment">// 作者信息</span></span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Hello World Module&quot;</span>); <span class="comment">// 模块描述</span></span><br></pre></td></tr></table></figure>
+<h4 id="关键机制解析">关键机制解析</h4>
+<ol type="1">
+<li><strong>入口函数</strong>：
+<ul>
+<li>形式：<code>int init_func(void)</code></li>
+<li>职责：注册资源/初始化硬件/分配数据结构</li>
+<li>返回值：0=成功，非0=失败</li>
+</ul></li>
+<li><strong>出口函数</strong>：
+<ul>
+<li>形式：<code>void exit_func(void)</code></li>
+<li>职责：释放资源/复位硬件/清理状态</li>
+</ul></li>
+<li><strong>许可证声明</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);  <span class="comment">// 合法选项：GPL/MIT/BSD等</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>非GPL模块会导致内核标记为"tainted"</li>
+<li>无法调用GPL-only符号</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="模块构建指南">模块构建指南</h3>
+<h4 id="集成到内核源码树推荐">集成到内核源码树（推荐）</h4>
+<ol type="1">
+<li><strong>选择路径</strong>：
+<ul>
+<li>字符设备 → <code>drivers/char/</code></li>
+<li>块设备 → <code>drivers/block/</code></li>
+<li>USB设备 → <code>drivers/usb/</code></li>
+</ul></li>
+<li><strong>修改Makefile</strong>： <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># drivers/char/Makefile 添加</span></span><br><span class="line">obj-<span class="variable">$(CONFIG_FISHING_POLE)</span> += fishing/</span><br><span class="line"></span><br><span class="line"><span class="comment"># drivers/char/fishing/Makefile 内容</span></span><br><span class="line">obj-<span class="variable">$(CONFIG_FISHING_POLE)</span> += fishing.o</span><br><span class="line">fishing-objs := main.o line.o  <span class="comment"># 多文件模块</span></span><br><span class="line">EXTRA_CFLAGS += -DTITANIUM_POLE  <span class="comment"># 自定义编译标志</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="外部独立构建">外部独立构建</h4>
+<ol type="1">
+<li><p><strong>Makefile示例</strong>： <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">obj-m := fishing.o</span><br><span class="line">fishing-objs := fishing-main.o fishing-line.o</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    make -C /path/to/kernel/source M=<span class="variable">$(PWD)</span> modules</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>构建命令</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在模块目录执行</span></span><br><span class="line">make -C /lib/modules/$(<span class="built_in">uname</span> -r)/build M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure> ### 模块管理</p></li>
+</ol>
+<h4 id="模块安装路径规范">模块安装路径规范</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准安装路径模板</span></span><br><span class="line">/lib/modules/$(<span class="built_in">uname</span> -r)/kernel/&lt;源码树路径&gt;/&lt;模块名&gt;.ko</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例：2.6.34内核的钓鱼竿模块</span></span><br><span class="line">/lib/modules/2.6.34/kernel/drivers/char/fishing.ko</span><br></pre></td></tr></table></figure>
+<p><strong>安装命令</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make modules_install  <span class="comment"># 需root权限</span></span><br></pre></td></tr></table></figure></p>
+<hr />
+<h3 id="模块依赖管理">模块依赖管理</h3>
+<h4 id="依赖关系生成">1. 依赖关系生成</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成完整依赖关系</span></span><br><span class="line">sudo depmod</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增量更新（仅处理新模块）</span></span><br><span class="line">sudo depmod -A</span><br></pre></td></tr></table></figure>
+<h4 id="依赖存储位置">2. 依赖存储位置</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖关系文件路径</span></span><br><span class="line">/lib/modules/$(<span class="built_in">uname</span> -r)/modules.dep</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件内容示例</span></span><br><span class="line">kernel/drivers/char/fishing.ko: kernel/drivers/net/bait.ko</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>智能加载原理</strong>：<br />
+当加载 <code>chum.ko</code> 时，系统自动解析其依赖并先加载
+<code>bait.ko</code></p>
+</blockquote>
+<hr />
+<h3 id="模块加载与卸载">模块加载与卸载</h3>
+<h4 id="基础工具不推荐">基础工具（不推荐）</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 27%" />
+<col style="width: 29%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>缺陷</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加载</td>
+<td><code>insmod module.ko</code></td>
+<td>无依赖解析</td>
+<td><code>insmod fishing.ko</code></td>
+</tr>
+<tr>
+<td>卸载</td>
+<td><code>rmmod module_name</code></td>
+<td>不检查依赖</td>
+<td><code>rmmod fishing</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="高级工具推荐">高级工具（推荐）</h4>
+<p><strong>1. 智能加载</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载模块（自动处理依赖）</span></span><br><span class="line">sudo modprobe fishing pole_length=300 material=titanium</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看加载的模块</span></span><br><span class="line">lsmod | grep fishing</span><br></pre></td></tr></table></figure></p>
+<p><strong>2. 安全卸载</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载模块（自动移除未用依赖）</span></span><br><span class="line">sudo modprobe -r fishing</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制卸载（危险！）</span></span><br><span class="line">sudo modprobe -rf fishing  <span class="comment"># 可能破坏依赖树</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="内核配置与模块开发高级指南">内核配置与模块开发高级指南</h3>
+<h4 id="配置选项管理-kconfig">配置选项管理 (Kconfig)</h4>
+<p>linux使用kbuild系统，可以通过修改Kconfig文件便捷地管理配置选项
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># drivers/char/Kconfig 示例</span><br><span class="line">config FISHING_POLE</span><br><span class="line">    tristate &quot;Fish Master 3000 support&quot;  # 三态选项，表示模块在编译配置中可以内置编译到内核（Y），作为模块编译（M）或者不编译（N）</span><br><span class="line">    default n                            # 默认禁用</span><br><span class="line">    depends on FISH_TANK &amp;&amp; !NO_FISHING  # 依赖条件</span><br><span class="line">    select BAIT                          # 强制关联选项</span><br><span class="line">    help                                 # 帮助文档</span><br><span class="line">        Enable support for the Fish Master 3000 computer interface.</span><br><span class="line">        Choose Y to build into kernel, M for module (fishing.ko), or N to disable.</span><br></pre></td></tr></table></figure></p>
+<p><strong>核心指令解析</strong>： | <strong>指令</strong> |
+<strong>功能</strong> | <strong>示例</strong> |
+|----------------|----------------------------------|-----------------------------------|
+| <code>tristate</code> | 三态选项 (Y/M/N) | 驱动标准配置 | |
+<code>bool</code> | 布尔选项 (Y/N) | 特性开关 | | <code>default</code> |
+默认值 | <code>default y</code> 默认启用 | | <code>depends on</code> |
+依赖关系 | <code>depends on NET</code> 需网络支持 | |
+<code>select</code> | 强制启用其他选项 | <code>select CRC32</code>
+自动启用CRC校验 | | <code>if</code> | 条件显示 |
+<code>if EMBEDDED</code> 嵌入式场景可见 | | <code>help</code> | 帮助文档
+| 用户配置时的说明文本 |</p>
+<hr />
+<h3 id="模块参数系统">模块参数系统</h3>
+<h4 id="基础参数声明">1. 基础参数声明</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> pole_length = <span class="number">200</span>;  <span class="comment">// 默认值</span></span><br><span class="line">module_param(pole_length, <span class="type">int</span>, <span class="number">0644</span>);  <span class="comment">// 整型参数</span></span><br><span class="line">MODULE_PARM_DESC(pole_length, <span class="string">&quot;Pole length in cm&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="高级参数类型">2. 高级参数类型</h4>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 32%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>charp</code></td>
+<td>字符串指针</td>
+<td><code>module_param(name, charp, 0);</code></td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>布尔值</td>
+<td><code>module_param(enable, bool, 0);</code></td>
+</tr>
+<tr>
+<td><code>module_param_string</code></td>
+<td>直接复制到数组</td>
+<td><code>char target[32]; module_param_string(dest, target, sizeof(target), 0);</code></td>
+</tr>
+<tr>
+<td><code>module_param_array</code></td>
+<td>数组参数</td>
+<td><code>int ids[5]; int count; module_param_array(ids, int, &amp;count, 0);</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="参数传递方式">3. 参数传递方式</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载时指定参数</span></span><br><span class="line">sudo modprobe fishing pole_length=300 material=carbon</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看参数信息</span></span><br><span class="line">modinfo fishing</span><br><span class="line">parm:           pole_length:Pole length <span class="keyword">in</span> cm (int)</span><br><span class="line">parm:           material:Construction material (charp)</span><br></pre></td></tr></table></figure>
+<h4 id="sysfs集成">4. sysfs集成</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数自动暴露到sysfs</span></span><br><span class="line">/sys/module/fishing/parameters/pole_length  <span class="comment"># 权限0644=rwr--r--</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="符号导出机制">符号导出机制</h3>
+<h4 id="基础导出">1. 基础导出</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明可被模块调用的函数</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_pole_strength</span><span class="params">(<span class="keyword">struct</span> pole *p)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> p-&gt;load_capacity;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(get_pole_strength);  <span class="comment">// 全局导出</span></span><br></pre></td></tr></table></figure>
+<h4 id="gpl受限导出">2. GPL受限导出</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPORT_SYMBOL_GPL(calculate_bait_ratio);  <span class="comment">// 仅GPL模块可用</span></span><br></pre></td></tr></table></figure>
+<h4 id="导出规则">3. 导出规则</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>导出类型</strong></th>
+<th><strong>调用权限</strong></th>
+<th><strong>典型场景</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXPORT_SYMBOL</code></td>
+<td>所有模块</td>
+<td>通用内核API</td>
+</tr>
+<tr>
+<td><code>EXPORT_SYMBOL_GPL</code></td>
+<td>仅GPL许可证模块</td>
+<td>核心子系统接口</td>
+</tr>
+<tr>
+<td>未导出符号</td>
+<td>仅内核内部使用</td>
+<td>静态函数/私有实现</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="配置系统元选项">配置系统元选项</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">config EXPERIMENTAL</span><br><span class="line">    bool &quot;Enable experimental features&quot;  # 高风险功能开关</span><br><span class="line">    default n</span><br><span class="line"></span><br><span class="line">config DEBUG_KERNEL</span><br><span class="line">    bool &quot;Kernel debugging&quot;  # 调试选项总开关</span><br><span class="line">    default y if DEBUG</span><br></pre></td></tr></table></figure>
+<p><strong>关键元选项</strong>： -
+<code>CONFIG_EMBEDDED</code>：嵌入式系统优化选项 -
+<code>CONFIG_BROKEN_ON_SMP</code>：标记非SMP安全驱动 -
+<code>CONFIG_EXPERIMENTAL</code>：实验性功能入口</p>
+<hr />
+<h3 id="开发工作流示例">开发工作流示例</h3>
+<h4 id="添加新驱动">1. 添加新驱动</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建Kconfig</span></span><br><span class="line"><span class="comment"># drivers/char/fishing/Kconfig</span></span><br><span class="line">config FISHING_PRO</span><br><span class="line">    tristate <span class="string">&quot;Professional Fishing Module&quot;</span></span><br><span class="line">    select FISHING_ADVANCED</span><br><span class="line">    <span class="built_in">help</span></span><br><span class="line">      Support <span class="keyword">for</span> professional-grade fishing equipment</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改上级Kconfig</span></span><br><span class="line"><span class="comment"># drivers/char/Kconfig</span></span><br><span class="line"><span class="built_in">source</span> <span class="string">&quot;drivers/char/fishing/Kconfig&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="实现参数化模块">2. 实现参数化模块</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/moduleparam.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">char</span> material[<span class="number">20</span>] = <span class="string">&quot;fiberglass&quot;</span>;</span><br><span class="line">module_param_string(material, material, <span class="keyword">sizeof</span>(material), <span class="number">0644</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> lengths[] = &#123;<span class="number">180</span>, <span class="number">240</span>&#125;;</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> nr_lengths = <span class="number">2</span>;</span><br><span class="line">module_param_array(lengths, <span class="type">int</span>, &amp;nr_lengths, <span class="number">0444</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">bool</span> enable_ai;</span><br><span class="line">module_param(enable_ai, <span class="type">bool</span>, <span class="number">0644</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="编译验证">3. 编译验证</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置内核</span></span><br><span class="line">make menuconfig</span><br><span class="line"><span class="comment"># -&gt; Device Drivers -&gt; Character devices -&gt; Professional Fishing Module (M)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>) modules</span><br><span class="line">sudo make modules_install</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="生产环境最佳实践">生产环境最佳实践</h3>
+<ol type="1">
+<li><p><strong>参数安全</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> max_load = <span class="number">100</span>;</span><br><span class="line">module_param(max_load, <span class="type">int</span>, <span class="number">0644</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">init_func</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (max_load &gt; MAX_SAFE_LIMIT) &#123;</span><br><span class="line">        pr_warn(<span class="string">&quot;Dangerous load limit %d, capping at %d\n&quot;</span>, </span><br><span class="line">                max_load, MAX_SAFE_LIMIT);</span><br><span class="line">        max_load = MAX_SAFE_LIMIT;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>版本兼容</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/version.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> LINUX_VERSION_CODE &gt;= KERNEL_VERSION(5,15,0)</span></span><br><span class="line"><span class="comment">// 新版内核API</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="comment">// 旧版兼容实现</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>错误处理</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> err = register_device();</span><br><span class="line"><span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="comment">// 彻底回滚初始化</span></span><br><span class="line">    unregister_previous();</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<blockquote>
+<p><strong>性能提示</strong>：高频访问的模块参数应复制到局部变量，避免频繁查sysfs</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/12/oper_sys18/" rel="prev" title="操作系统基础 | 4.4 内核数据结构-二叉树">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 4.4 内核数据结构-二叉树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/08/19/kamacode36/" rel="next" title="代码随想录 | 刷题-动态规划9">
+                  代码随想录 | 刷题-动态规划9 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/08/12/oper_sys19/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/08/12/oper_sys19/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

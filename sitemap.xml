@@ -2,6 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mackz-maxw.github.io/2025/08/23/oper_sys23%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</loc>
+    
+    <lastmod>2025-08-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/20/oper_sys22%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
+    
+    <lastmod>2025-08-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/19/oper_sys21%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%AE%9E%E9%AA%8C/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/19/oper_sys20/</loc>
+    
+    <lastmod>2025-08-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/19/kamacode36/</loc>
+    
+    <lastmod>2025-08-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/11/kamacode35/</loc>
+    
+    <lastmod>2025-08-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/12/oper_sys19/</loc>
+    
+    <lastmod>2025-08-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/2025/08/12/oper_sys18/</loc>
+    
+    <lastmod>2025-08-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mackz-maxw.github.io/2025/08/05/kamacode34/</loc>
     
     <lastmod>2025-08-11</lastmod>
@@ -272,7 +344,7 @@
   </url>
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/18/oper_sys0/</loc>
+    <loc>https://mackz-maxw.github.io/2025/06/18/oper_sys0linux%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B/</loc>
     
     <lastmod>2025-06-23</lastmod>
     
@@ -281,7 +353,7 @@
   </url>
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/20/oper_sys1/</loc>
+    <loc>https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/</loc>
     
     <lastmod>2025-06-22</lastmod>
     
@@ -290,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://mackz-maxw.github.io/2025/06/20/oper_sys2/</loc>
+    <loc>https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/</loc>
     
     <lastmod>2025-06-22</lastmod>
     
@@ -778,7 +850,7 @@
 
   <url>
     <loc>https://mackz-maxw.github.io/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -788,56 +860,56 @@
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/leetcode/</loc>
-    <lastmod>2025-08-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mackz-maxw.github.io/categories/linux-tricks/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/realtime-sched/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mackz-maxw.github.io/categories/linux-tricks/</loc>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/comp-basic/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/interview/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/os-basic/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/os-basic/lab/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mackz-maxw.github.io/categories/rust-os/</loc>
-    <lastmod>2025-08-11</lastmod>
+    <lastmod>2025-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
