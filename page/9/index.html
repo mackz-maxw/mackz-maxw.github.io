@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,97 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -222,100 +313,6 @@
 <p>最近发现了力扣的笔记功能，虽然题目集的笔记和题目的笔记是分开的，有点坑，不过还是打算不写博客的时候先记在题目集笔记里，方便之后翻阅整理。</p>
 <h2 id="section">3/2-3/11</h2>
 <p>（累了，摸会🐟）</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
-<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
-<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
-是第一个参数，依此类推。\)</span>@ - 所有参数 <span
-class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
-当前脚本的进程识别码 !! -
-完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
-sudo !!再尝试一次。 $_ -
-上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
-Esc 之后键入 . 来获取这个值。</p>
 
       
     </div>
@@ -470,7 +467,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -488,7 +485,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
+          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
         </h2>
 
         <div class="post-meta-container">
@@ -506,7 +503,16 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:19" itemprop="dateModified" datetime="2025-01-22T10:30:19+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
+        </span>
     </span>
 
   
@@ -519,23 +525,16 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
-<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
-<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
-以上代码分别：设置了GTK（GIMP
-Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
-Window
-System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
-<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
-<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
-<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
-选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
-默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
-<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
-target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
+          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
+<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
+<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
+是第一个参数，依此类推。\)</span>@ - 所有参数 <span
+class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
+当前脚本的进程识别码 !! -
+完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
+sudo !!再尝试一次。 $_ -
+上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
+Esc 之后键入 . 来获取这个值。</p>
 
       
     </div>
@@ -673,6 +672,95 @@ or other reference you trust.</li>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:22" itemprop="dateModified" datetime="2025-01-22T10:30:22+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="依赖问题">依赖问题</h3>
+<p>由于安装的老版本（humble）ros2,
+很多必需包直接安装会报依赖小版本号不一致错误，使用apt
+install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
+在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
+<h3 id="swap空间不足">swap空间不足</h3>
+<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
+很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
+<p>这个时候就需要给wsl2扩swap空间， 在
+c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
+在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
+<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
+<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -784,7 +872,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -802,7 +890,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
+          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -820,7 +908,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:22" itemprop="dateModified" datetime="2025-01-22T10:30:22+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:19" itemprop="dateModified" datetime="2025-01-22T10:30:19+08:00">2025-01-22</time>
     </span>
 
   
@@ -833,20 +921,23 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="依赖问题">依赖问题</h3>
-<p>由于安装的老版本（humble）ros2,
-很多必需包直接安装会报依赖小版本号不一致错误，使用apt
-install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
-在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
-<h3 id="swap空间不足">swap空间不足</h3>
-<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
-很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
-<p>这个时候就需要给wsl2扩swap空间， 在
-c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
-在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
-<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
-<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
+          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
+<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
+以上代码分别：设置了GTK（GIMP
+Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
+Window
+System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
+<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
+<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
+<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
+选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
+默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
+<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
+target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
 
       
     </div>
@@ -1020,88 +1111,6 @@ Programming Interface，API）。</p>
 <h2 id="section-1">4/22</h2>
 <p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
 <p>绝了！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/thoughts_0927/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/thoughts_0927/" class="post-title-link" itemprop="url">杂记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:53" itemprop="dateModified" datetime="2025-01-22T10:30:53+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="一些感慨">一些感慨</h3>
-<p>最近学了好多好多东西，有gdb debug, 有rust,
-也刷了些题。正在看很有意思的操作系统网课，还有项目组要求看的书...感觉这些事情都忙不过来了，更别说整理成博客。我这个博客网站的archive也一直没好好利用。</p>
-<p>完全提不起兴致玩游戏，心理上好累又睡不着。大概是最近游戏不好玩吧，大概是没有朋友和我一起玩？大概是游戏打多了忙一忙就觉得游戏好玩了...好多年前我就只有听着Owl
-City的歌才能睡着了，但那个时候只觉得是自己压力太大。三两年前觉着是实验室事情太多，是画图太累，后来安慰自己年轻人熬熬夜怎么了。</p>
-<p>很多年前还小的时候我就总觉着，如果社交上出现一些问题，那个念头就会总在脑子里转动消不去，到了有点影响生活的地步了。我总被这样的思绪叨扰，我没办法解释这种事情，只好跟家长说我头疼。我以为是我性格太执拗，是我太内向，是我表达的方式不对...哦，我该改改总是自我检讨的毛病，所作所为，留予世人评好了</p>
-<p>好歹还能感受到朋友的关心，好歹还有兴致吃点什么，好歹今天中午睡得不错。</p>
 
       
     </div>

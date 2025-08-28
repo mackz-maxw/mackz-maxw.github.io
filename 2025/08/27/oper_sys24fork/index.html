@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="信号的概念 信号（Signal）是通知进程已发生某种事件的一种机制。信号有时被描述为软件中断（software interrupts）。信号与硬件中断类似，因为它们会中断程序的正常执行流程；在大多数情况下，无法精确预测信号何时到达。一个进程（如果它具有适当的权限）可以向另一个进程发送信号。这种用途下，信号可以作为一种同步技术，甚至作为一种原始的进程间通信（IPC） 形式。进程也可以向自己发送">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 5.3 信号；fork">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="信号的概念 信号（Signal）是通知进程已发生某种事件的一种机制。信号有时被描述为软件中断（software interrupts）。信号与硬件中断类似，因为它们会中断程序的正常执行流程；在大多数情况下，无法精确预测信号何时到达。一个进程（如果它具有适当的权限）可以向另一个进程发送信号。这种用途下，信号可以作为一种同步技术，甚至作为一种原始的进程间通信（IPC） 形式。进程也可以向自己发送">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-28T01:15:23.649Z">
+<meta property="article:modified_time" content="2025-08-28T01:17:07.408Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/","path":"2025/08/27/oper_sys24fork/","title":"操作系统基础 | 5.3 信号；fork"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 5.3 信号；fork | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">信号的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fork-exit-wait-%E5%92%8C-execve-%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">fork(),
+exit(), wait() 和 execve()
+概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E8%BF%9B%E7%A8%8Bfork"><span class="nav-number">3.</span> <span class="nav-text">创建新进程：fork()</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 5.3 信号；fork | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 5.3 信号；fork
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-08-28 09:15:23 / 修改时间：09:17:07" itemprop="dateCreated datePublished" datetime="2025-08-28T09:15:23+08:00">2025-08-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="信号的概念">信号的概念</h3>
+<p>信号（Signal）是通知进程已发生某种事件的一种机制。信号有时被描述为<strong>软件中断</strong>（software
+interrupts）。信号与硬件中断类似，因为它们会中断程序的正常执行流程；在大多数情况下，无法精确预测信号何时到达。一个进程（如果它具有适当的权限）可以向另一个进程发送信号。这种用途下，信号可以作为一种同步技术，甚至作为一种原始的<strong>进程间通信（IPC）</strong>
+形式。进程也可以向自己发送信号。</p>
+<p>然而，传递给进程的许多信号的通常来源是<strong>内核</strong>（kernel）。导致内核为进程生成信号的事件类型包括：</p>
+<ul>
+<li><strong>发生硬件异常</strong>：这意味着硬件检测到故障条件并通知内核，内核随后向相关进程发送相应的信号。硬件异常的例子包括：执行格式错误的机器语言指令、除以0、或引用了无法访问的内存区域。</li>
+<li><strong>用户键入了能生成信号的终端特殊字符</strong>。这些字符包括中断字符（通常是
+<code>Control-C</code>）和挂起字符（通常是
+<code>Control-Z</code>）。</li>
+<li><strong>发生软件事件</strong>。例如：文件描述符上有输入可用、终端窗口大小改变、定时器超时、进程的CPU时间限制已超过、或该进程的一个子进程终止。</li>
+</ul>
+<p>每个信号都被定义为一个唯一的（小）整数，从1开始顺序编号。这些整数在
+<code>&lt;signal.h&gt;</code> 头文件中用 <code>SIGxxxx</code>
+形式的符号名定义。由于每个信号使用的实际数字因实现而异，因此在程序中总是使用这些符号名称。例如，当用户键入中断字符时，<code>SIGINT</code>（信号编号2）被传递给进程。</p>
+<p>信号分为两大类。第一组构成了<strong>传统或标准信号</strong>（standard
+signals），内核使用它们来通知进程事件。在Linux上，标准信号编号从1到31。本章我们描述标准信号。另一组信号由<strong>实时信号</strong>（realtime
+signals）组成，其与标准信号的区别将在第22.8节描述。</p>
+<p>信号被认为是<strong>由某个事件产生</strong>（generated）。一旦产生，信号随后会被<strong>递送</strong>（delivered）给一个进程，该进程随后会采取某些<strong>动作</strong>（action）来响应信号。在信号产生和递送之间的时间段，信号被称为<strong>处于等待状态</strong>（pending）。通常，一个等待中的信号会在进程下一次被调度运行时立即递送，如果进程已经在运行则立即递送（例如，进程向自己发送信号）。</p>
+<p>然而，有时我们需要确保一段代码不会因信号的递送而中断。为此，我们可以将一个信号添加到进程的<strong>信号掩码</strong>（signal
+mask）中——这是一组当前<strong>被阻塞</strong>（blocked）递送的信号。如果一个信号在阻塞状态下产生，它将保持等待状态，直到后来被<strong>解除阻塞</strong>（unblocked）（从信号掩码中移除）。各种系统调用允许进程向其信号掩码中添加和移除信号。</p>
+<p>根据信号的不同，信号被递送时，进程会执行以下<strong>默认动作</strong>（default
+actions）之一：</p>
+<ul>
+<li><strong>忽略信号</strong>（Ignored）：即信号被内核丢弃，对进程没有影响。（进程甚至不知道它发生了。）</li>
+<li><strong>进程被终止</strong>（Terminated）（杀死）。这有时被称为异常进程终止，与进程使用
+<code>exit()</code> 终止的正常进程终止相对。</li>
+<li><strong>生成核心转储文件</strong>（Core dump
+file）且进程被终止。核心转储文件包含进程虚拟内存的一个映像，可以将其加载到调试器中，以检查进程终止时的状态。</li>
+<li><strong>进程被停止</strong>（Stopped）——进程的执行被暂停。</li>
+<li><strong>进程被恢复</strong>（Resumed）执行——在之前被停止后恢复执行。</li>
+</ul>
+<p>程序可以改变信号递送时发生的动作，而不是接受特定信号的默认动作。这被称为设置信号的<strong>处置方式</strong>（disposition）。程序可以为信号设置以下处置方式之一：</p>
+<ul>
+<li>发生<strong>默认动作</strong>。这对于撤销之前将信号处置方式更改为非默认值的操作很有用。</li>
+<li><strong>忽略</strong>信号。这对于那些默认动作是终止进程的信号很有用。</li>
+<li>执行一个<strong>信号处理程序</strong>（signal
+handler）。信号处理程序是由程序员编写的函数，它执行适当的任务以响应信号的递送。例如，shell
+有一个用于 <code>SIGINT</code> 信号（由中断字符 <code>Control-C</code>
+产生）的处理程序，该处理程序使其停止当前正在做的事情并将控制权返回给主输入循环，从而再次向用户显示
+shell 提示符（用户按下 <code>Control-C</code>
+-shell中断当前处理-用户可以再次在shell中输入指令了）。通知内核应调用某个处理函数通常被称为<strong>安装</strong>（installing）或<strong>建立</strong>（establishing）一个信号处理程序。当信号处理程序因信号递送而被调用时，我们说信号已被<strong>处理</strong>（handled）或，同义词，被<strong>捕获</strong>（caught）。
+<em>注意：不可能将信号的处置方式设置为终止或转储核心（除非其中一个是该信号的默认处置方式）。最接近这一点的是为该信号安装一个处理程序，然后该处理程序调用
+<code>exit()</code> 或 <code>abort()</code>。<code>abort()</code>
+函数（第21.2.2节）为进程生成一个 <code>SIGABRT</code>
+信号，这会导致其转储核心并终止。</em></li>
+</ul>
+<p>Linux特有的 <code>/proc/PID/status</code>
+文件包含各种位掩码字段，可以检查这些字段以确定进程对信号的处理情况。位掩码以十六进制数显示，最低有效位代表信号1，左边下一位代表信号2，依此类推。这些字段是：
+* <code>SigPnd</code>（线程内等待信号，per-thread pending signals） *
+<code>ShdPnd</code>（进程范围内等待信号，process-wide pending
+signals；自Linux 2.6起） * <code>SigBlk</code>（阻塞信号，blocked
+signals） * <code>SigIgn</code>（忽略信号，ignored signals） *
+<code>SigCgt</code>（捕获信号，caught signals）。
+（当我们第33.2节描述多线程进程中的信号处理时，<code>SigPnd</code> 和
+<code>ShdPnd</code> 字段之间的区别将变得清晰。）同样的信息也可以使用
+<code>ps(1)</code> 命令的各种选项来获取。</p>
+<h3 id="fork-exit-wait-和-execve-概述"><code>fork()</code>,
+<code>exit()</code>, <code>wait()</code> 和 <code>execve()</code>
+概述</h3>
+<ul>
+<li><p><strong><code>fork()</code></strong> <code>fork()</code>
+系统调用允许一个进程（称为<strong>父进程</strong>）创建一个新的进程（称为<strong>子进程</strong>）。这是通过使新的子进程成为父进程的（近乎）完全副本来实现的：子进程获取父进程栈、数据、堆和文本段（第6.3节）的副本。“Fork”一词源于我们可以将父进程视为<strong>分裂
+(forking)</strong> 以产生自身的两个副本这一构想。</p></li>
+<li><p><strong><code>exit(status)</code></strong> <code>exit()</code>
+库函数<strong>终止</strong>一个进程，使该进程使用的所有资源（内存、打开的文件描述符等）可供内核后续重新分配。<code>status</code>
+参数是一个整数，用于确定进程的<strong>终止状态</strong>。通过
+<code>wait()</code> 系统调用，父进程可以检索此状态。 <code>exit()</code>
+库函数是基于 <code>_exit()</code>
+系统调用构建的。在第25章，我们将解释这两个接口之间的区别。在此我们只需注意，在
+<code>fork()</code>
+之后，通常只有父进程和子进程中的<strong>一个</strong>通过调用
+<code>exit()</code> 终止；<strong>另一个</strong>进程应使用
+<code>_exit()</code> 终止。</p></li>
+<li><p><strong><code>wait(&amp;status)</code></strong>
+<code>wait(&amp;status)</code>
+系统调用有两个目的。首先，如果该进程的某个子进程尚未调用
+<code>exit()</code> 终止，那么 <code>wait()</code>
+会<strong>暂停</strong>该进程的执行，直到它的一个子进程终止为止。其次，子进程的终止状态通过
+<code>wait()</code> 的 <code>status</code>
+参数<strong>返回</strong>。</p></li>
+<li><p><strong><code>execve(pathname, argv, envp)</code></strong>
+<code>execve(pathname, argv, envp)</code>
+系统调用将一个新的程序（<code>pathname</code>，带有参数列表
+<code>argv</code> 和环境列表
+<code>envp</code>）<strong>加载</strong>到一个进程的内存中。现有的程序文本被丢弃，并为新程序<strong>全新创建</strong>栈、数据和堆段。此操作通常被称为
+<strong>execing</strong> 一个新程序。后面我们会看到，有几个库函数是基于
+<code>execve()</code>
+构建的，每个函数都在编程接口上提供了有用的变体。当我们不关心这些接口变体时，我们遵循通用惯例，将这些调用统称为
+<code>exec()</code>，但请注意，并没有叫这个名字的系统调用或库函数。</p></li>
+</ul>
+<p><strong>与其他系统的对比：</strong> 一些其他操作系统将
+<code>fork()</code> 和 <code>exec()</code>
+的功能组合到单个操作中——即所谓的
+<strong>spawn</strong>——该操作创建一个新进程然后执行指定的程序。相比之下，UNIX
+的方法通常更简单、更优雅。将这两个步骤分开使得 API
+更简单（<code>fork()</code>
+系统调用不需要参数），并且允许程序在两个步骤之间执行的操作具有极大的灵活性。此外，只进行
+<code>fork()</code> 而不接着执行 <code>exec()</code> 通常也很有用。</p>
+<p>SUSv3 规定了可选的 <code>posix_spawn()</code> 函数，它结合了
+<code>fork()</code> 和 <code>exec()</code> 的效果。此函数以及 SUSv3
+规定的几个相关 API 已在 glibc 中为 Linux 实现。SUSv3 规定
+<code>posix_spawn()</code>
+是为了允许为那些不提供交换设施或内存管理单元（这在许多嵌入式系统中很典型）的硬件架构编写可移植应用程序。在此类架构上，传统的
+<code>fork()</code> 难以或无法实现。</p>
+<p><strong>协同工作概述：</strong> <code>fork()</code>,
+<code>exit()</code>, <code>wait()</code>, 和 <code>execve()</code>
+通常是如何一起使用的。（shell
+持续执行一个循环，该循环读取命令、对其进行各种处理，然后 fork
+一个子进程来 exec 该命令。）</p>
+<h3 id="创建新进程fork">创建新进程：<code>fork()</code></h3>
+<p><code>fork()</code>
+系统调用创建一个新的进程，即<strong>子进程</strong>，它是调用进程，即<strong>父进程</strong>的一个几乎完全相同的副本。</p>
+<p>理解 <code>fork()</code>
+的关键在于认识到，在它完成工作后，存在<strong>两个进程</strong>，并且在每个进程中，执行都从
+<code>fork()</code>
+<strong>返回的地方继续</strong>。两个进程执行相同的程序代码，但它们拥有独立的栈、数据和堆段副本。子进程的栈、数据和堆段最初是父进程内存相应部分的精确副本。在
+<code>fork()</code>
+之后，每个进程都可以修改其栈、数据和堆段中的变量，而<strong>不会影响另一个进程</strong>。</p>
+<p>在程序代码中，我们可以通过 <code>fork()</code>
+的返回值来区分这两个进程：</p>
+<ul>
+<li>对于<strong>父进程</strong>，<code>fork()</code>
+返回新创建子进程的<strong>进程ID
+(PID)</strong>。这很有用，因为父进程可能会创建多个子进程，并因此需要（通过
+<code>wait()</code> 或其相关函数）跟踪它们。</li>
+<li>对于<strong>子进程</strong>，<code>fork()</code> 返回
+<strong>0</strong>。</li>
+<li>如果无法创建新进程，<code>fork()</code> 返回
+<strong>-1</strong>。失败的可能原因包括：已达到允许该（真实）用户ID创建的进程数的资源限制（<code>RLIMIT_NPROC</code>，在第36.3节描述），或者已达到系统范围内可创建进程数的上限。</li>
+</ul>
+<p>必要时，子进程可以使用 <code>getpid()</code> 获取自身的进程ID，使用
+<code>getppid()</code> 获取其父进程的进程ID。</p>
+<p>调用 <code>fork()</code> 时有时会使用以下惯用法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> childPid; <span class="comment">/* 在父进程中用于记录成功 fork() 后的子进程 PID */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">-1</span>: <span class="comment">/* fork() 失败 */</span></span><br><span class="line">    <span class="comment">/* 处理错误 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="number">0</span>:  <span class="comment">/* 成功 fork() 后的子进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行子进程特定的操作 */</span></span><br><span class="line">    <span class="keyword">break</span>; <span class="comment">// 或 exit()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">default</span>: <span class="comment">/* 成功 fork() 后的父进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行父进程特定的操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重要的是要认识到，在 <code>fork()</code>
+之后，<strong>无法确定接下来是哪个进程被调度使用CPU</strong>。在编写不佳的程序中，这种不确定性可能导致称为<strong>竞争条件
+(race conditions)</strong> 的错误，我们将在第24.4节进一步描述。</p>
+<p>代码清单24-1演示了 <code>fork()</code>
+的用法。该程序创建一个子进程，修改它在 <code>fork()</code>
+期间继承的全局变量和自动变量的副本。在程序中（由父进程执行的代码中）使用
+<code>sleep()</code>，是为了让子进程能在父进程之前被调度到CPU上，从而使子进程可以在父进程继续执行之前完成其工作并终止。使用
+<code>sleep()</code>
+这种方式并<strong>不是</strong>保证此结果的万无一失的方法；我们将在第24.5节探讨一种更好的方法。
+<strong>代码清单 24-1: 使用 fork()</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> idata = <span class="number">111</span>;             <span class="comment">/* 分配在数据段 (data segment) */</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> istack = <span class="number">222</span>;               <span class="comment">/* 分配在栈段 (stack segment) */</span></span><br><span class="line">    <span class="type">pid_t</span> childPid;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:                         <span class="comment">/* 子进程分支 */</span></span><br><span class="line">        idata *= <span class="number">3</span>;                 <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        istack *= <span class="number">3</span>;                <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:                        <span class="comment">/* 父进程分支 */</span></span><br><span class="line">        sleep(<span class="number">3</span>);                   <span class="comment">/* 给子进程一个执行的机会 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 父进程和子进程都会执行到这里 */</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;PID=%ld %s idata=%d istack=%d\n&quot;</span>, (<span class="type">long</span>) getpid(),</span><br><span class="line">            (childPid == <span class="number">0</span>) ? <span class="string">&quot;(child) &quot;</span> : <span class="string">&quot;(parent)&quot;</span>, idata, istack);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当我们运行清单24-1中的程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./t_fork</span><br><span class="line">PID=28557 (child)  idata=333 istack=666</span><br><span class="line">PID=28556 (parent) idata=111 istack=222</span><br></pre></td></tr></table></figure>
+上面的输出证明，子进程在 <code>fork()</code>
+时获得了栈段和数据段的<strong>自有副本</strong>，并且它能够修改这些段中的变量而<strong>不影响父进程</strong>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/23/oper_sys23%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" rel="prev" title="操作系统基础 | 5.2 进程管理详解">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 5.2 进程管理详解
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/08/27/oper_sys24fork/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/08/27/oper_sys24fork/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

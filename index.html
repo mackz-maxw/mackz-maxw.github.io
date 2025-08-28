@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,232 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/27/oper_sys24fork/" class="post-title-link" itemprop="url">操作系统基础 | 5.3 信号；fork</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-08-28 09:15:23 / 修改时间：09:17:07" itemprop="dateCreated datePublished" datetime="2025-08-28T09:15:23+08:00">2025-08-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="信号的概念">信号的概念</h3>
+<p>信号（Signal）是通知进程已发生某种事件的一种机制。信号有时被描述为<strong>软件中断</strong>（software
+interrupts）。信号与硬件中断类似，因为它们会中断程序的正常执行流程；在大多数情况下，无法精确预测信号何时到达。一个进程（如果它具有适当的权限）可以向另一个进程发送信号。这种用途下，信号可以作为一种同步技术，甚至作为一种原始的<strong>进程间通信（IPC）</strong>
+形式。进程也可以向自己发送信号。</p>
+<p>然而，传递给进程的许多信号的通常来源是<strong>内核</strong>（kernel）。导致内核为进程生成信号的事件类型包括：</p>
+<ul>
+<li><strong>发生硬件异常</strong>：这意味着硬件检测到故障条件并通知内核，内核随后向相关进程发送相应的信号。硬件异常的例子包括：执行格式错误的机器语言指令、除以0、或引用了无法访问的内存区域。</li>
+<li><strong>用户键入了能生成信号的终端特殊字符</strong>。这些字符包括中断字符（通常是
+<code>Control-C</code>）和挂起字符（通常是
+<code>Control-Z</code>）。</li>
+<li><strong>发生软件事件</strong>。例如：文件描述符上有输入可用、终端窗口大小改变、定时器超时、进程的CPU时间限制已超过、或该进程的一个子进程终止。</li>
+</ul>
+<p>每个信号都被定义为一个唯一的（小）整数，从1开始顺序编号。这些整数在
+<code>&lt;signal.h&gt;</code> 头文件中用 <code>SIGxxxx</code>
+形式的符号名定义。由于每个信号使用的实际数字因实现而异，因此在程序中总是使用这些符号名称。例如，当用户键入中断字符时，<code>SIGINT</code>（信号编号2）被传递给进程。</p>
+<p>信号分为两大类。第一组构成了<strong>传统或标准信号</strong>（standard
+signals），内核使用它们来通知进程事件。在Linux上，标准信号编号从1到31。本章我们描述标准信号。另一组信号由<strong>实时信号</strong>（realtime
+signals）组成，其与标准信号的区别将在第22.8节描述。</p>
+<p>信号被认为是<strong>由某个事件产生</strong>（generated）。一旦产生，信号随后会被<strong>递送</strong>（delivered）给一个进程，该进程随后会采取某些<strong>动作</strong>（action）来响应信号。在信号产生和递送之间的时间段，信号被称为<strong>处于等待状态</strong>（pending）。通常，一个等待中的信号会在进程下一次被调度运行时立即递送，如果进程已经在运行则立即递送（例如，进程向自己发送信号）。</p>
+<p>然而，有时我们需要确保一段代码不会因信号的递送而中断。为此，我们可以将一个信号添加到进程的<strong>信号掩码</strong>（signal
+mask）中——这是一组当前<strong>被阻塞</strong>（blocked）递送的信号。如果一个信号在阻塞状态下产生，它将保持等待状态，直到后来被<strong>解除阻塞</strong>（unblocked）（从信号掩码中移除）。各种系统调用允许进程向其信号掩码中添加和移除信号。</p>
+<p>根据信号的不同，信号被递送时，进程会执行以下<strong>默认动作</strong>（default
+actions）之一：</p>
+<ul>
+<li><strong>忽略信号</strong>（Ignored）：即信号被内核丢弃，对进程没有影响。（进程甚至不知道它发生了。）</li>
+<li><strong>进程被终止</strong>（Terminated）（杀死）。这有时被称为异常进程终止，与进程使用
+<code>exit()</code> 终止的正常进程终止相对。</li>
+<li><strong>生成核心转储文件</strong>（Core dump
+file）且进程被终止。核心转储文件包含进程虚拟内存的一个映像，可以将其加载到调试器中，以检查进程终止时的状态。</li>
+<li><strong>进程被停止</strong>（Stopped）——进程的执行被暂停。</li>
+<li><strong>进程被恢复</strong>（Resumed）执行——在之前被停止后恢复执行。</li>
+</ul>
+<p>程序可以改变信号递送时发生的动作，而不是接受特定信号的默认动作。这被称为设置信号的<strong>处置方式</strong>（disposition）。程序可以为信号设置以下处置方式之一：</p>
+<ul>
+<li>发生<strong>默认动作</strong>。这对于撤销之前将信号处置方式更改为非默认值的操作很有用。</li>
+<li><strong>忽略</strong>信号。这对于那些默认动作是终止进程的信号很有用。</li>
+<li>执行一个<strong>信号处理程序</strong>（signal
+handler）。信号处理程序是由程序员编写的函数，它执行适当的任务以响应信号的递送。例如，shell
+有一个用于 <code>SIGINT</code> 信号（由中断字符 <code>Control-C</code>
+产生）的处理程序，该处理程序使其停止当前正在做的事情并将控制权返回给主输入循环，从而再次向用户显示
+shell 提示符（用户按下 <code>Control-C</code>
+-shell中断当前处理-用户可以再次在shell中输入指令了）。通知内核应调用某个处理函数通常被称为<strong>安装</strong>（installing）或<strong>建立</strong>（establishing）一个信号处理程序。当信号处理程序因信号递送而被调用时，我们说信号已被<strong>处理</strong>（handled）或，同义词，被<strong>捕获</strong>（caught）。
+<em>注意：不可能将信号的处置方式设置为终止或转储核心（除非其中一个是该信号的默认处置方式）。最接近这一点的是为该信号安装一个处理程序，然后该处理程序调用
+<code>exit()</code> 或 <code>abort()</code>。<code>abort()</code>
+函数（第21.2.2节）为进程生成一个 <code>SIGABRT</code>
+信号，这会导致其转储核心并终止。</em></li>
+</ul>
+<p>Linux特有的 <code>/proc/PID/status</code>
+文件包含各种位掩码字段，可以检查这些字段以确定进程对信号的处理情况。位掩码以十六进制数显示，最低有效位代表信号1，左边下一位代表信号2，依此类推。这些字段是：
+* <code>SigPnd</code>（线程内等待信号，per-thread pending signals） *
+<code>ShdPnd</code>（进程范围内等待信号，process-wide pending
+signals；自Linux 2.6起） * <code>SigBlk</code>（阻塞信号，blocked
+signals） * <code>SigIgn</code>（忽略信号，ignored signals） *
+<code>SigCgt</code>（捕获信号，caught signals）。
+（当我们第33.2节描述多线程进程中的信号处理时，<code>SigPnd</code> 和
+<code>ShdPnd</code> 字段之间的区别将变得清晰。）同样的信息也可以使用
+<code>ps(1)</code> 命令的各种选项来获取。</p>
+<h3 id="fork-exit-wait-和-execve-概述"><code>fork()</code>,
+<code>exit()</code>, <code>wait()</code> 和 <code>execve()</code>
+概述</h3>
+<ul>
+<li><p><strong><code>fork()</code></strong> <code>fork()</code>
+系统调用允许一个进程（称为<strong>父进程</strong>）创建一个新的进程（称为<strong>子进程</strong>）。这是通过使新的子进程成为父进程的（近乎）完全副本来实现的：子进程获取父进程栈、数据、堆和文本段（第6.3节）的副本。“Fork”一词源于我们可以将父进程视为<strong>分裂
+(forking)</strong> 以产生自身的两个副本这一构想。</p></li>
+<li><p><strong><code>exit(status)</code></strong> <code>exit()</code>
+库函数<strong>终止</strong>一个进程，使该进程使用的所有资源（内存、打开的文件描述符等）可供内核后续重新分配。<code>status</code>
+参数是一个整数，用于确定进程的<strong>终止状态</strong>。通过
+<code>wait()</code> 系统调用，父进程可以检索此状态。 <code>exit()</code>
+库函数是基于 <code>_exit()</code>
+系统调用构建的。在第25章，我们将解释这两个接口之间的区别。在此我们只需注意，在
+<code>fork()</code>
+之后，通常只有父进程和子进程中的<strong>一个</strong>通过调用
+<code>exit()</code> 终止；<strong>另一个</strong>进程应使用
+<code>_exit()</code> 终止。</p></li>
+<li><p><strong><code>wait(&amp;status)</code></strong>
+<code>wait(&amp;status)</code>
+系统调用有两个目的。首先，如果该进程的某个子进程尚未调用
+<code>exit()</code> 终止，那么 <code>wait()</code>
+会<strong>暂停</strong>该进程的执行，直到它的一个子进程终止为止。其次，子进程的终止状态通过
+<code>wait()</code> 的 <code>status</code>
+参数<strong>返回</strong>。</p></li>
+<li><p><strong><code>execve(pathname, argv, envp)</code></strong>
+<code>execve(pathname, argv, envp)</code>
+系统调用将一个新的程序（<code>pathname</code>，带有参数列表
+<code>argv</code> 和环境列表
+<code>envp</code>）<strong>加载</strong>到一个进程的内存中。现有的程序文本被丢弃，并为新程序<strong>全新创建</strong>栈、数据和堆段。此操作通常被称为
+<strong>execing</strong> 一个新程序。后面我们会看到，有几个库函数是基于
+<code>execve()</code>
+构建的，每个函数都在编程接口上提供了有用的变体。当我们不关心这些接口变体时，我们遵循通用惯例，将这些调用统称为
+<code>exec()</code>，但请注意，并没有叫这个名字的系统调用或库函数。</p></li>
+</ul>
+<p><strong>与其他系统的对比：</strong> 一些其他操作系统将
+<code>fork()</code> 和 <code>exec()</code>
+的功能组合到单个操作中——即所谓的
+<strong>spawn</strong>——该操作创建一个新进程然后执行指定的程序。相比之下，UNIX
+的方法通常更简单、更优雅。将这两个步骤分开使得 API
+更简单（<code>fork()</code>
+系统调用不需要参数），并且允许程序在两个步骤之间执行的操作具有极大的灵活性。此外，只进行
+<code>fork()</code> 而不接着执行 <code>exec()</code> 通常也很有用。</p>
+<p>SUSv3 规定了可选的 <code>posix_spawn()</code> 函数，它结合了
+<code>fork()</code> 和 <code>exec()</code> 的效果。此函数以及 SUSv3
+规定的几个相关 API 已在 glibc 中为 Linux 实现。SUSv3 规定
+<code>posix_spawn()</code>
+是为了允许为那些不提供交换设施或内存管理单元（这在许多嵌入式系统中很典型）的硬件架构编写可移植应用程序。在此类架构上，传统的
+<code>fork()</code> 难以或无法实现。</p>
+<p><strong>协同工作概述：</strong> <code>fork()</code>,
+<code>exit()</code>, <code>wait()</code>, 和 <code>execve()</code>
+通常是如何一起使用的。（shell
+持续执行一个循环，该循环读取命令、对其进行各种处理，然后 fork
+一个子进程来 exec 该命令。）</p>
+<h3 id="创建新进程fork">创建新进程：<code>fork()</code></h3>
+<p><code>fork()</code>
+系统调用创建一个新的进程，即<strong>子进程</strong>，它是调用进程，即<strong>父进程</strong>的一个几乎完全相同的副本。</p>
+<p>理解 <code>fork()</code>
+的关键在于认识到，在它完成工作后，存在<strong>两个进程</strong>，并且在每个进程中，执行都从
+<code>fork()</code>
+<strong>返回的地方继续</strong>。两个进程执行相同的程序代码，但它们拥有独立的栈、数据和堆段副本。子进程的栈、数据和堆段最初是父进程内存相应部分的精确副本。在
+<code>fork()</code>
+之后，每个进程都可以修改其栈、数据和堆段中的变量，而<strong>不会影响另一个进程</strong>。</p>
+<p>在程序代码中，我们可以通过 <code>fork()</code>
+的返回值来区分这两个进程：</p>
+<ul>
+<li>对于<strong>父进程</strong>，<code>fork()</code>
+返回新创建子进程的<strong>进程ID
+(PID)</strong>。这很有用，因为父进程可能会创建多个子进程，并因此需要（通过
+<code>wait()</code> 或其相关函数）跟踪它们。</li>
+<li>对于<strong>子进程</strong>，<code>fork()</code> 返回
+<strong>0</strong>。</li>
+<li>如果无法创建新进程，<code>fork()</code> 返回
+<strong>-1</strong>。失败的可能原因包括：已达到允许该（真实）用户ID创建的进程数的资源限制（<code>RLIMIT_NPROC</code>，在第36.3节描述），或者已达到系统范围内可创建进程数的上限。</li>
+</ul>
+<p>必要时，子进程可以使用 <code>getpid()</code> 获取自身的进程ID，使用
+<code>getppid()</code> 获取其父进程的进程ID。</p>
+<p>调用 <code>fork()</code> 时有时会使用以下惯用法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> childPid; <span class="comment">/* 在父进程中用于记录成功 fork() 后的子进程 PID */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">-1</span>: <span class="comment">/* fork() 失败 */</span></span><br><span class="line">    <span class="comment">/* 处理错误 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="number">0</span>:  <span class="comment">/* 成功 fork() 后的子进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行子进程特定的操作 */</span></span><br><span class="line">    <span class="keyword">break</span>; <span class="comment">// 或 exit()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">default</span>: <span class="comment">/* 成功 fork() 后的父进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行父进程特定的操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重要的是要认识到，在 <code>fork()</code>
+之后，<strong>无法确定接下来是哪个进程被调度使用CPU</strong>。在编写不佳的程序中，这种不确定性可能导致称为<strong>竞争条件
+(race conditions)</strong> 的错误，我们将在第24.4节进一步描述。</p>
+<p>代码清单24-1演示了 <code>fork()</code>
+的用法。该程序创建一个子进程，修改它在 <code>fork()</code>
+期间继承的全局变量和自动变量的副本。在程序中（由父进程执行的代码中）使用
+<code>sleep()</code>，是为了让子进程能在父进程之前被调度到CPU上，从而使子进程可以在父进程继续执行之前完成其工作并终止。使用
+<code>sleep()</code>
+这种方式并<strong>不是</strong>保证此结果的万无一失的方法；我们将在第24.5节探讨一种更好的方法。
+<strong>代码清单 24-1: 使用 fork()</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> idata = <span class="number">111</span>;             <span class="comment">/* 分配在数据段 (data segment) */</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> istack = <span class="number">222</span>;               <span class="comment">/* 分配在栈段 (stack segment) */</span></span><br><span class="line">    <span class="type">pid_t</span> childPid;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:                         <span class="comment">/* 子进程分支 */</span></span><br><span class="line">        idata *= <span class="number">3</span>;                 <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        istack *= <span class="number">3</span>;                <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:                        <span class="comment">/* 父进程分支 */</span></span><br><span class="line">        sleep(<span class="number">3</span>);                   <span class="comment">/* 给子进程一个执行的机会 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 父进程和子进程都会执行到这里 */</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;PID=%ld %s idata=%d istack=%d\n&quot;</span>, (<span class="type">long</span>) getpid(),</span><br><span class="line">            (childPid == <span class="number">0</span>) ? <span class="string">&quot;(child) &quot;</span> : <span class="string">&quot;(parent)&quot;</span>, idata, istack);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当我们运行清单24-1中的程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./t_fork</span><br><span class="line">PID=28557 (child)  idata=333 istack=666</span><br><span class="line">PID=28556 (parent) idata=111 istack=222</span><br></pre></td></tr></table></figure>
+上面的输出证明，子进程在 <code>fork()</code>
+时获得了栈段和数据段的<strong>自有副本</strong>，并且它能够修改这些段中的变量而<strong>不影响父进程</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -187,9 +413,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-08-23 23:49:20 / 修改时间：23:49:42" itemprop="dateCreated datePublished" datetime="2025-08-23T23:49:20+08:00">2025-08-23</time>
+      <time title="创建时间：2025-08-23 23:49:20" itemprop="dateCreated datePublished" datetime="2025-08-23T23:49:20+08:00">2025-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-27 10:13:53" itemprop="dateModified" datetime="2025-08-27T10:13:53+08:00">2025-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -211,7 +443,299 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <h3 id="进程创建-process-creation"><strong>进程创建 (Process
+Creation)</strong></h3>
+<p>Unix 中的进程创建方式是独特的。大多数操作系统实现一种 <strong>spawn
+机制</strong>来在新地址空间中创建新进程、读入可执行文件并开始执行。Unix
+则采用了一种不寻常的方法，将这些步骤分离成两个不同的函数：<code>fork()</code>
+和 <code>exec()</code>⁷。第一个函数 <code>fork()</code>
+创建一个作为当前任务副本的<strong>子进程</strong>。它与父进程的区别仅在于其
+PID（是唯一的）、其 PPID（父进程的 PID，被设置为原始进程的
+PID）以及某些资源和统计信息（如待处理的信号，这些不被继承）。第二个函数
+<code>exec()</code>
+将一个新的可执行文件加载到地址空间中并开始执行。<code>fork()</code> 后接
+<code>exec()</code> 这种组合，类似于大多数操作系统提供的单一函数。</p>
+<p>⁷ 这里的 <code>exec()</code> 指的是 <code>exec()</code>
+函数家族中的任何成员。内核实现了 <code>execve()</code>
+系统调用，基于此实现了 <code>execlp()</code>, <code>execle()</code>,
+<code>execv()</code>, 和 <code>execvp()</code>。</p>
+<h4 id="写时复制-copy-on-write"><strong>写时复制
+(Copy-on-Write)</strong></h4>
+<p>传统上，在 <code>fork()</code>
+时，父进程拥有的所有资源都会被复制，并将副本交给子进程。这种方法很朴素且低效，因为它复制了许多本可以共享的数据。更糟糕的是，如果新进程要立即执行一个新的映像（image），所有这些复制都将被浪费。在
+Linux 中，<code>fork()</code> 是通过使用<strong>写时复制 (Copy-on-Write
+或 COW)</strong>
+页来实现的。写时复制是一种延迟或完全防止数据复制的技术。父进程和子进程可以共享一份单一的副本，而不是复制整个进程地址空间。</p>
+<p>然而，数据会被标记，如果对其进行写入，就会创建一个副本，每个进程都会收到一个独一无二的副本。因此，资源的复制<strong>仅发生在它们被写入时</strong>；在此之前，它们以只读方式共享。这种技术将地址空间中每一页的复制延迟到实际被写入的时候。如果这些页永远不被写入——例如，如果在
+<code>fork()</code> 之后立即调用
+<code>exec()</code>——它们就永远不需要被复制。</p>
+<p><code>fork()</code> 产生的唯一开销是复制父进程的<strong>页表 (page
+tables)</strong>
+以及为子进程创建一个唯一的进程描述符。在常见的场景中（进程在 fork
+后立即执行一个新的可执行映像），这种优化避免了大量数据（整个地址空间，很容易达到几十兆字节）的浪费性复制。这是一个重要的优化，因为
+Unix 哲学鼓励快速的进程执行。</p>
+<h4 id="forking"><strong>Forking</strong></h4>
+<p>Linux 通过 <code>clone()</code> 系统调用来实现
+<code>fork()</code>。这个调用接受一系列标志（flags），用以指定父进程和子进程应共享哪些资源（如果有的话）。（关于这些标志的更多信息，请参阅本章后面的“Linux
+的线程实现”一节。）<code>fork()</code>, <code>vfork()</code>, 和
+<code>__clone()</code> 库调用都使用必要的标志来调用 <code>clone()</code>
+系统调用。而 <code>clone()</code> 系统调用又会调用
+<code>do_fork()</code>。</p>
+<p>forking 的大部分工作由 <code>do_fork()</code> 处理，该函数定义在
+<code>kernel/fork.c</code> 中。此函数调用
+<code>copy_process()</code>，然后启动进程运行。有趣的工作是由
+<code>copy_process()</code> 完成的：</p>
+<ol type="1">
+<li>它调用
+<code>dup_task_struct()</code>，该函数为新进程创建一个新的内核栈、<code>thread_info</code>
+结构和
+<code>task_struct</code>。新的值与当前任务的值完全相同。此时，子进程和父进程的描述符是完全相同的。</li>
+<li>然后检查确保新的子进程不会超过当前用户所能拥有的进程数量资源限制。</li>
+<li>子进程需要与父进程区分开来。进程描述符的各种成员被清除或设置为初始值。不被继承的进程描述符成员主要是统计信息。<code>task_struct</code>
+中的大部分值保持不变。</li>
+<li>子进程的状态被设置为 <code>TASK_UNINTERRUPTIBLE</code>
+以确保它还不会运行。</li>
+<li><code>copy_process()</code> 调用 <code>copy_flags()</code> 来更新
+<code>task_struct</code> 的 <code>flags</code>
+成员。<code>PF_SUPERPRIV</code>
+标志（表示任务是否使用了超级用户权限）被清除。<code>PF_FORKNOEXEC</code>
+标志（表示进程尚未调用 <code>exec()</code>）被设置。</li>
+<li>它调用 <code>alloc_pid()</code> 为新任务分配一个可用的 PID。</li>
+<li>根据传递给 <code>clone()</code> 的标志，<code>copy_process()</code>
+要么复制要么共享打开的文件、文件系统信息、信号处理程序、进程地址空间和命名空间。这些资源通常在给定进程的线程之间共享；否则，它们是唯一的，因此在这里被复制。</li>
+<li>最后，<code>copy_process()</code>
+进行清理工作，并向调用者返回一个指向新子进程的指针。</li>
+</ol>
+<p>回到 <code>do_fork()</code>，如果 <code>copy_process()</code>
+成功返回，新的子进程会被唤醒并运行。内核有意地让<strong>子进程先运行</strong>⁸。在子进程通常只是立即调用
+<code>exec()</code>
+的常见情况下，这消除了如果父进程先运行并开始写入地址空间可能发生的任何写时复制开销。</p>
+<blockquote>
+<p>⁸
+虽然目标是让子进程先运行，但这目前（指原书写作时）并不能正确运行。</p>
+</blockquote>
+<h4 id="vfork"><strong>vfork()</strong></h4>
+<p><code>vfork()</code> 系统调用与 <code>fork()</code>
+效果相同，但<strong>不会复制父进程的页表项 (page table
+entries)</strong>。相反，子进程作为父进程地址空间中的唯一线程执行，并且<strong>父进程被阻塞</strong>，直到子进程调用
+<code>exec()</code>
+或退出。不允许子进程写入地址空间。在引入这个调用的旧版 3BSD
+时代，这是一个受欢迎的优化，因为当时还没有使用写时复制页来实现
+<code>fork()</code>。如今，有了写时复制和子进程优先运行的语义，<code>vfork()</code>
+的唯一好处就是<strong>不复制父进程的页表项</strong>。</p>
+<p>如果 Linux 有一天实现了写时复制页表项，那么 <code>vfork()</code>
+将不再有任何好处⁹。由于 <code>vfork()</code> 的语义很棘手（例如，如果
+<code>exec()</code> 失败了会发生什么？），理想情况下系统不需要
+<code>vfork()</code>，内核也不必实现它。完全可以将 <code>vfork()</code>
+实现为一个普通的 <code>fork()</code> —— 这就是 Linux 在 2.2
+版本之前所做的。</p>
+<p><code>vfork()</code> 系统调用是通过向 <code>clone()</code>
+系统调用传递一个特殊标志来实现的：</p>
+<ol type="1">
+<li>在 <code>copy_process()</code> 中，<code>task_struct</code> 的成员
+<code>vfork_done</code> 被设置为 <code>NULL</code>。</li>
+<li>在 <code>do_fork()</code>
+中，如果给定了特殊标志，<code>vfork_done</code>
+会被指向一个特定的地址。</li>
+<li>子首次运行后，父进程——不会立即返回——而是等待子进程通过
+<code>vfork_done</code> 指针向其发出信号。</li>
+<li>在 <code>mm_release()</code>
+函数中（该函数在任务退出内存地址空间时使用），会检查
+<code>vfork_done</code> 是否为
+<code>NULL</code>。如果不是，则向父进程发送信号。</li>
+<li>回到 <code>do_fork()</code>，父进程被唤醒并返回。</li>
+</ol>
+<p>如果这一切都按计划进行，那么子进程现在在新的地址空间中执行，而父进程则在其原始地址空间中恢复执行。开销是降低了，但实现并不优雅。</p>
+<blockquote>
+<p>⁹ 页表写时复制可作为补丁，已大概率加入主流内核</p>
+</blockquote>
+<h3
+id="linux-的线程实现-the-linux-implementation-of-threads"><strong>Linux
+的线程实现 (The Linux Implementation of Threads)</strong></h3>
+<p>线程是一种流行的现代编程抽象。它们在同一程序的共享内存地址空间内提供多个执行线程。它们还可以共享打开的文件和其他资源。线程实现了并发编程，并且在多处理器系统上实现了真正的并行。</p>
+<p>Linux 拥有一个独特的线程实现。<strong>对 Linux
+内核而言，没有“线程”的概念</strong>。Linux
+将所有线程实现为标准进程。Linux
+内核并不提供任何特殊的调度语义或数据结构来表示线程。相反，一个线程仅仅是一个与其他进程共享某些资源的进程。每个线程都有一个唯一的
+<code>task_struct</code>，并且在内核看来就是一个普通的进程——线程只是恰巧与其他进程共享了资源（例如地址空间）。</p>
+<p>这种线程实现方法与 Microsoft Windows 或 Sun Solaris
+等操作系统形成了巨大对比，这些操作系统在内核中提供了对线程的明确支持（有时称线程为<strong>轻量级进程
+(Lightweight Processes)</strong>）。“轻量级进程”这个名字概括了 Linux
+与其他系统在哲学上的差异。对这些其他操作系统而言，线程是一种抽象，旨在提供比笨重进程更轻量、更快速的执行单元。而对
+Linux
+而言，线程仅仅是进程之间共享资源的一种方式（而进程本身已经相当轻量）¹⁰。</p>
+<p>例如，假设一个包含四个线程的进程。在具有显式线程支持的系统中，可能会存在一个进程描述符，该描述符又指向四个不同的线程。进程描述符描述共享资源，如地址空间或打开的文件。线程则描述它们独自拥有的资源。相反，在
+Linux 中，简单地存在四个进程，因而有四个普通的 <code>task_struct</code>
+结构。这四个进程被设置为共享某些资源。结果非常优雅。</p>
+<blockquote>
+<p>¹⁰ 例如，可以对比 benchmark 一下 Linux
+的进程创建时间与其他操作系统的进程（甚至线程！）创建时间。结果对 Linux
+有利。</p>
+</blockquote>
+<h4 id="创建线程-creating-threads"><strong>创建线程 (Creating
+Threads)</strong></h4>
+<p>线程的创建方式与普通任务相同，区别在于需要向 <code>clone()</code>
+系统调用传递一些标志（flags），这些标志指定了要共享的特定资源：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 上述代码产生的行为与普通的 <code>fork()</code>
+相同，但<strong>地址空间、文件系统资源、文件描述符和信号处理程序是共享的</strong>。换句话说，新任务和其父进程就是通常所说的线程。相比之下，一个普通的
+<code>fork()</code> 可以实现为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(SIGCHLD, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 而 <code>vfork()</code>
+可以实现为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(CLONE_VFORK | CLONE_VM | SIGCHLD, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 提供给 <code>clone()</code>
+的标志有助于指定新进程的行为，并详细说明父进程和子进程将共享哪些资源。表
+3.1 列出了在 <code>&lt;linux/sched.h&gt;</code> 中定义的 clone
+标志及其作用。</p>
+<p><strong>(表 3.1 Clone 标志及含义)</strong> | 标志 (Flag) | 含义
+(Meaning) | | :----------------------- |
+:-----------------------------------------------------------------------------
+| | <code>CLONE_FILES</code> | 父子进程共享打开的文件。 | |
+<code>CLONE_FS</code> |
+父子进程共享文件系统信息（如根目录、当前工作目录）。 | |
+<code>CLONE_IDLETASK</code> | 将 PID 设置为零（仅由空闲任务使用）。 | |
+<code>CLONE_NEWNS</code> | 为子进程创建新的命名空间 (namespace)。 | |
+<code>CLONE_PARENT</code> |
+子进程与父进程拥有相同的父进程（即调用者的父进程）。 | |
+<code>CLONE_PTRACE</code> | 继续跟踪子进程。 | |
+<code>CLONE_SETTID</code> | 将 TID（线程 ID）写回用户空间。 | |
+<code>CLONE_SETTLS</code> | 为子进程创建新的 TLS（线程本地存储）。 | |
+<code>CLONE_SIGHAND</code> | 父子进程共享信号处理程序和阻塞的信号掩码。
+| | <code>CLONE_SYSVSEM</code> | 父子进程共享 System V SEM_UNDO 语义。 |
+| <code>CLONE_THREAD</code> |
+父子进程位于同一个线程组中。这是将新进程标识为线程而非普通进程的关键标志。
+| | <code>CLONE_VFORK</code> | 使用了
+<code>vfork()</code>，父进程将睡眠直到子进程唤醒它。 | |
+<code>CLONE_UNTRACED</code> | 不允许跟踪进程强制对子进程使用
+<code>CLONE_PTRACE</code>。 | | <code>CLONE_STOP</code> | 以
+<code>TASK_STOPPED</code> 状态启动进程。 | |
+<code>CLONE_CHILD_CLEARTID</code> | 在子进程中清除 TID。 | |
+<code>CLONE_CHILD_SETTID</code> | 在子进程中设置 TID。 | |
+<code>CLONE_PARENT_SETTID</code> | 在父进程中设置 TID。 | |
+<code>CLONE_VM</code> |
+父子进程共享地址空间。这是创建线程的关键标志之一。 |</p>
+<h4 id="内核线程-kernel-threads"><strong>内核线程 (Kernel
+Threads)</strong></h4>
+<p>内核在后台执行某些操作通常很有用。内核通过<strong>内核线程 (kernel
+threads)</strong>
+来实现这一点——内核线程是<strong>仅存在于内核空间的标准进程</strong>。内核线程与普通进程的显著区别在于内核线程<strong>没有地址空间</strong>（它们的
+<code>mm</code> 指针指向它们的地址空间，为
+<code>NULL</code>）。它们只在内核空间中运行，不会上下文切换到用户空间。然而，内核线程与普通进程一样，是可调度和可抢占的。</p>
+<p>Linux 将一些任务委托给内核线程，最著名的是 <code>flush</code> 任务和
+<code>ksoftirqd</code> 任务。您可以在 Linux 系统上运行
+<code>ps -ef</code> 命令来查看内核线程。数量很多！</p>
+<blockquote>
+<p>-ef 是 every full(info) 的简写。在所有进程中，CMD 带 []，TTY 为
+?，PPID 为 2 或 0， UID是0或者root，是内核线程的特征</p>
+</blockquote>
+<p>内核线程在系统启动时由其他内核线程创建。实际上，内核线程只能由另一个内核线程创建。内核通过从
+<code>kthreadd</code> 内核进程 <strong>fork</strong>
+出所有新的内核线程来自动处理此事。在
+<code>&lt;linux/kthread.h&gt;</code>
+中声明的，用于从现有内核线程生成新内核线程的接口是： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">kthread_create</span><span class="params">(<span class="type">int</span> (*threadfn)(<span class="type">void</span> *data),</span></span><br><span class="line"><span class="params">                                   <span class="type">void</span> *data,</span></span><br><span class="line"><span class="params">                                   <span class="type">const</span> <span class="type">char</span> namefmt[], ...)</span>;</span><br></pre></td></tr></table></figure>
+新任务由 kthread 内核进程通过 <code>clone()</code>
+系统调用创建。新进程将运行 <code>threadfn</code> 函数，该函数接收
+<code>data</code> 参数。进程将被命名为
+<code>namefmt</code>，该参数接受在可变参数列表中的 printf
+风格格式化参数。进程创建时处于<strong>不可运行状态 (unrunnable
+state)</strong>；只有在通过 <code>wake_up_process()</code>
+显式唤醒后，它才会开始运行。可以使用单个函数 <code>kthread_run()</code>
+来创建并使进程可运行： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">kthread_run</span><span class="params">(<span class="type">int</span> (*threadfn)(<span class="type">void</span> *data),</span></span><br><span class="line"><span class="params">                                <span class="type">void</span> *data,</span></span><br><span class="line"><span class="params">                                <span class="type">const</span> <span class="type">char</span> namefmt[], ...)</span>;</span><br></pre></td></tr></table></figure> 这个例程（作为宏实现）简单地调用了
+<code>kthread_create()</code> 和 <code>wake_up_process()</code>：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kthread_run(threadfn, data, namefmt, ...)                     \</span></span><br><span class="line"><span class="meta">(&#123;                                                                    \</span></span><br><span class="line"><span class="meta">    struct task_struct *k;                                        \</span></span><br><span class="line"><span class="meta">                                                                      \</span></span><br><span class="line"><span class="meta">    k = kthread_create(threadfn, data, namefmt, ## __VA_ARGS__);  \</span></span><br><span class="line"><span class="meta">    <span class="keyword">if</span> (!IS_ERR(k))                                               \</span></span><br><span class="line"><span class="meta">        wake_up_process(k);                                   \</span></span><br><span class="line"><span class="meta">    k;                                                            \</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br></pre></td></tr></table></figure> 启动后，内核线程会继续存在，直到它调用
+<code>do_exit()</code>，或者内核的另一部分调用
+<code>kthread_stop()</code>（传入由 <code>kthread_create()</code> 返回的
+<code>task_struct</code> 结构体的地址）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">kthread_stop</span><span class="params">(<span class="keyword">struct</span> task_struct *k)</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="进程终止-process-termination"><strong>进程终止 (Process
+Termination)</strong></h3>
+<p>这很遗憾，但进程最终都会消亡。当一个进程终止时，内核会释放该进程所拥有的资源，并通知其父进程关于子进程消亡的消息。</p>
+<p>通常，进程销毁是<strong>自我诱导 (self-induced)</strong>
+的。当进程调用 <code>exit()</code>
+系统调用时就会发生，这可以是在它准备终止时显式调用，也可以是在从任何程序的
+main 子程序返回时隐式调用（即 C 编译器会在 <code>main()</code>
+返回后放置一个对 <code>exit()</code>
+的调用）。进程也可能<strong>非自愿地 (involuntarily)</strong>
+终止。这发生在进程收到一个它无法处理或忽略的信号或异常时。</p>
+<p>无论进程如何终止，大部分工作都由 <code>do_exit()</code> 处理（定义在
+<code>kernel/exit.c</code> 中），它完成一系列收尾工作：</p>
+<ol type="1">
+<li>它在 <code>task_struct</code> 的 <code>flags</code> 成员中设置
+<code>PF_EXITING</code> 标志。</li>
+<li>它调用 <code>del_timer_sync()</code>
+来移除任何内核定时器。确保返回时没有定时器在排队，也没有定时器处理程序在运行。</li>
+<li>如果启用了 BSD 进程记账 (process accounting)，<code>do_exit()</code>
+会调用 <code>acct_update_integrals()</code> 来写出记账信息。</li>
+<li>它调用 <code>exit_mm()</code> 来释放该进程持有的
+<code>mm_struct</code>。如果没有其他进程在使用这个地址空间（即地址空间未被共享），内核就会销毁它。</li>
+<li>它调用 <code>exit_sem()</code>。如果进程正在排队等待一个 IPC
+信号量，它在这里被移出队列。</li>
+<li>然后它调用 <code>exit_files()</code> 和 <code>exit_fs()</code>
+来分别递减与文件描述符和文件系统数据相关的对象的引用计数。如果某个引用计数降为零，说明该对象不再被任何进程使用，随即被销毁。</li>
+<li>它将任务的退出码（存储在 <code>task_struct</code> 的
+<code>exit_code</code> 成员中）设置为 <code>exit()</code>
+提供的代码或任何强制终止它的内核机制所提供的代码。退出码存储在这里，供父进程选择性检索。</li>
+<li>它调用 <code>exit_notify()</code>
+来向任务的父进程发送信号，将该任务的任何子进程<strong>重新设定父进程
+(reparent)</strong> 给其线程组中的另一个线程或 init
+进程，并将任务的退出状态（存储在 <code>task_struct</code> 结构的
+<code>exit_state</code> 中）设置为 <code>EXIT_ZOMBIE</code>。</li>
+<li><code>do_exit()</code> 调用 <code>schedule()</code>
+来切换到新进程（参见第 4
+章）。因为该进程现在已不可调度，这是该任务将执行的最后代码。<code>do_exit()</code>
+永不返回。</li>
+</ol>
+<p>至此，与任务关联的所有对象（假设该任务是唯一使用者）都已释放。该任务不可运行（并且不再有地址空间可供运行），并处于
+<code>EXIT_ZOMBIE</code>（僵尸）退出状态。它占用的唯一内存是它的内核栈、<code>thread_info</code>
+结构和 <code>task_struct</code>
+结构。该任务存在的唯一目的是向其父进程提供信息。在父进程检索到信息，或通知内核它不感兴趣之后，进程持有的剩余内存将被释放并返回给系统使用。</p>
+<h4
+id="移除进程描述符-removing-the-process-descriptor"><strong>移除进程描述符
+(Removing the Process Descriptor)</strong></h4>
+<p>在 <code>do_exit()</code>
+完成后，已终止进程的进程描述符仍然存在，但该进程已成为僵尸 (zombie)
+且无法运行。如前所述，这使得系统能够在子进程终止后获取其信息。因此，清理进程之后和移除其进程描述符是分开的两个步骤。在父进程获取了已终止子进程的信息，或向内核表示不关心之后，子进程的
+<code>task_struct</code> 才会被释放。</p>
+<p><code>wait()</code> 函数族是通过一个单一（且复杂）的系统调用
+<code>wait4()</code>
+实现的。标准行为是<strong>挂起调用任务的执行</strong>，直到它的一个子进程退出，此时函数返回退出子进程的
+PID。此外，还提供一个指针给该函数，该指针在返回时持有已终止子进程的退出码。</p>
+<p>当最终要释放进程描述符时，会调用
+<code>release_task()</code>。它执行以下操作： 1. 它调用
+<code>__exit_signal()</code>，后者又调用
+<code>__unhash_process()</code>，继而调用 <code>detach_pid()</code>
+来将进程从 pidhash 中移除，并从任务列表中移除该进程。 2.
+<code>__exit_signal()</code>
+释放这个已死亡进程使用的任何剩余资源，并完成统计和簿记工作。 3.
+如果该任务是线程组的最后一个成员，并且领导者 (leader) 是僵尸进程，那么
+<code>release_task()</code> 会通知僵尸领导者的父进程。 4.
+<code>release_task()</code> 调用 <code>put_task_struct()</code>
+来释放包含进程内核栈和 <code>thread_info</code> 结构的内存页，并释放包含
+<code>task_struct</code> 的 slab 缓存。</p>
+<p>至此，进程描述符以及仅属于该进程的所有资源都已被释放。</p>
+<h4
+id="无父任务的困境-the-dilemma-of-the-parentless-task"><strong>无父任务的困境
+(The Dilemma of the Parentless Task)</strong></h4>
+<p>如果一个父进程在其子进程之前退出，必须存在某种机制来将任何子任务<strong>重新设定父进程
+(reparent)</strong>
+给一个新进程，否则，没有父进程的已终止进程将永远保持僵尸状态，浪费系统内存。解决方案是在退出时将一个任务的子进程重新设定父进程给当前线程组中的另一个进程，如果失败，则设定给
+init 进程。<code>do_exit()</code> 调用
+<code>exit_notify()</code>，后者调用
+<code>forget_original_parent()</code>，该函数又调用
+<code>find_new_reaper()</code> 来执行重新设定父进程的操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> task_struct *<span class="title function_">find_new_reaper</span><span class="params">(<span class="keyword">struct</span> task_struct *father)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">pid_namespace</span> *<span class="title">pid_ns</span> =</span> task_active_pid_ns(father);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">thread</span>;</span></span><br><span class="line"></span><br><span class="line">    thread = father;</span><br><span class="line">    while_each_thread(father, thread) &#123;</span><br><span class="line">        <span class="keyword">if</span> (thread-&gt;flags &amp; PF_EXITING)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (unlikely(pid_ns-&gt;child_reaper == father))</span><br><span class="line">            pid_ns-&gt;child_reaper = thread;</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> pid_ns-&gt;child_reaper; <span class="comment">// 通常是 init 进程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（代码已简化，核心逻辑是查找同一线程组内未退出的线程，或最终返回 init
+进程）</p>
+<p>这段代码尝试在进程的线程组中查找并返回另一个任务。如果线程组中没有其他任务，它就查找并返回
+init
+进程。找到合适的新父进程后，需要找到每个子进程并将其重新设定父进程给这个新的“收割者”(reaper)：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">reaper = find_new_reaper(father);</span><br><span class="line">list_for_each_entry_safe(p, n, &amp;father-&gt;children, sibling) &#123;</span><br><span class="line">    p-&gt;real_parent = reaper;</span><br><span class="line">    <span class="keyword">if</span> (p-&gt;parent == father) &#123;</span><br><span class="line">        BUG_ON(p-&gt;ptrace);</span><br><span class="line">        p-&gt;parent = p-&gt;real_parent;</span><br><span class="line">    &#125;</span><br><span class="line">    reparent_thread(p, father);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后调用 <code>ptrace_exit_finish()</code>
+做同样的事情，但是针对一个被 ptrace 跟踪 (ptraced) 的子进程列表。</p>
+<p>同时拥有一个子进程列表 (child list) 和一个被跟踪子进程列表 (ptraced
+list) 的基本原理很有趣；这是 2.6 内核的一个新特性。当一个任务被
+<code>ptrace</code>
+跟踪时，它被临时重新设定父进程给调试进程。然而，当该任务的原始父进程退出时，它必须与其兄弟姐妹一起被重新设定父进程。在之前的内核中，这会导致需要循环遍历系统中的每个进程来查找子进程。解决方案就是简单地维护一个进程被
+<code>ptrace</code>
+跟踪的子进程的独立列表——将查找子进程的范围从系统中的每个进程缩小到仅仅两个相对较小的列表。</p>
+<p>随着进程成功被重新设定父进程，就不再存在 stray zombie processes（
+stray zombie processes）的风险。init 进程会例行地对其子进程调用
+<code>wait()</code>，清理分配给它的任何僵尸进程。</p>
 
       
     </div>
@@ -274,7 +798,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-23 23:48:55" itemprop="dateModified" datetime="2025-08-23T23:48:55+08:00">2025-08-23</time>
+      <time title="修改时间：2025-08-28 09:19:55" itemprop="dateModified" datetime="2025-08-28T09:19:55+08:00">2025-08-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -368,12 +892,14 @@ slab 分配器动态创建的，因此引入了一个新的结构
 </blockquote>
 <p><code>thread_info</code> 结构在 x86 上的
 <code>&lt;asm/thread_info.h&gt;</code> 中定义如下： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_info</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span>    *<span class="title">task</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">exec_domain</span>    *<span class="title">exec_domain</span>;</span></span><br><span class="line">    __u32                 flags;</span><br><span class="line">    __u32                 status;</span><br><span class="line">    __u32                 cpu;</span><br><span class="line">    <span class="type">int</span>                   preempt_count;</span><br><span class="line">    <span class="type">mm_segment_t</span>          addr_limit;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">restart_block</span>  <span class="title">restart_block</span>;</span></span><br><span class="line">    <span class="type">void</span>                  *sysenter_return;</span><br><span class="line">    <span class="type">int</span>                   uaccess_err;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><strong>(图 3.2 示意图说明)</strong> 进程内核栈
-栈起始处（向低地址方向增长） - 最高内存地址 - 栈指针 -
-<code>struct thread_struct</code> (进程的
-<code>struct task_struct</code>) - 最低内存地址,
-<code>current_thread_info()</code> <code>thread_info</code>
-包含一个指向进程描述符的指针</p>
+<p><strong>(图 3.2 示意图说明)</strong> 进程内核栈<br />
+栈起始处（向低地址方向增长）<br />
+- 最高内存地址<br />
+- 栈指针<br />
+- <code>struct thread_struct</code> (进程的
+<code>struct task_struct</code>)<br />
+- 最低内存地址, <code>current_thread_info()</code><br />
+<code>thread_info</code> 包含一个指向进程描述符的指针</p>
 <blockquote>
 <p>栈的增长方向：x86 体系的栈是向下（向低地址方向）增长的。 - 栈底
 (Stack Base)：为了充分利用这块内存，栈被初始化为从这块分配区的最高地址
@@ -430,32 +956,30 @@ x86（几乎没有多余的寄存器可用），则利用 <code>struct thread_in
 可以采用这种方法是因为，与 x86
 不同，它有大量的寄存器。由于访问进程描述符是一项常见且重要的工作，PPC
 内核开发人员认为使用一个寄存器是值得的。</p>
-<p>好的，这是对“Process State”部分的整理和翻译：</p>
-<hr />
 <h3 id="进程状态-process-state"><strong>进程状态 (Process
 State)</strong></h3>
 <p>进程描述符中的 <code>state</code> 字段描述了进程的当前状况（参见图
 3.3）。系统中的每个进程都确切地处于五种不同状态中的一种。该值由以下五个标志之一表示：</p>
 <ul>
-<li><p><strong>TASK_RUNNING
+<li><strong>TASK_RUNNING
 (运行)</strong>：进程是可运行的；它要么正在执行，要么在运行队列（runqueue）中等待运行（运行队列将在第
 4
-章讨论）。这是在用户空间执行的进程唯一可能的状态；它也应用于正在内核空间中主动运行的进程。</p></li>
-<li><p><strong>TASK_INTERRUPTIBLE
+章讨论）。这是在用户空间执行的进程唯一可能的状态；它也应用于正在内核空间中主动运行的进程。</li>
+<li><strong>TASK_INTERRUPTIBLE
 (可中断睡眠)</strong>：进程正在睡眠（即被阻塞），等待某个条件的发生。当此条件满足时，内核会将进程的状态设置为
-<code>TASK_RUNNING</code>。如果进程接收到信号，它也会被提前唤醒并变为可运行状态。</p></li>
-<li><p><strong>TASK_UNINTERRUPTIBLE (不可中断睡眠)</strong>：此状态与
+<code>TASK_RUNNING</code>。如果进程接收到信号，它也会被提前唤醒并变为可运行状态。</li>
+<li><strong>TASK_UNINTERRUPTIBLE (不可中断睡眠)</strong>：此状态与
 <code>TASK_INTERRUPTIBLE</code>
 类似，区别在于即使接收到信号，它也不会被唤醒并变为可运行状态。此状态用于进程必须不受中断地等待，或者预期事件会很快发生的场合。由于处在此状态的任务不响应信号，因此
 <code>TASK_UNINTERRUPTIBLE</code> 的使用频率低于
-<code>TASK_INTERRUPTIBLE</code>⁵。</p></li>
-<li><p>**__TASK_TRACED (被跟踪)**：进程正被另一个进程（例如调试器通过
-<code>ptrace</code>）所跟踪。</p></li>
-<li><p>**__TASK_STOPPED
+<code>TASK_INTERRUPTIBLE</code>⁵。</li>
+<li>**__TASK_TRACED (被跟踪)**：进程正被另一个进程（例如调试器通过
+<code>ptrace</code>）所跟踪。</li>
+<li>**__TASK_STOPPED
 (停止)**：进程执行已停止；任务既不在运行，也没有资格运行。如果任务收到
 <code>SIGSTOP</code>、<code>SIGTSTP</code>、<code>SIGTTIN</code> 或
 <code>SIGTTOU</code>
-信号，或者在被调试时收到任何信号，就会发生这种状态。</p></li>
+信号，或者在被调试时收到任何信号，就会发生这种状态。</li>
 </ul>
 <blockquote>
 <p>⁵ 这就是为什么在 <code>ps(1)</code> 命令中会出现那些状态为 D (即
@@ -464,7 +988,61 @@ State)</strong></h3>
 <code>SIGKILL</code>
 信号。此外，即使你能终止该任务，这样做通常也不明智，因为该任务可能正在进行一项重要操作（并可能持有信号量）。</p>
 </blockquote>
+<h3
+id="操作当前进程状态-manipulating-the-current-process-state"><strong>操作当前进程状态
+(Manipulating the Current Process State)</strong></h3>
+<p>内核代码经常需要更改进程的状态。首选机制是使用： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_task_state(task, state);        <span class="comment">/* 将任务 &#x27;task&#x27; 的状态设置为 &#x27;state&#x27; */</span></span><br></pre></td></tr></table></figure>
+此函数将给定的任务设置为给定的状态。在适用的情况下，它还提供一个<strong>内存屏障
+(memory barrier)</strong> 以强制在其他处理器上的执行顺序（这仅在 SMP
+系统上需要）。否则，它等价于： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">task-&gt;state = state;</span><br></pre></td></tr></table></figure> 方法
+<code>set_current_state(state)</code> 等同于
+<code>set_task_state(current, state)</code>。请参阅
+<code>&lt;linux/sched.h&gt;</code> 以了解这些及相关函数的实现。</p>
 <hr />
+<h3 id="进程上下文-process-context"><strong>进程上下文 (Process
+Context)</strong></h3>
+<p>进程最重要的部分之一是正在执行的程序代码。这些代码从可执行文件中读入，并在程序的地址空间内执行。正常的程序执行发生在<strong>用户空间
+(user-space)</strong>。当程序执行系统调用或触发异常时，它就进入了<strong>内核空间
+(kernel-space)</strong>。此时，内核被称为“代表进程执行”并处于<strong>进程上下文
+(process context)</strong> 中。在进程上下文中，<code>current</code>
+宏是有效的⁶。退出内核后，进程会在用户空间恢复执行，除非在此期间有更高优先级的进程变为可运行状态（这种情况下将调用调度器来选择更高优先级的进程）。</p>
+<blockquote>
+<p>⁶ 除了进程上下文，还有<strong>中断上下文 (interrupt
+context)</strong>。在中断上下文中，系统并非代表某个进程运行，而是在执行一个中断处理程序。没有进程与中断处理程序相关联。</p>
+</blockquote>
+<p>系统调用和异常处理程序是进入内核的明确定义的接口。进程只能通过这些接口之一开始在内核空间中执行——所有对内核的访问都是通过这些接口进行的。</p>
+<hr />
+<h3 id="进程家族树-the-process-family-tree"><strong>进程家族树 (The
+Process Family Tree)</strong></h3>
+<p>在 Unix 系统（Linux
+也不例外）的进程之间存在着一个清晰的层次结构。所有进程都是 <strong>init
+进程</strong>（其 PID 为 1）的后代。内核在启动过程的最后步骤中启动
+<code>init</code>。然后，<code>init</code>
+进程读取系统初始化脚本并执行更多程序，最终完成启动过程。</p>
+<p>系统中的每个进程都有且只有一个<strong>父进程
+(parent)</strong>。同样，每个进程有零个或多个<strong>子进程
+(children)</strong>。同一父进程的所有直接子进程称为<strong>兄弟进程
+(siblings)</strong>。进程之间的关系存储在进程描述符中。每个
+<code>task_struct</code> 都有一个指向父进程 <code>task_struct</code>
+的指针（名为 <code>parent</code>），以及一个子进程的链表（名为
+<code>children</code>）。</p>
+<p>因此，给定当前进程，可以通过以下代码获取其父进程的描述符：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">my_parent</span> =</span> current-&gt;parent;</span><br></pre></td></tr></table></figure> 类似地，可以这样遍历一个进程的所有子进程：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">list</span>;</span></span><br><span class="line"></span><br><span class="line">list_for_each(<span class="built_in">list</span>, &amp;current-&gt;children) &#123;</span><br><span class="line">    task = list_entry(<span class="built_in">list</span>, <span class="keyword">struct</span> task_struct, sibling);</span><br><span class="line">    <span class="comment">/* task 现在指向 current 的某个子进程 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>init 任务的进程描述符是静态分配的，名为
+<code>init_task</code>。所有进程间关系的一个很好例证是下面这段代码总能执行成功：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line"><span class="keyword">for</span> (task = current; task != &amp;init_task; task = task-&gt;parent)</span><br><span class="line">    ;</span><br><span class="line"><span class="comment">/* 循环结束后，task 指向了 init */</span></span><br></pre></td></tr></table></figure>
+实际上，你可以从系统中的任何一个进程出发，循着进程层次结构到达任何其他进程。</p>
+<p>然而，通常我们更希望简单地遍历系统中的所有进程。这很容易，因为任务列表是一个<strong>循环双向链表
+(circular doubly linked
+list)</strong>。给定任何一个有效任务，要获取链表中的下一个任务，可以使用：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_entry(task-&gt;tasks.next, <span class="keyword">struct</span> task_struct, tasks)</span><br></pre></td></tr></table></figure> 获取上一个任务的方式相同： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_entry(task-&gt;tasks.prev, <span class="keyword">struct</span> task_struct, tasks)</span><br></pre></td></tr></table></figure>
+这两个操作分别由宏 <code>next_task(task)</code> 和
+<code>prev_task(task)</code> 提供。最后，提供了宏
+<code>for_each_process(task)</code>
+用于遍历整个任务列表。每次迭代时，<code>task</code>
+指向列表中的下一个任务： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line">for_each_process(task) &#123;</span><br><span class="line">    <span class="comment">/* 这段代码无意义地打印每个任务的名称和 PID */</span></span><br><span class="line">    printk(<span class="string">&quot;%s[%d]\n&quot;</span>, task-&gt;comm, task-&gt;pid);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> <strong>注意</strong>
+在拥有大量进程的系统中，遍历每个任务的开销很大；代码在这样做之前应该有充分的理由（并且没有其他替代方案）。</p>
 
       
     </div>
@@ -1657,162 +2235,6 @@ Tree-旧版实现，现为XArray），专用于将唯一ID（UID）映射到指�
 <li><code>idr_get_new</code>等操作需自旋锁保护（参见第9/10章）</li>
 </ul></li>
 </ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/07/oper_sys16/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/07/oper_sys16/" class="post-title-link" itemprop="url">操作系统基础 | 4.2 内核数据结构-队列</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-08 00:28:10" itemprop="dateCreated datePublished" datetime="2025-08-08T00:28:10+08:00">2025-08-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-09 00:28:09" itemprop="dateModified" datetime="2025-08-09T00:28:09+08:00">2025-08-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="队列">队列</h3>
-<p>任何操作系统内核中常见的编程模式是<strong>生产者与消费者</strong>。实现此模式的最简单方式通常是使用队列，即<strong>先进先出</strong>（FIFO）。</p>
-<p>Linux内核的通用队列实现称为<code>kfifo</code>，代码位于<code>kernel/kfifo.c</code>，头文件为<code>&lt;linux/kfifo.h&gt;</code>。本节讨论2.6.33版本更新后的API（早期版本用法略有不同，编写代码前请确认头文件）。</p>
-<hr />
-<h4 id="kfifo">kfifo</h4>
-<p>Linux的<code>kfifo</code>与其他队列抽象类似，提供两个核心操作：<br />
-- <strong>入队</strong>（<code>in</code>）：将数据写入队列<br />
-- <strong>出队</strong>（<code>out</code>）：从队列中读取数据</p>
-<p><code>kfifo</code>对象维护两个偏移量：<br />
-- <strong>in偏移量</strong>：下一次入队的起始位置<br />
-- <strong>out偏移量</strong>：下一次出队的起始位置</p>
-<p><strong>规则</strong>：<br />
-1.
-<code>out</code>偏移量始终≤<code>in</code>偏移量（否则会读取未入队的数据）。<br />
-2. 当<code>out == in</code>时，队列为空（无法出队）。<br />
-3. 当<code>in</code>到达队列末尾时，需重置队列才能继续入队。</p>
-<hr />
-<h4 id="创建队列">创建队列</h4>
-<h5 id="动态初始化常用">动态初始化（常用）</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">kfifo_alloc</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">unsigned</span> <span class="type">int</span> size, <span class="type">gfp_t</span> gfp_mask)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：分配大小为`size`字节的队列（`size`必须为<span class="number">2</span>的幂次），内存分配标志为`gfp_mask`（参见第<span class="number">12</span>章“内存管理”）。  </span><br><span class="line">- **返回值**：成功返回`<span class="number">0</span>`，失败返回错误码。  </span><br><span class="line">- **示例**：  </span><br><span class="line">  ```c</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">fifo</span>;</span></span><br><span class="line">  <span class="type">int</span> ret = kfifo_alloc(&amp;fifo, PAGE_SIZE, GFP_KERNEL);</span><br><span class="line">  <span class="keyword">if</span> (ret)</span><br><span class="line">      <span class="keyword">return</span> ret; <span class="comment">// 初始化失败</span></span><br></pre></td></tr></table></figure>
-<h5 id="自定义缓冲区">自定义缓冲区</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_init</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *buffer, <span class="type">unsigned</span> <span class="type">int</span> size)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：使用用户提供的`buffer`初始化队列，`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">##### 静态声明（较少用）  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">DECLARE_KFIFO</span><span class="params">(name, size)</span>;  <span class="comment">// 声明队列</span></span><br><span class="line">INIT_KFIFO(name);           <span class="comment">// 初始化队列</span></span><br><span class="line">```  </span><br><span class="line">- **要求**：`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 数据入队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_in</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">const</span> <span class="type">void</span> *from, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从`from`复制`len`字节到队列`fifo`。  </span><br><span class="line">- **返回值**：实际入队的字节数（若空间不足，可能小于`len`）。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 数据出队  </span><br><span class="line">##### 标准出队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从队列`fifo`复制最多`len`字节到`to`缓冲区。  </span><br><span class="line">- **返回值**：实际出队的字节数。  </span><br><span class="line">- **注意**：出队后数据不再保留在队列中。  </span><br><span class="line"></span><br><span class="line">##### 查看数据（不删除）  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out_peek</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len, <span class="type">unsigned</span> offset)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：与`kfifo_out`类似，但**不移动out偏移量**，数据仍可后续读取。  </span><br><span class="line">- **参数**：`offset`指定队列中的起始位置（<span class="number">0</span>表示队头）。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 获取队列信息</span><br><span class="line"><span class="number">1.</span> **获取队列总容量**</span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_size</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>返回队列底层缓冲区的总字节数</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>获取已入队数据量</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_len</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回当前队列中已存储的字节数</li>
-<li>（注：内核命名存在不一致性，需特别注意）</li>
-</ul>
-<ol start="3" type="1">
-<li><strong>获取剩余空间</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_avail</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回可继续写入的剩余字节数</li>
-</ul>
-<ol start="4" type="1">
-<li><strong>队列状态检查</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_empty</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_full</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回非零值表示队列为空/满</li>
-<li>返回零表示非空/非满</li>
-</ul>
-<h4 id="重置与销毁队列">重置与销毁队列</h4>
-<ol type="1">
-<li><strong>重置队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">kfifo_reset</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>清空队列所有内容（不释放内存）</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>销毁动态分配的队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_free</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>释放通过<code>kfifo_alloc()</code>创建的队列</li>
-<li>注意：使用<code>kfifo_init()</code>创建的队列需手动释放关联缓冲区</li>
-</ul>
-<h4 id="实际应用示例">实际应用示例</h4>
-<p>创建8KB大小的kfifo队列： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kfifo.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">my_fifo</span>;</span>  <span class="comment">// 声明 kfifo 结构体</span></span><br><span class="line"><span class="type">int</span> ret;</span><br><span class="line"><span class="comment">// 分配 8KB 队列</span></span><br><span class="line">ret = kfifo_alloc(&amp;my_fifo, <span class="number">8192</span>, GFP_KERNEL);  <span class="comment">// 8192 = 8 * 1024</span></span><br><span class="line"><span class="keyword">if</span> (ret) &#123;</span><br><span class="line">    pr_err(<span class="string">&quot;Failed to allocate kfifo: error %d\n&quot;</span>, ret);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 验证大小</span></span><br><span class="line">pr_info(<span class="string">&quot;Created FIFO size: %u bytes\n&quot;</span>, kfifo_size(&amp;my_fifo));  <span class="comment">// 输出 8192</span></span><br></pre></td></tr></table></figure> &gt; 队列总容量 = 8 KB = 8 ×
-1024 字节 = 8192 字节（环形缓冲区无需减一） &gt;
-<code>unsigned int</code>大小 = 4
-字节（也可能是8字节，可以通过<code>sizeof(unsigned int)</code>获取）
-&gt; 这样一个队列最多可以容纳8192 字节 / 4 字节 = 2048
-个<code>unsigned int</code></p>
-<p><strong>入队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 入队0-31的整数 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> i;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">    kfifo_in(fifo, &amp;i, <span class="keyword">sizeof</span>(i));</span><br></pre></td></tr></table></figure></p>
-<p><strong>查看队首元素（不移除）</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line"><span class="type">int</span> ret = kfifo_out_peek(fifo, &amp;val, <span class="keyword">sizeof</span>(val), <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">    <span class="keyword">return</span> -EINVAL;</span><br><span class="line">printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); <span class="comment">/* 输出: 0 */</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>完整出队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (kfifo_avail(fifo)) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line">    <span class="type">int</span> ret = kfifo_out(fifo, &amp;val, <span class="keyword">sizeof</span>(val));</span><br><span class="line">    <span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 输出: 0 1 2 ... 31 (严格保持FIFO顺序) */</span></span><br></pre></td></tr></table></figure> -
-输出顺序为0→31证明是标准的FIFO队列 - 若输出为31→0则变为栈结构（LIFO） -
-所有操作均保持原子性，适合生产者-消费者场景
-（注：实际开发中通常入队复杂结构体而非基础类型）</p>
 
       
     </div>
