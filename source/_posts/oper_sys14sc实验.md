@@ -6,38 +6,30 @@ categories:
 lang: zh-CN
 ---
 
-#### **必做练习**
-
+### **必做练习**
 **练习1**  
-作为第一题的答案，列出共同完成本实验的成员姓名。
-
----
+准备好实验报告
 
 **练习2**  
 我们将通过 libc 包装器发起系统调用（标准用户程序调用内核的方式）。系统调用完整列表可通过 `man 2 syscalls` 查看手册页。  
-1. 启动树莓派，在终端中**脱离 Linux 源码目录**新建用户程序目录（后续通过 sftp 从 `shell.cec.学校简称.edu` 传输文件）。  
-2. SSH 登录 `shell.cec.学校简称.edu`，执行 `qlogin` 连接到 Linux 实验机，在**首期实验创建的个人目录顶层**（但不在 Linux 源码目录内）新建用户程序目录。  
-3. 创建文件 `lib_call.c`，编写 C 程序：  
+1. 启动树莓派，在终端中**脱离 Linux 源码目录**新建用户程序目录   
+2. 创建文件 `lib_call.c`，编写 C 程序：  
    - 使用库函数 `getuid` 读取并打印用户 ID  
    - 尝试用 `setuid` 将 ID 设为 0（root）并报告是否成功  
    - 再次读取并打印用户 ID  
-4. 通过 `man 2 getuid` 和 `man 2 setuid` 查阅：  
+3. 通过 `man 2 getuid` 和 `man 2 setuid` 查阅：  
    - 函数调用语法和返回值类型  
    - 编译所需的头文件  
-5. 错误检查：若 `setuid` 失败，输出错误原因（使用 `strerror(errno)`）。  
+4. 错误检查：若 `setuid` 失败，输出错误原因（使用 `strerror(errno)`）。  
    - 相关手册页：`man 3 printf`, `man 3 strerror`, `man 3 errno`  
-6. 在实验机上编译运行：  
+5. 在实验机上编译运行：  
    ```bash
    gcc lib_call.c -o lib_call && ./lib_call
    ```  
 **提示**：
 直接写 `usr_id = getuid()` 实际上**不是直接使用系统调用**，而是调用了**libc库的封装函数**（即 glibc 提供的 getuid），它内部会帮你完成系统调用的参数准备和陷入内核的过程。
 如果想**直接使用系统调用**，需要用 `syscall` 函数或者汇编指令，并传入系统调用号（如 `__NR_getuid`），而不是用库函数。例如：
-```c
-#include <unistd.h>
-#include <sys/syscall.h>
-uid_t usr_id = syscall(__NR_getuid);
-```
+
 
 ---
 
@@ -177,7 +169,7 @@ asmlinkage long sys_onearg(int arg);
 
 ---
 
-#### **可选拓展练习**  
+### **可选拓展练习**  
 完成任意拓展练习后简述收获（附问题答案）。
 
 **练习1**  
