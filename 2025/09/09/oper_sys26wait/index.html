@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="等待子进程 (Waiting on a Child Process) 在许多由父进程创建子进程的应用程序中，父进程能够监视子进程以了解它们于何时以及如何终止是非常有用的。wait() 系统调用及一系列相关的系统调用提供了这个功能。 wait() 系统调用 (The wait() System Call) wait() 系统调用等待调用进程的任一子进程终止，并在 status 参数所指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 5.6 等待子进程">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/09/09/oper_sys26wait/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="等待子进程 (Waiting on a Child Process) 在许多由父进程创建子进程的应用程序中，父进程能够监视子进程以了解它们于何时以及如何终止是非常有用的。wait() 系统调用及一系列相关的系统调用提供了这个功能。 wait() 系统调用 (The wait() System Call) wait() 系统调用等待调用进程的任一子进程终止，并在 status 参数所指">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-09T17:03:53.123Z">
+<meta property="article:modified_time" content="2025-09-09T17:04:04.283Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/09/09/oper_sys26wait/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/09/09/oper_sys26wait/","path":"2025/09/09/oper_sys26wait/","title":"操作系统基础 | 5.6 等待子进程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 5.6 等待子进程 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%BE%85%E5%AD%90%E8%BF%9B%E7%A8%8B-waiting-on-a-child-process"><span class="nav-number">1.</span> <span class="nav-text">等待子进程
+(Waiting on a Child Process)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-the-wait-system-call"><span class="nav-number">2.</span> <span class="nav-text">wait()
+系统调用 (The wait() System Call)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#waitpid-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-the-waitpid-system-call"><span class="nav-number">3.</span> <span class="nav-text">waitpid()
+系统调用 (The waitpid() System Call)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/09/oper_sys26wait/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 5.6 等待子进程 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 5.6 等待子进程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-10 01:03:53 / 修改时间：01:04:04" itemprop="dateCreated datePublished" datetime="2025-09-10T01:03:53+08:00">2025-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="等待子进程-waiting-on-a-child-process"><strong>等待子进程
+(Waiting on a Child Process)</strong></h3>
+<p>在许多由父进程创建子进程的应用程序中，父进程能够监视子进程以了解它们于何时以及如何终止是非常有用的。<code>wait()</code>
+系统调用及一系列相关的系统调用提供了这个功能。</p>
+<h3 id="wait-系统调用-the-wait-system-call"><strong><code>wait()</code>
+系统调用 (The wait() System Call)</strong></h3>
+<p><code>wait()</code> 系统调用等待调用进程的任一子进程终止，并在
+<code>status</code> 参数所指向的缓冲区中返回该子进程的终止状态。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">wait</span><span class="params">(<span class="type">int</span> *status)</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>返回值：</strong> 成功则返回终止子进程的进程ID
+(PID)，出错则返回 -1。</p>
+<p><code>wait()</code> 系统调用执行以下操作：</p>
+<ol type="1">
+<li>如果调用进程的（先前未被等待的）子进程中尚无一个终止，则该调用会<strong>阻塞</strong>，直到某个子进程终止为止。如果在调用时已有子进程终止，<code>wait()</code>
+则立即返回。</li>
+<li>如果 <code>status</code> 参数不是
+<code>NULL</code>，则关于子进程如何终止的信息会通过 <code>status</code>
+指针所指向的整数返回。我们将在第 26.1.3 节描述 <code>status</code>
+返回的信息。</li>
+<li>内核会将此子进程的 CPU 时间（第 10.7 节）和资源使用统计信息（第 36.1
+节）添加到其父进程所有子进程的运行总计时长中。</li>
+<li>作为其函数结果，<code>wait()</code> 返回已终止子进程的进程 ID。</li>
+</ol>
+<p>出错时，<code>wait()</code> 返回
+-1。一个可能的错误是调用进程没有（先前未被等待的）子进程，这由
+<code>errno</code> 值 <code>ECHILD</code>
+指示。这意味着我们可以使用以下循环来等待调用进程的所有子进程终止：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ((childPid = wait(<span class="literal">NULL</span>)) != <span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">continue</span>;</span><br><span class="line"><span class="keyword">if</span> (errno != ECHILD)    <span class="comment">/* 发生意外错误... */</span></span><br><span class="line">    errExit(<span class="string">&quot;wait&quot;</span>);  </span><br></pre></td></tr></table></figure>
+<p>以下代码演示了 <code>wait()</code>
+的用法。该程序创建多个子进程，每个命令行整数参数对应一个子进程。每个子进程休眠其对应命令行参数所指定的秒数，然后退出。与此同时，在创建完所有子进程后，父进程反复调用
+<code>wait()</code> 来监视其子进程的终止。此循环持续直到
+<code>wait()</code> 返回
+-1。（这不是唯一的方法：我们也可以选择当终止的子进程数量
+<code>numDead</code> 匹配创建的子进程数量时退出循环。）</p>
+<p><strong>创建并等待多个子进程</strong>
+<code>––––––––––––––––––––––––––––––––––––––––––––––––––––– procexec/multi_wait.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;curr_time.h&quot;</span>              <span class="comment">/* Declaration of currTime() */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="type">int</span> numDead;       <span class="comment">/* 目前已等待的子进程数量 */</span></span><br><span class="line">    <span class="type">pid_t</span> childPid;    <span class="comment">/* 被等待的子进程的PID */</span></span><br><span class="line">    <span class="type">int</span> j;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (argc &lt; <span class="number">2</span> || <span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;--help&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">        usageErr(<span class="string">&quot;%s sleep-time...\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);           <span class="comment">/* 禁用 stdout 的缓冲 */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt; argc; j++) &#123;    <span class="comment">/* 为每个参数创建一个子进程 */</span></span><br><span class="line">        <span class="keyword">switch</span> (fork()) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">            errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:                     <span class="comment">/* 子进程：休眠一段时间后退出 */</span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[%s] child %d started with PID %ld, sleeping %s &quot;</span></span><br><span class="line">                    <span class="string">&quot;seconds\n&quot;</span>, currTime(<span class="string">&quot;%T&quot;</span>), j, (<span class="type">long</span>) getpid(), argv[j]);</span><br><span class="line">            sleep(getInt(argv[j], GN_NONNEG, <span class="string">&quot;sleep-time&quot;</span>));</span><br><span class="line">            _exit(EXIT_SUCCESS);</span><br><span class="line">        <span class="keyword">default</span>:                    <span class="comment">/* 父进程：继续循环 */</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    numDead = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;                      <span class="comment">/* 父进程等待每个子进程退出 */</span></span><br><span class="line">        childPid = wait(<span class="literal">NULL</span>);</span><br><span class="line">        <span class="keyword">if</span> (childPid == <span class="number">-1</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (errno == ECHILD) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;No more children - bye!\n&quot;</span>);</span><br><span class="line">                <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;                <span class="comment">/* 发生其他（意外）错误 */</span></span><br><span class="line">                errExit(<span class="string">&quot;wait&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        numDead++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[%s] wait() returned child PID %ld (numDead=%d)\n&quot;</span>,</span><br><span class="line">                currTime(<span class="string">&quot;%T&quot;</span>), (<span class="type">long</span>) childPid, numDead);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面的 shell 会话日志展示了我们使用该程序创建三个子进程时发生的情况：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ./multi_wait 7 1 4</span><br><span class="line">[13:41:00] child 1 started with PID 21835, sleeping 7 seconds</span><br><span class="line">[13:41:00] child 2 started with PID 21836, sleeping 1 seconds</span><br><span class="line">[13:41:00] child 3 started with PID 21837, sleeping 4 seconds</span><br><span class="line">[13:41:01] wait() returned child PID 21836 (numDead=1)</span><br><span class="line">[13:41:04] wait() returned child PID 21837 (numDead=2)</span><br><span class="line">[13:41:07] wait() returned child PID 21835 (numDead=3)</span><br><span class="line">No more children - bye!</span><br></pre></td></tr></table></figure> 如果在某个特定时刻有多个子进程已终止，SUSv3 (Single UNIX
+Specification, version 3) 未明确规定一系列 <code>wait()</code>
+调用回收这些子进程的顺序；也就是说，顺序依赖于实现。即使在不同的 Linux
+内核版本之间，该行为也有所不同。</p>
+<h3
+id="waitpid-系统调用-the-waitpid-system-call"><strong><code>waitpid()</code>
+系统调用 (The waitpid() System Call)</strong></h3>
+<p><code>wait()</code> 系统调用有一些局限性，<code>waitpid()</code>
+的设计正是为了应对这些局限性：</p>
+<ul>
+<li>如果一个父进程创建了多个子进程，使用 <code>wait()</code>
+无法等待<strong>特定某个子进程</strong>的完成；我们只能等待<strong>下一个终止</strong>的子进程。</li>
+<li>如果尚无子进程终止，<code>wait()</code>
+<strong>总是会阻塞</strong>。有时，更可取的是执行<strong>非阻塞的等待</strong>，这样如果尚无子进程终止，我们可以立即获得相应的指示。</li>
+<li>使用
+<code>wait()</code>，我们只能获知那些<strong>已经终止</strong>的子进程的信息。无法在一个子进程被信号（如
+<code>SIGSTOP</code> 或
+<code>SIGTTIN</code>）<strong>停止</strong>时，或在一个被停止的子进程因收到
+<code>SIGCONT</code> 信号而<strong>恢复</strong>执行时得到通知。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> *status, <span class="type">int</span> options)</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>返回值：</strong> 成功则返回状态发生变化的子进程的进程ID
+(PID)；如果指定了 <code>WNOHANG</code> 且未有子进程状态变化则返回
+0；出错则返回 -1。</p>
+<p><code>waitpid()</code> 的返回值和 <code>status</code> 参数与
+<code>wait()</code> 相同。（关于通过 <code>status</code>
+返回值的解释，请参见第 26.1.3 节）。<code>pid</code>
+参数用于选择要等待的子进程，具体如下：</p>
+<ul>
+<li>如果 <code>pid</code> <strong>大于 0</strong>，则等待进程 ID 等于
+<code>pid</code> 的那个子进程。</li>
+<li>如果 <code>pid</code> <strong>等于
+0</strong>，则等待与调用者（父进程）<strong>属于同一进程组</strong>的任何子进程。我们将在第
+34.2 节描述进程组。</li>
+<li>如果 <code>pid</code> <strong>小于
+-1</strong>，则等待其<strong>进程组标识符</strong>等于 <code>pid</code>
+绝对值 (<code>abs(pid)</code>) 的任何子进程。</li>
+<li>如果 <code>pid</code> <strong>等于
+-1</strong>，则等待<strong>任何</strong>子进程。调用
+<code>wait(&amp;status)</code> 等价于调用
+<code>waitpid(-1, &amp;status, 0)</code>。</li>
+</ul>
+<p><code>options</code> 参数是一个位掩码，可以包含（通过 OR
+操作）以下零个或多个标志（所有这些标志都在 SUSv3 中指定）：</p>
+<ul>
+<li><strong><code>WUNTRACED</code></strong>
+除了返回关于已终止子进程的信息外，还会在子进程因收到信号而<strong>停止</strong>时返回其信息。</li>
+<li><strong><code>WCONTINUED</code></strong> (自 Linux 2.6.10 起)
+还会在因收到 <code>SIGCONT</code>
+信号而<strong>恢复</strong>执行的、之前被停止的子进程的状态信息。</li>
+<li><strong><code>WNOHANG</code></strong> 如果由 <code>pid</code>
+指定的子进程尚未改变状态，则立即返回而非阻塞（即执行一次“<strong>轮询</strong>”）。在这种情况下，<code>waitpid()</code>
+的返回值为 <code>0</code>。如果调用进程没有符合 <code>pid</code>
+指定条件的子进程，则 <code>waitpid()</code> 失败并返回错误
+<code>ECHILD</code>。</li>
+</ul>
+<p>我们将在清单 26-3 中演示 <code>waitpid()</code> 的用法。</p>
+<hr />
+<p><strong>附加说明 (关于 WUNTRACED 名称的由来)：</strong></p>
+<p>在其关于 <code>waitpid()</code> 的原理说明中，SUSv3 指出名称
+<code>WUNTRACED</code> 是该标志源自 BSD 的一个历史产物，在 BSD
+中，一个进程可以通过两种方式之一被停止：一种是由于被
+<code>ptrace()</code>
+系统调用<strong>跟踪</strong>的结果，另一种是被信号<strong>停止</strong>（即未被跟踪）。当一个子进程被
+<code>ptrace()</code> 跟踪时，<strong>任何信号</strong>（除了
+<code>SIGKILL</code>）的送达都会导致该子进程被停止，并随之向父进程发送一个
+<code>SIGCHLD</code>
+信号。即使子进程<strong>忽略</strong>该信号，此行为也会发生。然而，如果子进程<strong>阻塞</strong>了该信号，则它不会被停止（除非该信号是
+<code>SIGSTOP</code>，它无法被阻塞）。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/05/intv_io/" rel="prev" title="算法笔试 | acm模式输入输出指南">
+                  <i class="fa fa-angle-left"></i> 算法笔试 | acm模式输入输出指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/14/oper_sys27orphan_err/" rel="next" title="操作系统基础 | 5.7 孤儿进程；错误检查">
+                  操作系统基础 | 5.7 孤儿进程；错误检查 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/09/09/oper_sys26wait/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/09/09/oper_sys26wait/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

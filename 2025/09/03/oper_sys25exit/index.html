@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="终止进程：_exit() 和 exit() 进程可以通过两种通用方式终止。其中一种是异常终止，由接收到一个默认动作为终止进程（可能伴随核心转储）的信号引起。另一种方式是，进程可以使用 _exit() 系统调用进行正常终止。 12#include &lt;unistd.h&gt;void _exit(int status); 传递给 _exit() 的 status 参数定义了进程的终止">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 5.5 终止进程">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/09/03/oper_sys25exit/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="终止进程：_exit() 和 exit() 进程可以通过两种通用方式终止。其中一种是异常终止，由接收到一个默认动作为终止进程（可能伴随核心转储）的信号引起。另一种方式是，进程可以使用 _exit() 系统调用进行正常终止。 12#include &lt;unistd.h&gt;void _exit(int status); 传递给 _exit() 的 status 参数定义了进程的终止">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-04T00:03:19.864Z">
+<meta property="article:modified_time" content="2025-09-04T00:03:43.552Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/09/03/oper_sys25exit/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/09/03/oper_sys25exit/","path":"2025/09/03/oper_sys25exit/","title":"操作系统基础 | 5.5 终止进程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 5.5 终止进程 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B_exit-%E5%92%8C-exit"><span class="nav-number">1.</span> <span class="nav-text">终止进程：_exit() 和
+exit()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%BB%88%E6%AD%A2%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">2.</span> <span class="nav-text">进程终止的细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F-exit-handlers"><span class="nav-number">3.</span> <span class="nav-text">退出处理程序 (Exit Handlers)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#forkstdio-%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%8E-_exit-%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="nav-number">4.</span> <span class="nav-text">fork()、stdio
+缓冲区与 _exit() 之间的交互</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/03/oper_sys25exit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 5.5 终止进程 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 5.5 终止进程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-04 08:03:19 / 修改时间：08:03:43" itemprop="dateCreated datePublished" datetime="2025-09-04T08:03:19+08:00">2025-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="终止进程_exit-和-exit">终止进程：<code>_exit()</code> 和
+<code>exit()</code></h3>
+<p>进程可以通过两种通用方式终止。其中一种是<strong>异常终止</strong>，由接收到一个默认动作为终止进程（可能伴随核心转储）的信号引起。另一种方式是，进程可以使用
+<code>_exit()</code> 系统调用进行<strong>正常终止</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> _exit(<span class="type">int</span> status);</span><br></pre></td></tr></table></figure>
+<p>传递给 <code>_exit()</code> 的 <code>status</code>
+参数定义了进程的<strong>终止状态</strong>，该状态在此进程的父进程调用
+<code>wait()</code> 时可用。虽然定义为 <code>int</code>
+类型，但实际上只有 <code>status</code> 的低 <strong>8
+位</strong>会提供给父进程。按照惯例，终止状态 <strong>0</strong>
+表示进程<strong>成功完成</strong>，而<strong>非零</strong>状态值表示进程<strong>未成功终止</strong>。对于如何解释非零状态值没有固定规则；不同的应用程序遵循自己的惯例，这些惯例应在它们的文档中描述。SUSv3
+规定了两个常量 <code>EXIT_SUCCESS</code> (0) 和
+<code>EXIT_FAILURE</code> (1)，本书中的大多数程序都使用它们。进程总是被
+<code>_exit()</code> <strong>成功终止</strong>（即 <code>_exit()</code>
+从不返回）。</p>
+<p>尽管任何在 0 到 255 范围内的值都可以通过 <code>_exit()</code> 的
+<code>status</code> 参数传递给父进程，但指定大于 128 的值可能会在 shell
+脚本中引起混淆。原因是，当一个命令被信号终止时，shell 通过将变量
+<code>$?</code> 的值设置为 <strong>128 加上信号编号</strong>
+来表明这一事实，而这个值与进程以相同的状态值调用 <code>_exit()</code>
+所产生的值无法区分。</p>
+<p>程序通常不直接调用 <code>_exit()</code>，而是调用 <code>exit()</code>
+库函数，该函数在调用 <code>_exit()</code> 之前会执行各种操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">exit</span><span class="params">(<span class="type">int</span> status)</span>;</span><br></pre></td></tr></table></figure>
+<p><code>exit()</code> 执行以下操作： *
+调用<strong>退出处理程序</strong>（使用 <code>atexit()</code> 和
+<code>on_exit()</code>
+注册的函数），调用顺序与注册顺序<strong>相反</strong>。 *
+<strong>刷新</strong> stdio 流缓冲区。 * 使用 <code>status</code>
+中提供的值调用 <code>_exit()</code> 系统调用。</p>
+<p>与 UNIX 特有的 <code>_exit()</code> 不同，<code>exit()</code>
+被定义为标准 C 库的一部分；也就是说，它在每个 C 实现中都可用。</p>
+<p>进程终止的另一种方式是从 <code>main()</code> 返回，无论是通过显式
+<code>return</code> 语句，还是通过执行到 <code>main()</code>
+函数末尾而隐式返回。执行显式的 <code>return n</code> 通常等同于调用
+<code>exit(n)</code>，因为调用 <code>main()</code> 的运行时函数会在调用
+<code>exit()</code> 时使用 <code>main()</code> 的返回值。</p>
+<p>在一种情况下，调用 <code>exit()</code> 和从 <code>main()</code>
+返回并不等效。如果在退出处理期间执行的任何步骤访问了 <code>main()</code>
+的局部变量，那么从 <code>main()</code>
+返回会导致<strong>未定义行为</strong>。例如，如果在调用
+<code>setvbuf()</code> 或 <code>setbuf()</code>（第13.2节）时指定了
+<code>main()</code> 的局部变量，就可能发生这种情况。</p>
+<p>执行不指定值的 <code>return</code>，或者执行到 <code>main()</code>
+函数末尾，也会导致 <code>main()</code> 的调用者调用
+<code>exit()</code>，但结果会根据所支持的 C
+标准版本和所使用的编译选项而有所不同： * 在 <strong>C89</strong>
+中，这些情况下的行为是<strong>未定义的</strong>；程序可能以任意状态值终止。这是在
+Linux 上使用 <code>gcc</code> 时的默认行为，程序的退出状态取自栈上或特定
+CPU 寄存器中的某个随机值。应避免以这种方式终止程序。 *
+<strong>C99</strong> 标准要求执行到主程序末尾应等同于调用
+<code>exit(0)</code>。如果我们在 Linux 上使用 <code>gcc –std=c99</code>
+编译程序，就会得到这种行为。</p>
+<h3 id="进程终止的细节">进程终止的细节</h3>
+<p>在进程的正常和异常终止期间，会发生以下操作： *
+打开的<strong>文件描述符</strong>、<strong>目录流</strong>（第18.8节）、<strong>消息目录描述符</strong>（参见
+<code>catopen(3)</code> 和 <code>catgets(3)</code>
+手册页）和<strong>转换描述符</strong>（参见 <code>iconv_open(3)</code>
+手册页）被关闭。 *
+作为关闭文件描述符的后果，此进程持有的任何<strong>文件锁</strong>（第55章）都会被释放。
+* 任何附加的 <strong>System V
+共享内存段</strong>都会被分离（detach），并且相应每个段的
+<code>shm_nattch</code> 计数器减一（参见第48.8节）。 * 对于进程已设置了
+<code>semadj</code> 值的每个 <strong>System V 信号量</strong>，该
+<code>semadj</code> 值会被添加到信号量值中（参见第47.8节）。 *
+如果此进程是某个控制终端的<strong>控制进程</strong>，则
+<strong><code>SIGHUP</code>
+信号</strong>会被发送到该控制终端前台进程组中的每个进程，并且该终端与会话分离。我们将在第34.6节进一步讨论这一点。
+* 调用进程中打开的任何 <strong>POSIX
+命名信号量</strong>都会被关闭，就像调用了 <code>sem_close()</code>
+一样。 * 调用进程中打开的任何 <strong>POSIX
+消息队列</strong>都会被关闭，就像调用了 <code>mq_close()</code> 一样。 *
+如果由于此进程退出导致一个进程组变为<strong>孤儿进程组</strong>，并且该组中存在任何<strong>停止的
+(stopped)</strong> 进程，则该组中的所有进程都会收到一个
+<code>SIGHUP</code> 信号，随后是一个 <code>SIGCONT</code>
+信号。我们将在第34.7.4节进一步讨论这一点。 * 此进程使用
+<code>mlock()</code> 或
+<code>mlockall()</code>（第50.2节）建立的任何<strong>内存锁</strong>会被移除。
+* 此进程使用 <code>mmap()</code>
+建立的任何<strong>内存映射</strong>会被取消映射（unmapped）。</p>
+<h3 id="退出处理程序-exit-handlers">退出处理程序 (Exit Handlers)</h3>
+<p>有时，应用程序需要在进程终止时自动执行一些操作。考虑这样一个例子：一个应用程序库，如果在进程的生命周期中被使用，需要在进程退出时自动执行一些清理操作。由于该库无法控制进程何时以及如何退出，也不能强制主程序在退出前调用库特定的清理函数，因此无法保证清理一定会发生。在这种情况下，一种方法是使用<strong>退出处理程序</strong>（exit
+handler）（较老的 System V 手册使用术语“程序终止例程”）。</p>
+<p>退出处理程序是由程序员提供的函数，在进程生命周期的某个时间点<strong>注册</strong>，然后在进程通过
+<code>exit()</code>
+正常终止时被<strong>自动调用</strong>。如果程序直接调用
+<code>_exit()</code>
+或者进程被信号异常终止，则<strong>不会调用</strong>退出处理程序。</p>
+<p>在某种程度上，进程被信号终止时不调用退出处理程序这一事实限制了它们的实用性。我们能做的最好方式是为可能发送给进程的信号建立处理程序，并让这些处理程序设置一个标志，促使主程序调用
+<code>exit()</code>。（因为 <code>exit()</code>
+不在表21-1（第426页）列出的异步信号安全函数中，所以我们通常不能从信号处理程序中调用它。）即使这样，也无法处理
+<code>SIGKILL</code>
+的情况，因为它的默认动作无法更改。这是我们应避免使用
+<code>SIGKILL</code> 终止进程（如第20.2节所述）而应使用
+<code>SIGTERM</code>（这是 <code>kill</code>
+命令发送的默认信号）的又一个理由。</p>
+<p><strong>注册退出处理程序</strong> GNU C
+库提供了两种注册退出处理程序的方法。第一种方法，由 SUSv3 规定，是使用
+<code>atexit()</code> 函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">atexit</span><span class="params">(<span class="type">void</span> (*func)(<span class="type">void</span>))</span>;</span><br></pre></td></tr></table></figure>
+<p>成功返回 0，错误返回非零值</p>
+<p><code>atexit()</code> 函数将 <code>func</code>
+添加到一个函数列表中，这些函数在进程终止时被调用。函数 <code>func</code>
+应定义为不接收参数且不返回值，因此具有以下一般形式： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* 执行一些操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+注意，<code>atexit()</code> 在出错时返回一个非零值（不一定是 -1）。</p>
+<p>可以注册多个退出处理程序（甚至多次注册同一个退出处理程序）。当程序调用
+<code>exit()</code>
+时，这些函数按<strong>注册顺序的逆序</strong>被调用。这个顺序是合乎逻辑的，因为通常较早注册的函数执行更基本的清理类型，这些清理可能需要在后注册的函数之后执行。</p>
+<p>本质上，可以在退出处理程序内部执行任何所需的操作，包括注册额外的退出处理程序（这些新处理程序会被放在待调用退出处理程序列表的头部）。但是，如果其中一个退出处理程序<strong>未能返回</strong>——要么是因为它调用了
+<code>_exit()</code>，要么是因为进程被信号终止（例如，退出处理程序调用了
+<code>raise()</code>）——那么剩余的退出处理程序将不会被调用。此外，<code>exit()</code>
+通常会执行的剩余操作（即刷新 stdio 缓冲区）也不会执行。</p>
+<p>SUSv3 规定，如果退出处理程序自身调用
+<code>exit()</code>，结果是未定义的。在 Linux
+上，剩余的退出处理程序会正常调用。然而，在一些系统上，这会导致所有退出处理程序再次被调用，这可能引发无限递归（直到栈溢出杀死进程）。可移植的应用程序应避免在退出处理程序内部调用
+<code>exit()</code>。</p>
+<p>SUSv3 要求实现允许一个进程至少能够注册 32 个退出处理程序。使用调用
+<code>sysconf(_SC_ATEXIT_MAX)</code>，程序可以确定实现定义的可以注册的退出处理程序数量的上限。（但是，无法查明已经注册了多少退出处理程序。）通过将注册的退出处理程序链入一个动态分配的链表，glibc
+允许注册几乎无限数量的退出处理程序。在 Linux
+上，<code>sysconf(_SC_ATEXIT_MAX)</code> 返回
+2,147,482,647（即最大的有符号 32
+位整数）。换句话说，在达到可注册函数数量的限制之前，其他东西（例如内存不足）就会先出问题。</p>
+<p>通过 <code>fork()</code>
+创建的子进程<strong>继承</strong>其父进程的退出处理程序注册的一个副本。当进程执行
+<code>exec()</code>
+时，<strong>所有</strong>退出处理程序注册都会被<strong>移除</strong>。（这必然是如此的，因为
+<code>exec()</code>
+会替换掉退出处理程序的代码以及现有程序的其余代码。）</p>
+<p>我们无法<strong>注销</strong>一个已经用
+<code>atexit()</code>（或下面描述的
+<code>on_exit()</code>）注册的退出处理程序。但是，我们可以让退出处理程序在执行其操作之前检查某个全局标志是否设置，并通过清除该标志来禁用该退出处理程序。</p>
+<p>用 <code>atexit()</code>
+注册的退出处理程序有<strong>几个局限性</strong>。第一个是当被调用时，退出处理程序<strong>不知道</strong>传递给
+<code>exit()</code>
+的状态（status）是什么。偶尔，了解这个状态可能有用；例如，我们可能希望根据进程是成功退出还是不成功退出执行不同的操作。第二个局限性是，我们无法在调用退出处理程序时为其指定<strong>参数</strong>。这种功能可能有助于定义一个根据其参数执行不同操作的退出处理程序，或者用不同的参数多次注册同一个函数。</p>
+<p>为了解决这些局限性，glibc
+提供了一种（非标准的）注册退出处理程序的替代方法：<code>on_exit()</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE           <span class="comment">/* 或者: #define _SVID_SOURCE */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">on_exit</span><span class="params">(<span class="type">void</span> (*func)(<span class="type">int</span>, <span class="type">void</span> *), <span class="type">void</span> *arg)</span>;</span><br></pre></td></tr></table></figure>
+<p>成功返回 0，错误返回非零值</p>
+<p><code>on_exit()</code> 的 <code>func</code>
+参数是一个指向如下类型函数的指针： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">int</span> status, <span class="type">void</span> *arg)</span> &#123;</span><br><span class="line">    <span class="comment">/* 执行清理操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当被调用时，<code>func()</code> 被传入两个参数：提供给
+<code>exit()</code> 的 <code>status</code> 参数，以及注册该函数时提供给
+<code>on_exit()</code> 的 <code>arg</code>
+参数的副本。虽然定义为指针类型，但 <code>arg</code>
+可由程序员自由解释。它可以被用作指向某个结构的指针；同样地，通过明智地使用类型转换，它可以被视为整数或其他标量类型。</p>
+<p>与 <code>atexit()</code> 一样，<code>on_exit()</code>
+出错时返回非零值（不一定是 -1）。与 <code>atexit()</code> 一样，可以使用
+<code>on_exit()</code> 注册多个退出处理程序。使用 <code>atexit()</code>
+和 <code>on_exit()</code>
+注册的函数被放在同一个列表中。如果在同一个程序中同时使用这两种方法，则退出处理程序按使用这两种方法<strong>注册顺序的逆序</strong>调用。</p>
+<p>虽然比 <code>atexit()</code> 更灵活，但 <code>on_exit()</code>
+在旨在可移植的程序中应<strong>避免使用</strong>，因为它不受任何标准涵盖，并且在其他
+UNIX 实现上很少可用。</p>
+<p><strong>示例程序</strong> 以下代码演示了使用 <code>atexit()</code> 和
+<code>on_exit()</code> 注册退出处理程序。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE     <span class="comment">/* 从 &lt;stdlib.h&gt; 获取 on_exit() 声明 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">atexitFunc1</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;atexit function 1 called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">atexitFunc2</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;atexit function 2 called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">onexitFunc</span><span class="params">(<span class="type">int</span> exitStatus, <span class="type">void</span> *arg)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;on_exit function called: status=%d, arg=%ld\n&quot;</span>,</span><br><span class="line">                exitStatus, (<span class="type">long</span>) arg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (on_exit(onexitFunc, (<span class="type">void</span> *) <span class="number">10</span>) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;on_exit 1&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (atexit(atexitFunc1) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;atexit 1&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (atexit(atexitFunc2) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;atexit 2&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (on_exit(onexitFunc, (<span class="type">void</span> *) <span class="number">20</span>) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;on_exit 2&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当我们运行这个程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./exit_handlers</span><br><span class="line">on_exit function called: status=2, arg=20</span><br><span class="line">atexit function 2 called</span><br><span class="line">atexit function 1 called</span><br><span class="line">on_exit function called: status=2, arg=10</span><br></pre></td></tr></table></figure></p>
+<p><strong>(输出顺序解释)</strong>
+处理程序按<strong>注册顺序的逆序</strong>调用： * 最后注册的是
+<code>on_exit</code> (arg=20)，所以最先调用。 * 然后是
+<code>atexitFunc2</code>。 * 然后是 <code>atexitFunc1</code>。 *
+最后是第一个注册的 <code>on_exit</code> (arg=10)。</p>
+<h3 id="forkstdio-缓冲区与-_exit-之间的交互"><code>fork()</code>、stdio
+缓冲区与 <code>_exit()</code> 之间的交互</h3>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world\n&quot;</span>);</span><br><span class="line">    write(STDOUT_FILENO, <span class="string">&quot;Ciao\n&quot;</span>, <span class="number">5</span>); <span class="comment">// 直接写入当前打开的文件描述符</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fork() == <span class="number">-1</span>)</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 父子进程都会执行到这里 */</span></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上程序的输出展示了一个起初令人费解的现象。当我们直接在终端运行此程序时，会看到预期的结果：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./fork_stdio_buf</span><br><span class="line">Hello world</span><br><span class="line">Ciao</span><br></pre></td></tr></table></figure> 然而，当我们将标准输出重定向到一个文件时，却看到以下情况：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./fork_stdio_buf &gt; a</span><br><span class="line">$ <span class="built_in">cat</span> a</span><br><span class="line">Ciao</span><br><span class="line">Hello world</span><br><span class="line">Hello world</span><br></pre></td></tr></table></figure> 在上面的输出中，我们看到两件奇怪的事情：由
+<code>printf()</code> 写入的行出现了两次，并且 <code>write()</code>
+的输出先于 <code>printf()</code> 的输出出现。</p>
+<p>要理解为什么用 <code>printf()</code>
+写入的消息会出现两次，需要回忆一下：<strong>stdio
+缓冲区是在进程的用户空间内存中维护的</strong>（参见第13.2节）。因此，这些缓冲区在
+<code>fork()</code> 时会被<strong>子进程复制</strong>。</p>
+<p>当标准输出指向终端时，默认是<strong>行缓冲</strong>的，因此由
+<code>printf()</code>
+写入的以换行符终止的字符串会<strong>立即显示</strong>。然而，当标准输出重定向到文件时，默认是<strong>块缓冲</strong>的。因此，在我们的例子中，在
+<code>fork()</code> 发生时，由 <code>printf()</code>
+写入的字符串仍然位于父进程的 stdio
+缓冲区中，并且这个字符串被子进程复制。当父进程和子进程随后调用
+<code>exit()</code> 时，它们都会<strong>刷新</strong>各自的 stdio
+缓冲区副本，从而导致<strong>重复的输出</strong>。</p>
+<p>我们可以通过以下方法之一来防止出现这种重复输出： * 作为解决 stdio
+缓冲问题的特定方案，我们可以在调用 <code>fork()</code>
+<strong>之前</strong>使用 <code>fflush()</code> 来刷新 stdio
+缓冲区。或者，我们可以使用 <code>setvbuf()</code> 或
+<code>setbuf()</code> 来<strong>禁用</strong> stdio 流的缓冲。 *
+子进程可以调用 <code>_exit()</code> 而不是
+<code>exit()</code>，这样它就不会刷新 stdio
+缓冲区。这项技术阐明了一个更通用的原则：在创建子进程的应用程序中，通常<strong>只有一个进程</strong>（最常见的是父进程）应该通过
+<code>exit()</code> 终止，而其他进程应该通过 <code>_exit()</code>
+终止。这确保了只有一个进程调用退出处理程序并刷新 stdio
+缓冲区，这通常是可取的。</p>
+<p>也存在其他允许父进程和子进程都调用 <code>exit()</code>
+的方法（有时是必要的）。例如，可以设计退出处理程序，使得即使从多个进程调用也能正确运行；或者让应用程序在调用
+<code>fork()</code>
+<strong>之后</strong>才安装退出处理程序。此外，有时我们可能确实希望所有进程在
+<code>fork()</code> 后都刷新其 stdio
+缓冲区。在这种情况下，我们可以选择使用 <code>exit()</code>
+终止进程，或者根据情况在每个进程中使用显式的 <code>fflush()</code>
+调用。</p>
+<p>示例程序中 <code>write()</code> 的输出没有出现两次，是因为
+<code>write()</code>
+将数据<strong>直接传输到内核缓冲区</strong>，而该缓冲区在
+<code>fork()</code> 期间<strong>不会被复制</strong>。</p>
+<p>现在，程序输出重定向到文件时的第二个奇怪之处的原因应该很清楚了。<code>write()</code>
+的输出出现在 <code>printf()</code> 的<strong>输出之前</strong>，是因为
+<code>write()</code>
+的输出会<strong>立即</strong>传输到内核缓冲区缓存，而
+<code>printf()</code> 的输出只有在调用 <code>exit()</code> 刷新 stdio
+缓冲区时才会被传输。（通常，如第13.7节所述，在同一文件上混合使用 stdio
+函数和系统调用来执行 I/O 时需要小心。）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/27/oper_sys24fork/" rel="prev" title="操作系统基础 | 5.3 信号；fork">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 5.3 信号；fork
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/05/intv_io/" rel="next" title="算法笔试 | acm模式输入输出指南">
+                  算法笔试 | acm模式输入输出指南 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/09/03/oper_sys25exit/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/09/03/oper_sys25exit/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

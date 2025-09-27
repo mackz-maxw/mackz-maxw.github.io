@@ -122,13 +122,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -150,6 +150,378 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-15 04:50:34" itemprop="dateModified" datetime="2025-09-15T04:50:34+08:00">2025-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/wsl2/" itemprop="url" rel="index"><span itemprop="name">wsl2</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="依赖问题">依赖问题</h3>
+<p>由于安装的老版本（humble）ros2,
+很多必需包直接安装会报依赖小版本号不一致错误，使用apt
+install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
+在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
+<h3 id="swap空间不足">swap空间不足</h3>
+<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
+很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
+<p>这个时候就需要给wsl2扩swap空间， 在
+c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
+在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
+<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
+<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-15 04:50:37" itemprop="dateModified" datetime="2025-09-15T04:50:37+08:00">2025-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/wsl2/" itemprop="url" rel="index"><span itemprop="name">wsl2</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
+<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
+以上代码分别：设置了GTK（GIMP
+Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
+Window
+System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
+<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
+<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
+<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
+选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
+默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
+<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
+target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/mvvm-frtnd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:46" itemprop="dateModified" datetime="2025-01-22T10:30:46+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>实现一个简单的MVVM框架</p>
+<h2 id="section">6/30</h2>
+<p>纯javascript实现双向数据绑定：https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</p>
+<p>javascript
+MVVM框架介绍：https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</p>
+<p>谢谢你，<a
+target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr
+Kopytin</a>大神！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/network/" class="post-title-link" itemprop="url">计算机网络相关</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:49" itemprop="dateModified" datetime="2025-01-22T10:30:49+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在b站看斯坦福CS144作为教程，打算后期跟着《计算机网络
+自顶向下方法》（Kurose&amp;Ross版）再过一过。</p>
+<p>突然发现看了英文教程再看中文版书有点不理解一些概念用语😂，想看纯英文版的书又怕自己看不懂，纠结了。</p>
+<h2 id="section">3/17</h2>
+<p>（摘自Kurose&amp;Ross的《计算机网络 自顶向下方法》）</p>
+<p>什么是套接字（socket）：</p>
+<p>套接字说同一台主机内应用层与传输层之间的接口，由于该套接字是在网络上建立网络应用程序的可编程接口，因此也将套接字称为应用程序和网络之间的应用程序编程接口（Application
+Programming Interface，API）。</p>
+<p>什么是传输层的多路复用（multiplexing）和解复用（demultiplexing，多路分解）：</p>
+<p>多路复用和多路分解是因特网中的基本传输层服务。</p>
+<p>从源主机的不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在多路分解时使用）从而生成报文段，然后将报文段传递到网络层的工作称为多路复用。</p>
+<p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
+<h2 id="section-1">4/22</h2>
+<p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
+<p>绝了！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

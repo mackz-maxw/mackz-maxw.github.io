@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="把面试可能遇到的题目和回答存一下，面完来看看有哪些问到了 更新： 面完了，全在拷问项目，一点八股没问，凉了。迭代一下模拟面试题目 我的简历项目有三个：通用操作系统框架（Rust，研究生阶段跟着导师组里做的项目），自己开发的博客平台（Spring boot），智能菜市场物联网数据平台后端（Spring Boot，本科阶段实习的项目） 请用3分钟左右的时间介绍一下你自己 (考察总结和表达能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模拟面试 | 云计算，云平台开发岗">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/06/06/intv_mock/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="把面试可能遇到的题目和回答存一下，面完来看看有哪些问到了 更新： 面完了，全在拷问项目，一点八股没问，凉了。迭代一下模拟面试题目 我的简历项目有三个：通用操作系统框架（Rust，研究生阶段跟着导师组里做的项目），自己开发的博客平台（Spring boot），智能菜市场物联网数据平台后端（Spring Boot，本科阶段实习的项目） 请用3分钟左右的时间介绍一下你自己 (考察总结和表达能">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-07T01:37:42.383Z">
+<meta property="article:modified_time" content="2025-09-24T20:46:45.567Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/06/06/intv_mock/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/06/06/intv_mock/","path":"2025/06/06/intv_mock/","title":"模拟面试 | 云计算，云平台开发岗"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>模拟面试 | 云计算，云平台开发岗 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E7%94%A83%E5%88%86%E9%92%9F%E5%B7%A6%E5%8F%B3%E7%9A%84%E6%97%B6%E9%97%B4%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E4%BD%A0%E8%87%AA%E5%B7%B1-%E8%80%83%E5%AF%9F%E6%80%BB%E7%BB%93%E5%92%8C%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B%E5%BC%95%E5%AF%BC%E9%9D%A2%E8%AF%95%E5%AE%98%E5%85%B3%E6%B3%A8%E4%BD%A0%E7%9A%84%E4%BA%AE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">请用3分钟左右的时间介绍一下你自己
+(考察总结和表达能力，引导面试官关注你的亮点)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E4%B8%80%E6%AC%A1%E9%9C%80%E8%A6%81%E5%9C%A8%E6%9C%89%E9%99%90%E8%B5%84%E6%BA%90%E4%B8%8B%E5%AE%8C%E6%88%90%E4%BB%BB%E5%8A%A1%E7%9A%84%E7%BB%8F%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">描述一次需要在有限资源下完成任务的经历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E4%B8%80%E6%AC%A1%E6%88%90%E5%8A%9F%E8%AF%B4%E6%9C%8D%E5%88%AB%E4%BA%BA%E7%9A%84%E7%BB%8F%E5%8E%86"><span class="nav-number">3.</span> <span class="nav-text">描述一次成功说服别人的经历</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/06/intv_mock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="模拟面试 | 云计算，云平台开发岗 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          模拟面试 | 云计算，云平台开发岗
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-07 09:37:42" itemprop="dateCreated datePublished" datetime="2025-06-07T09:37:42+08:00">2025-06-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-25 04:46:45" itemprop="dateModified" datetime="2025-09-25T04:46:45+08:00">2025-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>把面试可能遇到的题目和回答存一下，面完来看看有哪些问到了 更新：
+面完了，全在拷问项目，一点八股没问，凉了。迭代一下模拟面试题目</p>
+<p>我的简历项目有三个：通用操作系统框架（Rust，研究生阶段跟着导师组里做的项目），自己开发的博客平台（Spring
+boot），智能菜市场物联网数据平台后端（Spring
+Boot，本科阶段实习的项目）</p>
+<h3
+id="请用3分钟左右的时间介绍一下你自己-考察总结和表达能力引导面试官关注你的亮点"><strong>请用3分钟左右的时间介绍一下你自己</strong>
+(考察总结和表达能力，引导面试官关注你的亮点)</h3>
+<p>面试官您好！我是来自XX大学计算机科学专业的硕士研究生XX，非常荣幸能参加贵公司云架构平台部后台开发岗位的面试。
+(背景 &amp; 核心项目 - 1 min)
+在研究生阶段，我的核心研究聚焦于构建高性能、可扩展的<strong>操作系统框架</strong>。我主导了其中<strong>调度算法模块</strong>的设计与实现。我的任务是将导师提出的新型*联合调度模型<strong>落地到基于Rust开发的</strong>微内核<strong>框架中。该模型的核心是根据任务的</strong>CPU占用<strong>特征（高/低利用率）</strong>动态匹配<strong>最优调度策略（如EDF或Rate-Monotonic），以提升统在超负荷以及</strong>实时调度<strong>场景下的整体效用。
+为了实现并验证该模型：
+充分利用</strong>Rust的所有权机制<strong>实现安全高效的</strong>任务状态管理<strong>
+我设计了模块化的调度器接口，支持灵活集成和对比不同策略，并通过Linux内核工程实践（在Raspberry
+Pi上进行</strong>内核模块定制<strong>、交叉编译） 搭建了真实的测试环境。
+我利用</strong>perf**等工具采集并分析任务响应时间、CPU利用率等指标，量化验证了该联合调度模型在极端负载下的性能优势，达到了理论预期。这个项目不仅锻炼了我系统级编程（Rust）、核原理和性能调优的能力，也让我深刻理解了高并发、实时性保障的挑战。</p>
+<p>(其他项目经验 - 突出相关技术 - 45 sec)
+除了研究项目，我也积极将技术应用于实践：
+我独立设计并开发了一个高性能多线程TCP服务器（Rust）。采用Reactor模式和<strong>非阻塞I/O</strong>处理并发连接，精心设计了<strong>线程安全的任务队列</strong>和共享数据模型，降低了系统调度开销通过优化，服务器在压力测试下峰值处理能力达到300+请求/秒，并保持了99.9%的运行时间可靠性。这强化了我对网络编程、并发控制和系统稳定性的理解。
+在XX公司实习期间，我参与了智能菜市场物联网数据平台后端（Spring
+Boot/Java）
+的开发。针对日均5000+设备数据的高并发接入场景，我参与了<strong>分库分表方案设计</strong>，并通过优化复查询（使用联合索引）降低关键接口耗时。我还负责了服务的Docker容器化部署，实现了资源的有效利用和快速扩容。这让我熟悉了企业级Java开发、数据库性能优化（MySQL/MyBatis）和容器化技术。</p>
+<p>(技能总结 &amp; 匹配岗位 - 30 sec)
+通过这些经历，我熟练掌握<strong>C++、Python</strong>，并具备扎实的<strong>Rust系统级开发</strong>经验；深入理解操作系统、网络、并发编程原理；在分布式系统设（分库分表）、高并发优化等方面有实际项目积累；并具备良好的问题定位和解决能力。</p>
+<p>(结尾 - 表达热情与匹配 - 15 sec)
+我了解到贵部门专注于<strong>构建和优化云平台</strong>的核心服务与基础设施，这正是我的兴趣所在。我的系统底层经验、性能优化意识、对分布式和云原生技的热情，以及扎实的后端开发技能，都与这个岗位高度契合。我非常渴望能加入团队，贡献我的力量，并持续学习成长。谢谢</p>
+<h3
+id="描述一次需要在有限资源下完成任务的经历">描述一次需要在有限资源下完成任务的经历</h3>
+<p>基于项目：智能菜市场物联网数据平台后端（实习经历）
+Situation（情境）：在实习期间，我参与开发智能菜市场物联网数据平台。项目面临两个关键限制：一是时间紧迫（核心查询接口优化需在1周内完成，同时还有上线前的测试工作），二是测试资源有限（只有一台低配测试服务器，无法模拟高并发场景）。</p>
+<p>Task（任务）：我的任务是在有限时间和资源下，将核心查询接口的响应时间从300ms以上优化到150ms以下，以支持平台的高并发需求。
+Action（行动）：
+优先级聚焦：我首先分析慢查询日志，识别出最影响性能的SQL语句（如多表关联查询），放弃全面优化，集中精力攻克关键点。
+创造性解决：由于无法进行大规模负载测试，我使用Docker容器在本机模拟小型数据库环境，通过指数生成测试数据。然后，我设计了联合索引来优化查询，避免了硬件依赖。
+迭代验证：我采用敏捷方式，每完成一个索引优化就立即测试，确保每次微改进都有效果，同时用Docker快速部署验证，节省了运维时间。
+Result（结果）：最终，核心查询耗时降低150ms（性能提升50%），任务提前完成。这次经历让我学会了在约束条件下优先解决瓶颈问题，并灵活使用工具（如Docker）来弥补资源不足</p>
+<h3 id="描述一次成功说服别人的经历">描述一次成功说服别人的经历</h3>
+<p>基于项目：通用操作系统框架（Rust+C+gcc+Perf）
+Situation（情境）：在2024年参与通用操作系统框架项目时，团队在设计任务调度模块时出现了分歧。部分成员倾向于使用传统的轮转（RR）调度算法，因为它简单易实现；但我通过前期研究发现，在混合任务场景（如实时任务和批处理任务共存）下，RR调度会导致性能瓶颈，尤其是系统超负荷时响应时间恶化。</p>
+<p>Task（任务）：我的任务是通过数据和演示，说服团队采纳我提出的联合调度模型（结合优先级和时间片调整），以优化系统吞吐量和响应时间。
+Action（行动）： 我首先收集了基准数据：使用Perf工具在Raspberry
+Pi上模拟了150%超负荷场景，对比了RR调度和联合调度的性能指标（如CPU利用率、任务响应时间）。
+然后，我组织了一次技术评审会，用可视化图表展示数据：RR调度在超负荷下CPU利用率仅65%，而联合调度达到85%以上；同时，调度开销降低了10%。
+针对团队对复杂性的担忧，我解释了模块化设计如何降低维护成本，并承诺主导核心代码实现。我还邀请了导师Prof.
+G提供反馈，增强了说服力。
+Result（结果）：团队最终同意采用联合调度模型。实施后，项目成果显示系统在超负荷场景下性能显著提升，CPU利用率提升20%，调度开销降低10%。这次经历不仅优化了系统，还锻炼了我用数据驱动决策的能力。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/06/kamacode22backtrack4/" rel="prev" title="代码随想录 | 刷题-回溯算法4">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-回溯算法4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/08/kamacode23/" rel="next" title="代码随想录 | 刷题-贪心算法1">
+                  代码随想录 | 刷题-贪心算法1 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/06/06/intv_mock/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/06/06/intv_mock/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

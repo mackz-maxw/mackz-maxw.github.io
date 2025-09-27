@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="26.2 孤儿进程与僵尸进程 (Orphans and Zombies) 父进程和子进程的生命周期通常并不相同——要么父进程比子进程存活时间长，要么相反。这就引出了两个问题： 1. 孤儿进程由谁接管？ 当一个进程的父进程终止后，该进程就变成了“孤儿进程”。这个孤儿进程会被 init 进程（所有进程的祖先，其进程 ID 为 1）收养。换句话说，在子进程的父进程终止后，调用 getppid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 5.7 孤儿进程；错误检查">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/09/14/oper_sys27orphan_err/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="26.2 孤儿进程与僵尸进程 (Orphans and Zombies) 父进程和子进程的生命周期通常并不相同——要么父进程比子进程存活时间长，要么相反。这就引出了两个问题： 1. 孤儿进程由谁接管？ 当一个进程的父进程终止后，该进程就变成了“孤儿进程”。这个孤儿进程会被 init 进程（所有进程的祖先，其进程 ID 为 1）收养。换句话说，在子进程的父进程终止后，调用 getppid">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-14T15:32:32.574Z">
+<meta property="article:modified_time" content="2025-09-14T15:32:41.292Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/09/14/oper_sys27orphan_err/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/09/14/oper_sys27orphan_err/","path":"2025/09/14/oper_sys27orphan_err/","title":"操作系统基础 | 5.7 孤儿进程；错误检查"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 5.7 孤儿进程；错误检查 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B-orphans-and-zombies"><span class="nav-number">1.</span> <span class="nav-text">26.2
+孤儿进程与僵尸进程 (Orphans and Zombies)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E8%BF%9B%E7%A8%8B%E6%BA%90%E4%BB%A3%E7%A0%81%E6%8C%87%E5%BC%95"><span class="nav-number">2.</span> <span class="nav-text">Linux 进程源代码指引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF%E6%A3%80%E6%9F%A5"><span class="nav-number">3.</span> <span class="nav-text">Linux
+内核代码错误检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#err_ptr-%E5%92%8C-ptr_err-%E5%AE%8F"><span class="nav-number">4.</span> <span class="nav-text">ERR_PTR 和
+PTR_ERR 宏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-is_err-%E5%92%8C-ptr_err%E5%AE%83%E4%BB%AC%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="nav-number">5.</span> <span class="nav-text">如何使用
+IS_ERR 和 PTR_ERR？它们是什么意思？</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/14/oper_sys27orphan_err/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 5.7 孤儿进程；错误检查 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 5.7 孤儿进程；错误检查
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-14 23:32:32 / 修改时间：23:32:41" itemprop="dateCreated datePublished" datetime="2025-09-14T23:32:32+08:00">2025-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="孤儿进程与僵尸进程-orphans-and-zombies"><strong>26.2
+孤儿进程与僵尸进程 (Orphans and Zombies)</strong></h3>
+<p>父进程和子进程的生命周期通常并不相同——要么父进程比子进程存活时间长，要么相反。这就引出了两个问题：</p>
+<p><strong>1. 孤儿进程由谁接管？</strong>
+当一个进程的父进程终止后，该进程就变成了“孤儿进程”。这个孤儿进程会被
+<code>init</code> 进程（所有进程的祖先，其进程 ID 为
+1）收养。换句话说，在子进程的父进程终止后，调用 <code>getppid()</code>
+将返回值
+1。这可以作为一种判断子进程的真正父进程是否仍存活的方法（前提是该子进程并非由
+<code>init</code> 进程创建）。 使用 Linux 特有的 <code>prctl()</code>
+系统调用的 <code>PR_SET_PDEATHSIG</code>
+操作，可以设置一个进程在成为孤儿时接收到一个特定的信号。</p>
+<p><strong>2. 父进程还未执行 wait()
+子进程就已终止，会发生什么？</strong>
+关键在于，尽管子进程已经完成了它的工作，但仍应允许父进程在之后的某个时间点执行
+<code>wait()</code>
+来获取子进程的终止状态。内核通过将子进程转变为“僵尸进程”（Zombie）来处理这种情况。这意味着子进程持有的大部分资源会被释放回系统，供其他进程重用。进程唯一保留的部分是内核进程表中的一个条目，该条目记录了子进程的进程
+ID、终止状态以及资源使用统计信息（参见 36.1 节）等信息。</p>
+<p>关于僵尸进程，UNIX
+系统模仿了电影中的设定——僵尸进程无法被信号杀死，即使是（银弹）<code>SIGKILL</code>
+信号也不行。这确保了父进程最终总是能够执行 <code>wait()</code>。</p>
+<p>当父进程执行了 <code>wait()</code>
+后，内核会清除该僵尸进程，因为关于该子进程的最后剩余信息不再需要。另一方面，如果父进程未执行
+<code>wait()</code> 就终止了，那么 <code>init</code>
+进程会收养该子进程，并自动执行
+<code>wait()</code>，从而将僵尸进程从系统中移除。</p>
+<p>如果一个父进程创建了子进程，但未能执行
+<code>wait()</code>，那么内核进程表中将无限期地保留该僵尸子进程的条目。如果创建了大量这样的僵尸子进程，它们最终会填满内核进程表，从而阻止新进程的创建。由于僵尸进程无法用信号杀死，将它们从系统中移除的唯一方法是杀死它们的父进程（或等待其退出），届时
+<code>init</code> 进程会收养这些僵尸进程并对它们执行
+<code>wait()</code>，从而将它们从系统中清除。</p>
+<p>这些语义对于需要创建大量子进程的长生命周期父进程（如网络服务器和
+Shell）的设计具有重要意义。换句话说，在此类应用程序中，父进程应执行
+<code>wait()</code>
+调用，以确保已终止的子进程总是能从系统中被移除，而不是变成长期存在的僵尸进程。如
+26.3.1 节所述，父进程可以同步执行这些 <code>wait()</code>
+调用，也可以异步地（例如响应 <code>SIGCHLD</code> 信号的递送）执行。</p>
+<p>以下程序演示了僵尸进程的创建以及僵尸进程无法被 <code>SIGKILL</code>
+杀死的情况。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;libgen.h&gt;</span>             <span class="comment">/* For basename() declaration */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CMD_SIZE 200</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="type">char</span> cmd[CMD_SIZE];</span><br><span class="line">    <span class="type">pid_t</span> childPid;</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);       <span class="comment">/* Disable buffering of stdout */</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Parent PID=%ld\n&quot;</span>, (<span class="type">long</span>) getpid());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:     <span class="comment">/* Child: immediately exits to become zombie */</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Child (PID=%ld) exiting\n&quot;</span>, (<span class="type">long</span>) getpid());</span><br><span class="line">        _exit(EXIT_SUCCESS);</span><br><span class="line">    <span class="keyword">default</span>:    <span class="comment">/* Parent */</span></span><br><span class="line">        sleep(<span class="number">3</span>);               <span class="comment">/* Give child a chance to start and exit */</span></span><br><span class="line">        <span class="built_in">snprintf</span>(cmd, CMD_SIZE, <span class="string">&quot;ps | grep %s&quot;</span>, basename(argv[<span class="number">0</span>]));</span><br><span class="line">        cmd[CMD_SIZE - <span class="number">1</span>] = <span class="string">&#x27;\0&#x27;</span>;    <span class="comment">/* Ensure string is null-terminated */</span></span><br><span class="line">        system(cmd);            <span class="comment">/* View zombie child */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Now send the &quot;sure kill&quot; signal to the zombie */</span></span><br><span class="line">        <span class="keyword">if</span> (kill(childPid, SIGKILL) == <span class="number">-1</span>)</span><br><span class="line">            errMsg(<span class="string">&quot;kill&quot;</span>);</span><br><span class="line">        sleep(<span class="number">3</span>);               <span class="comment">/* Give child a chance to react to signal */</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;After sending SIGKILL to zombie (PID=%ld):\n&quot;</span>, (<span class="type">long</span>) childPid);</span><br><span class="line">        system(cmd);            <span class="comment">/* View zombie child again */</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 当我们运行此程序时，会看到以下输出：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ./make_zombie</span><br><span class="line">Parent PID=1013</span><br><span class="line">Child (PID=1014) exiting</span><br><span class="line"> 1013 pts/4   00:00:00 make_zombie</span><br><span class="line"> 1014 pts/4   00:00:00 make_zombie &lt;defunct&gt;       (ps命令的输出)</span><br><span class="line">After sending SIGKILL to zombie (PID=1014):</span><br><span class="line"> 1013 pts/4   00:00:00 make_zombie</span><br><span class="line"> 1014 pts/4   00:00:00 make_zombie &lt;defunct&gt;       (ps命令的输出)</span><br></pre></td></tr></table></figure> 在上面的输出中，我们看到 <code>ps(1)</code> 命令显示字符串
+<code>&lt;defunct&gt;</code> 来表示一个处于僵尸状态的进程。 示例程序使用
+<code>system()</code> 函数来执行其字符串参数中给出的 Shell
+命令。我们将在 27.6 节详细描述 <code>system()</code>。</p>
+<h3 id="linux-进程源代码指引"><strong>Linux 进程源代码指引</strong></h3>
+<p>进程和线程是操作系统中的基本抽象概念。为支持进程和线程，操作系统使用了两个关键数据结构：<code>task_struct</code>
+和
+<code>thread_info</code>；以及大量用于管理系统中进程和线程的辅助函数。</p>
+<ul>
+<li><strong><code>arch/arm/include/asm/thread_info.h</code></strong>
+文件声明了 <code>thread_info</code> 结构体。</li>
+<li><strong><code>include/linux/sched.h</code></strong> 文件声明了
+<code>task_struct</code> 结构体以及许多进程管理函数。</li>
+<li><strong><code>arch/arm/include/asm/switch_to.h</code></strong>
+文件为 <code>switch_to</code> 进程切换例程定义了一个特定于 ARM
+架构的宏，而 <strong><code>arch/arm/kernel/entry-armv.S</code></strong>
+文件实现了该宏所使用的汇编级进程切换例程 <code>__switch_to</code>。</li>
+</ul>
+<h3 id="linux-内核代码错误检查"><strong>Linux
+内核代码错误检查</strong></h3>
+<p>在 Linux 用户空间编程中，函数通常返回整数，并约定返回值
+<code>0</code>
+表示函数调用成功，而不同的（通常为负的）非零值用于指示不同的错误。然而，在内核编程中，许多函数可能返回指针而非整数，这使问题变得复杂，因为指针可能使用非零值来编码作为函数成功调用结果而返回的有效内存地址。</p>
+<p>Linux 通过利用以下事实来解决这一挑战： 1.
+有效（虚拟）地址范围的上半部分未被使用。 2.
+使用负值表示错误会使得其高位比特位非零，无论它们是作为指针还是整数返回。
+3. 在 <strong><code>include/linux/err.h</code></strong>
+文件中提供有用的宏和内联函数，这些函数可以以跨不同硬件架构的可移植方式处理指针、整数和布尔类型的不同组合：</p>
+<ul>
+<li><strong><code>IS_ERR_VALUE</code>
+宏</strong>：检查一个（指针或整数）值的高位范围是否非空（即，包含错误值）。</li>
+<li><strong><code>ERR_PTR</code>
+函数</strong>：将一个（<code>long</code>
+类型）整数值转换为（<code>void *</code> 类型）指针值。</li>
+<li><strong><code>PTR_ERR</code>
+函数</strong>：将一个（<code>const void *</code>
+类型）指针值转换为（<code>long</code> 类型）整数值。</li>
+<li><strong><code>IS_ERR</code>
+函数</strong>：将一个（<code>const void *</code>
+类型）指针值转换为（<code>unsigned long</code> 类型）整数值，使用
+<code>IS_ERR_VALUE</code>
+宏检查该值的高位范围是否非空（即，包含错误值），并相应地返回一个
+<code>bool</code> 值。</li>
+<li><strong><code>IS_ERR_OR_NULL</code> 函数</strong>：返回一个
+<code>bool</code> 值，如果 (1) 传入的（<code>const void *</code>
+类型）指针值为 <code>0</code> <strong>或</strong> (2)
+将其转换为（<code>unsigned long</code> 类型）整数值后使用
+<code>IS_ERR_VALUE</code>
+宏检查表明该值的高位范围非空（即，包含错误值），则该函数返回
+<code>true</code>。</li>
+<li><strong><code>ERR_CAST</code>
+函数</strong>：将（<code>const void *</code>
+类型）指针转换为（<code>void *</code> 类型）指针（去除
+<code>const</code> 属性）。</li>
+<li><strong><code>PTR_ERR_OR_ZERO</code> 函数</strong>：使用
+<code>IS_ERR</code> 函数检查传入的（<code>const void *</code>
+类型）指针值是否包含错误，并返回一个（<code>int</code>
+类型）整数值：如果不包含错误则返回
+<code>0</code>，如果包含错误则返回通过调用 <code>PTR_ERR</code>
+函数获取的错误值。</li>
+</ul>
+<h3 id="err_ptr-和-ptr_err-宏"><strong><code>ERR_PTR</code> 和
+<code>PTR_ERR</code> 宏</strong></h3>
+<p>关于返回值的讨论，你现在明白了内核模块的 <code>init</code>
+例程必须返回一个整数。但如果你希望返回一个指针呢？
+<strong><code>ERR_PTR()</code></strong>
+内联函数为我们提供了解决方案，它允许我们通过将指针类型转换为
+<code>void *</code>
+来返回一个伪装成整数的指针。实际上还有更好的方法：你可以使用
+<strong><code>IS_ERR()</code></strong>
+内联函数检查错误（该函数实质上判断值是否在 <code>[-1, -4095]</code>
+范围内），通过 <strong><code>ERR_PTR()</code></strong>
+内联函数将负的错误值编码到指针中，并使用对应的例程
+<strong><code>PTR_ERR()</code></strong> 从指针中检索出这个错误值。</p>
+<p>一个简单的例子，参见下面给出的被调用方代码。这次，我们让（示例）函数
+<code>myfunc()</code> 返回一个（指向名为 <code>mystruct</code>
+的结构体的）指针，而不是整数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> mystruct * <span class="title function_">myfunc</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mystruct</span> *<span class="title">mys</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    mys = kzalloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> mystruct), GFP_KERNEL);</span><br><span class="line">    <span class="keyword">if</span> (!mys)</span><br><span class="line">        <span class="keyword">return</span> ERR_PTR(-ENOMEM); <span class="comment">/* 示例：返回编码为指针的错误码 */</span></span><br><span class="line">    <span class="comment">/* ... 其他操作 ... */</span></span><br><span class="line">    <span class="keyword">return</span> mys; <span class="comment">/* 返回有效的指针 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何使用-is_err-和-ptr_err它们是什么意思"><strong>如何使用
+IS_ERR 和 PTR_ERR？它们是什么意思？</strong></h3>
+<p>根据内核定义，有三个宏： * <strong><code>IS_ERR</code></strong> -
+用于检查。如果 <code>ptr</code> 是一个错误指针则返回非 <code>0</code>
+值。否则，如果不是错误则返回 <code>0</code>。 *
+<strong><code>PTR_ERR</code></strong> -
+用于打印。获取指针中当前（编码的错误）值。 *
+<strong><code>IS_ERR_VALUE</code></strong> - 在此有更详细的解释
+(here1)。</p>
+<p>我发现这些宏对于内核空间编程非常有用。用法如下 - 如果
+<code>ptr</code> 是你要检查的指针，则按如下方式使用： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (IS_ERR(ptr))</span><br><span class="line">     printk(<span class="string">&quot;Error here: %ld&quot;</span>, PTR_ERR(ptr)); <span class="comment">/* 打印出错误码 */</span></span><br></pre></td></tr></table></figure>
+它们在内核中的代码定义如下： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> IS_ERR_VALUE(x) unlikely((x) &gt;= (unsigned long)-MAX_ERRNO)</span></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> * __must_check <span class="title function_">ERR_PTR</span><span class="params">(<span class="type">long</span> error)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">void</span> *) error;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">long</span> __must_check <span class="title function_">PTR_ERR</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *ptr)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">long</span>) ptr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">long</span> __must_check <span class="title function_">IS_ERR</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *ptr)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> IS_ERR_VALUE((<span class="type">unsigned</span> <span class="type">long</span>)ptr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">long</span> __must_check <span class="title function_">IS_ERR_OR_NULL</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *ptr)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !ptr || IS_ERR_VALUE((<span class="type">unsigned</span> <span class="type">long</span>)ptr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/09/oper_sys26wait/" rel="prev" title="操作系统基础 | 5.6 等待子进程">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 5.6 等待子进程
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/09/14/oper_sys27orphan_err/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/09/14/oper_sys27orphan_err/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

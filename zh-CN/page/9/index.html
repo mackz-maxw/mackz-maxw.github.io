@@ -122,13 +122,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm2/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/28/linux_sched2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -177,7 +177,399 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/algorithm2/" class="post-title-link" itemprop="url">刷题-初级算法：字符串</a>
+          <a href="/2024/12/28/linux_sched2/" class="post-title-link" itemprop="url">Linux调度算法相关2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-29 00:10:36" itemprop="dateCreated datePublished" datetime="2024-12-29T00:10:36+08:00">2024-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:36" itemprop="dateModified" datetime="2025-01-22T10:30:36+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="实时进程调度概述">实时进程调度概述</h1>
+<h2 id="标准调度与实时调度的差异">标准调度与实时调度的差异</h2>
+<p>标准内核调度算法通常可以为交互式和后台进程的混合提供足够的性能和响应能力。然而，实时应用程序对调度器的需求更加严格</p>
+<h3 id="提供外部输入的最大响应时间保证">1.
+提供外部输入的最大响应时间保证</h3>
+<ul>
+<li>实时应用程序必须保证对外部输入的最大响应时间。在许多情况下，这些最大响应时间需要非常短，例如在毫秒或几分之一秒的级别。</li>
+</ul>
+<h4 id="附加措施">附加措施</h4>
+<ul>
+<li>一些时间关键型的应用可能需要采取其他措施来避免不可接受的延迟。例如：
+<ul>
+<li>使用 <code>mlock()</code> 或 <code>mlockall()</code>
+将应用程序的所有虚拟内存锁定到 RAM 中，避免页面错误造成的延迟。</li>
+</ul></li>
+</ul>
+<h3 id="保持对-cpu-的独占访问权">2. 保持对 CPU 的独占访问权</h3>
+<ul>
+<li>高优先级进程在完成任务或自愿放弃 CPU 之前，应该能够独占地使用
+CPU，确保任务的顺利执行。 ### 3. 进程顺序控制</li>
+<li><h2
+id="实时应用程序需要对其成员进程精确顺序的调度权">实时应用程序需要对其成员进程精确顺序的调度权。</h2></li>
+</ul>
+<h1 id="实时调度的-posix-api">实时调度的 POSIX API</h1>
+<h2 id="susv3-的实时调度-api">SUSv3 的实时调度 API</h2>
+<p>SUSv3 定义了一个实时进程调度 API，部分满足了实时应用的严格需求： -
+提供两种实时调度策略： - <code>SCHED_FIFO</code>（先进先出） -
+<code>SCHED_RR</code>（轮转） - 使用这些策略的进程优先级总是高于采用
+<code>SCHED_OTHER</code>（普通时间共享）的进程。</p>
+<h2 id="实时优先级范围">实时优先级范围</h2>
+<ul>
+<li>每种实时调度策略至少需要支持 32 个离散优先级。</li>
+<li>高优先级的进程总是优先于低优先级的进程。</li>
+</ul>
+<h3 id="多处理器系统中的调度行为">多处理器系统中的调度行为</h3>
+<p>在多处理器系统（包括超线程系统）中，调度行为有一些特殊性： 1. 每个
+CPU
+维护一个独立的运行队列。这种设计优于单一的系统级运行队列，可以提高性能。
+2. 进程只能在其所属 CPU 的运行队列中被调度。 3. <strong>举例</strong>：
+- 在一个双处理器系统中，如果有三个进程： - 进程 A：实时优先级为 20； -
+进程 B：实时优先级为 30； - 进程 C：实时优先级为 10； - 如果当前 CPU0
+正在运行 B，A 只能等待 CPU0 空闲，即使 A 的优先级高于 CPU1 上正在运行的
+C。</p>
+<p>Linux 提供了 99 个实时优先级，从 1（最低）到
+99（最高）。这一区间适用于两种实时调度策略（<code>SCHED_RR</code> 和
+<code>SCHED_FIFO</code>）。两种策略中的优先级是等效的。</p>
+<p>这意味着： - 如果两个进程具有相同的优先级，一个使用
+<code>SCHED_RR</code> 策略，另一个使用 <code>SCHED_FIFO</code>
+策略，那么哪个进程会被调度取决于它们被放入队列的顺序。</p>
+<p>实际上，每个优先级都维护着一个可运行进程的队列。 -
+调度时，系统会从最高优先级的非空队列中选择队列头部的进程来运行。 ---</p>
+<h1 id="posix-实时-vs-硬实时">POSIX 实时 vs 硬实时</h1>
+<h3 id="posix-实时软实时">POSIX 实时（软实时）</h3>
+<p>POSIX 提供的是软实时调度功能，具体表现为： - 可以控制进程何时被调度。
+- 不能完全保证处理输入时的响应时间。 -
+适用于绝大多数实时场景，但无法满足某些严格的硬实时需求。</p>
+<h3 id="硬实时">硬实时</h3>
+<ul>
+<li>硬实时系统保证所有任务在规定的时限内完成。</li>
+<li>实现硬实时通常需要操作系统支持额外的功能，而 Linux 默认不支持。</li>
+<li>Linux 内核自 2.6.18
+版本以来添加了一些功能，目标是原生支持硬实时应用，但仍需配置和优化。</li>
+</ul>
+<hr />
+<h1 id="sched_rr-策略详解">SCHED_RR 策略详解</h1>
+<h3 id="基本规则">基本规则</h3>
+<p>在 <code>SCHED_RR</code> 策略下： - 同一优先级的任务按照轮转方式共享
+CPU，每个任务在每次使用 CPU 时获得一个固定长度的时间片。</p>
+<h3 id="执行控制">执行控制</h3>
+<p>任务保持对 CPU 的控制直到以下任一情况发生： 1. 时间片耗尽： -
+任务被移至同一优先级队列的末尾，其他同优先级任务可以被调度。 2. 自愿放弃
+CPU： - 例如，调用了 <code>sched_yield()</code> 或执行了阻塞操作。 3.
+任务终止。 4. 被更高优先级的任务抢占。</p>
+<p>对于前两个事件（时间片耗尽或主动放弃 CPU）中的情况，当运行在
+<code>SCHED_RR</code> 策略下的进程失去对 CPU
+的访问权限时，它会被移至其优先级队列的末尾。<br />
+在最后一种情况中（被更高优先级的进程抢占），当高优先级进程结束执行后，被抢占的进程会继续运行，使用其剩余的时间片（即被抢占的进程会回到其优先级队列的头部）。</p>
+<h3 id="sched_rr-和-sched_fifo"><code>SCHED_RR</code> 和
+<code>SCHED_FIFO</code></h3>
+<p>在 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
+策略中，当前运行中的进程可能因以下原因之一被抢占： 1.
+一个更高优先级的进程从阻塞状态变为非阻塞状态（例如，I/O 操作完成）。 2.
+另一个进程的优先级被提升到高于当前运行进程的优先级。 3.
+当前运行进程的优先级被降低到低于某些其他可运行进程的优先级。</p>
+<p><code>SCHED_RR</code>
+策略类似于标准的轮转时间共享调度算法（<code>SCHED_OTHER</code>），它允许一组相同优先级的进程共享
+CPU。</p>
+<h3 id="两者的主要区别">两者的主要区别：</h3>
+<ol type="1">
+<li><strong>优先级规则</strong>：
+<ul>
+<li><code>SCHED_RR</code>
+策略严格区分优先级，高优先级的进程总是优先于低优先级的进程。</li>
+<li>而 <code>SCHED_OTHER</code> 策略中，较低的 <code>nice</code>
+值（即较高的优先级）虽然增加了调度权重，但不能保证独占 CPU。</li>
+</ul></li>
+<li><strong>时间片保障</strong>：
+<ul>
+<li>在 <code>SCHED_OTHER</code> 策略中，任何具有低优先级（高
+<code>nice</code> 值）的进程始终可以获得一定的 CPU 时间。</li>
+<li><h2
+id="sched_rr-策略允许我们更精确地控制进程的调度顺序和执行时间"><code>SCHED_RR</code>
+策略允许我们更精确地控制进程的调度顺序和执行时间。</h2></li>
+</ul></li>
+</ol>
+<h1 id="sched_fifo-策略详解">SCHED_FIFO 策略详解</h1>
+<h3 id="基本规则-1">基本规则</h3>
+<p><code>SCHED_FIFO</code>（先进先出）策略与 <code>SCHED_RR</code>
+类似，但没有时间片限制。 - 任务可以一直运行，直到以下任一情况发生： 1.
+主动放弃 CPU（例如阻塞操作）。 2. 任务终止。 3.
+被更高优先级任务抢占。</p>
+<p>在第一种情况下，进程会被放置到其优先级队列的末尾。
+在最后一种情况下，当高优先级的进程停止执行（例如由于阻塞或终止）时，被抢占的进程会继续执行（即，被抢占的进程会保持在其优先级队列的队首）。</p>
+<hr />
+<h1 id="sched_batch-和-sched_idle-策略">SCHED_BATCH 和 SCHED_IDLE
+策略</h1>
+<h2 id="sched_batch-策略">SCHED_BATCH 策略</h2>
+<ul>
+<li><strong>功能</strong>：用于批处理型任务。</li>
+<li><strong>特点</strong>：
+<ul>
+<li>适用于 CPU 密集型任务。</li>
+<li>对调度延迟不敏感。</li>
+<li>调度器会根据任务的 <code>nice</code> 值决定优先级。</li>
+</ul></li>
+<li><strong>引入版本</strong>：Linux 2.6.16。</li>
+</ul>
+<h2 id="sched_idle-策略">SCHED_IDLE 策略</h2>
+<ul>
+<li><strong>功能</strong>：用于低优先级任务，仅在系统完全空闲时执行。</li>
+<li><strong>特点</strong>：
+<ul>
+<li>优先级比所有其他任务都低（甚至低于 <code>nice +19</code>）。</li>
+<li><code>nice</code> 值对该策略没有影响。</li>
+</ul></li>
+<li><strong>引入版本</strong>：Linux 2.6.23。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/27/linux_sched/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/27/linux_sched/" class="post-title-link" itemprop="url">Linux调度算法相关</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-28 02:35:39" itemprop="dateCreated datePublished" datetime="2024-12-28T02:35:39+08:00">2024-12-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:30" itemprop="dateModified" datetime="2025-01-22T10:30:30+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="实时调度策略及算法概述">实时调度策略及算法概述</h1>
+<p>Linux 提供了两种实时调度策略，<code>SCHED_FIFO</code> 和
+<code>SCHED_RR</code>。非实时的普通调度策略是
+<code>SCHED_NORMAL</code>。</p>
+<p>通过调度类框架，这些实时调度策略并非由完全公平调度器（CFS）管理，而是由一个特殊的实时调度器管理，该调度器定义在
+<code>kernel/sched_rt.c</code> 文件中。</p>
+<h2 id="sched_fifo-策略">1. SCHED_FIFO 策略</h2>
+<p><code>SCHED_FIFO</code>
+实现了一种简单的先进先出（FIFO）调度算法，<strong>没有时间片限制</strong>，可以无限期运行。
+- 一个可运行的 <code>SCHED_FIFO</code> 任务始终优先于任何
+<code>SCHED_NORMAL</code> 任务。 - 当 <code>SCHED_FIFO</code>
+任务变为可运行状态时，它会一直运行，直到阻塞或显式放弃处理器。 -
+<strong>抢占规则</strong>：只有更高优先级的 <code>SCHED_FIFO</code> 或
+<code>SCHED_RR</code> 任务可以抢占当前的 <code>SCHED_FIFO</code> 任务。
+- 如果多个 <code>SCHED_FIFO</code>
+任务具有相同优先级，它们以轮转的方式运行。</p>
+<h2 id="sched_rr-策略">2. SCHED_RR 策略</h2>
+<p><code>SCHED_RR</code> 与 <code>SCHED_FIFO</code>
+类似，但有时间片限制。 -
+每个任务运行到时间片耗尽时，会被切换到同一优先级队列中的下一个任务。 -
+只有更高优先级的任务可以抢占当前任务，即使 <code>SCHED_RR</code>
+任务的时间片耗尽，低优先级的进程也无法抢占它的执行。 -
+<strong>时间片的作用</strong>：仅用于同优先级进程之间的调度。</p>
+<h2 id="静态优先级">3. 静态优先级</h2>
+<ul>
+<li>两种实时调度策略都实现了<strong>静态优先级</strong>。</li>
+<li>内核不会为实时任务计算动态优先级。</li>
+<li>给定优先级的实时任务总是会抢占低优先级的任务。</li>
+</ul>
+<h2 id="软实时与硬实时">4. 软实时与硬实时</h2>
+<ul>
+<li>Linux
+的实时调度策略提供的是<strong>软实时</strong>行为：内核会尽力在时限内调度应用程序，但不保证一定达成。</li>
+<li>硬实时系统则保证严格的时限要求，而 Linux 并不原生支持。</li>
+</ul>
+<hr />
+<h1 id="实时优先级范围">实时优先级范围</h1>
+<ul>
+<li>实时优先级范围为 <code>0</code> 到
+<code>MAX_RT_PRIO - 1</code>，默认情况下 <code>MAX_RT_PRIO</code> 为
+<code>100</code>。99为最高实时优先级。</li>
+<li>普通任务（<code>SCHED_NORMAL</code>）与实时任务共享优先级空间：
+<ul>
+<li><code>-20</code> 到 <code>+19</code> 的 nice 值映射到优先级范围
+<code>100</code> 到
+<code>139</code>。这是用户空间的进程评级，-20为最高优先级。</li>
+</ul></li>
+</ul>
+<hr />
+<h1 id="与调度器相关的系统调用">与调度器相关的系统调用</h1>
+<p>以下是管理调度参数的系统调用列表：</p>
+<table>
+<thead>
+<tr>
+<th><strong>系统调用</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nice()</code></td>
+<td>设置进程的 nice 值</td>
+</tr>
+<tr>
+<td><code>sched_setscheduler()</code></td>
+<td>设置进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_getscheduler()</code></td>
+<td>获取进程的调度策略</td>
+</tr>
+<tr>
+<td><code>sched_setparam()</code></td>
+<td>设置进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_getparam()</code></td>
+<td>获取进程的实时优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_max()</code></td>
+<td>获取实时调度的最大优先级</td>
+</tr>
+<tr>
+<td><code>sched_get_priority_min()</code></td>
+<td>获取实时调度的最小优先级</td>
+</tr>
+<tr>
+<td><code>sched_rr_get_interval()</code></td>
+<td>获取进程的时间片值</td>
+</tr>
+<tr>
+<td><code>sched_setaffinity()</code></td>
+<td>设置进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_getaffinity()</code></td>
+<td>获取进程的处理器亲和性</td>
+</tr>
+<tr>
+<td><code>sched_yield()</code></td>
+<td>临时将处理器让给其他任务</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
         </h2>
 
         <div class="post-meta-container">
@@ -195,7 +587,98 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:46" itemprop="dateModified" datetime="2025-01-22T10:29:46+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -203,7 +686,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
         </span>
     </span>
 
@@ -217,11 +700,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这两天感觉做题的速度快起来了！可以一到一个半小时做完一道题（当然是比较简单的题目啦）。</p>
-<p>试着做了一点牛客网上的面试题库，发现数据结构这块果然不能一点书不看（之前我是不是飘了？），准备看数据结构书了。</p>
-<p>最近发现了力扣的笔记功能，虽然题目集的笔记和题目的笔记是分开的，有点坑，不过还是打算不写博客的时候先记在题目集笔记里，方便之后翻阅整理。</p>
-<h2 id="section">3/2-3/11</h2>
-<p>（累了，摸会🐟）</p>
+          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
+<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
+<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
+是第一个参数，依此类推。\)</span>@ - 所有参数 <span
+class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
+当前脚本的进程识别码 !! -
+完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
+sudo !!再尝试一次。 $_ -
+上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
+Esc 之后键入 . 来获取这个值。</p>
 
       
     </div>
@@ -376,7 +864,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -394,7 +882,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/bash_var/" class="post-title-link" itemprop="url">bash小技巧</a>
+          <a href="/2024/12/20/algorithm2/" class="post-title-link" itemprop="url">刷题-初级算法：字符串</a>
         </h2>
 
         <div class="post-meta-container">
@@ -412,7 +900,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:29:50" itemprop="dateModified" datetime="2025-01-22T10:29:50+08:00">2025-01-22</time>
+      <time title="修改时间：2025-01-22 10:29:46" itemprop="dateModified" datetime="2025-01-22T10:29:46+08:00">2025-01-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -420,7 +908,7 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux-tricks/" itemprop="url" rel="index"><span itemprop="name">linux tricks</span></a>
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
         </span>
     </span>
 
@@ -434,16 +922,94 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="bash的一些特殊变量表示">bash的一些特殊变量表示</h3>
-<p>似乎这些东西总是偶尔能看到，放到这里方便查阅</p>
-<p>$0 - 脚本名 $1 到 $9 - 脚本的参数。 <span class="math inline">\(1
-是第一个参数，依此类推。\)</span>@ - 所有参数 <span
-class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $$ -
-当前脚本的进程识别码 !! -
-完整的上一条命令，包括参数。常见应用：当你因为权限不足执行命令失败时，可以使用
-sudo !!再尝试一次。 $_ -
-上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
-Esc 之后键入 . 来获取这个值。</p>
+          <p>这两天感觉做题的速度快起来了！可以一到一个半小时做完一道题（当然是比较简单的题目啦）。</p>
+<p>试着做了一点牛客网上的面试题库，发现数据结构这块果然不能一点书不看（之前我是不是飘了？），准备看数据结构书了。</p>
+<p>最近发现了力扣的笔记功能，虽然题目集的笔记和题目的笔记是分开的，有点坑，不过还是打算不写博客的时候先记在题目集笔记里，方便之后翻阅整理。</p>
+<h2 id="section">3/2-3/11</h2>
+<p>（累了，摸会🐟）</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Ubuntu_setup/" class="post-title-link" itemprop="url">设置Ubuntu</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="设置apt源">设置apt源</h3>
+<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
+<h3 id="vim技巧">vim技巧</h3>
+<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
+<h3 id="设置vim">设置vim</h3>
+<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -581,95 +1147,6 @@ or other reference you trust.</li>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:22" itemprop="dateModified" datetime="2025-01-22T10:30:22+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="依赖问题">依赖问题</h3>
-<p>由于安装的老版本（humble）ros2,
-很多必需包直接安装会报依赖小版本号不一致错误，使用apt
-install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
-在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
-<h3 id="swap空间不足">swap空间不足</h3>
-<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
-很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
-<p>这个时候就需要给wsl2扩swap空间， 在
-c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
-在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
-<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
-<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -781,7 +1258,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ChInput/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/install_ros2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -799,7 +1276,7 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/install_ChInput/" class="post-title-link" itemprop="url">为wsl2安装中文输入法</a>
+          <a href="/2024/12/20/install_ros2/" class="post-title-link" itemprop="url">在wsl2安装ros2遇到的一些坑</a>
         </h2>
 
         <div class="post-meta-container">
@@ -817,7 +1294,16 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:19" itemprop="dateModified" datetime="2025-01-22T10:30:19+08:00">2025-01-22</time>
+      <time title="修改时间：2025-09-15 04:50:34" itemprop="dateModified" datetime="2025-09-15T04:50:34+08:00">2025-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/wsl2/" itemprop="url" rel="index"><span itemprop="name">wsl2</span></a>
+        </span>
     </span>
 
   
@@ -830,278 +1316,20 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>安装中文语言包和fcitx输入法管理器，其中fcitx-sunpinyin是新安装的输入法
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br><span class="line">sudo apt install fcitx dbus-x11 im-config fcitx-sunpinyin</span><br></pre></td></tr></table></figure></p>
-<p>编辑/etc/locale.gen文件，找到 # zh_CN.UTF-8 这一行，取消注释
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure></p>
-<p>编辑~/.profile文件，在文件末尾加上： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=@im=fcitx</span><br><span class="line">export DefaultIMModule=fcitx</span><br><span class="line">fcitx-autostart &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
-以上代码分别：设置了GTK（GIMP
-Toolkit）和QT程序的输入法模块为fcitx。GTK和QT是Linux系统中用于创建图形用户界面的工具包；设置了X
-Window
-System的修饰符（modifiers），以确保fcitx能够正确地拦截键盘事件；设置了默认的输入法模块为fcitx；设置了fcitx的自动启动，并将启动时的输出重定向到/dev/null，这样就不会在终端中显示启动过程的输出信息</p>
-<p>刷新~/.profile在shell中的引用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure></p>
-<p>刷新字体缓存 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure> 重启 wsl2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure> 重启fcitx
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-autostart</span><br></pre></td></tr></table></figure></p>
-<p>打开fcitx的设置页面 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fcitx-config-gtk3</span><br></pre></td></tr></table></figure> 在输入法中,
-选择keyboard_en_us作为首位输入法，之前安装的fcitx-sunpinyin为第二位。
-默认的输入法切换键位是ctrl+space，可以在fcitx的设置页面中更改。</p>
-<p>这一套完成后，亲测无需将系统语言切换至中文，也可在gedit使用中文输入法。当然如果想在特定编译器中使用中文输入法，或许需要更复杂的配置了。设置IDEA可以参考：<a
-target="_blank" rel="noopener" href="https://monkeywie.cn/2021/09/26/wsl2-gui-idea-config">monkeywie的博客:wsl2官方gui安装IDEA踩坑记录</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/mvvm-frtnd/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/mvvm-frtnd/" class="post-title-link" itemprop="url">MVVM框架项目</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:46" itemprop="dateModified" datetime="2025-01-22T10:30:46+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>实现一个简单的MVVM框架</p>
-<h2 id="section">6/30</h2>
-<p>纯javascript实现双向数据绑定：https://www.codeproject.com/Articles/5264704/Two-Way-Data-Binding-in-Pure-JavaScript</p>
-<p>javascript
-MVVM框架介绍：https://www.codeproject.com/Articles/5265632/Introducing-MVVM-Architecture-in-JavaScript-TypeSc</p>
-<p>谢谢你，<a
-target="_blank" rel="noopener" href="https://www.codeproject.com/script/Membership/View.aspx?mid=14753120">Volodymyr
-Kopytin</a>大神！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/network/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/network/" class="post-title-link" itemprop="url">计算机网络相关</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:49" itemprop="dateModified" datetime="2025-01-22T10:30:49+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在b站看斯坦福CS144作为教程，打算后期跟着《计算机网络
-自顶向下方法》（Kurose&amp;Ross版）再过一过。</p>
-<p>突然发现看了英文教程再看中文版书有点不理解一些概念用语😂，想看纯英文版的书又怕自己看不懂，纠结了。</p>
-<h2 id="section">3/17</h2>
-<p>（摘自Kurose&amp;Ross的《计算机网络 自顶向下方法》）</p>
-<p>什么是套接字（socket）：</p>
-<p>套接字说同一台主机内应用层与传输层之间的接口，由于该套接字是在网络上建立网络应用程序的可编程接口，因此也将套接字称为应用程序和网络之间的应用程序编程接口（Application
-Programming Interface，API）。</p>
-<p>什么是传输层的多路复用（multiplexing）和解复用（demultiplexing，多路分解）：</p>
-<p>多路复用和多路分解是因特网中的基本传输层服务。</p>
-<p>从源主机的不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在多路分解时使用）从而生成报文段，然后将报文段传递到网络层的工作称为多路复用。</p>
-<p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
-<h2 id="section-1">4/22</h2>
-<p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
-<p>绝了！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/thoughts_0927/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/thoughts_0927/" class="post-title-link" itemprop="url">杂记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:53" itemprop="dateModified" datetime="2025-01-22T10:30:53+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="一些感慨">一些感慨</h3>
-<p>最近学了好多好多东西，有gdb debug, 有rust,
-也刷了些题。正在看很有意思的操作系统网课，还有项目组要求看的书...感觉这些事情都忙不过来了，更别说整理成博客。我这个博客网站的archive也一直没好好利用。</p>
-<p>完全提不起兴致玩游戏，心理上好累又睡不着。大概是最近游戏不好玩吧，大概是没有朋友和我一起玩？大概是游戏打多了忙一忙就觉得游戏好玩了...好多年前我就只有听着Owl
-City的歌才能睡着了，但那个时候只觉得是自己压力太大。三两年前觉着是实验室事情太多，是画图太累，后来安慰自己年轻人熬熬夜怎么了。</p>
-<p>很多年前还小的时候我就总觉着，如果社交上出现一些问题，那个念头就会总在脑子里转动消不去，到了有点影响生活的地步了。我总被这样的思绪叨扰，我没办法解释这种事情，只好跟家长说我头疼。我以为是我性格太执拗，是我太内向，是我表达的方式不对...哦，我该改改总是自我检讨的毛病，所作所为，留予世人评好了</p>
-<p>好歹还能感受到朋友的关心，好歹还有兴致吃点什么，好歹今天中午睡得不错。</p>
+          <h3 id="依赖问题">依赖问题</h3>
+<p>由于安装的老版本（humble）ros2,
+很多必需包直接安装会报依赖小版本号不一致错误，使用apt
+install解决是很麻烦的， 于是要用一个比较新的依赖处理工具 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install aptitude</span><br><span class="line">sudo aptitude install [package]</span><br></pre></td></tr></table></figure>
+在[package]填出问题的依赖，aptitude会弹出建议的一些解决方案，按<code>,</code>和<code>.</code>切换到一个降版本的解决方案，yes即可</p>
+<h3 id="swap空间不足">swap空间不足</h3>
+<p>已经到了编译这一步了，但是编到最后总是报错 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C++: fatal error: Killed signal terminated program cc1plus</span><br></pre></td></tr></table></figure>
+很搞心态，开新terminal用<code>htop</code>命令一查，cpu内存swap全拉满</p>
+<p>这个时候就需要给wsl2扩swap空间， 在
+c:下找一个叫<code>.wslconfig</code>的文件，找不到就创建一个，填：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[wsl2]</span><br><span class="line">swap=4GB</span><br></pre></td></tr></table></figure> 填完<code>wsl --shutdown</code>重启一下wsl2，
+在wsl的终端<code>free -h</code>可以查看swap分区的大小，当然直接<code>htop</code>自然是可以的</p>
+<p>如果rosdep已经初始化过了，还要删掉初始化文件重新初始化一下。执行这个<code>sudo rosdep init</code>会有提示</p>
+<p>这个时候再<code>colcon build --symlink-install</code>就万事大吉了</p>
 
       
     </div>

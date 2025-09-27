@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="链表（Linked Lists） 单链表与双链表  单链表：每个节点只包含指向下一个节点的指针。 1234struct list_element &amp;#123;    void *data;                   &#x2F;&#x2F; 数据    struct list_element *next;    &#x2F;&#x2F; 指向下一个节点&amp;#125;; 双链表：每个节点包含指向前一个和后一个节点的指针。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 4.1 内核数据结构-链表">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="链表（Linked Lists） 单链表与双链表  单链表：每个节点只包含指向下一个节点的指针。 1234struct list_element &amp;#123;    void *data;                   &#x2F;&#x2F; 数据    struct list_element *next;    &#x2F;&#x2F; 指向下一个节点&amp;#125;; 双链表：每个节点包含指向前一个和后一个节点的指针。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-06T16:30:09.182Z">
+<meta property="article:modified_time" content="2025-08-07T16:27:55.823Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/","path":"2025/08/06/oper_sys15链表/","title":"操作系统基础 | 4.1 内核数据结构-链表"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 4.1 内核数据结构-链表 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8linked-lists"><span class="nav-number">1.</span> <span class="nav-text">链表（Linked Lists）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E9%93%BE%E8%A1%A8%E4%B8%8E%E5%8F%8C%E9%93%BE%E8%A1%A8"><span class="nav-number">1.1.</span> <span class="nav-text">单链表与双链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E9%93%BE%E8%A1%A8circular-linked-lists"><span class="nav-number">1.2.</span> <span class="nav-text">循环链表（Circular Linked
+Lists）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">链表的遍历</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">Linux 内核链表实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8E%E4%BC%A0%E7%BB%9F%E9%93%BE%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.1.</span> <span class="nav-text">1. 与传统链表的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">2. 内核链表节点结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">3. 如何使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">2.4.</span> <span class="nav-text">4. 链表操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">5. 链表初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E5%A4%B4"><span class="nav-number">2.6.</span> <span class="nav-text">6. 链表头</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E9%93%BE%E8%A1%A8%E7%9A%84%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">Linux 内核链表的操作方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E9%93%BE%E8%A1%A8%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">4.</span> <span class="nav-text">Linux 内核链表的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">基础遍历方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%94%A8%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">实用遍历方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E9%81%8D%E5%8E%86"><span class="nav-number">4.3.</span> <span class="nav-text">反向遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4%E9%81%8D%E5%8E%86"><span class="nav-number">4.4.</span> <span class="nav-text">安全删除遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.5.</span> <span class="nav-text">注意事项</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 4.1 内核数据结构-链表 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 4.1 内核数据结构-链表
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-07 00:30:09" itemprop="dateCreated datePublished" datetime="2025-08-07T00:30:09+08:00">2025-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-08 00:27:55" itemprop="dateModified" datetime="2025-08-08T00:27:55+08:00">2025-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="链表linked-lists">链表（Linked Lists）</h3>
+<h4 id="单链表与双链表">单链表与双链表</h4>
+<ul>
+<li><strong>单链表</strong>：每个节点只包含指向下一个节点的指针。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> *data;                   <span class="comment">// 数据</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">next</span>;</span>    <span class="comment">// 指向下一个节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li><strong>双链表</strong>：每个节点包含指向前一个和后一个节点的指针。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> *data;                   <span class="comment">// 数据</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">next</span>;</span>    <span class="comment">// 指向下一个节点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_element</span> *<span class="title">prev</span>;</span>    <span class="comment">// 指向前一个节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="循环链表circular-linked-lists">循环链表（Circular Linked
+Lists）</h4>
+<ul>
+<li>普通链表的最后一个节点的 next 指针通常指向 NULL，表示结束。</li>
+<li>循环链表的最后一个节点的 next
+指针指向第一个节点，形成环状结构。循环链表可以是单向或双向的。</li>
+<li>Linux 内核的链表实现本质上是循环双链表，灵活性最高。</li>
+</ul>
+<h4 id="链表的遍历">链表的遍历</h4>
+<ul>
+<li>链表的遍历是线性的：从头节点开始，依次通过 next
+指针访问每个节点。</li>
+<li>非循环链表的最后一个节点 next 为 NULL；循环链表的最后一个节点 next
+指向头节点。</li>
+<li>双链表可以支持从尾节点向前遍历。</li>
+<li>链表适合需要频繁插入、删除和遍历全部元素的场景，不适合随机访问。</li>
+</ul>
+<h3 id="linux-内核链表实现方式">Linux 内核链表实现方式</h3>
+<h4 id="与传统链表的区别">1. 与传统链表的区别</h4>
+<ul>
+<li>传统链表通常是在数据结构里直接加 <code>next</code> 和
+<code>prev</code> 指针，把结构本身变成链表节点。</li>
+<li>Linux
+内核采用<strong>嵌入链表节点</strong>的方式：在自定义结构体里嵌入一个
+<code>struct list_head</code> 成员，而不是直接用
+<code>next</code>/<code>prev</code> 指针。</li>
+</ul>
+<h4 id="内核链表节点结构">2. 内核链表节点结构</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">next</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">prev</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>只包含指向前后节点的指针，不存储数据。</li>
+</ul>
+<h4 id="如何使用">3. 如何使用</h4>
+<ul>
+<li>在你的结构体里嵌入 <code>struct list_head</code> 成员，例如：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> &#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> tail_length;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> weight;</span><br><span class="line">    <span class="type">bool</span> is_fantastic;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span> <span class="comment">// 链表节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>这样，<code>fox.list.next</code> 指向下一个
+fox，<code>fox.list.prev</code> 指向上一个 fox。</li>
+</ul>
+<h4 id="链表操作">4. 链表操作</h4>
+<ul>
+<li>内核提供了丰富的链表操作函数（如
+<code>list_add()</code>），这些函数只操作
+<code>list_head</code>，不关心具体数据类型。</li>
+<li>通过 <code>container_of</code> 宏，可以从 <code>list_head</code>
+指针反查到包含它的结构体： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> container_of(ptr, type, member) \</span></span><br><span class="line"><span class="meta">    ((type *)((char *)(ptr) - offsetof(type, member)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> list_entry(ptr, type, member) \</span></span><br><span class="line"><span class="meta">    container_of(ptr, type, member)</span></span><br></pre></td></tr></table></figure></li>
+<li>用 <code>list_entry()</code>
+可以从链表节点指针获取到完整的结构体数据。</li>
+</ul>
+<h4 id="链表初始化">5. 链表初始化</h4>
+<ul>
+<li>动态分配结构体后，用 <code>INIT_LIST_HEAD(&amp;obj-&gt;list)</code>
+在运行时初始化链表节点。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">fox</span> *red_fox; </span><br><span class="line">red_fox = <span class="built_in">kmalloc</span>(<span class="built_in">sizeof</span>(*red_fox), GFP_KERNEL); </span><br><span class="line">red_fox-&gt;tail_length = <span class="number">40</span>; </span><br><span class="line">red_fox-&gt;weight = <span class="number">6</span>; </span><br><span class="line">red_fox-&gt;is_fantastic = <span class="literal">false</span>; </span><br><span class="line"><span class="built_in">INIT_LIST_HEAD</span>(&amp;red_fox-&gt;list);</span><br></pre></td></tr></table></figure></li>
+<li>静态定义时可用 <code>LIST_HEAD_INIT()</code> 宏在编译时初始化。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">fox</span> red_fox = &#123; </span><br><span class="line">   .tail_length = <span class="number">40</span>, </span><br><span class="line">   .weight = <span class="number">6</span>, </span><br><span class="line">   .list  = <span class="built_in">LIST_HEAD_INIT</span>(red_fox.list),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="链表头">6. 链表头</h4>
+<ul>
+<li>通常会定义一个专门的 <code>list_head</code>
+变量作为链表头，用于管理整个链表： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="title function_">LIST_HEAD</span><span class="params">(fox_list)</span>;</span><br></pre></td></tr></table></figure></li>
+<li>这个链表头本质上也是一个 <code>list_head</code>
+节点，但不存储实际数据，只作为入口。</li>
+</ul>
+<h3 id="linux-内核链表的操作方法">Linux 内核链表的操作方法</h3>
+<ol type="1">
+<li><p><strong>所有链表操作函数都只操作 <code>struct list_head</code>
+指针，和具体数据类型无关。</strong></p>
+<ul>
+<li>这些函数都定义在
+<code>&lt;linux/list.h&gt;</code>，实现为内联函数，效率高。</li>
+<li>所有操作都是 O(1)
+常数时间，无论链表长度如何，插入、删除等操作速度都一样。</li>
+</ul></li>
+<li><p><strong>常用操作函数：</strong></p>
+<ul>
+<li><strong>添加节点</strong>（底层的循环链表特性，每一个节点都可以填入head）
+<ul>
+<li><code>list_add(new, head)</code>：把新节点插入到 head
+节点之后（将最后一个节点填入head，实现栈）。</li>
+<li><code>list_add_tail(new, head)</code>：把新节点插入到 head
+节点之前（将第一个节点填入head，实现队列）。</li>
+</ul></li>
+<li><strong>删除节点</strong>
+<ul>
+<li><code>list_del(entry)</code>：把 entry
+节点从链表中移除，但不释放内存。</li>
+<li><code>list_del_init(entry)</code>：移除节点并重新初始化它，方便后续复用。</li>
+</ul></li>
+<li><strong>移动节点</strong>
+<ul>
+<li><code>list_move(list, head)</code>：把节点 list 移到 head
+节点之后。</li>
+<li><code>list_move_tail(list, head)</code>：把节点 list 移到 head
+节点之前。</li>
+</ul></li>
+<li><strong>拼接链表</strong>
+<ul>
+<li><code>list_splice(list, head)</code>：把 list 指向的链表拼接到 head
+节点之后。</li>
+<li><code>list_splice_init(list, head)</code>：拼接后把原链表重新初始化。</li>
+</ul></li>
+<li><strong>判断链表是否为空</strong>
+<ul>
+<li><code>list_empty(head)</code>：判断链表是否为空，返回非零表示空。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>内部函数优化</strong></p>
+<ul>
+<li>如果你已经有了节点的 next 和 prev 指针，可以直接调用内部函数（如
+<code>__list_del(prev, next)</code>），省去多余的指针解引用。</li>
+<li>这些内部函数一般以双下划线 <code>__</code>
+开头，只有在你已经拿到指针时才建议用。</li>
+</ul></li>
+</ol>
+<h3 id="linux-内核链表的遍历">Linux 内核链表的遍历</h3>
+<p>完整遍历包含n个节点的链表是O(n)时间复杂度操作。</p>
+<h4 id="基础遍历方法">基础遍历方法</h4>
+<p>最基础的遍历宏是<code>list_for_each()</code>，接收两个<code>list_head</code>参数：
+-
+<strong>第一个参数</strong>：指向当前项的指针（需调用者提供的临时变量）
+- <strong>第二个参数</strong>：要遍历的链表头节点</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">p</span>;</span></span><br><span class="line">list_for_each(p, fox_list) &#123;</span><br><span class="line">    <span class="comment">/* p指向链表中的某个节点 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但仅获取<code>list_head</code>指针通常无用，我们需要的是包含该链表节点的结构体（前文已讨论）指针。此时应使用<code>list_entry()</code>宏：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">p</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> *<span class="title">f</span>;</span></span><br><span class="line">list_for_each(p, &amp;fox_list) &#123;</span><br><span class="line">    f = list_entry(p, <span class="keyword">struct</span> fox, <span class="built_in">list</span>); <span class="comment">// 获取包含list_head的fox结构体</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="实用遍历方法">实用遍历方法</h4>
+<p>上述方法不够直观，因此内核主要使用<code>list_for_each_entry()</code>宏，该宏自动完成<code>list_entry()</code>转换：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry(pos, head, member)</span><br></pre></td></tr></table></figure>
+<p>参数说明： -
+<code>pos</code>：包含<code>list_head</code>的结构体指针（相当于<code>list_entry()</code>返回值）
+- <code>head</code>：链表头节点指针（如<code>fox_list</code>） -
+<code>member</code>：<code>list_head</code>在结构体中的成员名（如<code>list</code>）</p>
+<p>示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fox</span> *<span class="title">f</span>;</span></span><br><span class="line">list_for_each_entry(f, &amp;fox_list, <span class="built_in">list</span>) &#123;</span><br><span class="line">    <span class="comment">/* 每次迭代f指向下一个fox结构体 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>实际案例</strong>（来自内核文件系统通知系统inotify）：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> inotify_watch *<span class="title function_">inode_find_handle</span><span class="params">(<span class="keyword">struct</span> inode *inode, </span></span><br><span class="line"><span class="params">                                              <span class="keyword">struct</span> inotify_handle *ih)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inotify_watch</span> *<span class="title">watch</span>;</span></span><br><span class="line">    list_for_each_entry(watch, &amp;inode-&gt;inotify_watches, i_list) &#123;</span><br><span class="line">        <span class="keyword">if</span> (watch-&gt;ih == ih)</span><br><span class="line">            <span class="keyword">return</span> watch;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+此函数遍历<code>inode-&gt;inotify_watches</code>链表，查找匹配<code>inotify_handle</code>的节点。</p>
+<h4 id="反向遍历">反向遍历</h4>
+<p><code>list_for_each_entry_reverse()</code>功能与正向遍历相同，但沿<code>prev</code>指针逆向移动：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_reverse(pos, head, member)</span><br></pre></td></tr></table></figure> 适用场景： 1. 性能优化：当目标节点更靠近链表尾部时 2.
+顺序要求：如实现LIFO栈操作 若无特殊需求，建议使用正向遍历。</p>
+<h4 id="安全删除遍历">安全删除遍历</h4>
+<p>标准遍历方法在迭代过程中删除节点会导致问题（后续迭代无法获取正确的next/prev指针）。内核提供安全版本：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_safe(pos, next, head, member)</span><br></pre></td></tr></table></figure>
+参数<code>next</code>用于临时存储下一节点指针，确保当前节点可安全删除。</p>
+<p><strong>inotify示例</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">inotify_inode_is_dead</span><span class="params">(<span class="keyword">struct</span> inode *inode)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inotify_watch</span> *<span class="title">watch</span>, *<span class="title">next</span>;</span></span><br><span class="line">    mutex_lock(&amp;inode-&gt;inotify_mutex);</span><br><span class="line">    list_for_each_entry_safe(watch, next, &amp;inode-&gt;inotify_watches, i_list) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">inotify_handle</span> *<span class="title">ih</span> =</span> watch-&gt;ih;</span><br><span class="line">        mutex_lock(&amp;ih-&gt;mutex);</span><br><span class="line">        inotify_remove_watch_locked(ih, watch); <span class="comment">// 删除watch节点</span></span><br><span class="line">        mutex_unlock(&amp;ih-&gt;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    mutex_unlock(&amp;inode-&gt;inotify_mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>逆向安全遍历版本： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_for_each_entry_safe_reverse(pos, n, head, member)</span><br></pre></td></tr></table></figure></p>
+<h4 id="注意事项">注意事项</h4>
+<ol type="1">
+<li>"safe"宏仅防护循环体内的删除操作，若存在并发操作仍需加锁</li>
+<li>更多链表操作方法详见<code>&lt;linux/list.h&gt;</code></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/08/05/kamacode34/" rel="prev" title="代码随想录 | 刷题-动态规划7">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-动态规划7
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/" rel="next" title="操作系统基础 | 4.2 内核数据结构-队列">
+                  操作系统基础 | 4.2 内核数据结构-队列 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

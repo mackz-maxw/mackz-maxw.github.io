@@ -122,13 +122,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sys8/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/27/oper_sys10%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -177,7 +177,948 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/oper_sys8/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述4</a>
+          <a href="/2025/06/27/oper_sys10%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" class="post-title-link" itemprop="url">操作系统基础 | 3. 系统调用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-28 02:34:45 / 修改时间：05:15:15" itemprop="dateCreated datePublished" datetime="2025-06-28T02:34:45+08:00">2025-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="与内核通信">与内核通信</h2>
+<p>系统调用（system
+call）在硬件和用户空间进程之间提供了一层抽象，这一层有三个主要作用：</p>
+<ol type="1">
+<li><p><strong>硬件抽象</strong><br />
+系统调用为用户空间提供了统一的硬件接口。例如，应用程序在读写文件时，无需关心底层的磁盘类型、介质类型，甚至文件所在的文件系统类型。</p></li>
+<li><p><strong>系统安全与稳定</strong><br />
+有了内核作为中介，内核可以根据权限、用户等标准仲裁资源访问。这防止了应用程序误用硬件、窃取其他进程资源或对系统造成破坏。</p></li>
+<li><p><strong>虚拟化与多任务支持</strong><br />
+用户空间与系统其他部分之间有统一的接口，便于实现进程虚拟化和多任务。如果应用能直接访问系统资源，将难以实现多任务和虚拟内存，更无法保证系统的稳定和安全。</p></li>
+</ol>
+<p>在 Linux
+中，系统调用是用户空间与内核交互的唯一合法入口（除了异常和陷阱）。即使是设备文件或
+<code>/proc</code>
+这样的接口，最终也要通过系统调用访问。值得一提的是，Linux
+的系统调用数量比大多数系统要少。</p>
+<h3 id="apiposix-与-c-库">API、POSIX 与 C 库</h3>
+<p>通常，应用程序是基于用户空间的
+API（应用程序编程接口）开发的，而不是直接调用系统调用。这很重要，因为
+API 与内核实际提供的接口之间不需要一一对应。API
+定义了一组供应用程序使用的编程接口，这些接口可以通过一个系统调用实现，也可以通过多个系统调用，甚至完全不依赖系统调用。这样，同样的
+API 可以在不同系统上实现，应用程序无需关心底层实现细节。</p>
+<p>在 Unix 世界中，最常见的 API 之一是基于 POSIX 标准的。POSIX 是 IEEE
+制定的一系列标准，旨在提供基于 Unix 的可移植操作系统标准。Linux
+在适用的地方努力兼容 POSIX 和 SUSv3。</p>
+<p>POSIX 很好地体现了 API 与系统调用的关系。在大多数 Unix 系统中，POSIX
+API 与系统调用高度相关，POSIX 标准本身就是参考早期 Unix
+系统接口制定的。但有些非 Unix 系统（如 Windows）也提供了 POSIX
+兼容库。</p>
+<h4 id="c-库的作用">C 库的作用</h4>
+<p>在 Linux 和大多数 Unix 系统中，C 库（如
+glibc）部分实现了系统调用接口。C 库不仅实现了标准 C
+库，还实现了系统调用接口，是所有 C 程序的基础。由于 C
+语言的特性，其他编程语言也可以很方便地调用 C 库。C 库还实现了大部分
+POSIX API。</p>
+<p>对应用开发者来说，系统调用的细节并不重要，他们只关心
+API；而内核只关心系统调用，至于哪些库函数或应用程序会用到这些系统调用，内核并不关心。不过，内核需要保证系统调用的通用性和灵活性，以适应各种用途。</p>
+<h3 id="系统调用syscalls">系统调用（Syscalls）</h3>
+<p>在 Linux 中，系统调用（syscall）通常通过 C
+库中定义的函数进行访问。系统调用可以有零个、一个或多个参数（输入），并可能产生一个或多个副作用，例如写文件或将数据复制到指定指针。系统调用还会返回一个
+long
+类型的值，用于表示成功或错误——通常（但并非总是）负值表示错误，返回值为 0
+通常（但也不是总是）表示成功。</p>
+<p>当系统调用出错时，C 库会将一个特殊的错误码写入全局变量
+<code>errno</code>。可以通过如 <code>perror()</code> 这样的库函数将
+<code>errno</code> 转换为可读的错误信息。</p>
+<p>系统调用有明确的行为定义。例如，<code>getpid()</code>
+系统调用被定义为返回当前进程的 PID。其内核实现大致如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE0(getpid) </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> task_tgid_vnr(current); <span class="comment">// 返回 current-&gt;tgid</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：你可能会好奇为什么 <code>getpid()</code> 返回的是
+tgid（线程组ID）？在普通进程中，TGID 等于
+PID；而在线程中，同一线程组的所有线程 TGID 相同，这样所有线程调用
+<code>getpid()</code> 时返回相同的 PID。</p>
+</blockquote>
+<p>需要注意的是，定义只规定了行为，具体实现方式由内核决定，只要结果正确即可。<code>SYSCALL_DEFINE0</code>
+是一个宏，用于定义无参数的系统调用（0 表示参数个数）。展开后类似于：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_getpid</span><span class="params">(<span class="type">void</span>)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>asmlinkage</code>
+修饰符告诉编译器只从栈上获取参数，这是所有系统调用都需要的修饰符。</li>
+<li>返回类型为 long，是为了兼容 32 位和 64 位系统。即使用户空间定义为
+int，内核中也返回 long。</li>
+<li>命名约定：内核中系统调用的实现函数名为 <code>sys_xxx()</code>，如
+<code>getpid()</code> 对应 <code>sys_getpid()</code>。</li>
+</ul>
+<h4 id="系统调用号system-call-numbers">系统调用号（System Call
+Numbers）</h4>
+<p>在 Linux 中，每个系统调用都有唯一的系统调用号（syscall
+number），用于标识具体的系统调用。用户空间进程执行系统调用时，实际上是通过系统调用号来指定调用哪个系统调用，而不是用名字。</p>
+<p>系统调用号非常重要，一旦分配就不能更改，否则已编译的应用程序会出错。同样，如果某个系统调用被移除，其编号也不能被回收，否则旧程序会调用到错误的系统调用。Linux
+提供了一个“未实现”系统调用 <code>sys_ni_syscall()</code>，它只返回
+-ENOSYS（表示无效系统调用），用于填补被移除或不可用的系统调用号。</p>
+<p>内核通过系统调用表（<code>sys_call_table</code>）维护所有已注册的系统调用。在
+x86-64 架构下，这个表定义在 <code>arch/i386/kernel/syscall_64.c</code>
+文件中，每个有效的系统调用都分配有唯一的编号。</p>
+<h4 id="系统调用性能">系统调用性能</h4>
+<p>Linux 的系统调用比许多其他操作系统更快，这部分归功于 Linux
+的上下文切换速度快，进入和退出内核的过程非常简洁高效，系统调用处理器和各个系统调用本身也很简单。</p>
+<h3 id="系统调用处理器system-call-handler">系统调用处理器（System Call
+Handler）</h3>
+<p>用户空间的应用程序<strong>无法直接执行内核代码</strong>，也不能直接调用内核空间的方法，因为内核处于受保护的内存空间。如果应用可以直接读写内核地址空间，系统的安全性和稳定性将无法保证。</p>
+<p>因此，用户空间的应用程序必须通过某种方式<strong>通知内核</strong>，让系统切换到内核态，由内核代表应用程序在内核空间执行系统调用。</p>
+<h4 id="进入内核的机制">进入内核的机制</h4>
+<p>这种通知内核的机制是一种<strong>软件中断</strong>：即触发一个异常，系统会切换到内核态并执行异常处理程序。在系统调用的场景下，这个异常处理程序就是<strong>系统调用处理器</strong>（system
+call handler）。</p>
+<ul>
+<li>在 x86 架构上，定义的软件中断号为 128，通过 <code>int $0x80</code>
+指令触发。这会导致系统切换到内核态，并执行异常向量
+128（即系统调用处理器）。</li>
+<li>系统调用处理器的函数名通常为
+<code>system_call()</code>，它是与架构相关的代码（如 x86-64 下在
+<code>entry_64.S</code> 汇编文件中实现）。</li>
+<li>近年来，x86 处理器增加了 <code>sysenter</code> 指令，这是一种比
+<code>int $0x80</code>
+更快、更专用的进入内核执行系统调用的方法。内核很快就支持了这种方式。</li>
+<li>无论采用哪种方式，核心思想都是：用户空间通过异常或陷阱（trap）进入内核。</li>
+</ul>
+<h4 id="指定正确的系统调用">指定正确的系统调用</h4>
+<p>仅仅进入内核空间还不够，因为有很多不同的系统调用，它们都是通过相同的方式进入内核的。因此，<strong>必须将系统调用号传递给内核</strong>。</p>
+<ul>
+<li><p>在 x86 架构上，系统调用号通过 <code>eax</code>
+32位寄存器传递。在触发陷阱进入内核前，用户空间会把所需系统调用的编号写入
+<code>eax</code>。</p></li>
+<li><p>系统调用处理器读取 <code>eax</code> 的值，判断其有效性（与
+<code>NR_syscalls</code> 比较）。如果编号无效，返回 <code>-ENOSYS</code>
+错误；否则，通过系统调用表调用对应的系统调用函数： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call *sys_call_table(,%rax,8)</span><br></pre></td></tr></table></figure> &gt;
+rax和eax均为累加器，区别是rax是64位， eax32位</p>
+<p>这里每个表项 8 字节（64 位），所以用 8 乘以系统调用号定位表项（x86-32
+下用 4 乘以系统调用号）。</p></li>
+</ul>
+<h4 id="参数传递">参数传递</h4>
+<p>除了系统调用号，大多数系统调用还需要传递一个或多个参数。用户空间必须在陷阱捕获过程中时将参数传递给内核。</p>
+<ul>
+<li>最简单的方式是<strong>通过寄存器传递参数</strong>。在 x86-32
+架构下，<code>ebx</code>、<code>ecx</code>、<code>edx</code>、<code>esi</code>、<code>edi</code>
+依次存放前五个参数。</li>
+<li>如果参数超过五个，则用一个寄存器传递指向用户空间参数数组的指针。</li>
+<li>返回值也通过寄存器传递，x86 下写入 <code>eax</code>。</li>
+</ul>
+<p><strong>调用系统调用处理器并执行系统调用的流程</strong>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+         +-------------------+</span><br><span class="line">|    User Space     |         |   Kernel Space    |</span><br><span class="line">|-------------------|         |-------------------|</span><br><span class="line">| Application       |         | Syscall Handler   |</span><br><span class="line">|   call read()     |         |   system_call()   |</span><br><span class="line">|-------------------|         |-------------------|</span><br><span class="line">| C library         |         | sys_read()        |</span><br><span class="line">| read() wrapper    |         |                   |</span><br><span class="line">+-------------------+         +-------------------+</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>应用程序调用 <code>read()</code>，实际上先调用 C 库的
+<code>read()</code> 封装函数。</li>
+<li>C 库的 <code>read()</code> 封装函数通过软中断（如
+<code>int $0x80</code> 或 <code>sysenter</code>）进入内核，调用
+<code>system_call()</code>。</li>
+<li><code>system_call()</code> 读取系统调用号和参数，查找并调用内核中的
+<code>sys_read()</code> 实现。</li>
+<li>执行完毕后，返回值通过寄存器传回用户空间，流程反向返回到应用程序。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/oper_sysn2/" class="post-title-link" itemprop="url">操作系统基础 | 系统编程常用设置2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 05:46:20 / 修改时间：07:49:32" itemprop="dateCreated datePublished" datetime="2025-06-26T05:46:20+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="可移植性问题portability-issues">可移植性问题（Portability
+Issues）</h2>
+<h3 id="特性测试宏feature-test-macros">特性测试宏（Feature Test
+Macros）</h3>
+<ul>
+<li>系统调用和库函数 API 的行为受多种标准规范（如 The Open Group 的
+Single UNIX Specification、BSD、System V Release 4
+及其接口定义）约束。</li>
+<li>为了让头文件只暴露符合某一标准的定义（如常量、函数原型等），可以在编译时定义一个或多个特性测试宏。定义方式有两种：
+<ol type="1">
+<li>在源代码中包含头文件前定义宏： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE 1</span></span><br></pre></td></tr></table></figure></li>
+<li>用编译器的 <code>-D</code> 选项定义： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_BSD_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
+</ol></li>
+<li>“特性测试宏”这个名字的由来是：实现会通过 <code>#if</code>
+判断这些宏的值，决定头文件中哪些特性对应用可见。</li>
+</ul>
+<h4 id="常用特性测试宏">常用特性测试宏</h4>
+<p>这些宏由相关标准规定，适用于所有支持这些标准的系统：</p>
+<ul>
+<li><code>_POSIX_SOURCE</code><br />
+定义后暴露符合 POSIX.1-1990 和 ISO C (1990) 的定义。已被
+<code>_POSIX_C_SOURCE</code> 取代。</li>
+<li><code>_POSIX_C_SOURCE</code>
+<ul>
+<li>值为 1 时，效果同 <code>_POSIX_SOURCE</code>。</li>
+<li>值 ≥ 199309 时，暴露 POSIX.1b（实时）定义。</li>
+<li>值 ≥ 199506 时，暴露 POSIX.1c（线程）定义。</li>
+<li>值为 200112 时，暴露 POSIX.1-2001 基础规范（不含 XSI 扩展）。</li>
+<li>值为 200809 时，暴露 POSIX.1-2008 基础规范。</li>
+</ul></li>
+<li><code>_XOPEN_SOURCE</code>
+<ul>
+<li>定义后暴露 POSIX.1、POSIX.2 和 X/Open (XPG4) 定义。</li>
+<li>值 ≥ 500 时，暴露 SUSv2（UNIX 98 和 XPG5）扩展。</li>
+<li>值 ≥ 600 时，暴露 SUSv3 XSI（UNIX 03）和 C99 扩展。</li>
+<li>值 ≥ 700 时，暴露 SUSv4 XSI 扩展。</li>
+</ul></li>
+</ul>
+<h4 id="glibc-特有的特性测试宏">glibc 特有的特性测试宏</h4>
+<ul>
+<li><code>_BSD_SOURCE</code><br />
+定义后暴露 BSD 定义，同时定义
+<code>_POSIX_C_SOURCE=199506</code>。如只定义此宏，部分标准冲突时优先
+BSD 定义。</li>
+<li><code>_SVID_SOURCE</code><br />
+定义后暴露 System V 接口定义（SVID）。</li>
+<li><code>_GNU_SOURCE</code><br />
+定义后暴露所有上述宏的定义及 GNU 扩展。</li>
+</ul>
+<h4 id="默认行为与宏组合">默认行为与宏组合</h4>
+<ul>
+<li>默认情况下，GNU C 编译器会定义
+<code>_POSIX_SOURCE</code>、<code>_POSIX_C_SOURCE=200809</code>（或更早版本的
+200112/199506）、<code>_BSD_SOURCE</code> 和
+<code>_SVID_SOURCE</code>。</li>
+<li>如果单独定义了某些宏，或用标准模式（如 <code>cc -ansi</code> 或
+<code>cc -std=c99</code>）编译，则只暴露请求的定义。</li>
+<li>多个宏可以叠加定义。例如： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -D_POSIX_SOURCE -D_POSIX_C_SOURCE=199506 -D_BSD_SOURCE -D_SVID_SOURCE prog.c</span><br></pre></td></tr></table></figure></li>
+<li><code>&lt;features.h&gt;</code> 头文件和
+<code>feature_test_macros(7)</code> 手册页有详细说明。</li>
+</ul>
+<h4 id="posix.1sus-相关宏">POSIX.1/SUS 相关宏</h4>
+<ul>
+<li>POSIX.1-2001/SUSv3 只规定了 <code>_POSIX_C_SOURCE</code> 和
+<code>_XOPEN_SOURCE</code> 两个宏，要求值分别为 200112 和 600。</li>
+<li>POSIX.1-2008/SUSv4 要求值分别为 200809 和 700。</li>
+<li>设置 <code>_XOPEN_SOURCE=600</code> 应包含
+<code>_POSIX_C_SOURCE=200112</code> 的所有特性，SUSv4
+也有类似要求。</li>
+</ul>
+<h4
+id="示例代码与函数原型中的特性测试宏">示例代码与函数原型中的特性测试宏</h4>
+<ul>
+<li>手册页会说明使用某个常量或函数声明时需要定义哪些特性测试宏。</li>
+<li>本书示例代码可用默认 GNU C 编译器选项或如下方式编译：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cc -std=c99 -D_XOPEN_SOURCE=600</span><br></pre></td></tr></table></figure></li>
+<li>书中每个函数原型都会注明需要定义哪些特性测试宏。</li>
+<li>手册页有更详细的宏需求说明。</li>
+</ul>
+<h3 id="系统数据类型system-data-types">系统数据类型（System Data
+Types）</h3>
+<p>在 UNIX
+系统中，许多实现相关的数据类型（如进程ID、用户ID、文件偏移量等）都用标准
+C 类型来表示。虽然可以直接用 int、long
+等基本类型声明这些变量，但这样会降低程序的可移植性，原因包括：</p>
+<ul>
+<li>不同 UNIX 实现中基本类型的大小可能不同（如 long
+在某些系统上是4字节，在另一些系统上是8字节），甚至同一系统的不同编译环境也可能不同。</li>
+<li>不同实现可能用不同类型表示相同的信息。例如，进程ID在某些系统上是
+int，在另一些系统上是 long。</li>
+<li>同一实现的不同版本也可能改变类型定义。例如，Linux 2.2
+及以前用户和组ID是16位，2.4及以后是32位。</li>
+</ul>
+<p>为避免这些移植性问题，SUSv3（Single UNIX Specification, Version
+3）规定了一系列标准系统数据类型，并要求实现时正确使用这些类型。这些类型通常用
+C 的 typedef 定义。例如，pid_t 用于表示进程ID，在 Linux/x86-32
+上定义为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> <span class="type">pid_t</span>;</span><br></pre></td></tr></table></figure> 大多数标准系统数据类型以 <code>_t</code>
+结尾，通常声明在 <code>&lt;sys/types.h&gt;</code>
+头文件中，部分类型在其他头文件中定义。</p>
+<p><strong>建议：</strong>
+应用程序应使用这些类型来声明变量，以保证在所有符合 SUSv3
+的系统上都能正确运行。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br></pre></td></tr></table></figure></p>
+<h4 id="常用系统数据类型举例">常用系统数据类型举例</h4>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>类型要求</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pid_t</td>
+<td>有符号整数</td>
+<td>进程ID、进程组ID、会话ID</td>
+</tr>
+<tr>
+<td>uid_t</td>
+<td>整数</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td>gid_t</td>
+<td>整数</td>
+<td>组ID</td>
+</tr>
+<tr>
+<td>size_t</td>
+<td>无符号整数</td>
+<td>对象字节大小</td>
+</tr>
+<tr>
+<td>ssize_t</td>
+<td>有符号整数</td>
+<td>字节计数或错误指示</td>
+</tr>
+<tr>
+<td>off_t</td>
+<td>有符号整数</td>
+<td>文件偏移量或文件大小</td>
+</tr>
+<tr>
+<td>time_t</td>
+<td>整数或实数</td>
+<td>自 Epoch 起的秒数</td>
+</tr>
+<tr>
+<td>mode_t</td>
+<td>整数</td>
+<td>文件权限和类型</td>
+</tr>
+<tr>
+<td>dev_t</td>
+<td>算术类型</td>
+<td>设备号（主次设备号）</td>
+</tr>
+<tr>
+<td>ino_t</td>
+<td>无符号整数</td>
+<td>文件 i-node 号</td>
+</tr>
+<tr>
+<td>socklen_t</td>
+<td>至少32位整数</td>
+<td>套接字地址结构体大小</td>
+</tr>
+</tbody>
+</table>
+<h3 id="打印系统数据类型的数值">打印系统数据类型的数值</h3>
+<ul>
+<li><p>在用 <code>printf()</code> 打印表3-1中这些数值型系统数据类型（如
+<code>pid_t</code>、<code>uid_t</code>）时，要避免实现相关的依赖问题。</p></li>
+<li><p>由于 C 的参数提升规则，<code>short</code> 类型会被提升为
+<code>int</code>，但 <code>int</code> 和 <code>long</code>
+类型保持不变。因此，系统数据类型的底层实现不同，传递给
+<code>printf()</code> 的参数类型可能是 <code>int</code> 或
+<code>long</code>。</p></li>
+<li><p>由于 <code>printf()</code>
+在运行时无法判断参数类型，调用者必须用合适的格式说明符（如
+<code>%d</code> 或
+<code>%ld</code>）明确指定类型。但直接写死某个说明符会导致实现依赖。</p></li>
+<li><p>通常的解决办法是统一用 <code>%ld</code>，并将对应的值强制转换为
+<code>long</code>，例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> mypid;</span><br><span class="line">mypid = getpid();  <span class="comment">/* 获取当前进程ID */</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;My PID is %ld\n&quot;</span>, (<span class="type">long</span>) mypid);</span><br></pre></td></tr></table></figure></p></li>
+<li><p>有一个例外：<code>off_t</code> 类型在某些环境下是
+<code>long long</code>，因此应强制转换为 <code>long long</code> 并用
+<code>%lld</code> 打印（详见5.10节）。</p></li>
+<li><p>C99 标准定义了 <code>z</code> 长度修饰符，用于
+<code>size_t</code> 或 <code>ssize_t</code> 类型，可以用
+<code>%zd</code> 替代 <code>%ld</code>+强转。但该说明符并非所有 UNIX
+实现都支持，所以本书避免使用。</p></li>
+<li><p>C99 还定义了 <code>j</code> 长度修饰符，指定参数为
+<code>intmax_t</code>（或
+<code>uintmax_t</code>），这种类型足够大，可以表示任何整数类型。理论上，使用
+<code>(intmax_t)</code> 强转加 <code>%jd</code> 是最通用的做法，能处理
+<code>long long</code> 及扩展整数类型（如
+<code>int128_t</code>）。但由于并非所有 UNIX
+实现都支持，本书也避免使用这种方式。</p></li>
+</ul>
+<h3
+id="其他可移植性问题miscellaneous-portability-issues">其他可移植性问题（Miscellaneous
+Portability Issues）</h3>
+<h4 id="结构体的初始化与使用">结构体的初始化与使用</h4>
+<ul>
+<li>各 UNIX
+实现规定了一系列标准结构体，用于系统调用和库函数。例如，<code>sembuf</code>
+结构体用于信号量操作（semop）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> &#123;</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">short</span> sem_num;  <span class="comment">/* 信号量编号 */</span></span><br><span class="line">  <span class="type">short</span>          sem_op;   <span class="comment">/* 要执行的操作 */</span></span><br><span class="line">  <span class="type">short</span>          sem_flg;  <span class="comment">/* 操作标志 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>虽然 SUSv3 规定了这些结构体，但需要注意：
+<ul>
+<li>一般来说，结构体成员的顺序未必有标准规定。</li>
+<li>某些实现可能会在结构体中添加额外的字段。</li>
+</ul></li>
+<li>因此，<strong>不建议</strong>用如下方式初始化结构体（因为不同实现成员顺序可能不同）：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; <span class="number">3</span>, <span class="number">-1</span>, SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure> 这种写法在 Linux
+下可用，但在其他实现中可能出错。<strong>可移植的做法</strong>是用显式赋值：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span>;</span></span><br><span class="line">s.sem_num = <span class="number">3</span>;</span><br><span class="line">s.sem_op  = <span class="number">-1</span>;</span><br><span class="line">s.sem_flg = SEM_UNDO;</span><br></pre></td></tr></table></figure> 如果使用 C99，可以用新的结构体初始化语法：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sembuf</span> <span class="title">s</span> =</span> &#123; .sem_num = <span class="number">3</span>, .sem_op = <span class="number">-1</span>, .sem_flg = SEM_UNDO &#125;;</span><br></pre></td></tr></table></figure></li>
+<li>如果要将结构体内容写入文件，也要注意成员顺序。不能直接二进制写入结构体，而应按指定顺序逐个字段写入（最好用文本形式）。</li>
+</ul>
+<h4 id="某些宏可能并非所有实现都支持">某些宏可能并非所有实现都支持</h4>
+<ul>
+<li>有些宏在所有 UNIX 实现中并不一定存在。例如，<code>WCOREDUMP()</code>
+宏（用于检测子进程是否产生 core dump 文件）虽然常见，但 SUSv3
+并未规定，因此某些系统可能没有。</li>
+<li>可移植的做法是用 <code>#ifdef</code> 判断宏是否存在：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> WCOREDUMP</span></span><br><span class="line">  <span class="comment">/* 使用 WCOREDUMP() 宏 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="不同实现对头文件的要求不同">不同实现对头文件的要求不同</h4>
+<ul>
+<li>某些系统调用和库函数所需的头文件在不同 UNIX 实现中可能不同。本书以
+Linux 为主，并注明与 SUSv3 的差异。</li>
+<li>书中部分函数原型会注明某个头文件后加注释
+<code>/* For portability */</code>，表示该头文件在 Linux 或 SUSv3
+下不是必需的，但为了兼容其他（尤其是老旧）实现，建议在可移植程序中包含。</li>
+<li>POSIX.1-1990 要求在包含与某些函数相关的头文件前，先包含
+<code>&lt;sys/types.h&gt;</code>，但这一要求后来被 SUSv1
+移除。尽管如此，为了可移植性，建议将 <code>&lt;sys/types.h&gt;</code>
+作为首个头文件包含（本书示例为简洁起见省略了它）。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sysn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/oper_sysn/" class="post-title-link" itemprop="url">操作系统基础 | 系统编程常用设置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 05:27:30 / 修改时间：05:42:04" itemprop="dateCreated datePublished" datetime="2025-06-26T05:27:30+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="lpi示例程序说明">LPI示例程序说明</h2>
+<h3 id="命令行选项与参数">命令行选项与参数</h3>
+<ul>
+<li>本书中的许多示例程序依赖命令行选项和参数来决定其行为。</li>
+<li>传统 UNIX
+命令行选项格式为：一个连字符（-）加一个字母，后面可跟参数。GNU
+工具支持扩展格式：两个连字符（--）加选项名和可选参数。</li>
+<li>示例程序通常使用标准库函数 <code>getopt()</code>
+解析命令行选项（详见附录B）。</li>
+<li>只要程序的命令行语法不简单，都会实现一个帮助功能：如果用
+<code>--help</code>
+选项运行，程序会显示用法说明，指明命令行选项和参数的语法。</li>
+</ul>
+<h3 id="公共函数与头文件">公共函数与头文件</h3>
+<ul>
+<li>大多数示例程序都包含一个公共头文件，定义常用类型和宏，并引用常用的库函数和系统调用声明，使代码更简洁。</li>
+</ul>
+<h4 id="公共头文件libtlpi_hdr.h">公共头文件（lib/tlpi_hdr.h）</h4>
+<ul>
+<li><p>该头文件包含了许多常用头文件，定义了布尔类型和求最小/最大值的宏。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> TLPI_HDR_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TLPI_HDR_H  <span class="comment">/* 防止重复包含 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>  <span class="comment">/* 常用类型定义 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span>      <span class="comment">/* 标准I/O函数 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;get_num.h&quot;</span>    <span class="comment">/* 常用数值处理函数声明 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;error_functions.h&quot;</span>  <span class="comment">/* 错误处理函数声明 */</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span> FALSE, TRUE &#125; Boolean;</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> min(m,n) ((m) &lt; (n) ? (m) : (n))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> max(m,n) ((m) &gt; (n) ? (m) : (n))</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4
+id="错误诊断函数liberror_functions.h">错误诊断函数（lib/error_functions.h）</h4>
+<ul>
+<li><p>为简化错误处理，示例程序使用一组通用的错误诊断函数，其声明如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> ERROR_FUNCTIONS_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ERROR_FUNCTIONS_H</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errMsg</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __GNUC__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NORETURN __attribute__ ((__noreturn__))</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NORETURN</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errExit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">err_exit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExitEN</span><span class="params">(<span class="type">int</span> errnum, <span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">fatal</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">usageErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="type">void</span> <span class="title function_">cmdLineErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span> NORETURN ;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4
+id="使用-errmsgerrexiterr_exit-和-errexiten-诊断系统调用和库函数错误">使用
+errMsg()、errExit()、err_exit() 和 errExitEN()
+诊断系统调用和库函数错误</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">errMsg</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">err_exit</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">errExitEN</span><span class="params">(<span class="type">int</span> errnum, <span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>errMsg()</strong><br />
+在标准错误输出错误信息。参数列表与 printf()
+相同，输出末尾自动加换行。会输出当前 errno 对应的错误文本（如错误名
+EPERM 和 strerror() 返回的描述），再加上格式化输出内容。</p></li>
+<li><p><strong>errExit()</strong><br />
+功能类似 errMsg()，但会终止程序。终止方式为调用 exit()，如果环境变量
+EF_DUMPCORE 被设置为非空字符串，则调用 abort() 生成 core dump
+文件（用于调试）。</p></li>
+<li><p><strong>err_exit()</strong><br />
+与 errExit() 类似，但有两点不同：</p>
+<ol type="1">
+<li>打印错误信息前不会刷新标准输出。</li>
+<li>通过 _exit() 终止进程，而不是 exit()，这样不会刷新 stdio
+缓冲区，也不会调用 exit 处理函数。
+这种方式适合在库函数中创建子进程后，因错误需要立即终止子进程时使用，避免影响父进程的缓冲区和退出处理。</li>
+</ol></li>
+<li><p><strong>errExitEN()</strong><br />
+与 errExit() 类似，但输出的是参数 errnum 指定的错误号对应的错误文本（EN
+代表 Error Number），而不是当前 errno 的内容。主要用于 POSIX 线程
+API（pthread）相关的程序。</p>
+<ul>
+<li>传统 UNIX 系统调用出错返回 –1，POSIX
+线程函数出错则直接返回错误号（正整数），成功返回 0。</li>
+<li>示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> s;</span><br><span class="line">s = pthread_create(&amp;thread, <span class="literal">NULL</span>, func, &amp;arg);</span><br><span class="line"><span class="keyword">if</span> (s != <span class="number">0</span>)</span><br><span class="line">  errExitEN(s, <span class="string">&quot;pthread_create&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>这样比直接用 errno 更高效，因为在多线程程序中 errno
+是一个宏，会展开为函数调用，返回线程私有的存储区域指针。</li>
+</ul></li>
+<li><p><strong>lvalue（左值） 说明</strong><br />
+lvalue 是指向存储区域的表达式，最常见的是变量名。某些操作符也能产生
+lvalue，比如指针解引用 *p。在 POSIX 线程 API 下，errno
+被重定义为返回线程私有存储区指针的函数。</p></li>
+</ul>
+<h4 id="诊断其他类型错误的函数">诊断其他类型错误的函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">fatal</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">usageErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">cmdLineErr</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *format, ...)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>fatal()</strong><br />
+用于诊断一般性错误，包括那些不会设置 errno 的库函数错误。参数列表与
+printf() 相同，输出自动换行。该函数会将格式化信息输出到标准错误，并像
+errExit() 一样终止程序。</p></li>
+<li><p><strong>usageErr()</strong><br />
+用于诊断命令行参数用法错误。参数同 printf()，输出以 "Usage:"
+开头，后跟格式化内容，输出到标准错误，然后调用 exit()
+终止程序。（有些示例程序会用扩展版 usageError()。）</p></li>
+<li><p><strong>cmdLineErr()</strong><br />
+类似于 usageErr()，但用于诊断命令行参数本身的错误。输出以 "Command-line
+usage error:" 开头，后跟格式化内容，输出到标准错误并终止程序。</p></li>
+</ul>
+<h4 id="错误处理函数实现说明">错误处理函数实现说明</h4>
+<ul>
+<li>错误处理函数的实现会用到 <code>ename.c.inc</code>
+文件，该文件定义了一个字符串数组 <code>ename</code>，用于将 errno
+错误号映射为符号名（如 EPERM、EAGAIN/EWOULDBLOCK 等）。</li>
+<li>这样做的好处是：strerror()
+只返回错误描述，不包含符号名，而手册页用符号名描述错误。输出符号名便于查阅手册定位错误原因。</li>
+<li><code>ename.c.inc</code> 文件内容与硬件架构相关，不同平台 errno
+值可能不同。可以用书中提供的脚本（lib/Build_ename.sh）为特定平台生成合适的版本。</li>
+<li><code>ename</code>
+数组中有些字符串为空，对应未使用的错误号；有些字符串包含两个错误名（如
+"EAGAIN/EWOULDBLOCK"），表示这两个符号对应同一个错误号。</li>
+<li>例如，EAGAIN 和 EWOULDBLOCK 在大多数 UNIX 系统上值相同，分别用于
+System V 和 BSD 的不同场景。SUSv3
+规范允许非阻塞调用返回这两个错误之一。</li>
+</ul>
+<h4 id="解析数字型命令行参数的函数">解析数字型命令行参数的函数</h4>
+<ul>
+<li>头文件（如清单3-5）声明了两个常用来解析整型命令行参数的函数：<code>getInt()</code>
+和 <code>getLong()</code>。</li>
+<li>与 <code>atoi()</code>、<code>atol()</code>、<code>strtol()</code>
+等标准函数相比，这两个函数的主要优点是能对数字参数进行基本有效性检查。</li>
+<li><code>getInt()</code> 和 <code>getLong()</code> 分别将参数
+<code>arg</code> 指向的字符串转换为 int 或 long 类型。如果
+<code>arg</code> 不是有效的整数字符串（即只包含数字和 +、-
+号），函数会输出错误信息并终止程序。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getInt</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *arg, <span class="type">int</span> flags, <span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br><span class="line"><span class="type">long</span> <span class="title function_">getLong</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *arg, <span class="type">int</span> flags, <span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br><span class="line"><span class="comment">// 返回 arg 转换后的数值</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>如果 <code>name</code> 参数非 NULL，应传入一个字符串，用于标识
+arg 参数。该字符串会包含在错误信息中，便于定位问题。</p></li>
+<li><p><code>flags</code> 参数用于控制 <code>getInt()</code> 和
+<code>getLong()</code>
+的行为。默认情况下，这两个函数期望参数为有符号十进制整数。通过将一个或多个
+GN_* 常量（见清单3-5）按位或（|）赋给
+flags，可以选择不同的进制或限制数值范围（如只允许非负数或大于0）。</p></li>
+<li><p>这两个函数的实现见清单3-6。</p></li>
+<li><p>虽然 flags
+参数可以强制范围检查，但在某些示例程序中我们并未启用这些检查。例如，在清单47-1中，未检查信号量初始值参数，用户可以输入负数，导致后续
+semctl()
+系统调用出错（ERANGE），因为信号量不能为负。省略范围检查有助于实验系统调用和库函数的正确与错误用法，便于学习。实际应用中通常会对命令行参数做更严格的检查。</p></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sys9%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/oper_sys9%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">操作系统基础 | 3 系统编程概述</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 04:29:07 / 修改时间：05:15:17" itemprop="dateCreated datePublished" datetime="2025-06-26T04:29:07+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="系统调用system-calls">系统调用（System Calls）</h2>
+<ul>
+<li><strong>系统调用</strong>是进程进入内核、请求内核代表其执行某些操作的受控入口。内核通过系统调用
+API 向程序提供各种服务，如创建新进程、执行 I/O、创建管道等。（可参考
+<code>syscalls(2)</code> 手册页查看 Linux 系统调用列表。）</li>
+<li>系统调用的几个基本特点：
+<ul>
+<li>系统调用会将处理器状态从用户态切换到内核态，使 CPU
+能访问受保护的内核内存。</li>
+<li>系统调用集合是固定的，每个系统调用有唯一编号（程序通常通过名称而非编号调用）。</li>
+<li>每个系统调用可以有参数，用于在用户空间和内核空间之间传递信息。</li>
+</ul></li>
+</ul>
+<h3 id="系统调用的执行流程以-x86-32-为例">系统调用的执行流程（以 x86-32
+为例）</h3>
+<ol type="1">
+<li>应用程序通过 C 库中的封装函数（wrapper function）发起系统调用。</li>
+<li>封装函数将参数从栈传递到特定寄存器，以便内核处理。</li>
+<li>封装函数将系统调用编号写入特定寄存器（如 <code>%eax</code>）。</li>
+<li>封装函数执行 trap 指令（如
+<code>int 0x80</code>），使处理器从用户态切换到内核态，执行内核 trap
+向量表中对应位置的代码。新架构用 <code>sysenter</code>
+指令，速度更快。</li>
+<li>内核的 <code>system_call()</code> 例程被调用，主要步骤：
+<ul>
+<li>保存寄存器到内核栈</li>
+<li>检查系统调用编号有效性</li>
+<li>根据编号查找并调用对应的系统调用服务例程（如
+<code>sys_execve()</code>），并检查参数有效性，执行所需操作（如
+I/O、内存操作等），返回结果状态</li>
+<li>恢复寄存器，并将返回值放到栈上</li>
+<li>返回到封装函数，同时切换回用户态</li>
+</ul></li>
+<li>如果系统调用返回值表示错误，封装函数会设置全局变量
+<code>errno</code>，并返回 -1 表示失败；成功时返回非负值。</li>
+</ol>
+<ul>
+<li>Linux 系统调用服务例程约定：返回非负值表示成功，负值（为 errno
+常量的相反数）表示错误。C 库封装函数会将负值转为正数赋给
+<code>errno</code>，并返回 -1。</li>
+<li>这种约定假设系统调用不会在成功时返回负值，但极少数例外（如
+<code>fcntl()</code> 的 <code>F_GETOWN</code> 操作）。</li>
+<li>例如，<code>execve()</code> 系统调用在 <code>sys_call_table</code>
+的第 11 项，指向 <code>sys_execve()</code> 服务例程。</li>
+<li>系统调用的实现虽然对程序员透明，但实际上涉及许多底层操作，因此系统调用有一定的性能开销。例如，<code>getppid()</code>
+1,000 万次调用约需 2.2 秒，而等价的 C 函数只需 0.11 秒。</li>
+<li>在本书中，“调用系统调用 xyz()”通常指调用对应的 C 库封装函数。</li>
+<li>可用 <code>strace</code>
+命令跟踪程序的系统调用，便于调试和分析。</li>
+</ul>
+<h2 id="库函数library-functions">库函数（Library Functions）</h2>
+<ul>
+<li>库函数是标准 C 库（如
+glibc）中包含的大量函数之一。它们的功能非常多样，比如打开文件、时间格式转换、字符串比较等。</li>
+<li>许多库函数并不涉及系统调用（如字符串处理函数），而有些库函数则是对系统调用的封装。例如，<code>fopen()</code>
+库函数内部会调用 <code>open()</code> 系统调用来打开文件。</li>
+<li>库函数通常比底层系统调用更易用。例如，<code>printf()</code>
+提供了格式化输出和缓冲功能，而 <code>write()</code>
+只负责输出字节块。<code>malloc()</code> 和 <code>free()</code>
+也比底层的 <code>brk()</code> 系统调用更方便。</li>
+</ul>
+<h3 id="标准-c-库与-gnu-c-库glibc">标准 C 库与 GNU C 库（glibc）</h3>
+<ul>
+<li>不同 UNIX 实现有不同的标准 C 库实现。Linux 上最常用的是 GNU C
+库（glibc）。</li>
+</ul>
+<h3 id="查看系统上的-glibc-版本">查看系统上的 glibc 版本</h3>
+<ul>
+<li><p>可以直接运行 glibc 的共享库文件来查看版本信息，例如：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /lib/libc.so.6</span><br></pre></td></tr></table></figure> 输出内容会包含 glibc 的版本号等信息。</p></li>
+<li><p>在某些发行版中，glibc 可能不在
+<code>/lib/libc.so.6</code>，可以用 <code>ldd</code>
+命令查看某个程序依赖的 glibc 路径： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ldd myprog | grep libc</span><br><span class="line">libc.so.6 =&gt; /lib/tls/libc.so.6 (0x4004b000)</span><br></pre></td></tr></table></figure></p></li>
+<li><p>程序可以通过两种方式获取 glibc 版本：</p>
+<ol type="1">
+<li><strong>编译时检测常量</strong>：glibc 2.0 及以后定义了
+<code>__GLIBC__</code> 和 <code>__GLIBC_MINOR__</code> 两个常量，可用于
+<code>#ifdef</code> 判断。</li>
+<li><strong>运行时调用函数</strong>：可用
+<code>gnu_get_libc_version()</code> 获取运行时 glibc 版本号。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gnu/libc-version.h&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *<span class="title function_">gnu_get_libc_version</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure> 该函数返回如 "2.12" 的版本号字符串。</li>
+</ol></li>
+<li><p>还可以用 <code>confstr()</code> 函数获取
+<code>_CS_GNU_LIBC_VERSION</code> 配置变量，返回如 "glibc 2.12"
+的字符串。</p></li>
+</ul>
+<h2 id="处理系统调用和库函数的错误">处理系统调用和库函数的错误</h2>
+<ul>
+<li>几乎所有系统调用和库函数都会返回一个状态值，指示调用是否成功。<strong>必须始终检查这个返回值</strong>，如果失败，应采取适当措施（至少要输出错误信息）。</li>
+<li>虽然省略这些检查看似省事，但实际上会导致难以排查的
+bug，浪费大量调试时间。</li>
+</ul>
+<h3 id="系统调用错误处理">系统调用错误处理</h3>
+<ul>
+<li>每个系统调用的手册页会说明其返回值，通常返回 –1 表示出错。例如：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fd = open(pathname, flags, mode);</span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>) &#123;</span><br><span class="line">  <span class="comment">/* 错误处理代码 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (close(fd) == <span class="number">-1</span>) &#123;</span><br><span class="line">  <span class="comment">/* 错误处理代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>系统调用失败时，会将全局变量 <code>errno</code>
+设为正值，表示具体错误类型。需要包含 <code>&lt;errno.h&gt;</code>
+头文件。</li>
+<li><code>errno</code> 的符号常量都以 <code>E</code> 开头，手册页的
+ERRORS 部分会列出可能的 errno 值。</li>
+<li>示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cnt = read(fd, buf, numbytes);</span><br><span class="line"><span class="keyword">if</span> (cnt == <span class="number">-1</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (errno == EINTR)</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;read was interrupted by a signal\n&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">/* 其他错误 */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>成功的系统调用不会将 <code>errno</code> 设为 0，因此不能用
+<code>errno == 0</code> 判断是否成功。应先检查返回值，再看 errno。</li>
+<li>少数系统调用（如 <code>getpriority()</code>）在成功时也可能返回
+–1。此时应在调用前将 <code>errno</code> 设为 0，调用后判断：如果返回 –1
+且 errno 不为 0，则为错误。</li>
+</ul>
+<h3 id="错误信息输出">错误信息输出</h3>
+<ul>
+<li>常用 <code>perror()</code> 和 <code>strerror()</code> 输出错误信息。
+<ul>
+<li><code>perror()</code>：输出自定义信息和 errno 对应的错误描述。
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">perror</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *msg)</span>;</span><br></pre></td></tr></table></figure> 用法示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fd = open(pathname, flags, mode);</span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>) &#123;</span><br><span class="line">  perror(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">  <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><code>strerror()</code>：返回 errno 对应的错误字符串。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">char</span> *<span class="title function_">strerror</span><span class="params">(<span class="type">int</span> errnum)</span>;</span><br></pre></td></tr></table></figure>
+注意返回的字符串可能被后续调用覆盖。</li>
+</ul></li>
+<li>如果错误号未知，<code>strerror()</code> 返回 "Unknown error nnn" 或
+NULL。</li>
+<li>这两个函数支持本地化，错误信息会用本地语言显示。</li>
+</ul>
+<h3 id="库函数错误处理">库函数错误处理</h3>
+<ul>
+<li>不同库函数返回不同类型和数值表示失败（需查阅手册页）。</li>
+<li>常见几类：
+<ol type="1">
+<li><strong>与系统调用一致</strong>：返回 –1，errno 指示错误（如
+<code>remove()</code>）。</li>
+<li><strong>返回其他错误值</strong>：如 <code>fopen()</code> 出错返回
+NULL，errno 反映具体错误。</li>
+<li><strong>不使用 errno</strong>：某些库函数不用
+errno，具体错误判断方式见手册页。此时不应用 errno、perror() 或
+strerror()。</li>
+</ol></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/25/oper_sys8%E7%BB%84%E6%88%904/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/oper_sys8%E7%BB%84%E6%88%904/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述4</a>
         </h2>
 
         <div class="post-meta-container">
@@ -322,7 +1263,7 @@ time”指日历时间或经过时间，“realtime”专指具备上述响应�
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys7/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys7%E7%BB%84%E6%88%903/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -340,7 +1281,7 @@ time”指日历时间或经过时间，“realtime”专指具备上述响应�
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys7/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述3</a>
+          <a href="/2025/06/23/oper_sys7%E7%BB%84%E6%88%903/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述3</a>
         </h2>
 
         <div class="post-meta-container">
@@ -525,7 +1466,7 @@ Shell 作业控制（Process Groups and Shell Job Control）</h3>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys6/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -543,7 +1484,7 @@ Shell 作业控制（Process Groups and Shell Job Control）</h3>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys6/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述2</a>
+          <a href="/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述2</a>
         </h2>
 
         <div class="post-meta-container">
@@ -753,7 +1694,7 @@ list）</h4>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys5/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys5%E7%BB%84%E6%88%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -771,7 +1712,7 @@ list）</h4>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys5/" class="post-title-link" itemprop="url">操作系统基础 | 2.5 linux组成概述</a>
+          <a href="/2025/06/23/oper_sys5%E7%BB%84%E6%88%90/" class="post-title-link" itemprop="url">操作系统基础 | 2.5 linux组成概述</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1010,7 +1951,7 @@ I/O。常用的 stdio 函数包括
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/22/oper_sys4/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/22/oper_sys4lab_kinstall/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1028,7 +1969,7 @@ I/O。常用的 stdio 函数包括
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/22/oper_sys4/" class="post-title-link" itemprop="url">操作系统基础 | 2.4 初试linux内核实验</a>
+          <a href="/2025/06/22/oper_sys4lab_kinstall/" class="post-title-link" itemprop="url">操作系统基础 | 2.4 初试linux内核实验</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1046,7 +1987,7 @@ I/O。常用的 stdio 函数包括
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-23 04:34:16" itemprop="dateModified" datetime="2025-07-23T04:34:16+08:00">2025-07-23</time>
+      <time title="修改时间：2025-09-24 09:04:52" itemprop="dateModified" datetime="2025-09-24T09:04:52+08:00">2025-09-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1095,7 +2036,6 @@ America/Chicago），键盘布局选 us。</li>
 <li>点击“Save”，然后点击“WRITE”写入镜像。</li>
 <li>写入完成后，卸载 MicroSD 卡，插入树莓派并开机。</li>
 </ul>
-<hr />
 <h3 id="首次启动与-ssh-连接">2. 首次启动与 SSH 连接</h3>
 <ul>
 <li>树莓派首次启动可能需要几分钟，启动后通过 SSH 连接（如 ssh
@@ -1123,11 +2063,10 @@ Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
 <hr />
 <h3 id="传输并安装自编译内核与模块">5. 传输并安装自编译内核与模块</h3>
 <ul>
-<li>用 ssh 连接学校提供的linux工作平台，进入你编译内核的目录：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/<span class="string">&quot;your username&quot;</span>/linux_source</span><br></pre></td></tr></table></figure></li>
-<li>打包模块和内核启动文件： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -C modules/lib -czf modules.tgz modules</span><br><span class="line">tar -C linux/arch/arm -czf boot.tgz boot</span><br></pre></td></tr></table></figure></li>
-<li>在树莓派上新建 linux_source 目录，进入后用 sftp 下载上述两个压缩包：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sftp [学校统一登陆平台key]@shell.cec.学校曾用简称.edu</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/<span class="string">&quot;your username&quot;</span>/linux_source</span><br><span class="line">get modules.tgz</span><br><span class="line">get boot.tgz</span><br><span class="line">quit</span><br></pre></td></tr></table></figure></li>
+<li>进入你交叉编译内核的目录： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/linux_source</span><br></pre></td></tr></table></figure></li>
+<li>打包模块和内核： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -C modules/lib -czf modules.tgz modules</span><br><span class="line">tar -C linux/arch/arm -czf boot.tgz boot</span><br></pre></td></tr></table></figure></li>
+<li>在树莓派上新建 linux_source 目录，进入后用 sftp
+，或其它方式下载上述两个压缩包： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sftp [学校统一登陆平台key]@shell.cec.学校曾用简称.edu</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/<span class="string">&quot;your username&quot;</span>/linux_source</span><br><span class="line">get modules.tgz</span><br><span class="line">get boot.tgz</span><br><span class="line">quit</span><br></pre></td></tr></table></figure></li>
 <li>备份 <code>/usr/lib/modules</code> 和 <code>/boot</code> 目录（或
 <code>/lib/modules</code>，视系统而定）： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> -r /usr/lib/modules ~/Desktop/modules_backup</span><br><span class="line">sudo <span class="built_in">cp</span> -r /boot ~/Desktop/boot_backup</span><br></pre></td></tr></table></figure></li>
 <li>解压并安装新内核和模块： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf modules.tgz</span><br><span class="line">tar -xzf boot.tgz</span><br><span class="line"><span class="built_in">cd</span> modules</span><br><span class="line">sudo <span class="built_in">cp</span> -rd * /usr/lib/modules   <span class="comment"># 或 /lib/modules</span></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/*.dtb /boot/</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/overlays/*.dtb* /boot/overlays</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/overlays/README /boot/overlays</span><br></pre></td></tr></table></figure></li>
@@ -1186,7 +2125,7 @@ Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/21/oper_sys3/">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/21/oper_sys3lab_ksetup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1204,7 +2143,7 @@ Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/21/oper_sys3/" class="post-title-link" itemprop="url">操作系统基础 | 2.3 初试linux内核实验</a>
+          <a href="/2025/06/21/oper_sys3lab_ksetup/" class="post-title-link" itemprop="url">操作系统基础 | 2.3 初试linux内核实验</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1222,7 +2161,7 @@ Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-23 04:34:23" itemprop="dateModified" datetime="2025-07-23T04:34:23+08:00">2025-07-23</time>
+      <time title="修改时间：2025-09-24 01:59:02" itemprop="dateModified" datetime="2025-09-24T01:59:02+08:00">2025-09-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1248,48 +2187,43 @@ Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="树莓派-linux-内核源码下载与编译流程">树莓派 Linux
-内核源码下载与编译流程</h2>
+          <p><strong>注意</strong>：本教学实验因为使用较早版本的树莓派Linux内核，内核源码的symlink仅适配Linux系统，请使用Linux平台主机进行交叉编译，若要使用window主机编译请更换使用的内核</p>
 <h3 id="下载适用于树莓派的内核源码">1. 下载适用于树莓派的内核源码</h3>
 <p>一般项目可以直接去 <a target="_blank" rel="noopener" href="https://kernel.org">kernel.org</a> 下载
 Linux 源码，但本课程针对树莓派，需要用树莓派官方维护的内核版本（在 <a
-target="_blank" rel="noopener" href="https://github.com/raspberrypi">https://github.com/raspberrypi</a>）。</p>
-<p>在你的 <code>/project/scratch01/compile/user-name/</code>
-目录下，新建 <code>linux_source</code>
-文件夹用于存放源码和编译文件：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> linux_source</span><br><span class="line"><span class="built_in">cd</span> linux_source</span><br></pre></td></tr></table></figure>
-<p>下载指定版本的树莓派内核源码（此过程可能需要20-30分钟）：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure>
-<p>解压源码包：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure>
-<p>解压后会得到一个新目录，建议用 <code>mv</code> 命令重命名为
+target="_blank" rel="noopener" href="https://github.com/raspberrypi">https://github.com/raspberrypi</a>）。
+在你的工程目录下，新建 <code>linux_source</code>
+文件夹用于存放源码和编译文件： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> linux_source</span><br><span class="line"><span class="built_in">cd</span> linux_source</span><br></pre></td></tr></table></figure>
+下载指定版本的树莓派内核源码（此过程可能需要20-30分钟）： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure>
+解压源码包： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure> 解压后会得到一个新目录，建议用
+<code>mv</code> 命令重命名为
 <code>linux</code>，便于后续操作。解压完成后请删除 <code>.tar.gz</code>
 文件以节省空间。</p>
-<p>进入 <code>linux</code> 目录，运行以下命令查看内核版本：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make kernelversion</span><br></pre></td></tr></table></figure>
-<p>并用文本编辑器（如 emacs、vim、nano）打开
+<p>进入 <code>linux</code> 目录，运行以下命令查看内核版本：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make kernelversion</span><br></pre></td></tr></table></figure> 并用文本编辑器（如 emacs、vim、nano）打开
 <code>Makefile</code>，查看前几行定义的内核版本常量，记录
 <code>NAME</code> 常量的值。</p>
-<hr />
 <h3 id="针对树莓派-44b-的设备树修改">2. 针对树莓派 4/4B
 的设备树修改</h3>
 <p>如果你使用的是 Raspberry Pi 4 或 4B，需要修改设备树文件
 <code>arch/arm/boot/dts/bcm2711.dtsi</code>，找到 <code>arm-pmu</code>
-条目，将 <code>compatible</code> 行改为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = <span class="string">&quot;arm,cortex-a72-pmu&quot;</span>, <span class="string">&quot;arm,cortex-a15-pmu&quot;</span>, <span class="string">&quot;arm,armv8-pmuv3&quot;</span>;</span><br></pre></td></tr></table></figure>
-<hr />
+条目，将 <code>compatible</code> 行改为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = <span class="string">&quot;arm,cortex-a72-pmu&quot;</span>, <span class="string">&quot;arm,cortex-a15-pmu&quot;</span>, <span class="string">&quot;arm,armv8-pmuv3&quot;</span>;</span><br></pre></td></tr></table></figure></p>
 <h3 id="配置交叉编译环境">3. 配置交叉编译环境</h3>
 <p>添加交叉编译器和新版 gcc 到 PATH（并将以下两行添加到
-<code>~/.bashrc</code> 文件末尾，确保下次登录自动生效）：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">module add arm-rpi</span><br><span class="line">module add gcc-8.3.0</span><br></pre></td></tr></table></figure>
-<hr />
+<code>~/.bashrc</code> 文件末尾，确保下次登录自动生效）：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将交叉编译工具链添加到PATH</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="comment"># 将c编译器添加到PATH</span></span><br><span class="line">module add gcc-8.3.0</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：如果使用wsl2等，linux并不自带environment-modules的情况，需要手动安装编译工具并添加PATH：
+更新包列表 <code>sudo apt update</code>
+安装依赖，如果出现包依赖版本问题，请参照本站wsl2分类下的文章“在wsl2安装ros2遇到的一些坑”解决
+<code>sudo apt install bc bison flex libssl-dev make libc6-dev libncurses5-dev</code>
+安装32位工具链 <code>sudo apt install crossbuild-essential-armhf</code>
+检查是否已添加到PATH <code>arm-linux-gnueabihf-gcc --version</code></p>
+</blockquote>
 <h3 id="配置内核">4. 配置内核</h3>
-<p>对于 Raspberry Pi 3B+，运行：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig</span><br></pre></td></tr></table></figure>
-<p>对于 Raspberry Pi 4/4B，运行：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig</span><br></pre></td></tr></table></figure>
-<p>这会生成树莓派的默认内核配置。</p>
-<hr />
+<p>对于 Raspberry Pi 3B+，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig</span><br></pre></td></tr></table></figure></p>
+<p>对于 Raspberry Pi 4/4B，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig</span><br></pre></td></tr></table></figure>
+这会生成树莓派的默认内核配置。</p>
 <h3 id="自定义内核配置">5. 自定义内核配置</h3>
 <p>进入菜单配置界面：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig</span><br></pre></td></tr></table></figure>
@@ -1308,13 +2242,17 @@ Desktop)"（提示：该模式适合需要低延迟响应的场景，如桌面�
 <p>保存并退出配置。</p>
 <hr />
 <h3 id="编译内核">6. 编译内核</h3>
-<p>记录编译开始和结束时间：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span>&gt;&gt;time.txt; make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; <span class="built_in">date</span>&gt;&gt;time.txt</span><br></pre></td></tr></table></figure>
+<p>记录编译开始和结束时间</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span>&gt;&gt;time.txt; make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; <span class="built_in">date</span>&gt;&gt;time.txt</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：如果使用wsl2出现类似以下错误
+<code>Error: selected processor does not support 'dmb ish' in ARM mode</code>
+请尝试指定编译环境变量（编译参数会报错冲突）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line">export KCFLAGS=&quot;-march=armv7-a -mfpu=vfpv3&quot;</span><br><span class="line">make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs</span><br><span class="line">unset KCFLAGS</span><br></pre></td></tr></table></figure></p>
+</blockquote>
 <p>编译完成后，创建用于存放模块的目录：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ../modules</span><br></pre></td></tr></table></figure>
 <p>安装内核模块：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install</span><br></pre></td></tr></table></figure>
-<hr />
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install</span><br></pre></td></tr></table></figure>
 <h3 id="回答与说明">7. 回答与说明</h3>
 <ul>
 <li>用 <code>cat time.txt</code> 查看编译所用时间。</li>
@@ -1322,821 +2260,6 @@ Desktop)"（提示：该模式适合需要低延迟响应的场景，如桌面�
 服务器的架构与树莓派不同，必须用交叉编译器生成适用于 ARM
 架构的内核和模块。</li>
 </ul>
-<hr />
-<p><strong>总结</strong><br />
-本流程涵盖了树莓派专用 Linux
-内核源码的下载、解压、配置、定制、编译和模块安装，并介绍了如何设置交叉编译环境和设备树修改。通过这些步骤，你可以为树莓派编译和定制属于自己的
-Linux 内核。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/20/oper_sys2linux%E5%86%85%E6%A0%B8%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">操作系统基础 | 2.2 linux内核与用户空间的不同</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-21 10:18:37" itemprop="dateCreated datePublished" datetime="2025-06-21T10:18:37+08:00">2025-06-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-22 08:17:17" itemprop="dateModified" datetime="2025-06-22T08:17:17+08:00">2025-06-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2
-id="与众不同的野兽内核与用户空间的区别">与众不同的“野兽”：内核与用户空间的区别</h2>
-<p>Linux
-内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：</p>
-<ol type="1">
-<li><strong>内核无法使用 C 标准库（libc）和标准 C 头文件。</strong></li>
-<li><strong>内核使用 GNU C 语言编写。</strong></li>
-<li><strong>内核没有用户空间的内存保护机制。</strong></li>
-<li><strong>内核中不能轻易执行浮点运算。</strong></li>
-<li><strong>内核每个进程的栈空间很小且固定。</strong></li>
-<li><strong>由于内核有异步中断、支持抢占和多处理器（SMP），因此同步和并发问题非常重要。</strong></li>
-<li><strong>可移植性很重要。</strong></li>
-</ol>
-<p>下面简要解释这些差异：</p>
-<hr />
-<h3 id="没有-libc-或标准头文件">没有 libc 或标准头文件</h3>
-<p>与用户空间程序不同，内核不会链接标准 C
-库（libc）或其他外部库。主要原因是速度和体积——完整的 C
-库太大、效率太低，不适合内核使用。</p>
-<p>不用担心，内核自己实现了很多常用的 libc
-函数。例如，常见的字符串操作函数在 <code>lib/string.c</code>
-中实现，只需包含 <code>&lt;linux/string.h&gt;</code>
-头文件即可使用。</p>
-<h4 id="头文件">头文件</h4>
-<p>内核源码只能包含内核源码树中的头文件，不能引用外部头文件或库。<br />
-- 基础头文件位于源码根目录的 <code>include/</code>
-目录下。例如，<code>&lt;linux/inotify.h&gt;</code> 实际路径为
-<code>include/linux/inotify.h</code>。 - 架构相关的头文件位于
-<code>arch/&lt;architecture&gt;/include/asm</code>，如 x86 架构下为
-<code>arch/x86/include/asm</code>，引用时用
-<code>&lt;asm/ioctl.h&gt;</code>。</p>
-<h4 id="没有-printf用-printk">没有 printf()，用 printk()</h4>
-<p>内核没有 <code>printf()</code>，但提供了类似的 <code>printk()</code>
-用于内核日志输出。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(<span class="string">&quot;Hello world! A string &#x27;%s&#x27; and an integer &#x27;%d&#x27;\n&quot;</span>, str, i);</span><br></pre></td></tr></table></figure> 与 <code>printf()</code>
-不同，<code>printk()</code> 可以指定优先级（priority flag），用于
-syslogd 判断消息显示位置。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(KERN_ERR <span class="string">&quot;this is an error!\n&quot;</span>);</span><br></pre></td></tr></table></figure>
-注意：<code>KERN_ERR</code>
-和消息之间没有逗号，这是因为优先级标志是字符串宏，编译时会自动拼接。</p>
-<h3 id="gnu-c">GNU C</h3>
-<p>和大多数 Unix 内核一样，Linux 内核主要用 C 语言编写。但它并不是严格的
-ANSI C，而是大量使用了 gcc（GNU
-编译器套件）提供的各种语言扩展。内核开发者会用到 ISO C99 和 GNU C
-的扩展特性，这使得 Linux 内核基本只能用 gcc 编译（近年 Intel C
-编译器也支持了大部分 gcc 特性，可以编译内核）。目前推荐使用 gcc 4.4
-或更高版本。</p>
-<p>C99 的扩展比较常见，而 GNU C 的扩展则是 Linux 内核代码区别于普通 C
-项目的重要原因。下面介绍几个常见的 GNU C 扩展：</p>
-<h4 id="内联函数inline-functions">内联函数（Inline Functions）</h4>
-<p>C99 和 GNU C 都支持内联函数（inline
-function）。内联函数会在每个调用点直接插入函数体，避免了函数调用和返回的开销（如寄存器保存/恢复），有利于编译器整体优化调用者和被调用者的代码。但缺点是会增加代码体积和内存消耗。</p>
-<p>内核开发者通常只对小型、对性能要求高的函数使用内联。大函数或不常用的函数不建议内联。</p>
-<p>内联函数的声明方式如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">wolf</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> tail_size)</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>static inline</code> 关键字用于定义内联函数。</li>
-<li>内联函数的声明要在使用前，否则编译器无法内联。</li>
-<li>通常内联函数会放在头文件中（因为是 static，不会导出符号）。</li>
-</ul>
-<p>内核更倾向于用内联函数而不是复杂的宏，因为内联函数有类型安全和可读性好等优点。</p>
-<h4 id="内联汇编inline-assembly">内联汇编（Inline Assembly）</h4>
-<p>gcc 支持在 C
-代码中嵌入汇编指令，这在与硬件密切相关的内核代码中很有用。用法如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> low, high;</span><br><span class="line"><span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(<span class="string">&quot;rdtsc&quot;</span> : <span class="string">&quot;=a&quot;</span> (low), <span class="string">&quot;=d&quot;</span> (high))</span>;</span><br><span class="line"><span class="comment">/* low 和 high 现在分别保存了 64 位 tsc 的低 32 位和高 32 位 */</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>asm</code> 关键字用于插入汇编代码。</li>
-<li>这种用法主要用于体系结构相关或对性能极致要求的代码。</li>
-<li>大部分内核代码还是用 C 语言编写，汇编只用于底层和关键路径。</li>
-</ul>
-<h4 id="分支预测注解branch-annotation">分支预测注解（Branch
-Annotation）</h4>
-<p>gcc
-提供了分支预测指令，可以告诉编译器某个条件分支更可能被执行，从而优化生成的代码。内核通过
-<code>likely()</code> 和 <code>unlikely()</code> 宏来使用这些特性。</p>
-<p>例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unlikely(error)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 error 很少为真 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (likely(success)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 success 几乎总为真 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> - 只有在分支方向非常明确时才建议使用这些宏。 -
-如果预测正确，可以提升性能；预测错误则可能降低性能。 -
-在内核中，<code>unlikely()</code>
-常用于错误处理分支，因为大多数情况下不会出错。</p>
-<h3 id="没有内存保护">没有内存保护</h3>
-<p>当用户空间程序非法访问内存时，内核可以捕获错误，发送 SIGSEGV
-信号并终止该进程。但如果内核自身非法访问内存，后果就不可控了（毕竟，谁来保护内核呢？）。内核中的内存违规会导致
-oops（严重内核错误）。因此，在内核中绝不能非法访问内存，比如解引用 NULL
-指针——在内核里，这样的错误代价更高！</p>
-<p>另外，内核内存是不可换页的（not
-pageable），即内核占用的每一字节物理内存都不能被换出。你在内核里多用一点内存，系统可用物理内存就少一点。每次想给内核加新功能时，请记住这一点！</p>
-<h3 id="不能轻易使用浮点运算">不能（轻易）使用浮点运算</h3>
-<p>用户空间进程使用浮点指令时，内核会负责从整数模式切换到浮点模式。具体做法依赖于体系结构，通常是通过陷阱（trap）实现的。</p>
-<p>但内核自身不能像用户空间那样方便地使用浮点运算，因为内核无法轻松地“陷阱”自己。内核里用浮点数需要手动保存和恢复浮点寄存器等操作，非常麻烦。<strong>简而言之：不要在内核里用浮点运算！</strong>
-除极少数特殊情况外，内核代码中基本没有浮点操作。</p>
-<h3 id="小而固定的栈空间">小而固定的栈空间</h3>
-<p>用户空间可以在栈上分配大量变量，包括大结构体和大数组，因为用户空间的栈很大且可以动态增长。但内核栈既不大也不能动态扩展，而是小且固定的。</p>
-<ul>
-<li>栈的具体大小依赖于体系结构。例如 x86 架构下，栈大小可在编译时配置为
-4KB 或 8KB。</li>
-<li>通常，32 位系统为 8KB，64 位系统为
-16KB，每个进程有自己的内核栈，这个大小是固定的。</li>
-</ul>
-<p>因此，内核开发时要避免在栈上分配大对象。</p>
-<h3 id="同步与并发">同步与并发</h3>
-<p>内核容易出现竞态条件（race
-condition）。与单线程的用户空间程序不同，内核有多种并发访问共享资源的情况，必须通过同步机制防止竞态：</p>
-<ul>
-<li>Linux
-是抢占式多任务操作系统，进程会被调度器随时切换，内核需要在这些任务间同步。</li>
-<li>Linux
-支持对称多处理（SMP），多个处理器上的内核代码可能同时访问同一资源。</li>
-<li>中断是异步发生的，可能在访问资源时被打断，导致中断处理程序也访问同一资源。</li>
-<li>内核本身是可抢占的，内核代码可能被抢占，切换到另一个访问同一资源的代码。</li>
-</ul>
-<p>常见的同步机制有自旋锁（spinlock）和信号量（semaphore）。后续章节会详细介绍。</p>
-<h3 id="可移植性的重要性">可移植性的重要性</h3>
-<p>虽然用户空间程序不一定要追求可移植性，但 Linux
-作为一个可移植操作系统，必须保证代码能在多种体系结构上正确编译和运行。体系结构相关的代码要放在专门的目录下，体系结构无关的代码要保持通用。</p>
-<p>一些基本规则包括：保持字节序中立、支持 64
-位、不要假设字长或页面大小等。后续章节会详细讨论可移植性。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95linux%E5%86%85%E6%A0%B8/" class="post-title-link" itemprop="url">操作系统基础 | 2. 初试linux内核</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-21 06:57:37" itemprop="dateCreated datePublished" datetime="2025-06-21T06:57:37+08:00">2025-06-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-22 08:44:08" itemprop="dateModified" datetime="2025-06-22T08:44:08+08:00">2025-06-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="内核源码相关">内核源码相关</h2>
-<h3 id="获取内核源码">获取内核源码</h3>
-<p>当前的 Linux 源代码总是可以在 <a
-target="_blank" rel="noopener" href="http://www.kernel.org">http://www.kernel.org</a>
-官方网站上以完整的 tarball（用 tar
-命令创建的归档文件）和增量补丁的形式获得。 可以利用<a
-target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.10.17/source">Elixir Cross
-Referencer</a>网站在线查看源码</p>
-<h4 id="使用-git">使用 Git</h4>
-<p>你可以用 Git 获取 Linus 主线最新的源码树： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git</span><br></pre></td></tr></table></figure>
-检出后，可以用如下命令更新你的源码树到 Linus 的最新版本：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure></p>
-<h4 id="安装内核源码">安装内核源码</h4>
-<p>内核 tarball 以 GNU zip（gzip）和 bzip2 两种格式发布。bzip2
-是默认且推荐的格式，因为它通常压缩得更好。bzip2 格式的内核包名为
-linux-x.y.z.tar.bz2，其中 x.y.z
-是内核版本号。下载源码后，解压和解包很简单。如果你的 tarball 是 bzip2
-压缩的，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvjf linux-x.y.z.tar.bz2</span><br></pre></td></tr></table></figure> 如果是 gzip 压缩的，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvzf linux-x.y.z.tar.gz</span><br></pre></td></tr></table></figure>
-这会将源码解压到 linux-x.y.z 目录。如果你用 git 获取源码，就不需要下载
-tarball，只需运行 git clone，Git 会自动下载并解包最新源码。</p>
-<h4 id="源码安装与开发位置">源码安装与开发位置</h4>
-<p>内核源码通常安装在
-<code>/usr/src/linux</code>。但你不应该在这个目录下开发，因为你的 C
-库可能会链接到这里的内核版本。此外，修改内核源码不应需要 root
-权限——建议在你的 home 目录下开发，只在安装新内核时用
-root。即使安装新内核，也不要动 <code>/usr/src/linux</code>。</p>
-<h4 id="使用补丁">使用补丁</h4>
-<p>在 Linux
-内核社区，补丁是交流的通用语言。你会以补丁的形式分发你的代码更改，也会以补丁的形式接收别人的代码。增量补丁可以让你轻松地从一个内核版本升级到下一个，无需每次都下载完整的大包，只需应用增量补丁即可，节省带宽和时间。要应用增量补丁，在内核源码目录下运行：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patch -p1 &lt; ../patch-x.y.z</span><br></pre></td></tr></table></figure> 通常，补丁是针对前一个版本的源码生成的。</p>
-<h3 id="内核源码树结构简介">内核源码树结构简介</h3>
-<p>Linux 内核源码树（source
-tree）被划分为多个目录，每个目录下又包含许多子目录。下表列出了源码树根目录下的主要目录及其说明：</p>
-<table>
-<thead>
-<tr>
-<th>目录（Directory）</th>
-<th>说明（Description）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>arch</td>
-<td>架构相关源码（不同CPU架构的实现）</td>
-</tr>
-<tr>
-<td>block</td>
-<td>块设备I/O层</td>
-</tr>
-<tr>
-<td>crypto</td>
-<td>加密API</td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td>内核源码文档</td>
-</tr>
-<tr>
-<td>drivers</td>
-<td>设备驱动</td>
-</tr>
-<tr>
-<td>firmware</td>
-<td>某些驱动需要用到的设备固件</td>
-</tr>
-<tr>
-<td>fs</td>
-<td>虚拟文件系统（VFS）及各类文件系统实现</td>
-</tr>
-<tr>
-<td>include</td>
-<td>内核头文件</td>
-</tr>
-<tr>
-<td>init</td>
-<td>内核启动与初始化代码</td>
-</tr>
-<tr>
-<td>ipc</td>
-<td>进程间通信代码</td>
-</tr>
-<tr>
-<td>kernel</td>
-<td>核心子系统（如调度器等）</td>
-</tr>
-<tr>
-<td>lib</td>
-<td>辅助函数库</td>
-</tr>
-<tr>
-<td>mm</td>
-<td>内存管理子系统及虚拟内存</td>
-</tr>
-<tr>
-<td>net</td>
-<td>网络子系统</td>
-</tr>
-<tr>
-<td>samples</td>
-<td>示例和演示代码</td>
-</tr>
-<tr>
-<td>scripts</td>
-<td>构建内核用的脚本</td>
-</tr>
-<tr>
-<td>security</td>
-<td>Linux安全模块</td>
-</tr>
-<tr>
-<td>sound</td>
-<td>声音子系统</td>
-</tr>
-<tr>
-<td>usr</td>
-<td>早期用户空间代码（如initramfs）</td>
-</tr>
-<tr>
-<td>tools</td>
-<td>内核开发相关工具</td>
-</tr>
-<tr>
-<td>virt</td>
-<td>虚拟化基础设施</td>
-</tr>
-</tbody>
-</table>
-<h4 id="源码树根目录下的一些文件">源码树根目录下的一些文件</h4>
-<ul>
-<li><strong>COPYING</strong>：内核许可证（GNU GPL v2）。</li>
-<li><strong>CREDITS</strong>：内核主要开发者名单。</li>
-<li><strong>MAINTAINERS</strong>：各子系统和驱动的维护者名单。</li>
-<li><strong>Makefile</strong>：内核主
-Makefile，用于编译和构建整个内核。</li>
-</ul>
-<h2 id="配置内核configuring-the-kernel">配置内核（Configuring the
-Kernel）</h2>
-<p>因为 Linux
-源码是开放的，所以你可以在编译前根据自己的需求进行配置和定制。实际上，你可以只为你需要的功能和驱动编译支持。<strong>配置内核</strong>是编译前的必经步骤。由于内核功能丰富、支持的硬件种类繁多，配置选项也非常多。</p>
-<h3 id="内核配置选项configuration-options">内核配置选项（Configuration
-Options）</h3>
-<p>内核配置通过一系列以 <code>CONFIG_</code> 开头的选项控制，例如
-<code>CONFIG_SMP</code> 控制对称多处理（SMP）支持。设置该选项即启用
-SMP，未设置则禁用。配置选项既决定编译哪些文件，也通过预处理指令影响源码。</p>
-<ul>
-<li><strong>布尔型（Boolean）</strong>：只有 yes 或 no 两种状态。比如
-<code>CONFIG_PREEMPT</code>。</li>
-<li><strong>三态（Tristate）</strong>：yes、no 或 module。module
-表示编译为可动态加载的模块（.ko 文件）；yes
-表示直接编译进内核镜像。</li>
-<li><strong>字符串或整数</strong>：用于指定某些参数值，比如数组大小，这些不会影响编译流程，而是作为宏被源码访问。</li>
-</ul>
-<h3 id="发行版内核与自定义内核">发行版内核与自定义内核</h3>
-<p>各大 Linux 发行版（如
-Ubuntu、Fedora）自带的内核都是预编译好的，通常会启用大部分常用功能，并把绝大多数驱动编译为模块，以便支持各种硬件。但如果你想深入学习或开发内核，还是需要自己编译内核，并选择合适的模块。</p>
-<h3 id="配置工具">配置工具</h3>
-<p>内核提供了多种配置工具：</p>
-<ul>
-<li><p><strong>文本命令行工具</strong><br />
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make config</span><br></pre></td></tr></table></figure> 逐项询问每个选项，适合有耐心的用户。</p></li>
-<li><p><strong>基于 ncurses 的图形界面</strong><br />
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br></pre></td></tr></table></figure> 推荐使用，界面友好，选项分门别类。</p></li>
-<li><p><strong>基于 GTK+ 的图形界面</strong><br />
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make gconfig</span><br></pre></td></tr></table></figure> 适合喜欢图形界面的用户。</p></li>
-</ul>
-<p>这些工具会把配置选项分为不同类别（如“处理器类型与特性”），你可以浏览、修改各项配置。</p>
-<h3 id="快速生成默认配置">快速生成默认配置</h3>
-<p>如果你不想从零开始配置，可以用默认配置： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make defconfig</span><br></pre></td></tr></table></figure>
-这会生成一个适合你当前架构的默认配置（比如 i386 下据说是 Linus
-的配置），适合新手快速上手。之后可以再根据自己的硬件调整配置。</p>
-<h3 id="配置文件的位置与管理">配置文件的位置与管理</h3>
-<p>所有配置选项最终会保存在源码根目录下的 <code>.config</code>
-文件中。你也可以直接编辑这个文件（很多内核开发者都这么做），只需搜索并修改对应的配置项即可。</p>
-<p>如果你用现有的 <code>.config</code>
-文件，或者升级到新内核后想沿用旧配置，可以用： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make oldconfig</span><br></pre></td></tr></table></figure>
-它会根据新内核的选项补全或更新你的配置。</p>
-<h3 id="复制当前内核配置">复制当前内核配置</h3>
-<p>如果当前内核启用了 <code>CONFIG_IKCONFIG_PROC</code>，你可以直接从
-<code>/proc/config.gz</code> 拷贝当前内核的配置： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zcat /proc/config.gz &gt; .config</span><br><span class="line">make oldconfig</span><br></pre></td></tr></table></figure>
-这样可以方便地克隆当前系统的内核配置。</p>
-<h2 id="编译内核">编译内核</h2>
-<p>配置好后，只需一条命令即可编译内核： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure> 自 2.6
-版本起，无需再手动运行 <code>make dep</code> 或分别编译
-bzImage、modules，默认的 Makefile 规则会自动处理所有依赖和构建流程。</p>
-<h3
-id="降低编译输出噪音minimizing-build-noise">降低编译输出噪音（Minimizing
-Build Noise）</h3>
-<p>在编译内核时，终端会输出大量信息。为了减少这些“噪音”，但又能看到警告和错误，可以将
-<code>make</code> 的标准输出重定向到文件：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &gt; ../detritus</span><br></pre></td></tr></table></figure>
-<p>如果需要查看详细输出，可以阅读该文件。由于警告和错误信息会输出到标准错误（stderr），通常你不需要关心标准输出。实际上，你可以直接把输出丢到“黑洞”：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &gt; /dev/null</span><br></pre></td></tr></table></figure>
-<p>这样所有无用的输出都会被丢弃，只在终端显示警告和错误。</p>
-<hr />
-<h3 id="并行编译spawning-multiple-build-jobs">并行编译（Spawning
-Multiple Build Jobs）</h3>
-<p><code>make</code>
-支持并行编译，可以同时运行多个编译任务，大大加快多核系统上的编译速度。方法如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -jN</span><br></pre></td></tr></table></figure>
-<p>其中 <code>N</code>
-是并行任务数。通常建议每个处理器核心分配1~2个任务。例如，16核机器可以这样：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j32 &gt; /dev/null</span><br></pre></td></tr></table></figure>
-<p>此外，使用如 <code>distcc</code> 或 <code>ccache</code>
-等工具也能进一步提升编译速度。</p>
-<hr />
-<h2 id="安装新内核installing-the-new-kernel">安装新内核（Installing the
-New Kernel）</h2>
-<p>内核编译完成后，需要安装。安装方式依赖于你的硬件架构和引导程序（boot
-loader），请查阅对应引导程序的文档。</p>
-<p><strong>以 x86 + grub 为例：</strong></p>
-<ol type="1">
-<li>将 <code>arch/i386/boot/bzImage</code> 复制到
-<code>/boot</code>，并命名为如 <code>vmlinuz-version</code>。</li>
-<li>编辑 <code>/boot/grub/grub.conf</code>，为新内核添加启动项。</li>
-</ol>
-<p><strong>如果使用 LILO：</strong></p>
-<ol type="1">
-<li>编辑 <code>/etc/lilo.conf</code>，添加新内核项。</li>
-<li>重新运行 <code>lilo</code> 命令。</li>
-</ol>
-<h3 id="安装模块installing-modules">安装模块（Installing Modules）</h3>
-<p>模块的安装是自动且与架构无关的。只需以 root 权限运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make modules_install</span><br></pre></td></tr></table></figure>
-这会把所有编译好的模块安装到 <code>/lib/modules</code>
-下的对应目录。</p>
-<h3 id="system.map-文件">System.map 文件</h3>
-<p>编译过程中还会在源码根目录生成 <code>System.map</code>
-文件。它是一个符号查找表，用于将内核符号映射到内存地址，在调试时可以把地址转换为函数或变量名。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/18/oper_sys0linux%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/18/oper_sys0linux%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B/" class="post-title-link" itemprop="url">操作系统基础 | 1. linux内核简介</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-18 23:59:12" itemprop="dateCreated datePublished" datetime="2025-06-18T23:59:12+08:00">2025-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-24 04:33:15" itemprop="dateModified" datetime="2025-06-24T04:33:15+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>总结一下课堂笔记，不然总是放在不知道哪个作业文件夹里找不到</p>
-<h3 id="操作系统与内核概述">操作系统与内核概述</h3>
-<p><strong>内核</strong>是操作系统的最核心部分，负责管理硬件资源（如CPU、内存、硬盘等），并为上层软件提供服务。内核运行在“内核空间”，拥有对硬件的完全控制权，而普通应用程序运行在“用户空间”，只能通过内核提供的接口访问硬件。</p>
-<p>应用程序与内核的交互主要通过<strong>系统调用</strong>完成。比如：</p>
-<ul>
-<li>当你在 C 语言程序里调用 <code>printf("hello\n")</code>
-时，实际上发生了多层调用。<code>printf()</code>
-负责格式化和缓冲数据，最终会调用 <code>write()</code>
-函数，把数据写到终端。<code>write()</code> 是一个库函数，它最终会触发
-<code>write</code> 系统调用，由内核把数据真正输出到屏幕。</li>
-<li>类似地，<code>open()</code> 库函数几乎只做一件事，就是调用
-<code>open</code> 系统调用，让内核帮你打开一个文件。</li>
-<li>还有一些库函数，比如
-<code>strcpy()</code>，只是单纯地在内存中复制数据，根本不会和内核打交道。</li>
-</ul>
-<p><strong>简单来说：</strong> - 你写的应用程序通过库函数（如
-<code>printf()</code>、<code>open()</code>）间接或直接调用系统调用（如
-<code>write</code>、<code>open</code>），由内核完成实际的硬件操作。 -
-有些库函数（如
-<code>strcpy()</code>）只在用户空间工作，不需要内核参与。</p>
-<p><strong>内核还负责处理中断</strong>。比如你敲键盘时，键盘控制器会发出中断信号，内核收到后会执行相应的中断处理程序，把你输入的内容读出来。</p>
-<figure>
-<img src="../images/oper_sys0.png" alt="操作系统结构图" />
-<figcaption aria-hidden="true">操作系统结构图</figcaption>
-</figure>
-<p>在任何给定时刻，每个处理器正在做以下三件事中的一件：</p>
-<ul>
-<li>在用户空间，在进程上下文中执行用户代码</li>
-<li>在内核空间，在进程上下文中，代表特定进程执行操作（包括空闲进程）</li>
-<li>在内核空间，在中断上下文中，不与任何进程关联，处理中断</li>
-</ul>
-<h3 id="linux-与经典-unix-内核设计">Linux 与经典 Unix 内核设计</h3>
-<ul>
-<li><strong>单一内核/宏内核（Monolithic Kernel）</strong><br />
-经典 Unix 和 Linux
-都采用单一内核设计。单一内核就是把所有核心功能（如进程管理、内存管理、文件系统、驱动等）都放在一个大程序里，在同一个内存空间中运行。这样做的好处是：
-<ul>
-<li>内核内部各部分可以直接调用彼此的函数，通信效率高，性能好。</li>
-<li>设计和实现相对简单。</li>
-</ul></li>
-<li><strong>微内核（Microkernel）</strong><br />
-微内核把内核功能拆分成多个独立的“服务器”，有的在内核空间，有的在用户空间。它们之间通过消息传递（IPC）通信。优点是：
-<ul>
-<li>各部分相互隔离，一个崩溃不会影响其他部分，系统更稳定。</li>
-<li>更容易替换和扩展功能。 缺点是：<br />
-</li>
-<li>消息传递比直接函数调用慢，频繁切换上下文会影响性能。</li>
-<li>实际上，很多微内核系统（如 Windows
-NT、Mach）为了性能，后来又把大部分服务放回了内核空间。</li>
-</ul></li>
-<li><strong>Linux 的做法</strong><br />
-Linux
-是单一内核，但吸收了微内核的一些优点，比如模块化设计、支持内核线程、可以动态加载内核模块等。
-<ul>
-<li>Linux 所有核心功能都在内核空间，通信用直接函数调用，性能高。</li>
-<li>同时，Linux 也很灵活，可以按需加载或卸载功能模块。</li>
-</ul></li>
-</ul>
-<p>Linux 虽然继承了 Unix 的理念和 API，但并不基于任何特定 Unix
-变体，因此可以灵活选择或创新最佳技术方案。</p>
-<ul>
-<li><strong>动态内核模块</strong>：Linux
-支持内核模块的动态加载和卸载，增强了灵活性和可扩展性。</li>
-<li><strong>对称多处理器（SMP）支持</strong>：Linux 从早期就支持
-SMP，而许多传统 Unix 系统最初并不支持。</li>
-<li><strong>抢占式内核</strong>：Linux
-内核支持抢占，允许内核任务被中断，提高了实时性和响应速度，而大多数传统
-Unix 内核不是抢占式的。</li>
-<li><strong>线程与进程统一</strong>：Linux
-内核不区分线程和进程，所有进程本质上是一样的，只是有些进程共享资源。</li>
-<li><strong>面向对象的设备模型</strong>：Linux
-采用了现代的设备管理方式，如设备类、热插拔和 sysfs。</li>
-<li><strong>精简与创新</strong>：Linux
-有选择地实现功能，忽略了被认为设计不佳或无实际价值的传统 Unix 特性（如
-STREAMS）。</li>
-<li><strong>开放与自由</strong>：Linux
-的功能集来源于开放的开发模式，只有经过充分论证、设计清晰、实现扎实的功能才会被采纳。</li>
-</ul>
-<h3 id="linux-内核版本">Linux 内核版本</h3>
-<ul>
-<li><strong>稳定版 (Stable)：</strong> 次版本号为<strong>偶数</strong>
-(如 2.4, 2.6, 4.18,
-5.10)。适合生产环境部署，主要更新是错误修复和新驱动。</li>
-<li><strong>开发版 (Development)：</strong>
-次版本号为<strong>奇数</strong> (如 2.5,
-3.1)。代码快速变化，包含实验性功能，不稳定。</li>
-<li><strong>版本号格式：</strong>
-<code>主版本.次版本.修订版本[.稳定版本]</code> (如
-<code>2.6.30.1</code>)。
-<ul>
-<li><code>主版本.次版本</code> 定义内核系列 (如 2.6)。</li>
-<li><code>修订版本</code> 表示同一系列内的主要发布。</li>
-<li><code>.稳定版本</code> (可选)
-表示在主要发布后的小更新，专注于关键错误修复。</li>
-</ul></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/17/kamacode29/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/17/kamacode29/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-18 08:46:52" itemprop="dateCreated datePublished" datetime="2025-06-18T08:46:52+08:00">2025-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-21 01:02:03" itemprop="dateModified" datetime="2025-06-21T01:02:03+08:00">2025-06-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="不同路径">62.不同路径</h3>
-<p>想清楚要怎么推导每个格子，可以怎么推导 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">uniquePaths</span><span class="params">(<span class="type">int</span> m, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(m == <span class="number">1</span> || n == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(m, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>;i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>;j&lt;n;j++)&#123;</span><br><span class="line">                dp[i][j] = dp[i<span class="number">-1</span>][j] + dp[i][j<span class="number">-1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[m<span class="number">-1</span>][n<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="不同路径-ii">63. 不同路径 II</h3>
-<h4 id="问题分析">问题分析</h4>
-<ol type="1">
-<li><strong>起点<code>(0,0)</code>未特殊处理</strong>：
-<ul>
-<li>当<code>i=0, j=0</code>时（起点），您的代码会进入<code>else</code>分支（因为不满足前三个条件）。</li>
-<li>在<code>else</code>分支中，它计算<code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code>，但<code>i-1 = -1</code>、<code>j-1 = -1</code>（<strong>非法索引</strong>），导致未定义行为（崩溃或错误结果）。</li>
-</ul></li>
-<li><strong>边界条件不完整</strong>：
-<ul>
-<li>当起点有障碍物时，虽能设为0，但后续计算仍可能依赖无效索引。</li>
-<li>初始化<code>dp</code>为全1是冗余的，且可能掩盖问题（实际值会被覆盖）。</li>
-</ul></li>
-</ol>
-<h4 id="修复后的代码">修复后的代码</h4>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">uniquePathsWithObstacles</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; obstacleGrid)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> m = obstacleGrid.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = obstacleGrid[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(m, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;n;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(obstacleGrid[i][j] == <span class="number">1</span>)&#123;</span><br><span class="line">                    dp[i][j] = <span class="number">0</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>)&#123;</span><br><span class="line">                    dp[i][j] = <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i == <span class="number">0</span>)&#123;</span><br><span class="line">                    dp[i][j] = dp[i][j<span class="number">-1</span>];</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(j == <span class="number">0</span>)&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j];</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j] + dp[i][j<span class="number">-1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[m<span class="number">-1</span>][n<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="整数拆分-可跳过">343. 整数拆分 （可跳过）</h3>
-<p>我直接用贪心法，辗转减去3来写了 动态规划思路如下：</p>
-<ul>
-<li>遍历 <span class="math inline">\(j\)</span>（<span
-class="math inline">\(1 \leq j &lt; i\)</span>），比较 <span
-class="math inline">\((i - j) \times j\)</span> 和 <span
-class="math inline">\(dp[i - j] \times j\)</span>，取最大值。</li>
-<li><code>j * (i - j)</code> 是把整数拆分为两个数相乘。</li>
-<li><code>j * dp[i - j]</code> 是把整数拆分为两个及以上的数相乘。</li>
-<li>如果用
-<code>dp[i - j] * dp[j]</code>，则相当于强制把一个数拆成四份及以上。</li>
-</ul>
-<p>递推公式为：
-<code>dp[i] = max(&#123;dp[i], (i - j) * j, dp[i - j] * j&#125;);</code></p>
-<p>为什么还要比较 <code>dp[i]</code> 呢？<br />
-因为每次计算 <code>dp[i]</code> 时，都要保证它是当前的最大值。
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">integerBreak</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>)<span class="keyword">return</span> n<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> pd = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(n &gt; <span class="number">3</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(n == <span class="number">4</span>)&#123;</span><br><span class="line">                pd = pd * <span class="number">4</span>;</span><br><span class="line">                n = <span class="number">0</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                n = n - <span class="number">3</span>;</span><br><span class="line">                pd = pd * <span class="number">3</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(n &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            pd = pd * n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="不同的二叉搜索树-可跳过">96.不同的二叉搜索树 （可跳过）</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numTrees</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>)<span class="keyword">return</span> n;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n+<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;<span class="comment">// 方便计算</span></span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">3</span>; i&lt;=n ;i++)&#123;</span><br><span class="line">            <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;=i; j++)&#123;</span><br><span class="line">                cnt += dp[j<span class="number">-1</span>] * dp[i-j];</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i] = cnt;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
