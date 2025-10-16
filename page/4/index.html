@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,1045 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/04/oper_sys13%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/04/oper_sys13%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/" class="post-title-link" itemprop="url">操作系统基础 | 信号量和条件变量</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-05 05:06:20" itemprop="dateCreated datePublished" datetime="2025-07-05T05:06:20+08:00">2025-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-08 04:36:44" itemprop="dateModified" datetime="2025-07-08T04:36:44+08:00">2025-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="信号量-semaphore---停车场模型">🚦 <strong>信号量 (Semaphore) -
+停车场模型</strong></h3>
+<p><strong>口诀</strong>：<strong>“计数资源，进出加减”</strong><br />
+- 像一个停车场管理员： - <code>wait()</code> =
+抬起杆子放车进（<strong>资源-1</strong>） - <code>post()</code> =
+落下杆子放车出（<strong>资源+1</strong>） -
+<strong>核心</strong>：管<strong>数量</strong>（剩余车位）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 超简版信号量实现（C++20标准）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;semaphore&gt;</span></span></span><br><span class="line"><span class="function">std::counting_semaphore&lt;5&gt; <span class="title">parking</span><span class="params">(<span class="number">5</span>)</span></span>; <span class="comment">// 5个车位</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">car</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    parking.<span class="built_in">acquire</span>();      <span class="comment">// 等车位（杆子抬起）</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Car &quot;</span> &lt;&lt; id &lt;&lt; <span class="string">&quot; parked\n&quot;</span>;</span><br><span class="line">    parking.<span class="built_in">release</span>();      <span class="comment">// 开走（杆子落下）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="条件变量-condition-variable---奶茶店模型">🚥 <strong>条件变量
+(Condition Variable) - 奶茶店模型</strong></h3>
+<p><strong>口诀</strong>：<strong>“条件不满足，解锁等通知”</strong><br />
+- 像奶茶店取餐： - <code>wait()</code> =
+没奶茶时<strong>放下号码牌睡觉</strong> - <code>notify()</code> =
+奶茶做好后<strong>叫号唤醒顾客</strong> -
+<strong>核心</strong>：管<strong>条件</strong>（奶茶是否做好）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 条件变量基本结构</span></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> milktea_ready = <span class="literal">false</span>; <span class="comment">// 关键条件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 顾客线程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">customer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, []&#123; <span class="keyword">return</span> milktea_ready; &#125;); <span class="comment">// 没奶茶就睡</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Got milktea!\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 店员线程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">staff</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        milktea_ready = <span class="literal">true</span>; <span class="comment">// 奶茶做好</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_all</span>(); <span class="comment">// 大喊：奶茶好了！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="对比记忆表">🔑 <strong>对比记忆表</strong></h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 41%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>特征</strong></th>
+<th>信号量</th>
+<th>条件变量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>核心思想</strong></td>
+<td>资源计数器（还剩几个？）</td>
+<td>条件检查（事情发生了吗？）</td>
+</tr>
+<tr>
+<td><strong>操作</strong></td>
+<td><code>wait()</code>减资源，<code>post()</code>加资源</td>
+<td><code>wait()</code>休眠，<code>notify()</code>唤醒</td>
+</tr>
+<tr>
+<td><strong>锁依赖</strong></td>
+<td>自带锁机制</td>
+<td><strong>必须搭配mutex使用</strong></td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>连接池/限流</td>
+<td>任务协调/事件等待</td>
+</tr>
+<tr>
+<td><strong>生活比喻</strong></td>
+<td>停车场进出系统</td>
+<td>奶茶店叫号系统</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="记忆技巧">🧠 <strong>记忆技巧</strong></h3>
+<ol type="1">
+<li><strong>信号量记数字</strong>：
+<ul>
+<li>看到“允许N个线程访问” → 选信号量</li>
+<li>代码看到<code>.acquire()/.release()</code> → 信号量</li>
+</ul></li>
+<li><strong>条件变量查状态</strong>：
+<ul>
+<li>看到“当XX发生时唤醒” → 选条件变量</li>
+<li>代码看到<code>cv.wait(锁, lambda条件)</code> → 条件变量</li>
+</ul></li>
+<li><strong>必背两句话</strong>：
+<ul>
+<li>信号量：<strong>“资源不够就阻塞，释放资源就加一”</strong></li>
+<li>条件变量：<strong>“条件不满足时解锁等待，满足时加锁执行”</strong></li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="分钟实战场景">🌰 1分钟实战场景</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 场景：仅允许3个线程同时下载</span></span><br><span class="line"><span class="function">std::counting_semaphore <span class="title">down_sem</span><span class="params">(<span class="number">3</span>)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">download</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    down_sem.<span class="built_in">acquire</span>();    <span class="comment">// 占位</span></span><br><span class="line">    <span class="comment">// ...下载操作...</span></span><br><span class="line">    down_sem.<span class="built_in">release</span>();    <span class="comment">// 释放</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 场景：线程等待服务器启动</span></span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> server_ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">client</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock <span class="title">lk</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lk, []&#123; <span class="keyword">return</span> server_ready; &#125;); <span class="comment">// 等就绪</span></span><br><span class="line">    <span class="comment">// ...连接服务器...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">server</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...启动服务...</span></span><br><span class="line">    server_ready = <span class="literal">true</span>;</span><br><span class="line">    cv.<span class="built_in">notify_all</span>(); <span class="comment">// 通知所有客户端</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="用条件变量实现信号量">用条件变量实现信号量</h3>
+<p>即用条件变量（condition variable）和互斥锁（mutex）来模拟信号量的 P/V
+操作。</p>
+<p>如果多个资源场景，<strong>各线程对资源的要求条件复杂，容易发生死锁</strong>的话，建议使用条件变量的实现</p>
+<p>例如哲学家吃饭问题，每个哲学家都先拿起自己右手边的叉子，就会产生死锁，没有哲学家再能拿起左手边的叉子并吃饭。</p>
+<ul>
+<li><strong>P 操作（等待/获取资源）</strong><br />
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">P</span><span class="params">(<span class="type">sem_t</span> *sem)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">hold</span>(&amp;sem-&gt;mutex) &#123;</span><br><span class="line">        <span class="keyword">while</span> (!COND)</span><br><span class="line">            <span class="built_in">cond_wait</span>(&amp;sem-&gt;cv, &amp;sem-&gt;mutex);</span><br><span class="line">        sem-&gt;count--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>先加锁（hold mutex），保证对信号量的操作是原子的。</li>
+<li>如果条件不满足（如 count &lt;=
+0），就用条件变量等待（cond_wait），并自动释放 mutex，直到被唤醒。</li>
+<li>被唤醒后再次加锁，检查条件，满足则 count--，表示获取一个资源。</li>
+</ul></li>
+<li><strong>V 操作（释放/归还资源）</strong><br />
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">V</span><span class="params">(<span class="type">sem_t</span> *sem)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">hold</span>(&amp;sem-&gt;mutex) &#123;</span><br><span class="line">        sem-&gt;count++;</span><br><span class="line">        <span class="built_in">cond_broadcast</span>(&amp;sem-&gt;cv);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>加锁，count++，表示释放一个资源。</li>
+<li>用条件变量唤醒所有等待线程（cond_broadcast）。</li>
+</ul></li>
+</ul>
+<h3 id="用信号量实现条件变量">用信号量实现条件变量</h3>
+<p>用信号量实现条件变量的 wait/broadcast 操作：</p>
+<p><strong>1. <code>wait</code> 函数</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">wait</span><span class="params">(<span class="keyword">struct</span> condvar *cv, <span class="type">mutex_t</span> *mutex)</span> &#123;</span><br><span class="line">    mutex_lock(&amp;cv-&gt;lock);</span><br><span class="line">    cv-&gt;nwait++;</span><br><span class="line">    mutex_unlock(&amp;cv-&gt;lock);</span><br><span class="line"></span><br><span class="line">    mutex_unlock(mutex);</span><br><span class="line">    P(&amp;cv-&gt;sleep);</span><br><span class="line">    mutex_lock(mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>cv-&gt;nwait++</code>：记录当前有多少线程在等待条件变量（进入等待队列）。</li>
+<li><code>mutex_unlock(mutex)</code>：释放主互斥锁，允许其他线程进入临界区修改条件。</li>
+<li><code>P(&amp;cv-&gt;sleep)</code>：在信号量 sleep
+上等待（阻塞），直到被唤醒。</li>
+<li><code>mutex_lock(mutex)</code>：被唤醒后，重新获得主互斥锁，继续执行。</li>
+</ul>
+<p><strong>2. <code>broadcast</code> 函数</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">broadcast</span><span class="params">(<span class="keyword">struct</span> condvar *cv)</span> &#123;</span><br><span class="line">    mutex_lock(&amp;cv-&gt;lock);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cv-&gt;nwait; i++) &#123;</span><br><span class="line">        V(&amp;cv-&gt;sleep);</span><br><span class="line">    &#125;</span><br><span class="line">    cv-&gt;nwait = <span class="number">0</span>;</span><br><span class="line">    mutex_unlock(&amp;cv-&gt;lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>mutex_lock(&amp;cv-&gt;lock)</code>：保护 nwait
+变量，防止并发修改。</li>
+<li><code>for (int i = 0; i &lt; cv-&gt;nwait; i++) V(&amp;cv-&gt;sleep);</code>：唤醒所有等待的线程（每个线程对应一次
+V 操作）。</li>
+<li><code>cv-&gt;nwait = 0;</code>：重置等待计数。</li>
+<li><code>mutex_unlock(&amp;cv-&gt;lock)</code>：释放锁。</li>
+</ul>
+<h4 id="信号量实现条件变量出现的问题">信号量实现条件变量出现的问题</h4>
+<ul>
+<li>线程T2调用wait()，此时已经把自己标记为等待（nwait++），但还没真正阻塞（还没执行P）。</li>
+<li>这时，因为其它线程的操作，另一个线程T1调用broadcast()，唤醒了所有等待线程（V操作），并继续执行。</li>
+<li>此时nwait已经归零，T2就会睡死</li>
+</ul>
+<p>从理论上来说，我们希望<code>nwait++</code>,
+<code>mutex_unlock</code>和P操作是原子性的，并且<code>mutex_unlock</code>和P操作不可以互换位置（会在睡时一直持有锁，死锁了），但是实际上我们需要操作系统用类似条件变量的机制帮我们实现wait和release的原子性，这样就套娃了</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/03/kamabagu4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/kamabagu4/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP版本</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-04 08:06:11" itemprop="dateCreated datePublished" datetime="2025-07-04T08:06:11+08:00">2025-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-27 04:18:53" itemprop="dateModified" datetime="2025-07-27T04:18:53+08:00">2025-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="http1.0和http1.1的区别">HTTP1.0和HTTP1.1的区别</h3>
+<p><strong>🚗 连接方式：从“一次一请”到“多次复用”</strong> * <strong>HTTP
+1.0：</strong>
+<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。
+* <strong>HTTP 1.1：</strong>
+<strong>默认持久连接</strong>。浏览器和服务器建立一个TCP连接后，可以在这个连接上<strong>连续发送多个请求和接收多个响应</strong>通过Connection:
+keep-alive头来实现持久连接。</p>
+<p><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong> * <strong>HTTP
+1.0：</strong>
+请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。
+* <strong>HTTP 1.1：</strong>
+<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</p>
+<p><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong> *
+<strong>HTTP 1.0：</strong>
+客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。
+* <strong>HTTP 1.1：</strong>
+支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></p>
+<p><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong> * <strong>HTTP
+1.0：</strong>
+主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。
+* <strong>HTTP 1.1：</strong>
+引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public``private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></p>
+<p><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong> * <strong>HTTP
+1.0：</strong>
+如果下载大文件中断，<strong>必须从头开始重新下载</strong>。 *
+<strong>HTTP 1.1：</strong>
+支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</p>
+<p><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong> * <strong>HTTP
+1.0：</strong>
+服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。
+* <strong>HTTP 1.1：</strong>
+引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></p>
+<p><strong>📝 错误处理：从“模糊”到“更明确”</strong> * <strong>HTTP
+1.1：</strong> 新增了一些状态码，提供更精确的错误信息： *
+<code>409 Conflict</code>：请求与服务器当前状态冲突。 *
+<code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。
+*
+<code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。
+* <strong>响应格式：</strong> HTTP 1.1
+要求响应行中必须包含<strong>原因短语</strong>（如
+<code>HTTP/1.1 200 OK</code>），而 1.0
+只要求状态码是可选的（虽然实践中通常都有）。</p>
+<h3 id="http2.0与http1.1的区别">HTTP2.0与HTTP1.1的区别？</h3>
+<blockquote>
+<p><strong>一句话记忆：HTTP/2 = 更快、更智能、更省资源！</strong></p>
+</blockquote>
+<h4 id="传输方式从文本排队到二进制分帧">1️⃣
+<strong>传输方式：从“文本排队”到“二进制分帧”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>用<strong>纯文本格式</strong>发送请求和响应（比如
+<code>GET /index.html HTTP/1.1</code>）。<br />
+</li>
+<li>多个请求必须<strong>排队串行处理</strong>（即使开了管道化也有队头阻塞问题）。<br />
+</li>
+<li><strong>想象：</strong>
+邮局用明信片寄信，一次只能寄一张，必须等回信才能寄下一张，效率低。✉️➡️✉️➡️✉️</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>将数据拆分成更小的<strong>二进制帧（Frame）</strong>（头部帧 HEADERS
++ 数据帧 DATA）。<br />
+</li>
+<li>同一个连接上，<strong>多个请求/响应的帧可以混合发送、并行传输</strong>，互不阻塞！<br />
+</li>
+<li><strong>想象：</strong>
+快递公司把包裹拆成小件，打上标签，通过立体分拣通道同时运输，到目的地再组装。📦📦📦
+→ 🚚💨</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：彻底解决队头阻塞，大幅提升并发效率！</strong></p>
+<h4 id="连接方式从多路排队到真多路复用">2️⃣
+<strong>连接方式：从“多路排队”到“真·多路复用”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>虽然支持持久连接（一个TCP连多个请求），但<strong>响应必须按顺序返回</strong>（队头阻塞）。<br />
+</li>
+<li>浏览器通常开 <strong>6~8个TCP连接</strong>
+并行请求资源（但占用资源多）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li><strong>一个TCP连接</strong> 上即可实现
+<strong>成百上千个流的并行传输</strong>（每个流是一个请求/响应）。<br />
+</li>
+<li>帧自带流ID标识，接收方能按ID重组数据，无需排队等待！<br />
+</li>
+<li><strong>想象：</strong> 从多条乡间小路 →
+升级成一条双向十车道高速路，所有车辆（请求）畅通无阻。🛣️🚗🚙🚕</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：一个连接解决所有请求，省资源、低延迟！</strong></p>
+<h4 id="头部信息从重复臃肿到高效压缩">3️⃣
+<strong>头部信息：从“重复臃肿”到“高效压缩”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>每次请求都携带大量<strong>重复的文本头部</strong>（如Cookie、User-Agent），不压缩。<br />
+</li>
+<li><strong>浪费带宽</strong>（尤其小文件请求时，头部可能比数据还大）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>使用 <strong>HPACK 算法压缩头部</strong>：
+<ul>
+<li>客户端和服务端维护<strong>“头部字典”</strong>，相同头部只传索引；<br />
+</li>
+<li>用霍夫曼编码压缩文本。<br />
+</li>
+</ul></li>
+<li><strong>头部大小减少 30%~90%</strong>！<br />
+</li>
+<li><strong>想象：</strong> 从每次寄信都手写完整地址 →
+改用电子二维码扫码寄件，地址库自动匹配。📮→📲</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：大幅节省带宽，加快小资源加载！</strong></p>
+<h4 id="服务器主动推送从被动响应到主动送货">4️⃣
+<strong>服务器主动推送：从“被动响应”到“主动送货”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>服务器<strong>只能被动响应</strong>客户端请求。<br />
+</li>
+<li>浏览器需解析HTML后，再请求CSS/JS/图片等依赖资源。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>服务器可<strong>主动推送</strong>客户端可能需要的资源（如CSS/JS）！<br />
+</li>
+<li>客户端可缓存推送内容，下次直接使用。<br />
+</li>
+<li><strong>想象：</strong>
+点外卖时，商家不仅送米饭，还主动附赠了筷子和纸巾（你知道你一定会需要）。🍚+🥢+🧻</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：减少请求往返次数，加速页面渲染！</strong></p>
+<h4 id="优先级与流量控制更智能的资源调度">5️⃣
+<strong>优先级与流量控制：更智能的资源调度</strong></h4>
+<ul>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>客户端可为请求标记<strong>优先级</strong>（如CSS &gt;
+图片），服务器优先处理高优先级流。<br />
+</li>
+<li>支持精细的<strong>流量控制</strong>（基于每个流控制传输速率）。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/1.1：</strong>
+无法真正实现优先级调度（依赖浏览器启发式策略）。</li>
+</ul>
+<h4 id="注意">⚠️ 注意：</h4>
+<ol type="1">
+<li>HTTP/2 <strong>未加密</strong>，但所有主流浏览器只支持
+<strong>HTTP/2 Over TLS</strong>（即 HTTPS）。<br />
+</li>
+<li>HTTP/2 解决了应用层队头阻塞，但 <strong>TCP
+层仍有队头阻塞</strong>（丢包会阻塞所有流）。<br />
+</li>
+<li>这是 HTTP/3（基于QUIC/UDP）要解决的下一代问题！</li>
+</ol>
+<h3 id="http3.0有了解过吗">HTTP3.0有了解过吗？</h3>
+<p>🚀 <strong>核心一句话：HTTP/3 = 抛弃TCP！拥抱QUIC！</strong> &gt;
+<strong>解决 HTTP/2 的终极痛点：TCP 的队头阻塞！</strong></p>
+<h4 id="底层协议革命从-tcp-到-quic基于udp">1️⃣ <strong>底层协议革命：从
+TCP 到 QUIC（基于UDP）</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong> 都跑在 <strong>TCP</strong>
+协议之上。
+<ul>
+<li><strong>TCP 问题：</strong>
+如果传输中<strong>丢了一个包</strong>，后续所有包都要等待重传（即使它们属于不同请求），这就是
+<strong>TCP 队头阻塞</strong>。<br />
+</li>
+<li><strong>想象：</strong>
+快递车队走一条单行道，前一辆车抛锚，后面所有车都得堵着等（无论是不是同一批货物）。🚚❌🚛🚗🚐<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3：</strong> 彻底抛弃 TCP，改用全新协议
+<strong>QUIC（Quick UDP Internet Connections）</strong>，运行在
+<strong>UDP</strong> 之上。
+<ul>
+<li><strong>QUIC 优势：</strong>
+每个请求/响应流是<strong>独立传输的</strong>，丢包只影响当前流，其他流畅通无阻！<br />
+</li>
+<li><strong>想象：</strong>
+快递改用无人机配送，每件包裹独立飞行路线，一个包裹出问题，其他包裹照常送达。✈️📦➡️🏠
+| ✈️📦➡️🏠 | 💥📦❌ | ✈️📦➡️🏠<br />
+👉
+<strong>核心价值：彻底消灭传输层队头阻塞，网络波动时性能大幅提升！</strong></li>
+</ul></li>
+</ul>
+<h4 id="建连速度飞跃0-rtt-与-1-rtt-握手">2️⃣ <strong>建连速度飞跃：0-RTT
+与 1-RTT 握手</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2（TCP+TLS）：</strong>
+<ul>
+<li>首次连接需 <strong>TCP 三次握手（1.5 RTT） + TLS 握手（1~2 RTT） =
+总计 2~3.5 RTT</strong> 延迟才能发送数据。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li><strong>首次连接：1-RTT 握手</strong>（QUIC
+将传输和加密握手合并）。<br />
+</li>
+<li><strong>重连用户：0-RTT
+握手</strong>！客户端缓存了服务器密钥，首次请求可直接带上加密数据。<br />
+</li>
+<li><strong>想象：</strong>
+进地铁站——旧方式：先排队买票（TCP握手），再安检（TLS握手）；新方式：刷脸直接进（0-RTT）！🎫→🛂→🚇
+→ 😃🔜🚇<br />
+👉 <strong>核心价值：首次访问更快，重复访问“闪电启动”！</strong></li>
+</ul></li>
+</ul>
+<h4 id="连接迁移网络切换不断线">3️⃣
+<strong>连接迁移：网络切换不断线</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong>
+<ul>
+<li>连接绑定 <strong>IP + 端口 +
+TCP协议</strong>。切换网络（如WiFi→4G）会导致IP变化，连接必须重建！<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li>使用 <strong>连接ID（Connection ID）</strong> 唯一标识连接。<br />
+</li>
+<li>切换网络时，只要客户端能通信，连接ID不变，会话无缝延续！<br />
+</li>
+<li><strong>想象：</strong>
+旧手机卡换手机要重新插卡激活；eSIM卡换手机自动联网，号码不变。📱➡️📱 =
+❌ vs 📱➡️📱 = ✅<br />
+👉
+<strong>核心价值：移动端福音！地铁进隧道、WiFi切5G，视频会议不中断！</strong></li>
+</ul></li>
+</ul>
+<h4 id="内嵌加密安全是强制要求">4️⃣
+<strong>内嵌加密：安全是强制要求</strong></h4>
+<ul>
+<li><strong>QUIC 协议设计之初就强制加密</strong>（使用 TLS 1.3）。<br />
+</li>
+<li><strong>没有明文的 QUIC！</strong> 所有头部和载荷默认加密。<br />
+</li>
+<li><strong>对比：</strong> HTTP/2
+的加密（HTTPS）是可选但事实强制，HTTP/3 直接内嵌到协议层。<br />
+👉
+<strong>核心价值：提升安全性，防止运营商劫持、降低中间设备干扰。</strong></li>
+</ul>
+<h4 id="改进的多路复用-头部压缩">5️⃣ <strong>改进的多路复用 &amp;
+头部压缩</strong></h4>
+<ul>
+<li><strong>多路复用：</strong> 继承 HTTP/2
+的流多路复用（一个连接并发多个流），且由于基于
+QUIC，<strong>无队头阻塞</strong>。<br />
+</li>
+<li><strong>头部压缩：</strong> 升级为 <strong>QPACK</strong> 算法（类似
+HTTP/2 的 HPACK，但适应 QUIC 乱序特性）。<br />
+👉 <strong>核心价值：在 HTTP/2 高效基础上，更稳定！</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/29/kamacode30/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/29/kamacode30/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划3</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-30 06:25:40" itemprop="dateCreated datePublished" datetime="2025-06-30T06:25:40+08:00">2025-06-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-02 09:08:29" itemprop="dateModified" datetime="2025-07-02T09:08:29+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="分割等和子集">416. 分割等和子集</h3>
+<p><strong>动态规划的正确性</strong>： -
+每次迭代考虑一个新物品的所有可能组合 -
+在使用一维dp数组时，倒序遍历保证状态转移只依赖<strong>上一轮</strong>结果</p>
+<p>原始思路主要问题： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="type">int</span> cnt = target;</span><br><span class="line"><span class="keyword">for</span> (遍历每个数字) &#123;</span><br><span class="line">    <span class="keyword">if</span> (cnt &gt;= 当前数字) cnt -= 当前数字; <span class="comment">// 强制选择</span></span><br><span class="line">    <span class="keyword">if</span> (dp[cnt]) ... <span class="comment">// 但dp从未更新！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<strong>贪心选择错误</strong>：强制按顺序选择数字，不能处理非连续选择
+也可以使用布尔值判断： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">canPartition</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> eq = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n : nums)&#123;</span><br><span class="line">            eq += n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(eq % <span class="number">2</span> == <span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            eq = eq / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(eq+<span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="type">int</span> cnt = eq;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n : nums)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> e = eq; e&gt;=n; e--)&#123;</span><br><span class="line">                <span class="keyword">if</span>(dp[e - n])&#123;</span><br><span class="line">                    dp[e] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(dp[eq])<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/28/oper_sys12%E4%BE%8B%E5%AD%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/28/oper_sys12%E4%BE%8B%E5%AD%90/" class="post-title-link" itemprop="url">操作系统基础 | 3.3 系统调用实现</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-29 04:36:58 / 修改时间：23:54:21" itemprop="dateCreated datePublished" datetime="2025-06-29T04:36:58+08:00">2025-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="uapi-文件位置">UAPI 文件位置</h3>
+<p><strong>问题背景：</strong><br />
+内核头文件中，内联函数往往需要引用其他头文件的结构体或常量，但这些头文件之间又存在相互依赖，导致无法直接引用，只能用
+#define 代替，降低了代码质量。</p>
+<p><strong>解决方案：</strong><br />
+David 提出将内核头文件中的用户空间 API
+内容（即用户空间可见的定义）拆分到新的 uapi/
+子目录下的对应头文件中。这样做有以下好处：</p>
+<ul>
+<li>简化内核专用头文件，减少体积。</li>
+<li>明确区分用户空间与内核空间的 API，减少头文件间复杂的相互依赖。</li>
+<li>便于追踪用户空间 API 的变更，方便 C
+库维护者、脚本语言绑定、测试、文档等相关项目。</li>
+</ul>
+<p><strong>拆分方法：</strong><br />
+一般头文件结构如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 头部注释 */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> _XXXXXX_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _XXXXXX_H</span></span><br><span class="line"></span><br><span class="line">[用户空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __KERNEL__</span></span><br><span class="line"></span><br><span class="line">[内核空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* __KERNEL__ */</span></span></span><br><span class="line"></span><br><span class="line">[用户空间定义]</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* _XXXXXX_H */</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>所有未被 <code>#ifdef __KERNEL__</code> 包裹的内容，移动到 uapi/
+目录下的新头文件。</li>
+<li><code>#ifdef __KERNEL__</code> 内的内容保留在原头文件，但移除
+<code>#ifdef</code> 和 <code>#endif</code>。</li>
+<li>头部注释保留并复制到新文件。</li>
+<li>原头文件需添加
+<code>#include &lt;include/uapi/path/to/header.h&gt;</code>，放在已有
+<code>#include</code> 之后。</li>
+<li>若原文件没有 <code>#ifdef __KERNEL__</code>，则直接重命名为 uapi/
+文件。</li>
+</ul>
+<h4 id="技术实现要点">技术实现要点</h4>
+<ul>
+<li><strong>头文件结构调整</strong>：将所有未被
+<code>#ifdef __KERNEL__</code> 包裹的内容迁移到 <code>uapi/</code>
+目录下的新头文件，原文件只保留内核专用部分，并通过 <code>#include</code>
+引用新的 uapi 头文件。</li>
+<li><strong>自动化脚本辅助</strong>：由于头文件风格多样，David Howell
+编写了大量 shell/Perl
+脚本自动完成拆分，并对特殊情况通过预处理标记进行“辅导”。</li>
+<li><strong>兼容性与构建保证</strong>：拆分后，内核和用户空间的构建流程保持兼容，确保包含关系和功能不变。</li>
+</ul>
+<h4 id="社区讨论与挑战">社区讨论与挑战</h4>
+<ul>
+<li><strong>大规模变更的审查难题</strong>：一次性修改数千文件、数十万行代码，难以人工逐行审查。社区建议主要审查思路和脚本实现，并通过自动化构建和对比二进制产物来验证正确性。</li>
+<li><strong>头文件包含路径的争议</strong>：有开发者质疑 uapi
+头文件是否应包含内核头文件，实际实现中为兼容性和构建需要，uapi
+头文件在内核构建时会包含内核头文件，但用户空间只见到 uapi 头文件。</li>
+<li><strong>隐式依赖与编译优化</strong>：有建议借此机会清理隐式包含、优化编译速度，但这属于更大范围的重构，超出了本次拆分的目标。</li>
+<li><strong>自动化工具的局限</strong>：与 Java 等语言不同，C
+语言的预处理器和头文件机制更为复杂，自动化脚本难以覆盖所有边界情况，仍需人工干预和后续维护。</li>
+</ul>
+<h3 id="系统调用源码指引以-arm-架构为例">系统调用源码指引（以 ARM
+架构为例）</h3>
+<p>系统调用的实现高度依赖于具体架构，包括调用方式和可用的系统调用种类。以下是
+ARM 架构下与系统调用密切相关的核心源码文件：</p>
+<ul>
+<li><p><strong>include/linux/syscalls.h</strong><br />
+提供所有内核系统调用的架构无关的前向声明。该文件定义了内核内部调用系统调用函数的接口。</p></li>
+<li><p><strong>arch/arm/include/uapi/asm/unistd.h</strong><br />
+定义了 ARM 架构下系统调用号的相关内容。</p></li>
+<li><p><strong>arch/arm/kernel/entry-common.S</strong><br />
+提供 ARM 架构下系统调用的入口汇编实现。</p></li>
+<li><p><strong>arch/arm/tools/syscall.tbl</strong><br />
+负责将系统调用号及其对应的函数地址注册到 ARM
+硬件的系统调用表中。</p></li>
+</ul>
+<p>此外，以下文件虽然与系统调用无关，但涉及系统启动（这是内核执行的另一种方式）：</p>
+<ul>
+<li><p><strong>init 目录</strong><br />
+包含内核初始化相关代码。</p></li>
+<li><p><strong>init/main.c</strong><br />
+提供了 <code>start_kernel</code> 函数，这是 Linux 内核启动后执行的第一个
+C
+语言函数，且一旦调用永不返回。在此之前，内核仅通过架构相关的汇编代码和固件运行。<br />
+（参考：《Linux 设备驱动》第16章对 main.c 和 start_kernel
+的介绍）</p></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/27/oper_sys11sc%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/oper_sys11sc%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">操作系统基础 | 3.2 系统调用实现</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-28 07:22:48 / 修改时间：07:39:30" itemprop="dateCreated datePublished" datetime="2025-06-28T07:22:48+08:00">2025-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="系统调用的实现">系统调用的实现</h2>
+<p>在 Linux 中，实际实现一个系统调用时，不需要关心系统调用处理器（system
+call handler）的具体行为。因此，向 Linux
+添加一个新的系统调用相对容易。难点在于设计和实现系统调用本身，而将其注册到内核则很简单。下面是编写新系统调用的主要步骤。</p>
+<h3 id="实现系统调用的步骤">实现系统调用的步骤</h3>
+<ol type="1">
+<li><p><strong>明确目的</strong><br />
+首先要定义系统调用的用途。系统调用应该只做一件事。Linux
+不鼓励“多路复用”系统调用（即通过一个参数让同一个系统调用做完全不同的事情），如
+ioctl() 就是反面教材。</p></li>
+<li><p><strong>参数、返回值和错误码设计</strong><br />
+系统调用应有简洁、清晰的接口，参数数量应尽量少。其语义和行为必须稳定，不能随意更改，因为已有应用会依赖这些行为。要有前瞻性，考虑未来是否需要扩展功能，是否能在不破坏兼容性的前提下修复
+bug。很多系统调用会设计一个 flag
+参数，用于将来扩展功能（不是用来多路复用行为，而是为了兼容性和可扩展性）。</p></li>
+<li><p><strong>接口设计要通用、可移植</strong><br />
+不要让接口过于局限当前用途。系统调用的用途可能会变化，但其本质目的应保持不变。要考虑可移植性，不要假设特定架构的字长或字节序。Unix
+的设计哲学是“提供机制，不规定策略”。</p></li>
+<li><p><strong>关注可移植性和健壮性</strong><br />
+编写系统调用时要考虑未来的可移植性和健壮性。Unix
+的基本系统调用经受住了时间考验，几十年后依然适用。</p></li>
+</ol>
+<hr />
+<h3 id="参数校验">参数校验</h3>
+<p>系统调用必须<strong>严格校验所有参数</strong>，确保其有效和合法。系统调用在内核空间运行，如果用户能随意传递无效参数，系统的安全和稳定性会受到威胁。</p>
+<ul>
+<li><p>例如，文件 I/O
+系统调用要检查文件描述符是否有效；进程相关函数要检查 PID
+是否有效。每个参数都要验证其正确性，防止进程请求访问其无权访问的资源。</p></li>
+<li><p><strong>指针参数的校验尤为重要</strong>。如果进程能传递任意指针给内核，可能会让内核访问本不该访问的数据（如其他进程的数据或内核空间数据）。因此，在内核跟随用户空间指针前，必须确保：</p>
+<ol type="1">
+<li>指针指向用户空间内存，不能让进程让内核访问内核空间。</li>
+<li>指针指向的是本进程的地址空间，不能访问其他进程的数据。</li>
+<li>读操作时内存必须可读，写操作时必须可写，执行操作时必须可执行，不能绕过内存访问权限。</li>
+</ol></li>
+<li><p>内核提供了两种方法来进行这些检查和数据拷贝，<strong>内核代码绝不能直接跟随用户空间指针</strong>，必须使用以下两种方法之一：</p>
+<ul>
+<li><code>copy_to_user()</code>：用于将数据从内核空间写入用户空间。参数分别为用户空间目标地址、内核空间源地址、拷贝字节数。</li>
+<li><code>copy_from_user()</code>：用于从用户空间读取数据到内核空间。参数分别为内核空间目标地址、用户空间源地址、拷贝字节数。</li>
+</ul></li>
+<li><p>这两个函数在出错时返回未拷贝的字节数，成功时返回
+0。系统调用遇到这种错误时，通常返回 <code>-EFAULT</code>。</p></li>
+</ul>
+<p>下面以一个简单的系统调用 <code>silly_copy()</code>
+为例，说明如何在内核中安全地从用户空间读取和写入数据。这个系统调用的功能是：将用户空间
+<code>src</code> 指向的数据拷贝到
+<code>dst</code>，中间通过内核缓冲区作为中转。虽然实际用途不大，但有助于理解
+<code>copy_from_user()</code> 和 <code>copy_to_user()</code>
+的用法。</p>
+<p><strong>核心代码片段：</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE3(silly_copy,</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *, src, </span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *, dst, </span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> len)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> buf;</span><br><span class="line">    <span class="comment">// 从用户空间 src 拷贝 len 字节到内核缓冲区 buf</span></span><br><span class="line">    <span class="keyword">if</span> (copy_from_user(&amp;buf, src, len))</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    <span class="comment">// 从内核缓冲区 buf 拷贝 len 字节到用户空间 dst</span></span><br><span class="line">    <span class="keyword">if</span> (copy_to_user(dst, &amp;buf, len))</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    <span class="comment">// 返回拷贝的字节数</span></span><br><span class="line">    <span class="keyword">return</span> len;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> -
+<code>copy_from_user()</code>：将用户空间数据拷贝到内核空间，失败时返回未拷贝的字节数，成功返回0。
+-
+<code>copy_to_user()</code>：将内核空间数据拷贝到用户空间，失败时返回未拷贝的字节数，成功返回0。
+- 如果拷贝失败，系统调用返回 <code>-EFAULT</code>。</p>
+<p><strong>注意：</strong><br />
+这两个函数在数据页不在物理内存时可能会阻塞（如数据被换出到磁盘），此时进程会休眠直到页面被调入内存。</p>
+<h3 id="权限检查与能力机制">权限检查与能力机制</h3>
+<p>在早期 Linux 版本中，系统调用如果需要超级用户权限，会用
+<code>suser()</code> 检查是否为 root。现在，Linux
+使用更细粒度的“能力（capabilities）”机制。通过 <code>capable()</code>
+函数检查调用进程是否拥有某项能力。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!capable(CAP_SYS_BOOT))</span><br><span class="line">    <span class="keyword">return</span> -EPERM;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>capable(CAP_SYS_BOOT)</code>
+检查调用者是否有重启系统的权限（CAP_SYS_BOOT）。</li>
+<li>超级用户（root）默认拥有所有能力，普通用户默认没有。</li>
+</ul>
+<p><strong>reboot() 系统调用部分实现：</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE4(reboot, <span class="type">int</span> magic1, <span class="type">int</span> magic2, <span class="type">unsigned</span> <span class="type">int</span> cmd, <span class="type">void</span> __user *, arg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">256</span>];</span><br><span class="line">    <span class="comment">// 只允许超级用户重启系统</span></span><br><span class="line">    <span class="keyword">if</span> (!capable(CAP_SYS_BOOT))</span><br><span class="line">        <span class="keyword">return</span> -EPERM;</span><br><span class="line">    <span class="comment">// 检查 magic 参数，防止误操作</span></span><br><span class="line">    <span class="keyword">if</span> (magic1 != LINUX_REBOOT_MAGIC1 ||</span><br><span class="line">        (magic2 != LINUX_REBOOT_MAGIC2 &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2A &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2B &amp;&amp;</span><br><span class="line">         magic2 != LINUX_REBOOT_MAGIC2C))</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    <span class="comment">// ... 省略后续命令处理 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> -
+首先检查权限，只有拥有 CAP_SYS_BOOT 能力的进程才能重启系统。 - 然后检查
+magic 参数，只有传入特定的“魔数”才允许执行，防止误操作。</p>
+<p><strong>能力列表</strong>可参考
+<code>&lt;linux/capability.h&gt;</code>，每种能力对应不同的系统资源访问权限。</p>
+<h3 id="系统调用上下文system-call-context">系统调用上下文（System Call
+Context）</h3>
+<p>如第3章所述，<strong>在执行系统调用期间，内核处于进程上下文（process
+context）</strong>。此时，<code>current</code>
+指针指向当前任务（即发起系统调用的进程）。</p>
+<ul>
+<li>在进程上下文中，内核<strong>可以休眠</strong>（比如系统调用阻塞或显式调用
+<code>schedule()</code>），并且是<strong>完全可抢占的</strong>。
+<ul>
+<li>能够休眠意味着系统调用可以使用大部分内核功能，这极大简化了内核编程（相比中断处理程序，中断处理程序不能休眠，功能受限）。</li>
+<li>可抢占意味着当前任务可能被其他任务抢占，新的任务可能会执行同一个系统调用，因此系统调用实现必须<strong>可重入</strong>，这和多核并发下的同步问题类似。</li>
+</ul></li>
+</ul>
+<p>当系统调用返回时，控制权回到
+<code>system_call()</code>，最终切换回用户空间，继续执行用户进程。</p>
+<h3 id="系统调用注册的最后步骤">系统调用注册的最后步骤</h3>
+<p>系统调用代码写好后，将其注册为正式系统调用的过程很简单：</p>
+<ol type="1">
+<li><strong>在系统调用表中添加条目</strong>
+<ul>
+<li>对于每个支持该系统调用的架构，都要在系统调用表（如
+entry.S）末尾添加一项。表中每一项的位置（从0开始）就是系统调用号。例如，第10项的系统调用号是9。</li>
+<li>表示例（部分）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ENTRY(sys_call_table)</span><br><span class="line">.long sys_restart_syscall    /* 0 */</span><br><span class="line">.long sys_exit</span><br><span class="line">.long sys_fork</span><br><span class="line">.long sys_read</span><br><span class="line">.long sys_write</span><br><span class="line">.long sys_open              /* 5 */</span><br><span class="line">...</span><br><span class="line">.long sys_foo               /* 新增的系统调用 */</span><br></pre></td></tr></table></figure></li>
+<li>新系统调用自动获得下一个可用的系统调用号（如338）。</li>
+</ul></li>
+<li><strong>在 &lt;asm/unistd.h&gt; 中定义系统调用号</strong>
+<ul>
+<li>每个架构都要在对应的 <code>&lt;asm/unistd.h&gt;</code>
+文件中添加宏定义。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_foo 338</span></span><br></pre></td></tr></table></figure></li>
+</ul></li>
+<li><strong>将系统调用编译进内核镜像</strong>
+<ul>
+<li>系统调用必须编译进核心内核镜像（不能作为模块）。通常把实现代码放在
+kernel/ 目录下相关的文件中，比如 sys.c。如果和调度相关，可以放在
+kernel/sched.c。</li>
+</ul></li>
+</ol>
+<p><strong>示例：实现 foo() 系统调用</strong></p>
+<ul>
+<li>在 kernel/sys.c 中实现： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/page.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * sys_foo – 返回每个进程的内核栈大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_foo</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> THREAD_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>编译并启动新内核后，用户空间即可通过系统调用号调用 foo()。</li>
+</ul>
+<h3 id="用户空间访问系统调用">用户空间访问系统调用</h3>
+<p>通常，C 标准库（如
+glibc）会为系统调用提供支持。用户程序只需包含标准头文件并链接 C
+库，就可以直接调用系统调用（或调用库函数间接使用系统调用）。但如果你刚刚实现了一个新的系统调用，glibc
+很可能还没有为它提供支持！</p>
+<p>幸运的是，Linux
+提供了一组宏来帮助用户空间访问系统调用。这些宏会设置好寄存器内容并发出陷阱指令。宏的名字为
+<code>_syscalln()</code>，其中 n 取 0 到
+6，表示系统调用参数的个数。宏需要知道参数个数，以便正确地将参数压入寄存器。</p>
+<p>例如，open() 系统调用的原型为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *filename, <span class="type">int</span> flags, <span class="type">int</span> mode)</span></span><br></pre></td></tr></table></figure>
+如果没有库支持，可以这样使用宏： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_open 5</span></span><br><span class="line">_syscall3(<span class="type">long</span>, open, <span class="type">const</span> <span class="type">char</span> *, filename, <span class="type">int</span>, flags, <span class="type">int</span>, mode)</span><br></pre></td></tr></table></figure>
+这样，应用程序就可以直接调用 open() 了。</p>
+<p>每个宏的参数为 2 + 2 ×
+n：第一个参数是返回类型，第二个是系统调用名，后面依次是每个参数的类型和名字。<code>__NR_open</code>
+定义在
+<code>&lt;asm/unistd.h&gt;</code>，表示系统调用号。<code>_syscall3</code>
+宏会展开为带有内联汇编的 C
+函数，自动完成系统调用号和参数的传递，并发出软中断进入内核。只需在应用中写这个宏，就能直接使用
+open() 系统调用。</p>
+<p><strong>示例：用户空间调用自定义 foo() 系统调用</strong>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __NR_foo 283</span></span><br><span class="line">_syscall0(<span class="type">long</span>, foo)</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">long</span> stack_size;</span><br><span class="line">    stack_size = foo();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The kernel stack size is %ld\n&quot;</span>, stack_size);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3
+id="为什么不建议随意实现新系统调用">为什么不建议随意实现新系统调用</h3>
+<p>虽然实现新系统调用很容易，但这并不意味着你应该随意添加。实际上，添加新系统调用要非常谨慎。很多情况下，有更合适的替代方案。</p>
+<p><strong>实现新系统调用的优点：</strong> - 实现简单，使用方便。 - 在
+Linux 上系统调用性能很高。</p>
+<p><strong>缺点：</strong> - 需要分配一个系统调用号，必须官方分配。 -
+一旦进入稳定内核版本，接口就不能随意更改，否则会破坏用户空间应用的兼容性。
+- 每个架构都要单独注册和支持该系统调用。 -
+系统调用不能直接被脚本调用，也不能直接通过文件系统访问。 -
+需要分配系统调用号，难以在主线内核树之外维护和使用。 -
+对于简单信息交换，系统调用显得过于繁重。</p>
+<p><strong>常见替代方案：</strong> - 实现一个设备节点，通过
+read()/write() 进行数据交换，使用 ioctl() 操作特定设置或获取信息。 -
+某些接口（如信号量）可以用文件描述符表示并进行操作。 -
+将信息作为文件添加到 sysfs 的合适位置。</p>
+<p>对于许多接口，系统调用确实是正确的选择。但 Linux
+一直避免为每个新抽象都添加系统调用，这使得系统调用层非常简洁、稳定，很少有废弃接口。新系统调用增加速度慢，说明
+Linux 已经相对稳定且功能完善。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1255,1031 +2294,8 @@ time”指日历时间或经过时间，“realtime”专指具备上述响应�
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys7%E7%BB%84%E6%88%903/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys7%E7%BB%84%E6%88%903/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述3</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-24 05:26:38" itemprop="dateCreated datePublished" datetime="2025-06-24T05:26:38+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 01:47:52" itemprop="dateModified" datetime="2025-06-25T01:47:52+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="内存映射memory-mappings">内存映射（Memory Mappings）</h3>
-<ul>
-<li><code>mmap()</code>
-系统调用可以在进程的虚拟地址空间中创建新的内存映射。</li>
-<li>映射分为两类：
-<ol type="1">
-<li><strong>文件映射（file
-mapping）</strong>：将文件的一部分映射到进程的虚拟内存，映射后可以像操作内存一样访问文件内容，所需页面会自动从文件加载。</li>
-<li><strong>匿名映射（anonymous
-mapping）</strong>：不对应任何文件，映射区域的内容初始化为0。</li>
-</ol></li>
-<li>不同进程之间可以共享同一内存映射（如两个进程映射同一文件区域，或子进程继承父进程的映射）。</li>
-<li>如果映射是<strong>私有的（private）</strong>，对映射内容的修改不会影响其他进程，也不会写回文件；如果是<strong>共享的（shared）</strong>，修改会被其他进程看到，并同步到文件。</li>
-<li>内存映射的用途包括：初始化进程代码段、分配新内存、文件I/O（内存映射I/O）、进程间通信（共享映射）等。</li>
-</ul>
-<h3
-id="静态库与共享库static-and-shared-libraries">静态库与共享库（Static
-and Shared Libraries）</h3>
-<h4 id="静态库static-libraries">静态库（Static libraries）</h4>
-<ul>
-<li>静态库（archive）是包含一组已编译函数的文件，便于程序开发和维护。</li>
-<li>使用静态库时，链接器会将需要的目标模块从库中复制到最终的可执行文件中，称为<strong>静态链接</strong>。</li>
-<li>典型例子：<code>/usr/lib/libm.a</code>（数学库的静态库，扩展名为
-<code>.a</code>）</li>
-<li>缺点：
-<ul>
-<li>每个可执行文件都包含一份库函数代码，浪费磁盘空间。</li>
-<li>多个程序同时运行时，每个都需加载自己的库函数副本，浪费内存。</li>
-<li>如果库函数更新，所有用到该函数的程序都必须重新链接。</li>
-</ul></li>
-</ul>
-<h4 id="共享库shared-libraries">共享库（Shared libraries）</h4>
-<ul>
-<li>共享库为了解决静态库的问题而设计。</li>
-<li>程序链接共享库时，链接器只在可执行文件中记录需要的共享库，运行时由<strong>动态链接器</strong>加载和链接共享库。</li>
-<li>典型例子：<code>/lib/x86_64-linux-gnu/libm.so.6</code>（数学库的共享库，扩展名为
-<code>.so</code>），<code>/lib/x86_64-linux-gnu/libc.so.6</code>（C
-标准库的共享库）</li>
-<li>优点：
-<ul>
-<li>只需在内存中保留一份共享库代码，所有程序共享，节省内存和磁盘空间。</li>
-<li>更新共享库后，所有程序下次运行时自动使用新版本，无需重新链接。</li>
-</ul></li>
-</ul>
-<h3
-id="进程间通信与同步interprocess-communication-and-synchronization">进程间通信与同步（Interprocess
-Communication and Synchronization）</h3>
-<p>在运行中的 Linux
-系统中，存在大量进程，其中许多进程彼此独立运行。但有些进程需要协作完成任务，这就需要进程间通信（IPC）和同步机制。</p>
-<ul>
-<li><p>最简单的通信方式是通过读写磁盘文件，但这种方式通常太慢且不灵活。</p></li>
-<li><p>因此，Linux（和所有现代 UNIX
-系统）提供了丰富的进程间通信机制，包括：</p>
-<ul>
-<li><strong>信号（signals）</strong>：用于通知进程某个事件发生。</li>
-<li><strong>管道（pipes）和命名管道（FIFOs）</strong>：用于在进程间传递数据（如
-shell 中的 <code>|</code> 操作符）。</li>
-<li><strong>套接字（sockets）</strong>：可用于同一主机或不同主机间的进程数据传输。</li>
-<li><strong>文件锁（file
-locking）</strong>：允许进程锁定文件的某些区域，防止其他进程读取或修改内容。</li>
-<li><strong>消息队列（message
-queues）</strong>：用于在进程间交换消息（数据包）。</li>
-<li><strong>信号量（semaphores）</strong>：用于进程间的同步操作。</li>
-<li><strong>共享内存（shared
-memory）</strong>：允许多个进程共享一块内存区域，任何进程对其内容的更改都能被其他进程立即看到。</li>
-</ul></li>
-</ul>
-<h3 id="信号signals">信号（Signals）</h3>
-<ul>
-<li>信号常被称为“软件中断”。信号的到来通知进程某个事件或异常情况发生。</li>
-<li>信号有多种类型，每种类型代表不同的事件或条件。每种信号类型由一个整数标识，并有类似
-<code>SIGxxxx</code> 的符号名。</li>
-<li>信号可以由内核、其他进程（有权限时）或进程自身发送。例如，内核会在以下情况下向进程发送信号：
-<ul>
-<li>用户在键盘上输入中断字符（通常是 Ctrl+C）</li>
-<li>进程的某个子进程终止</li>
-<li>进程设置的定时器（闹钟）到期</li>
-<li>进程试图访问无效内存地址</li>
-</ul></li>
-<li>在 shell 中，可以用 <code>kill</code>
-命令向进程发送信号；在程序中可以用 <code>kill()</code>
-系统调用实现同样的功能。</li>
-</ul>
-<p>当进程收到信号时，会根据信号类型采取以下动作之一： - 忽略信号 -
-被信号杀死 - 被挂起，直到收到特定信号后恢复</p>
-<p>对于大多数信号类型，程序可以选择忽略信号（如果默认动作不是忽略），或者设置信号处理函数（signal
-handler）。信号处理函数是程序员自定义的函数，在信号送达进程时自动调用，用于处理相应的事件。</p>
-<p>信号从产生到送达进程之间的这段时间，称为信号“挂起”（pending）。通常，挂起信号会在进程下次被调度运行时立即送达，如果进程正在运行则立即送达。但也可以通过将信号加入进程的信号屏蔽字（signal
-mask）来阻塞信号。如果信号在被阻塞时产生，它会一直处于挂起状态，直到被解除阻塞（即从信号屏蔽字中移除）后才送达。</p>
-<h3 id="线程threads">线程（Threads）</h3>
-<ul>
-<li>在现代 UNIX 实现中，每个进程可以拥有多个执行线程。</li>
-<li>可以将线程理解为一组共享同一虚拟内存（以及其他属性）的“轻量级进程”。每个线程执行相同的程序代码，并共享数据区和堆区，但每个线程有自己的栈（用于存放局部变量和函数调用信息）。</li>
-<li>线程之间可以通过共享的全局变量进行通信。线程库还提供了条件变量（condition
-variables）和互斥锁（mutexes）等原语，用于线程间的通信和同步，特别是对共享变量的访问控制。</li>
-<li>线程也可以使用前面介绍的进程间通信（IPC）和同步机制进行通信。</li>
-<li>使用线程的主要优点：
-<ul>
-<li>线程间共享数据（通过全局变量）非常方便。</li>
-<li>某些算法用多线程实现比多进程实现更自然。</li>
-<li>多线程应用可以充分利用多处理器硬件，实现并行处理。</li>
-</ul></li>
-</ul>
-<h3
-id="进程组与-shell-作业控制process-groups-and-shell-job-control">进程组与
-Shell 作业控制（Process Groups and Shell Job Control）</h3>
-<ul>
-<li>shell
-启动的每个程序都会在新进程中运行。例如，下面的管道命令会创建三个进程：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l | <span class="built_in">sort</span> -k5n | less</span><br></pre></td></tr></table></figure></li>
-<li>除 Bourne shell 外，所有主流 shell
-都支持“作业控制”功能，允许用户同时执行和管理多个命令或管道。</li>
-<li>在支持作业控制的 shell
-中，管道中的所有进程会被放入一个新的进程组（job）中。对于单条命令，也会创建只包含一个进程的进程组。</li>
-<li>每个进程组中的进程都有相同的进程组标识符（process group ID），该 ID
-通常等于组内某个进程（称为进程组领导者）的进程 ID。</li>
-<li>内核支持对进程组的操作（如发送信号），shell
-利用这一特性实现对整个管道作业的挂起、恢复等控制。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-24 05:07:51 / 修改时间：05:24:46" itemprop="dateCreated datePublished" datetime="2025-06-24T05:07:51+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="程序programs">程序（Programs）</h3>
-<ul>
-<li>程序通常有两种形式：
-<ol type="1">
-<li><strong>源代码</strong>：人类可读的文本，使用如 C
-这样的编程语言编写。<br />
-</li>
-<li><strong>二进制机器码</strong>：计算机可执行的指令。源代码需经过编译和链接，才能变为机器码。<br />
-</li>
-</ol></li>
-<li>脚本（script）是包含命令的文本文件，由 shell
-或其他命令解释器直接处理。</li>
-<li>“程序”这两个含义通常可以互换，因为编译和链接会将源代码转换为等价的二进制代码。</li>
-</ul>
-<h4 id="过滤器filters">过滤器（Filters）</h4>
-<ul>
-<li>过滤器是指一类程序：从标准输入（stdin）读取数据，处理后将结果写到标准输出（stdout）。</li>
-<li>常见过滤器有：<code>cat</code>、<code>grep</code>、<code>tr</code>、<code>sort</code>、<code>wc</code>、<code>sed</code>、<code>awk</code>
-等。</li>
-</ul>
-<h4 id="命令行参数command-line-arguments">命令行参数（Command-line
-arguments）</h4>
-<ul>
-<li>在 C 语言中，程序可以通过 main 函数的参数访问命令行参数：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>argc</code>：参数个数</li>
-<li><code>argv</code>：参数字符串数组，<code>argv[0]</code>
-通常是程序名</li>
-</ul></li>
-</ul>
-<h3 id="进程processes">进程（Processes）</h3>
-<ul>
-<li>进程是正在运行的程序实例。</li>
-<li>当程序被执行时，内核会将其代码加载到虚拟内存，分配变量空间，并建立记录进程信息的数据结构（如进程ID、终止状态、用户ID、组ID等）。</li>
-<li>内核负责在进程间分配和管理有限资源（如内存、CPU、网络带宽等），进程结束时，资源会被回收。</li>
-</ul>
-<h4 id="进程内存布局">进程内存布局</h4>
-<p>进程的内存逻辑上分为以下几个部分（段）： -
-<strong>Text</strong>：程序指令（代码段） -
-<strong>Data</strong>：静态变量 -
-<strong>Heap</strong>：动态分配内存区域 -
-<strong>Stack</strong>：函数调用和局部变量的栈空间</p>
-<h4 id="进程创建与程序执行">进程创建与程序执行</h4>
-<ul>
-<li>进程可通过 <code>fork()</code> 系统调用创建新进程。调用
-<code>fork()</code> 的为父进程，新创建的为子进程。</li>
-<li>子进程会复制父进程的数据、堆和栈（代码段通常只读并共享）。</li>
-<li>子进程可以继续执行父进程的代码，也可以通过 <code>execve()</code>
-系统调用加载并执行新程序。<code>execve()</code>
-会用新程序的代码和数据替换原有的段。</li>
-<li>C 标准库还提供了一系列以 <code>exec</code> 开头的函数，都是对
-<code>execve()</code> 的封装，统称为 <code>exec()</code>。</li>
-</ul>
-<h4 id="进程id与父进程id">进程ID与父进程ID</h4>
-<ul>
-<li>每个进程有唯一的进程ID（PID）。</li>
-<li>每个进程还有一个父进程ID（PPID），表示哪个进程创建了它。</li>
-</ul>
-<h4 id="进程终止与终止状态">进程终止与终止状态</h4>
-<ul>
-<li>进程可以通过 <code>_exit()</code> 系统调用（或相关的
-<code>exit()</code> 库函数）主动终止，也可以被信号杀死。</li>
-<li>进程终止时会返回一个终止状态（小的非负整数），父进程可以通过
-<code>wait()</code> 系统调用获取。</li>
-<li>约定：终止状态为 0 表示成功，非零表示出错。大多数 shell 用变量
-<code>$?</code> 保存上一个程序的终止状态。 整理与翻译如下：</li>
-</ul>
-<h4 id="进程的用户和组标识凭证">进程的用户和组标识（凭证）</h4>
-<p>每个进程都关联有多个用户ID（UID）和组ID（GID），包括：</p>
-<ul>
-<li><strong>实际用户ID（real UID）和实际组ID（real
-GID）</strong>：标识进程所属的用户和组。新进程从父进程继承这些ID。登录
-shell 的实际UID和GID来自系统密码文件（/etc/passwd）中的相应字段。</li>
-<li><strong>有效用户ID（effective UID）和有效组ID（effective
-GID）</strong>：这两个ID（加上补充组ID）用于判断进程访问受保护资源（如文件、进程间通信对象）时的权限。通常有效ID与实际ID相同。更改有效ID可以让进程临时获得其他用户或组的权限。</li>
-<li><strong>补充组ID（supplementary group
-IDs）</strong>：标识进程所属的其他组。新进程从父进程继承这些ID，登录
-shell 的补充组ID来自系统组文件（/etc/group）。</li>
-</ul>
-<h4 id="特权进程">特权进程</h4>
-<ul>
-<li>在传统 UNIX 系统中，有效用户ID为0（即超级用户
-root）的进程被称为<strong>特权进程</strong>，可以绕过内核的权限检查。</li>
-<li>其他用户运行的进程称为<strong>非特权进程</strong>，其有效用户ID非0，必须遵守内核的权限规则。</li>
-<li>进程可以通过由特权进程创建（如 root 启动的 shell），或通过
-set-user-ID 机制（程序文件设置了 setuid
-位，进程获得该文件所有者的有效UID）获得特权。</li>
-</ul>
-<h4 id="能力capabilities">能力（Capabilities）</h4>
-<ul>
-<li>从 Linux 2.2
-内核开始，传统上属于超级用户的权限被细分为多个<strong>能力（capabilities）</strong>。</li>
-<li>每个特权操作都对应一个能力，进程只有拥有相应能力才能执行该操作。</li>
-<li>传统的超级用户进程（有效UID为0）等价于拥有所有能力的进程。</li>
-<li>只授予进程部分能力，可以让它执行部分特权操作，同时限制其他操作。</li>
-<li>能力名称以 <code>CAP_</code> 开头，如 <code>CAP_KILL</code>。</li>
-</ul>
-<h4 id="init-进程">init 进程</h4>
-<ul>
-<li>系统启动时，内核会创建一个特殊进程
-<strong>init</strong>（所有进程的“父进程”），其程序文件为
-<code>/sbin/init</code>。</li>
-<li>系统中所有进程都是由 init 或其子孙进程通过 fork() 创建的。</li>
-<li>init
-进程的进程ID永远为1，拥有超级用户权限，不能被杀死（即使是超级用户也不行），只会在系统关机时终止。</li>
-<li>init 的主要任务是创建和管理系统运行所需的各种进程。</li>
-</ul>
-<h4 id="守护进程daemon-processes">守护进程（Daemon processes）</h4>
-<ul>
-<li>守护进程是一类特殊用途的进程，由系统创建和管理，其特点包括：
-<ul>
-<li><strong>生命周期长</strong>：通常在系统启动时启动，直到系统关闭才结束。</li>
-<li><strong>后台运行</strong>：没有控制终端，无法直接读取输入或输出到终端。</li>
-</ul></li>
-<li>常见的守护进程有
-<code>syslogd</code>（记录系统日志）、<code>httpd</code>（提供网页服务）等。</li>
-</ul>
-<hr />
-<h4 id="环境变量列表environment-list">环境变量列表（Environment
-list）</h4>
-<ul>
-<li>每个进程都有一个环境变量列表，存储在进程的用户空间内存中。每个环境变量由名称和值组成。</li>
-<li>通过 <code>fork()</code>
-创建新进程时，子进程会继承父进程的环境变量列表。这为父进程向子进程传递信息提供了机制。</li>
-<li>进程用 <code>exec()</code>
-执行新程序时，可以选择继承原有环境变量，或指定新的环境变量。</li>
-<li>在大多数 shell 中，用 <code>export</code> 命令（C shell 用
-<code>setenv</code>）创建环境变量，例如： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MYVAR=<span class="string">&#x27;Hello world&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>C 程序可以通过外部变量 <code>char **environ</code>
-访问环境变量，也可用相关库函数获取和修改环境变量。</li>
-<li>环境变量用途广泛，如
-<code>HOME</code>（用户主目录）、<code>PATH</code>（shell
-查找命令的目录列表）等。</li>
-</ul>
-<h4 id="资源限制resource-limits">资源限制（Resource limits）</h4>
-<ul>
-<li>每个进程都会消耗资源，如打开的文件数、内存、CPU 时间等。</li>
-<li>进程可用 <code>setrlimit()</code>
-系统调用设置资源消耗的上限。每种资源限制有两个值：
-<ul>
-<li><strong>软限制（soft limit）</strong>：进程实际可用的资源上限。</li>
-<li><strong>硬限制（hard limit）</strong>：软限制可调整的最大值。</li>
-</ul></li>
-<li>非特权进程可以将软限制调整到硬限制以内的任意值，但只能降低硬限制，不能提高。</li>
-<li>新进程通过 <code>fork()</code>
-创建时，会继承父进程的资源限制设置。</li>
-<li>shell 可用 <code>ulimit</code> 命令（C shell 用
-<code>limit</code>）调整资源限制，这些设置会被子进程继承。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys5%E7%BB%84%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys5%E7%BB%84%E6%88%90/" class="post-title-link" itemprop="url">操作系统基础 | 2.5 linux组成概述</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-24 04:32:33 / 修改时间：05:05:54" itemprop="dateCreated datePublished" datetime="2025-06-24T04:32:33+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="shell壳命令行解释器">Shell（壳/命令行解释器）</h3>
-<p>Shell
-是一种专门的程序，用于读取用户输入的命令，并根据这些命令执行相应的程序。Shell
-也被称为命令解释器（command interpreter）。</p>
-<ul>
-<li><strong>登录 Shell（login
-shell）</strong>：指用户首次登录时系统为其启动的运行 Shell 的进程。</li>
-</ul>
-<p>在某些操作系统中，命令解释器是内核的一部分；但在 UNIX 系统中，Shell
-是一个普通的用户进程。UNIX 系统支持多种
-Shell，不同用户（甚至同一用户的不同会话）可以同时使用不同的 Shell。</p>
-<h3 id="用户与用户组users-and-groups">用户与用户组（Users and
-Groups）</h3>
-<h4 id="用户users">用户（Users）</h4>
-<ul>
-<li>系统中的每个用户都有唯一的登录名（username）和对应的数字用户ID（UID）。</li>
-<li>每个用户的信息都记录在 <code>/etc/passwd</code>
-文件的一行中，内容包括：
-<ul>
-<li>用户名</li>
-<li>用户ID（UID）</li>
-<li>所属的第一个用户组的组ID（GID）</li>
-<li>家目录（home directory）：用户登录后进入的初始目录</li>
-<li>登录Shell：用于解释用户命令的程序名</li>
-<li>密码（通常为加密形式），但出于安全考虑，密码一般存储在只有特权用户可读的
-shadow 密码文件中。</li>
-</ul></li>
-</ul>
-<h4 id="用户组groups">用户组（Groups）</h4>
-<ul>
-<li>为了管理和控制对文件及其他系统资源的访问，用户可以被组织到用户组中。</li>
-<li>例如，一个项目组的成员可以被加入同一个用户组，以便共享文件。</li>
-<li>早期 UNIX 系统中，一个用户只能属于一个组。BSD 及后来的 UNIX 和 POSIX
-标准允许用户同时属于多个组。</li>
-<li>每个用户组的信息记录在 <code>/etc/group</code>
-文件的一行中，内容包括：
-<ul>
-<li>组名（唯一）</li>
-<li>组ID（GID）</li>
-<li>用户列表：以逗号分隔的用户名列表，表示属于该组的用户（不包括那些通过
-<code>/etc/passwd</code> 文件的 GID 字段已属于该组的用户）</li>
-</ul></li>
-</ul>
-<h4 id="超级用户superuser">超级用户（Superuser）</h4>
-<ul>
-<li>系统中有一个特殊用户，称为超级用户（superuser），拥有系统内的特殊权限。</li>
-<li>超级用户的用户ID为0，通常用户名为 root。</li>
-<li>超级用户可以绕过系统的所有权限检查。例如，可以访问系统中的任何文件、向任何进程发送信号等。</li>
-<li>系统管理员使用超级用户账户执行各种系统管理任务。</li>
-</ul>
-<h3
-id="单一目录层次结构目录链接与文件">单一目录层次结构、目录、链接与文件</h3>
-<p>Linux
-内核维护着一个<strong>单一的分层目录结构</strong>来组织系统中的所有文件（与
-Windows 等操作系统每个磁盘有独立目录树不同）。这个层次结构的顶端是根目录
-<code>/</code>，所有文件和目录都是根目录的子孙。</p>
-<h4 id="文件类型">文件类型</h4>
-<ul>
-<li><strong>普通文件（regular file）</strong>：普通数据文件。</li>
-<li><strong>目录（directory）</strong>：特殊文件，内容是文件名和对应文件引用的表。</li>
-<li><strong>其他类型</strong>：还包括设备文件、管道、套接字、符号链接等。</li>
-</ul>
-<h4 id="目录与链接">目录与链接</h4>
-<ul>
-<li>目录是特殊文件，内容是“文件名+引用”的表，这种关联称为<strong>链接（link）</strong>。</li>
-<li>一个文件可以有多个链接（即多个名字），可以存在于同一目录或不同目录。</li>
-<li>目录可以包含指向文件和其他目录的链接，形成树状层次结构。</li>
-<li>每个目录至少有两个特殊条目：
-<ul>
-<li><code>.</code> ：指向自身</li>
-<li><code>..</code> ：指向父目录（根目录的 <code>..</code>
-也指向自身）</li>
-</ul></li>
-</ul>
-<h4 id="符号链接symbolic-link">符号链接（Symbolic Link）</h4>
-<ul>
-<li>符号链接（软链接，soft
-link）是一个特殊文件，内容是另一个文件的路径名。</li>
-<li>当系统调用中指定路径时，内核会自动解析（跟随）符号链接，直到找到目标文件（递归解析，内核会限制递归次数以防死循环）。</li>
-<li>如果符号链接指向的目标不存在，则称为<strong>悬挂链接（dangling
-link）</strong>。</li>
-<li><strong>硬链接（hard link）</strong>和<strong>软链接（soft
-link）</strong>是两种不同的链接类型。</li>
-</ul>
-<h4 id="文件名filenames">文件名（Filenames）</h4>
-<ul>
-<li>在大多数 Linux 文件系统中，文件名最长可达 255 个字符。</li>
-<li>文件名可以包含除斜杠（/）和空字符（\0）以外的任意字符。</li>
-<li>建议只使用字母、数字、点（.）、下划线（_）和连字符（-），即字符集
-<code>[-._a-zA-Z0-9]</code>，这被称为 SUSv3
-标准的“可移植文件名字符集”。</li>
-<li>避免使用不在可移植字符集内的字符，因为这些字符在
-shell、正则表达式等环境下可能有特殊含义。如果必须使用，需要用反斜杠（）转义，否则可能无法正确使用。</li>
-<li>避免以连字符（-）开头的文件名，因为在 shell
-命令中可能被误认为是选项。</li>
-</ul>
-<h4 id="路径名pathnames">路径名（Pathnames）</h4>
-<ul>
-<li>路径名是由可选的开头斜杠（/）和一系列用斜杠分隔的文件名组成的字符串。</li>
-<li>除最后一个部分外，路径中的每个部分都应是目录（或能解析为目录的符号链接），最后一个部分可以是任意类型的文件。</li>
-<li>路径名分为两类：
-<ul>
-<li><strong>绝对路径名</strong>：以斜杠（/）开头，从根目录开始定位文件。例如
-<code>/home/mtk/.bashrc</code>、<code>/usr/include</code>、<code>/</code>。</li>
-<li><strong>相对路径名</strong>：不以斜杠开头，相对于当前工作目录。例如，从
-<code>usr</code> 目录访问 <code>types.h</code> 可用
-<code>include/sys/types.h</code>，从 <code>avr</code> 目录访问
-<code>.bashrc</code> 可用 <code>../mtk/.bashrc</code>。</li>
-</ul></li>
-<li>路径名可以包含 <code>..</code>，表示上一级目录。</li>
-</ul>
-<h4 id="当前工作目录current-working-directory">当前工作目录（Current
-working directory）</h4>
-<ul>
-<li>每个进程都有一个当前工作目录（current working
-directory），即进程在目录树中的“当前位置”，相对路径名都是基于这个目录解析的。</li>
-<li>进程的当前工作目录由父进程继承。登录 shell 的初始工作目录由
-<code>/etc/passwd</code> 文件中的 home 字段指定。</li>
-<li>可以用 <code>cd</code> 命令更改当前工作目录。</li>
-</ul>
-<h4
-id="文件所有权与权限file-ownership-and-permissions">文件所有权与权限（File
-ownership and permissions）</h4>
-<ul>
-<li>每个文件都有一个关联的用户ID（UID）和组ID（GID），分别表示文件的所有者和所属组。</li>
-<li>文件的所有权决定了哪些用户可以访问该文件。</li>
-<li>系统将用户分为三类：
-<ol type="1">
-<li>文件所有者（user）</li>
-<li>与文件组ID匹配的组成员（group）</li>
-<li>其他所有用户（other）</li>
-</ol></li>
-<li>每类用户有三种权限（共九个权限位）：
-<ul>
-<li>读（read）：允许读取文件内容</li>
-<li>写（write）：允许修改文件内容</li>
-<li>执行（execute）：允许执行该文件（如程序或脚本）</li>
-</ul></li>
-<li>目录的权限含义略有不同：
-<ul>
-<li>读：允许列出目录内容（文件名）</li>
-<li>写：允许修改目录内容（添加、删除、重命名文件）</li>
-<li>执行（或称搜索）：允许访问目录中的文件（前提是对文件本身也有权限）</li>
-</ul></li>
-</ul>
-<h3 id="文件-io-模型">文件 I/O 模型</h3>
-<h4 id="io-的通用性">I/O 的通用性</h4>
-<p>UNIX 系统 I/O 模型的一个显著特点是<strong>I/O
-的通用性</strong>。这意味着同一组系统调用（如
-<code>open()</code>、<code>read()</code>、<code>write()</code>、<code>close()</code>
-等）可以用于所有类型的文件，包括设备文件。内核会将应用程序的 I/O
-请求转换为相应的文件系统或设备驱动操作，从而对目标文件或设备进行实际的
-I/O 操作。因此，使用这些系统调用的程序可以对任何类型的文件进行操作。</p>
-<p>内核本质上只提供一种文件类型：<strong>按字节顺序排列的字节流</strong>。对于磁盘文件、磁盘和磁带设备，可以通过
-<code>lseek()</code> 系统调用实现随机访问。</p>
-<p>许多应用和库将换行符（ASCII 码
-10，linefeed）视为一行文本的结束和下一行的开始。UNIX
-系统没有专门的文件结束符（EOF），文件结束通过 <code>read()</code>
-返回无数据来检测。</p>
-<h4 id="文件描述符file-descriptors">文件描述符（File descriptors）</h4>
-<p>I/O 系统调用通过<strong>文件描述符</strong>（file
-descriptor）来引用已打开的文件。文件描述符是一个（通常很小的）非负整数。通常通过
-<code>open()</code> 调用获得文件描述符，<code>open()</code>
-需要一个路径名参数，指定要进行 I/O 操作的文件。</p>
-<p>当进程由 shell 启动时，通常会继承三个已打开的文件描述符： -
-<strong>0</strong>：标准输入（standard input），进程从中读取输入 -
-<strong>1</strong>：标准输出（standard output），进程向其写入输出 -
-<strong>2</strong>：标准错误（standard
-error），进程向其写入错误信息和异常通知</p>
-<p>在交互式 shell 或程序中，这三个描述符通常都连接到终端。在 stdio
-库中，它们分别对应于 <code>stdin</code>、<code>stdout</code> 和
-<code>stderr</code>。</p>
-<h4 id="stdio-库">stdio 库</h4>
-<p>C 语言程序通常使用标准 C 库中的 I/O 函数（即 stdio 库）进行文件
-I/O。常用的 stdio 函数包括
-<code>fopen()</code>、<code>fclose()</code>、<code>scanf()</code>、<code>printf()</code>、<code>fgets()</code>、<code>fputs()</code>
-等。这些 stdio 函数是建立在底层 I/O 系统调用（如
-<code>open()</code>、<code>close()</code>、<code>read()</code>、<code>write()</code>
-等）之上的。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/22/oper_sys4lab_kinstall/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/22/oper_sys4lab_kinstall/" class="post-title-link" itemprop="url">操作系统基础 | 2.4 初试linux内核实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-23 00:26:14" itemprop="dateCreated datePublished" datetime="2025-06-23T00:26:14+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-24 09:04:52" itemprop="dateModified" datetime="2025-09-24T09:04:52+08:00">2025-09-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2
-id="树莓派镜像下载配置与自定义内核安装流程">树莓派镜像下载、配置与自定义内核安装流程</h2>
-<h3 id="下载并写入指定树莓派镜像">1. 下载并写入指定树莓派镜像</h3>
-<p>为避免因购买或借用的树莓派设备时间不同导致的系统版本不一致，建议大家统一下载指定的树莓派镜像作为起点。</p>
-<ul>
-<li>将 MicroSD 卡插入 USB 读卡器，并连接到你的电脑。</li>
-<li>下载并安装最新版 Raspberry Pi Imager。</li>
-<li>下载课程指定的树莓派镜像：<a
-target="_blank" rel="noopener" href="https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2022-01-28/2022-01-28-raspios-bullseye-armhf.zip">2022-01-28-raspios-bullseye-armhf.zip</a>（约1.2GB，解压后近4GB）。</li>
-<li>解压 zip 文件，得到 .img 镜像文件。</li>
-<li>打开 Raspberry Pi Imager，选择“CHOOSE OS”→“Use
-custom”，选中刚才解压的 .img 文件。</li>
-<li>选择“CHOOSE SD CARD”，选中你的 MicroSD
-卡（注意不要选错，否则会清空数据）。</li>
-<li>进入高级设置（齿轮图标，或 Windows 下用
-Ctrl+Shift+X），建议修改主机名为唯一值（如包含你的用户名），以免与他人冲突。</li>
-<li>勾选“Enable SSH”，选择“Use password
-authentication”，设置用户名和强密码（建议不要用默认密码）。</li>
-<li>勾选“Set locale settings”，设置时区（如美国中部用
-America/Chicago），键盘布局选 us。</li>
-<li>点击“Save”，然后点击“WRITE”写入镜像。</li>
-<li>写入完成后，卸载 MicroSD 卡，插入树莓派并开机。</li>
-</ul>
-<h3 id="首次启动与-ssh-连接">2. 首次启动与 SSH 连接</h3>
-<ul>
-<li>树莓派首次启动可能需要几分钟，启动后通过 SSH 连接（如 ssh
-piuser@pihost，用户名和主机名为你设置的）。</li>
-<li>若主机名无法解析，可在路由器管理页面查找树莓派的 IP 地址，再用 ssh
-连接。</li>
-</ul>
-<hr />
-<h3 id="初始设置与系统升级">3. 初始设置与系统升级</h3>
-<ul>
-<li>首次登录会看到“Welcome to the Raspberry
-Pi”向导，按提示设置国家、语言、时区、键盘等。</li>
-<li>可能会再次提示设置密码，可直接关闭。</li>
-<li>为防止欢迎界面反复出现，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt purge piwiz</span><br></pre></td></tr></table></figure></li>
-<li>升级系统和驱动： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br></pre></td></tr></table></figure></li>
-<li>升级完成后重启树莓派。</li>
-</ul>
-<hr />
-<h3 id="网络设置与信息收集">4. 网络设置与信息收集</h3>
-<ul>
-<li>连接 WiFi，打开终端，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig wlan0</span><br></pre></td></tr></table></figure> 记录 MAC 地址（ether
-后面的六组十六进制数）。</li>
-<li>运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname -I</span><br></pre></td></tr></table></figure> 记录 IP 地址。</li>
-</ul>
-<hr />
-<h3 id="传输并安装自编译内核与模块">5. 传输并安装自编译内核与模块</h3>
-<ul>
-<li>进入你交叉编译内核的目录： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/linux_source</span><br></pre></td></tr></table></figure></li>
-<li>打包模块和内核： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -C modules/lib -czf modules.tgz modules</span><br><span class="line">tar -C linux/arch/arm -czf boot.tgz boot</span><br></pre></td></tr></table></figure></li>
-<li>在树莓派上新建 linux_source 目录，进入后用 sftp
-，或其它方式下载上述两个压缩包： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sftp [学校统一登陆平台key]@shell.cec.学校曾用简称.edu</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/<span class="string">&quot;your username&quot;</span>/linux_source</span><br><span class="line">get modules.tgz</span><br><span class="line">get boot.tgz</span><br><span class="line">quit</span><br></pre></td></tr></table></figure></li>
-<li>备份 <code>/usr/lib/modules</code> 和 <code>/boot</code> 目录（或
-<code>/lib/modules</code>，视系统而定）： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> -r /usr/lib/modules ~/Desktop/modules_backup</span><br><span class="line">sudo <span class="built_in">cp</span> -r /boot ~/Desktop/boot_backup</span><br></pre></td></tr></table></figure></li>
-<li>解压并安装新内核和模块： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf modules.tgz</span><br><span class="line">tar -xzf boot.tgz</span><br><span class="line"><span class="built_in">cd</span> modules</span><br><span class="line">sudo <span class="built_in">cp</span> -rd * /usr/lib/modules   <span class="comment"># 或 /lib/modules</span></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/*.dtb /boot/</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/overlays/*.dtb* /boot/overlays</span><br><span class="line">sudo <span class="built_in">cp</span> boot/dts/overlays/README /boot/overlays</span><br></pre></td></tr></table></figure></li>
-<li>树莓派 3B+： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> boot/zImage /boot/kernel7.img</span><br></pre></td></tr></table></figure></li>
-<li>树莓派 4/4B： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> boot/zImage /boot/kernel7l.img</span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr />
-<h3 id="验证新内核">6. 验证新内核</h3>
-<ul>
-<li>重启树莓派，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -a</span><br></pre></td></tr></table></figure>
-检查输出是否包含你设置的本地版本字符串、编译日期等。</li>
-<li>若未生效，编辑 <code>/boot/config.txt</code>，在 <code>[pi4]</code>
-段落前加一行： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arm_64bit=0</span><br></pre></td></tr></table></figure> 再重启并用 <code>uname -a</code>
-检查。</li>
-</ul>
-<hr />
-<h3 id="备份与后续建议">7. 备份与后续建议</h3>
-<ul>
-<li>建议用 svn、git
-等工具备份你的代码，也可在多台树莓派间做冗余，防止系统崩溃或锁死导致数据丢失。</li>
-<li><code>sudo passwd root</code>更新root密码（忘记密码用）</li>
-<li><code>sudo raspi-config</code>中可以更改主机名</li>
-<li>在树莓派的桌面环境中，可以使用快捷键 Ctrl + Alt + T
-快速打开终端</li>
-</ul>
-<h3 id="用户管理">用户管理</h3>
-<ul>
-<li><code>sudo adduser 新用户名</code>创建新用户</li>
-<li><code>usermod -aG sudo username</code>将username用户加入sudoers组</li>
-<li>执行visudo命令并在文件中添加<code>username  ALL=(ALL) NOPASSWD:ALL</code>-赋予username用户执行所有sudo命令权限，不需要密码提示</li>
-<li><code>sudo userdel --remove --force pi</code>删除默认账号</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/21/oper_sys3lab_ksetup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/21/oper_sys3lab_ksetup/" class="post-title-link" itemprop="url">操作系统基础 | 2.3 初试linux内核实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-22 08:53:37" itemprop="dateCreated datePublished" datetime="2025-06-22T08:53:37+08:00">2025-06-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-24 01:59:02" itemprop="dateModified" datetime="2025-09-24T01:59:02+08:00">2025-09-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><strong>注意</strong>：本教学实验因为使用较早版本的树莓派Linux内核，内核源码的symlink仅适配Linux系统，请使用Linux平台主机进行交叉编译，若要使用window主机编译请更换使用的内核</p>
-<h3 id="下载适用于树莓派的内核源码">1. 下载适用于树莓派的内核源码</h3>
-<p>一般项目可以直接去 <a target="_blank" rel="noopener" href="https://kernel.org">kernel.org</a> 下载
-Linux 源码，但本课程针对树莓派，需要用树莓派官方维护的内核版本（在 <a
-target="_blank" rel="noopener" href="https://github.com/raspberrypi">https://github.com/raspberrypi</a>）。
-在你的工程目录下，新建 <code>linux_source</code>
-文件夹用于存放源码和编译文件： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> linux_source</span><br><span class="line"><span class="built_in">cd</span> linux_source</span><br></pre></td></tr></table></figure>
-下载指定版本的树莓派内核源码（此过程可能需要20-30分钟）： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure>
-解压源码包： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure> 解压后会得到一个新目录，建议用
-<code>mv</code> 命令重命名为
-<code>linux</code>，便于后续操作。解压完成后请删除 <code>.tar.gz</code>
-文件以节省空间。</p>
-<p>进入 <code>linux</code> 目录，运行以下命令查看内核版本：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make kernelversion</span><br></pre></td></tr></table></figure> 并用文本编辑器（如 emacs、vim、nano）打开
-<code>Makefile</code>，查看前几行定义的内核版本常量，记录
-<code>NAME</code> 常量的值。</p>
-<h3 id="针对树莓派-44b-的设备树修改">2. 针对树莓派 4/4B
-的设备树修改</h3>
-<p>如果你使用的是 Raspberry Pi 4 或 4B，需要修改设备树文件
-<code>arch/arm/boot/dts/bcm2711.dtsi</code>，找到 <code>arm-pmu</code>
-条目，将 <code>compatible</code> 行改为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = <span class="string">&quot;arm,cortex-a72-pmu&quot;</span>, <span class="string">&quot;arm,cortex-a15-pmu&quot;</span>, <span class="string">&quot;arm,armv8-pmuv3&quot;</span>;</span><br></pre></td></tr></table></figure></p>
-<h3 id="配置交叉编译环境">3. 配置交叉编译环境</h3>
-<p>添加交叉编译器和新版 gcc 到 PATH（并将以下两行添加到
-<code>~/.bashrc</code> 文件末尾，确保下次登录自动生效）：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将交叉编译工具链添加到PATH</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="comment"># 将c编译器添加到PATH</span></span><br><span class="line">module add gcc-8.3.0</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>注意：如果使用wsl2等，linux并不自带environment-modules的情况，需要手动安装编译工具并添加PATH：
-更新包列表 <code>sudo apt update</code>
-安装依赖，如果出现包依赖版本问题，请参照本站wsl2分类下的文章“在wsl2安装ros2遇到的一些坑”解决
-<code>sudo apt install bc bison flex libssl-dev make libc6-dev libncurses5-dev</code>
-安装32位工具链 <code>sudo apt install crossbuild-essential-armhf</code>
-检查是否已添加到PATH <code>arm-linux-gnueabihf-gcc --version</code></p>
-</blockquote>
-<h3 id="配置内核">4. 配置内核</h3>
-<p>对于 Raspberry Pi 3B+，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig</span><br></pre></td></tr></table></figure></p>
-<p>对于 Raspberry Pi 4/4B，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig</span><br></pre></td></tr></table></figure>
-这会生成树莓派的默认内核配置。</p>
-<h3 id="自定义内核配置">5. 自定义内核配置</h3>
-<p>进入菜单配置界面：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig</span><br></pre></td></tr></table></figure>
-<ul>
-<li>在 "General setup" -&gt; "Local version" 里，添加你的唯一标识（如
-<code>-v7</code> 或 <code>-v7l</code> 后面加你的名字，无空格）。</li>
-<li>修改 "Preemption Model" 选项为 "Preemptible Kernel (Low-Latency
-Desktop)"，以获得更低延迟的抢占模型。</li>
-<li>启用 ARM 性能监控单元驱动（"Kernel Performance Events and
-Counters"），并确保 "Profiling support" 也已启用。</li>
-<li>任选一个有趣的选项，按 <code>H</code>
-键查看简介，记录该选项的名称、简介和符号（symbol），并简述为何选择
-"Preemptible Kernel (Low-Latency
-Desktop)"（提示：该模式适合需要低延迟响应的场景，如桌面或实时应用）。</li>
-</ul>
-<p>保存并退出配置。</p>
-<hr />
-<h3 id="编译内核">6. 编译内核</h3>
-<p>记录编译开始和结束时间</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span>&gt;&gt;time.txt; make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; <span class="built_in">date</span>&gt;&gt;time.txt</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：如果使用wsl2出现类似以下错误
-<code>Error: selected processor does not support 'dmb ish' in ARM mode</code>
-请尝试指定编译环境变量（编译参数会报错冲突）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line">export KCFLAGS=&quot;-march=armv7-a -mfpu=vfpv3&quot;</span><br><span class="line">make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs</span><br><span class="line">unset KCFLAGS</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<p>编译完成后，创建用于存放模块的目录：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ../modules</span><br></pre></td></tr></table></figure>
-<p>安装内核模块：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install</span><br></pre></td></tr></table></figure>
-<h3 id="回答与说明">7. 回答与说明</h3>
-<ul>
-<li>用 <code>cat time.txt</code> 查看编译所用时间。</li>
-<li>说明为何要用交叉编译器：因为 linuxlab
-服务器的架构与树莓派不同，必须用交叉编译器生成适用于 ARM
-架构的内核和模块。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

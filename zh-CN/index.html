@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,708 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/10/02/kamacode38seq2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/02/kamacode38seq2/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划11</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-10-03 05:48:44" itemprop="dateCreated datePublished" datetime="2025-10-03T05:48:44+08:00">2025-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-11 23:30:22" itemprop="dateModified" datetime="2025-10-11T23:30:22+08:00">2025-10-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="最长公共子序列">1143.最长公共子序列</h3>
+<p>按照动态规划，每次比较成功就加一，取所有值最大的思路是错的，这种会把乱序但是相同的字符也算进去。
+于是我想了半天怎么先循环以i,j为右下角的正方形，本来想的是记忆化将i,j赋值为比较后相等的值，看了题解发现得在递推公式上作更改
+因为字符中间可能会插入别的字符，所以ac,ace的比较结果和ac,aced的比较结果是一样的
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">longestCommonSubsequence</span><span class="params">(string text1, string text2)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(text1.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt; (text2.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= text1.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= text2.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(text1[i<span class="number">-1</span>] == text2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>]+<span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j], dp[i][j<span class="number">-1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[text1.<span class="built_in">size</span>()][text2.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="不相交的线">1035.不相交的线</h3>
+<p>既然一个数只能连一根线，那么其实和上一题是一个意思了
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxUncrossedLines</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(nums1.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt; (nums2.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= nums1.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= nums2.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums1[i<span class="number">-1</span>] == nums2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j], dp[i][j<span class="number">-1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[nums1.<span class="built_in">size</span>()][nums2.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最大子序和">53. 最大子序和</h3>
+<p>我想的是，<code>dp[i]</code>由<code>dp[i-1]</code>,<code>dp[i-1]+nums[i]</code>,<code>nums[i]</code>中的最大值决定，但是这样解会算出不连续的最大值</p>
+<p>题解的推算法是这样的： <code>dp[i]</code>只有两个方向可以推出来： -
+<code>dp[i-1] + nums[i]</code>，即：<code>nums[i]</code>加入当前连续子序列和
+- <code>nums[i]</code>，即：从头开始计算当前连续子序列和
+再找每个的<code>dp[i]</code>最大值 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxSubArray</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> res = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>]+nums[i], nums[i]);</span><br><span class="line">            <span class="keyword">if</span>(dp[i] &gt; res)res = dp[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="判断子序列">392.判断子序列</h3>
+<p>常规做的话双指针法即可，按照动态规划来做是和第一题是差不多的思路
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isSubsequence</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(s.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(t.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= s.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= t.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(s[i<span class="number">-1</span>] == t[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = dp[i][j<span class="number">-1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[s.<span class="built_in">size</span>()][t.<span class="built_in">size</span>()] == s.<span class="built_in">size</span>() ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/10/02/kamabagu7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/02/kamabagu7/" class="post-title-link" itemprop="url">代码随想录 | 八股-TCP连接</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-03 05:29:05 / 修改时间：05:48:16" itemprop="dateCreated datePublished" datetime="2025-10-03T05:29:05+08:00">2025-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3
+id="tcp连接三次握手的过程为什么是三次可以是两次或者更多吗">TCP连接三次握手的过程，为什么是三次，可以是两次或者更多吗？</h3>
+<ol type="1">
+<li>三次握手的过程</li>
+</ol>
+<p>第一次握手：客户端向服务器发送一个SYN
+（同步序列编号）报文，请求建立连接，客户端进入SYN_SENT 状态。
+第二次握手：服务器收到SYN 报文后，如果同意建立连接，则会发送一个SYN-ACK
+（同步确认）报文作为响应，同时进入SYN_RCVD 状态。
+第三次握手：客户端收到服务器的SYN-ACK 报文后，会发送一个ACK
+（确认）报文作为最终响应，之后客户端和服务器都进入ESTABLISHED
+状态，连接建立成功。</p>
+<p>(2)为什么需要三次握手
+因为TCP需要简历双向的数据连接。通过三次握手，客户端和服务器都能够确认对方的接收和发送能力。第一次握手确认了客户端到服务器的通道是开放的；第二次握手确认了服务器到客户端的通道是开放的；第三次握手则确认了客户端接收到服务器的确认，从而确保了双方的通道都是可用的。</p>
+<p>而如果仅使用两次握手，服务器可能无法确定客户端的接收能力是否正常，比如客户端可能已经关闭了连接，但之前发送的连接请求报文在网络上延迟到达了服务器，服务器就会主动去建立一个连接，但是客户端接收不到，导致资源的浪费。而四次握手可以优化为三次。</p>
+<h3
+id="tcp连接四次挥手的过程为什么是四次">TCP连接四次挥手的过程，为什么是四次？</h3>
+<p>（1）四次挥手的过程</p>
+<p>第一次挥手：客户端发送一个FIN报文给服务端，表示自己要断开数据传送，报文中会指定一个序列号
+(seq=x)。然后,客户端进入FIN-WAIT-1 状态。
+第二次挥手：服务端收到FIN报文后，回复ACK报文给客户端，且把客户端的序列号值+1，作为ACK报文的序列号(seq=x+1)。然后，服务端进入CLOSE-WAIT(seq=x+1)状态，客户端进入FIN-WAIT-2状态。
+第三次挥手：服务端也要断开连接时，发送FIN报文给客户端，且指定一个序列号(seq=y+1)，随后服务端进入LAST-ACK状态。
+第四次挥手：客户端收到FIN报文后，发出ACK报文进行应答，并把服务端的序列号值+1作为ACK报文序列号(seq=y+2)。此时客户端进入TIME-WAIT状态。服务端在收到客户端的ACK
+报文后进入CLOSE 状态。如果客户端等待2MSL没有收到回复，才关闭连接。</p>
+<p>（2）为什么需要四次挥手</p>
+<p>TCP是全双工通信，可以双向传输数据。任何一方都可以在数据传送结束后发出连接释放的通知，待对方确认后进入半关闭状态。
+当另一方也没有数据再发送的时候，则发出连接释放通知，对方确认后才会完全关闭
+TCP
+连接。因此两次挥手可以释放一端到另一端的TCP连接，完全释放连接一共需要四次挥手。</p>
+<p>只有通过四次挥手，才可以确保双方都能接收到对方的最后一个数据段的确认，主动关闭方在发送完最后一个ACK后进入TIME-WAIT
+状态，这是为了确保被动关闭方接收到最终的ACK
+，如果被动关闭方没有接收到，它可以重发FIN
+报文，主动关闭方可以再次发送ACK 。</p>
+<p>而如果使用三次挥手，被动关闭方可能在发送最后一个数据段后立即关闭连接，而主动关闭方可能还没有接收到这个数据段的确认。</p>
+<h3
+id="http的keep-alive是什么tcp-的-keepalive-和-http-的-keep-alive-是一个东西吗">HTTP的Keep-Alive是什么？TCP
+的 Keepalive 和 HTTP 的 Keep-Alive 是一个东西吗？</h3>
+<p>HTTP 的 Keep-Alive，是由应用层实现的，称为 HTTP 长连接
+每次请求都要经历这样的过程：建立 TCP连接 -&gt; HTTP请求资源 -&gt;
+响应资源 -&gt;
+释放连接，这就是HTTP短连接，但是这样每次建立连接都只能请求一次资源，所以HTTP
+的 Keep-Alive实现了使用同一个 TCP 连接来发送和接收多个 HTTP
+请求/应答，避免了连接建立和释放的开销，就就是 HTTP
+长连接。通过设置HTTP头Connection: keep-alive来实现。</p>
+<p>TCP 的 Keepalive，是由TCP 层（内核态）实现的，称为 TCP
+保活机制，是一种用于在 TCP 连接上检测空闲连接状态的机制
+当TCP连接建立后，如果一段时间内没有任何数据传输，TCP
+Keepalive会发送探测包来检查连接是否仍然有效。</p>
+<p>补充说明：</p>
+<p>其实这里tcp的keepalive，不只是支持http，还可以支持ftp和smtp的，他是一个能力，类似于gc。</p>
+<p>http的这个keepalive感觉更是一种策略吧，比如你有一个http用了keepalive，然后过了一会，你不传输数据了，这个时候没有通知对方close，这个时候tcp的keepalive就会起到用处去关闭这次链接。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/26/oper_sys28lab_process/" class="post-title-link" itemprop="url">操作系统基础 | 5.8 进程实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-27 09:27:32" itemprop="dateCreated datePublished" datetime="2025-09-27T09:27:32+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-01 00:27:46" itemprop="dateModified" datetime="2025-10-01T00:27:46+08:00">2025-10-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="进程家族树-process-family-tree"><strong>进程家族树 (Process
+Family Tree)</strong></h3>
+<ol type="1">
+<li><p><strong>实验报告</strong>：准备好实验报告</p></li>
+<li><p><strong>simple_fork.c</strong>：编写一个名为
+<code>simple_fork.c</code> 的简短程序，使用 <code>fork()</code>
+函数从父进程生成一个子进程。父进程应在 <code>fork</code>
+之前打印一条语句，并在 <code>fork</code> 之后打印出子进程的
+PID。子进程应在被生成后打印一条语句，使用 <code>getpid()</code> 和
+<code>getppid()</code> 函数打印出其自身的 PID 及其父进程的
+PID。在您的树莓派上编译并运行您的程序，并将程序的输出作为此问题的答案。
+提示：gcc编译<code>gcc [source] -o [destination]</code></p></li>
+<li><p><strong>tree_fork.c</strong>：编写第二个名为
+<code>tree_fork.c</code>
+的程序，该程序将一个整数作为命令行参数，并在最多 10
+代的固定限制内，生成一个具有指定代数的“二进制家族树”进程。这将创建
+<code>2^n - 1</code> 个进程，其中 <code>n</code> 是代数。对于
+n=1，程序将创建 1 个进程；对于 n=5，将创建 31 个进程；对于 n=10，将创建
+1023 个进程，依此类推。我们将代数限制为最多
+10，因为更大的数字会运行很长时间，甚至可能冻结您的树莓派！</p>
+<ul>
+<li>如果未提供命令行参数，程序应输出有用的用法消息并退出。</li>
+<li>否则，它应将命令行参数转换为整数并存储在 <code>generations</code>
+变量中。</li>
+<li>如果 <code>generations</code> 变量小于 1 或大于
+10，程序应输出有用的用法消息并退出。</li>
+<li>否则，它（以及它生成的任何子进程）应执行以下操作（原始程序为第一代）：
+<ul>
+<li>打印一行，说明它属于哪一代及其自身的 PID；</li>
+<li>增加当前代数计数器；</li>
+<li>如果已达到最后一代（根据 <code>generations</code> 变量），则直接返回
+0；否则，生成两个子进程；</li>
+<li>使用 <code>wait(0)</code> 等待任何成功生成的子进程完成；</li>
+<li>如果两个子进程都成功生成，则返回
+0；如果任一生成（或两者都）失败，则返回 -1。</li>
+</ul></li>
+<li><strong>提示</strong>：仔细检查每次调用
+<code>fork()</code>（或您用于生成每个子进程的任何调用）返回的
+<code>pid_t</code> 值非常重要，因为 (1)
+这些调用可能失败（由负返回值指示），(2) <code>0</code>
+表示子进程正在运行，(3) 正数表示父进程正在运行。</li>
+<li><strong>提示</strong>：基于此，使用递归，或使用带有几个
+<code>pid_t</code> 变量（每个子进程一个）的 <code>while</code>
+循环并明智地在子进程中运行的代码分支使用 <code>continue</code>
+语句，可以很直接地实现本练习的逻辑。</li>
+<li>作为此练习的答案，请展示您的程序在运行 4
+代时（如果正确实现，应总共生成 15 个进程）的输出。</li>
+</ul></li>
+<li><p><strong>修改 kobject
+示例模块</strong>：现在我们将回到使用这些思想进行内核模块设计。首先，从您的
+linux 源码目录中，找到并将文件
+<code>samples/kobject/kobject-example.c</code>
+复制到您保存内核模块代码的目录中。这是一个使用称为 <code>kobjects</code>
+的功能的内核模块，它提供了一个在内核和用户空间之间交换数据的接口。每个数据项称为一个属性（attribute），对于每个属性，您需要提供一个
+<code>show</code> 和 <code>store</code>
+函数，分别在用户空间读取和写入这些值时被调用。</p>
+<ul>
+<li>该特定模块提供三个属性：<code>foo</code>、<code>baz</code> 和
+<code>bar</code>。加载后，您可以在 sysfs 文件系统中的
+<code>/sys/kernel/kobject_example/</code> 目录下找到它们。</li>
+<li>修改此文件，以便（通过使用 <code>printk</code>）在更新
+<code>foo</code>、<code>baz</code> 或 <code>bar</code>
+中的任何一个时打印一条系统日志消息，并在消息中显示被更新变量的旧值和新值。</li>
+<li>现在我们可以像以前一样构建您修改后的模块。首先，更新您的
+<code>Makefile</code>，使其包含新模块的相应 <code>.o</code>
+文件目标，然后为您的模块生成 <code>.ko</code> 文件，如下所示：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module add arm-rpi</span><br><span class="line">LINUX_SOURCE=您的Linux内核源代码路径</span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
+<li>然后，使用 <code>sftp</code> 将生成的 <code>.ko</code>
+文件复制到您的树莓派上，并使用 <code>sudo insmod</code>
+加载该模块。</li>
+<li>在具有 root 权限的终端中，您可以使用 <code>cat</code>
+命令读取这些属性的值，并使用 <code>echo</code>
+命令将值写入这些属性，例如： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo bash</span><br><span class="line"><span class="built_in">cd</span> /sys/kernel/kobject_example/</span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示 foo 属性的当前（原始）值</span></span><br><span class="line"><span class="built_in">echo</span> 42 &gt; foo    <span class="comment"># 将值 42 写入属性 foo</span></span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示属性 foo 的新值</span></span><br></pre></td></tr></table></figure> <em>注意：您必须有一个 root
+终端（<code>sudo bash</code> 可以给您）才能写入这些命令（即
+<code>sudo echo</code> 不起作用）。</em></li>
+<li>作为此练习的答案，请展示使用这些命令成功更改
+<code>foo</code>、<code>bar</code> 和 <code>baz</code>
+值的输出演示。</li>
+</ul></li>
+<li><p><strong>family_reader.c
+模块</strong>：现在我们将编写一个内核模块，通过 sysfs 接口读取一个
+PID，并在系统日志中打印该进程的祖先谱系。</p>
+<ul>
+<li>创建一个基于您修改后的 <code>kobject-example.c</code>
+文件的新内核模块文件
+<code>family_reader.c</code>（即，首先请复制它）。该模块应在
+<code>/sys/kernel/fam_reader/</code>
+下创建单个系统属性（像上一个练习一样是整数值）。当您向此属性写入一个整数时，您的模块应尝试打印出该
+PID
+的祖先谱系（即，它的父进程，然后是父进程的父进程，依此类推，一直追溯到
+<code>init</code> 任务）。涉及几个步骤：
+<ul>
+<li><strong>旁注</strong>：现代 Linux
+内核为了便于在不同虚拟主机之间迁移进程，区分了“真实”PID
+和“虚拟”PID。虚拟 PID 是进程从用户空间看到的 PID。</li>
+<li>您需要将整数输入转换为合适的内核 PID。使用函数
+<code>find_vpid()</code>（请参阅 <code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>），它返回一个
+<code>struct pid *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>接下来，您可以通过将 <code>struct pid *</code> 和标志
+<code>PIDTYPE_PID</code> 传递给函数 <code>get_pid_task()</code>（请参阅
+<code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>）来将其转换为
+<code>struct task_struct *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>一旦您有了
+<code>struct task_struct *</code>，就可以访问它存储的任何数据。特别是，<code>real_parent</code>
+字段存储了生成它的进程的 <code>struct task_struct *</code>
+指针，<code>comm</code> 字段是给出命令名称的字符串。
+<ul>
+<li><strong>注意</strong>：有一个单独的字段叫做
+<code>parent</code>，这不是我们本练习想要的。<code>parent</code>
+是共享进程组信号并允许父子进程之间等待的逻辑父进程。</li>
+</ul></li>
+<li>回溯家族树，打印出每个任务的 PID 和命令名称，一直回溯到 PID 为 1 的
+<code>init</code> 任务。</li>
+</ul></li>
+<li>像上一个模块一样编译您的新内核模块，然后使用 <code>sftp</code>
+将生成的 <code>.ko</code>
+文件复制到您的树莓派上。在您的树莓派上，安装该模块，然后使用
+<code>sudo bash</code> 为您的终端会话提供 root
+访问权限。在该模块的目录下（将在 <code>/sys/kernel/</code> 下），使用
+<code>cat</code> 和 <code>echo</code> 读取和写入该模块属性的值，然后使用
+<code>dmesg</code> 确认系统日志显示您的模块工作正常。</li>
+<li>使用 <code>ps</code> 命令查找在您当前终端窗口中运行的
+<code>sudo</code> 进程的 PID，使用 <code>echo</code>
+将您的模块属性设置为该 PID，然后使用 <code>dmesg</code>
+查看该进程的祖先谱系。作为此练习的答案，请展示显示 <code>sudo</code>
+进程祖先谱系的系统日志消息。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="可选拓展练习-optional-enrichment-exercises"><strong>可选拓展练习
+(Optional Enrichment Exercises)</strong></h3>
+<ol start="6" type="1">
+<li><strong>探索 task_struct</strong>：<code>task_struct</code>
+包含许多有趣的进程数据和进程记账信息。尝试将其他字段打印到系统日志中，并作为此练习的答案，请简要描述您打印了哪些内容，并展示执行此操作后的一些系统日志消息。</li>
+<li><strong>探索调度程序功能</strong>：<code>kernel/sched</code> 和
+<code>include/linux/sched</code>
+中的文件包含许多用于处理任务的功能，包括修改特定任务或迭代系统中每个任务的能力。例如，<code>include/linux/sched/signal.h</code>
+定义了诸如 <code>for_each_process()</code>
+之类的宏。尝试使用其中一些功能，并作为此练习的答案，请简要描述您做了什么以及观察到了什么。</li>
+</ol>
+<hr />
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/kamacode37subseq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/26/kamacode37subseq/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划10</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-27 09:25:21 / 修改时间：06:47:29" itemprop="dateCreated datePublished" datetime="2025-09-27T09:25:21+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="最长递增子序列">300.最长递增子序列</h3>
+<p>这题我一开始想使用回溯找最长子序列，但是我发现需要记录的状态太多，回溯没办法解决；同时对于序列中的相同数字，如何记住遍历前后的状态也是个问题。
+题解中这题使用的是动态规划，对于每一个索引求它所在的最长递增子序列，再求所有子序列中最长的那个。</p>
+<ul>
+<li>外层循环：遍历序列中每一个索引<code>i</code></li>
+<li>内层循环：求从开头到<code>i</code>之前的数字<code>j</code>中最长的子序列，如果<code>nums[i] &gt; nums[j]</code>，则开头到<code>i</code>所在处最长子序列为<code>j</code>所在处+1</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size(), <span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> mx = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i] &gt; nums[j])dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// cout&lt;&lt;dp[i]&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">            &#125;</span><br><span class="line">            mx = <span class="built_in">max</span>(mx, dp[i]);</span><br><span class="line">            <span class="comment">// cout&lt;&lt;endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mx;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="最长连续递增序列">674. 最长连续递增序列</h3>
+<p>这题不要想得太复杂了就行 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLengthOfLCIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> lng = <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> max_l = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; nums[i<span class="number">-1</span>])&#123;</span><br><span class="line">                lng++;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                lng = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            max_l = <span class="built_in">max</span>(max_l, lng);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max_l;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最长重复子数组">718. 最长重复子数组</h3>
+<p>这题我想可不可以分别求两个数组的最长相等前后缀表，再找重复子数组。看了动规解法我发现，一个两数组比较表能解决的事情，用前后缀表似乎有点浪费？</p>
+<p>动规解法中，<code>dp[i][j]</code>表示两个数组下标i-1，j-1个数进行比较，这样0行和0列默认初始化为0即可。如果表示下标i，j个数，则需要再初始化一下0行和0列
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLength</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(nums1.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(nums2.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; (nums1.<span class="built_in">size</span>()+<span class="number">1</span>); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt; (nums2.<span class="built_in">size</span>()+<span class="number">1</span>); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums1[i<span class="number">-1</span>] == nums2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] &gt; len)len = dp[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(auto line:dp)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int l:line)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;l&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/intv_tyy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/26/intv_tyy/" class="post-title-link" itemprop="url">算法笔试 | 某厂测开复盘</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-27 09:24:28 / 修改时间：09:24:16" itemprop="dateCreated datePublished" datetime="2025-09-27T09:24:28+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>今天笔试某厂测开岗，选择还行，算法全寄，遂复盘之</p>
+<h3 id="操作系统八股-内存的分页和分段">操作系统八股
+内存的分页和分段</h3>
+<h4 id="分页">分页</h4>
+<p>分页是一种内存管理方案，它<strong>将程序的虚拟地址空间和物理内存都划分成固定大小的块</strong>。虚拟内存的块称为“页”，物理内存的块称为“页框”或“帧”。页和页框的大小通常相同（例如
+4KB）。</p>
+<p>虚拟地址 = 页号 + 页内偏移量 物理地址 = 页框号 + 页内偏移量</p>
+<h4 id="分段">分段</h4>
+<p>分段是一种更符合程序员视角的内存管理方案。<strong>一个程序被划分为若干个逻辑段</strong>，例如：代码段、数据段、堆段、栈段等。每个段都有其特定的用途（如代码段可读可执行但不可写）。</p>
+<p>操作系统为每个进程维护一张<strong>段表</strong>，该表记录了每个段的<strong>基地址</strong>（在物理内存中的起始地址）和<strong>段长</strong>（段的界限）。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">特性</th>
+<th style="text-align: left;"><strong>分页（一维）</strong></th>
+<th style="text-align: left;"><strong>分段（二维）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>地址空间视图</strong></td>
+<td style="text-align: left;"><strong>一个</strong>连续的线性空间</td>
+<td
+style="text-align: left;"><strong>多个</strong>独立的逻辑空间（段）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>“号”的含义</strong></td>
+<td
+style="text-align: left;">系统管理的<strong>索引号</strong>（第几页）</td>
+<td
+style="text-align: left;">程序定义的<strong>逻辑标识</strong>（哪个段）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>对程序员可见</strong></td>
+<td
+style="text-align: left;"><strong>透明</strong>（由硬件和OS管理）</td>
+<td
+style="text-align: left;"><strong>可见</strong>（通常由编译器管理，但理念上符合程序员思维）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>类比</strong></td>
+<td
+style="text-align: left;"><strong>一本书</strong>：只需要一个页码和行号</td>
+<td
+style="text-align: left;"><strong>文件柜</strong>：需要先选抽屉，再选文件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="操作系统八股-银行家算法bankers-algorithm">操作系统八股
+银行家算法（Banker's Algorithm）。</h3>
+<p>银行家算法用于检查系统是否处于安全状态，即是否存在一个安全序列，每个进程按顺序执行，执行完后释放所有资源，使得所有进程都能完成而不导致死锁。</p>
+<h3 id="算法题-分零食">算法题 分零食</h3>
+<p>题目：小明和弟弟分零食，分零食的次数为c，每次会给到零食的数量n和最便宜的零食价格m,在价目表中，每个零食的价格是前一个零食的m倍（第一个零食价格为m）,小明想给弟弟总和比自己贵的零食，但为了弟弟的自尊心他想自己和弟弟的零食价格差尽量小，每次请输出小明的零食数和小明每个零食的单价</p>
+<h4 id="为什么贪心算法是最优的">为什么贪心算法是最优的？</h4>
+<ol type="1">
+<li><strong>几何序列的超级递增性质</strong>：当 (m &gt; 1)
+时，零食价格序列是超级递增的，即每个后续零食的价格都大于之前所有零食价格之和。例如，对于
+(m=2)，序列为 (2, 4, 8, 16, )，其中 (4 &gt; 2), (8 &gt; 2+4), (16 &gt;
+2+4+8)，等等。这种性质意味着贪心算法从大到小选择零食可以确保得到最接近总价一半的子集和，从而最小化价格差。</li>
+<li><strong>对于 (m = 1) 的情况</strong>：所有零食价格均为
+1。小明最多能拿的零食数为 (k = (n-1)/2 )，这样弟弟拿 (n-k)
+个零食，总价差为 1（最小可能值）。贪心算法在这里本质上是直接计算最大 (k)
+使得 (k &lt; n/2)。</li>
+</ol>
+<p>因此，贪心算法在两种情况下都能保证找到最优解，使价格差最小。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">    cin &gt;&gt; c;</span><br><span class="line">    <span class="keyword">while</span> (c--) &#123;</span><br><span class="line">        <span class="type">int</span> n, m;</span><br><span class="line">        cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (m == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 所有零食价格均为1：小明拿k个，使得k &lt; n/2，且k尽可能大</span></span><br><span class="line">            <span class="type">int</span> k = (n - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            cout &lt;&lt; k &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="number">1</span> &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 计算零食价格序列和总价S</span></span><br><span class="line">            vector&lt;ll&gt; <span class="built_in">prices</span>(n);</span><br><span class="line">            ll total_sum = <span class="number">0</span>;</span><br><span class="line">            ll current = m;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">                prices[i] = current;</span><br><span class="line">                total_sum += current;</span><br><span class="line">                current *= m;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            ll小明_sum = <span class="number">0</span>;</span><br><span class="line">            vector&lt;ll&gt; xiaoming_prices;</span><br><span class="line">            <span class="comment">// 从最贵的零食（序列末尾）开始贪心选择</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="number">2</span> * (小明_sum + prices[i]) &lt;= total_sum) &#123;</span><br><span class="line">                    小明_sum += prices[i];</span><br><span class="line">                    xiaoming_prices.<span class="built_in">push_back</span>(prices[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 输出小明的零食数量和每个零食的单价（价格从大到小）</span></span><br><span class="line">            cout &lt;&lt; xiaoming_prices.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = xiaoming_prices.<span class="built_in">size</span>() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                cout &lt;&lt; xiaoming_prices[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1119,1129 +1821,6 @@ signals） * <code>SigIgn</code>（忽略信号，ignored signals） *
 当我们运行清单24-1中的程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./t_fork</span><br><span class="line">PID=28557 (child)  idata=333 istack=666</span><br><span class="line">PID=28556 (parent) idata=111 istack=222</span><br></pre></td></tr></table></figure>
 上面的输出证明，子进程在 <code>fork()</code>
 时获得了栈段和数据段的<strong>自有副本</strong>，并且它能够修改这些段中的变量而<strong>不影响父进程</strong>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/23/oper_sys23processMgmt2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/23/oper_sys23processMgmt2/" class="post-title-link" itemprop="url">操作系统基础 | 5.2 进程管理详解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-23 23:49:20" itemprop="dateCreated datePublished" datetime="2025-08-23T23:49:20+08:00">2025-08-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-27 10:13:53" itemprop="dateModified" datetime="2025-08-27T10:13:53+08:00">2025-08-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="进程创建-process-creation"><strong>进程创建 (Process
-Creation)</strong></h3>
-<p>Unix 中的进程创建方式是独特的。大多数操作系统实现一种 <strong>spawn
-机制</strong>来在新地址空间中创建新进程、读入可执行文件并开始执行。Unix
-则采用了一种不寻常的方法，将这些步骤分离成两个不同的函数：<code>fork()</code>
-和 <code>exec()</code>⁷。第一个函数 <code>fork()</code>
-创建一个作为当前任务副本的<strong>子进程</strong>。它与父进程的区别仅在于其
-PID（是唯一的）、其 PPID（父进程的 PID，被设置为原始进程的
-PID）以及某些资源和统计信息（如待处理的信号，这些不被继承）。第二个函数
-<code>exec()</code>
-将一个新的可执行文件加载到地址空间中并开始执行。<code>fork()</code> 后接
-<code>exec()</code> 这种组合，类似于大多数操作系统提供的单一函数。</p>
-<p>⁷ 这里的 <code>exec()</code> 指的是 <code>exec()</code>
-函数家族中的任何成员。内核实现了 <code>execve()</code>
-系统调用，基于此实现了 <code>execlp()</code>, <code>execle()</code>,
-<code>execv()</code>, 和 <code>execvp()</code>。</p>
-<h4 id="写时复制-copy-on-write"><strong>写时复制
-(Copy-on-Write)</strong></h4>
-<p>传统上，在 <code>fork()</code>
-时，父进程拥有的所有资源都会被复制，并将副本交给子进程。这种方法很朴素且低效，因为它复制了许多本可以共享的数据。更糟糕的是，如果新进程要立即执行一个新的映像（image），所有这些复制都将被浪费。在
-Linux 中，<code>fork()</code> 是通过使用<strong>写时复制 (Copy-on-Write
-或 COW)</strong>
-页来实现的。写时复制是一种延迟或完全防止数据复制的技术。父进程和子进程可以共享一份单一的副本，而不是复制整个进程地址空间。</p>
-<p>然而，数据会被标记，如果对其进行写入，就会创建一个副本，每个进程都会收到一个独一无二的副本。因此，资源的复制<strong>仅发生在它们被写入时</strong>；在此之前，它们以只读方式共享。这种技术将地址空间中每一页的复制延迟到实际被写入的时候。如果这些页永远不被写入——例如，如果在
-<code>fork()</code> 之后立即调用
-<code>exec()</code>——它们就永远不需要被复制。</p>
-<p><code>fork()</code> 产生的唯一开销是复制父进程的<strong>页表 (page
-tables)</strong>
-以及为子进程创建一个唯一的进程描述符。在常见的场景中（进程在 fork
-后立即执行一个新的可执行映像），这种优化避免了大量数据（整个地址空间，很容易达到几十兆字节）的浪费性复制。这是一个重要的优化，因为
-Unix 哲学鼓励快速的进程执行。</p>
-<h4 id="forking"><strong>Forking</strong></h4>
-<p>Linux 通过 <code>clone()</code> 系统调用来实现
-<code>fork()</code>。这个调用接受一系列标志（flags），用以指定父进程和子进程应共享哪些资源（如果有的话）。（关于这些标志的更多信息，请参阅本章后面的“Linux
-的线程实现”一节。）<code>fork()</code>, <code>vfork()</code>, 和
-<code>__clone()</code> 库调用都使用必要的标志来调用 <code>clone()</code>
-系统调用。而 <code>clone()</code> 系统调用又会调用
-<code>do_fork()</code>。</p>
-<p>forking 的大部分工作由 <code>do_fork()</code> 处理，该函数定义在
-<code>kernel/fork.c</code> 中。此函数调用
-<code>copy_process()</code>，然后启动进程运行。有趣的工作是由
-<code>copy_process()</code> 完成的：</p>
-<ol type="1">
-<li>它调用
-<code>dup_task_struct()</code>，该函数为新进程创建一个新的内核栈、<code>thread_info</code>
-结构和
-<code>task_struct</code>。新的值与当前任务的值完全相同。此时，子进程和父进程的描述符是完全相同的。</li>
-<li>然后检查确保新的子进程不会超过当前用户所能拥有的进程数量资源限制。</li>
-<li>子进程需要与父进程区分开来。进程描述符的各种成员被清除或设置为初始值。不被继承的进程描述符成员主要是统计信息。<code>task_struct</code>
-中的大部分值保持不变。</li>
-<li>子进程的状态被设置为 <code>TASK_UNINTERRUPTIBLE</code>
-以确保它还不会运行。</li>
-<li><code>copy_process()</code> 调用 <code>copy_flags()</code> 来更新
-<code>task_struct</code> 的 <code>flags</code>
-成员。<code>PF_SUPERPRIV</code>
-标志（表示任务是否使用了超级用户权限）被清除。<code>PF_FORKNOEXEC</code>
-标志（表示进程尚未调用 <code>exec()</code>）被设置。</li>
-<li>它调用 <code>alloc_pid()</code> 为新任务分配一个可用的 PID。</li>
-<li>根据传递给 <code>clone()</code> 的标志，<code>copy_process()</code>
-要么复制要么共享打开的文件、文件系统信息、信号处理程序、进程地址空间和命名空间。这些资源通常在给定进程的线程之间共享；否则，它们是唯一的，因此在这里被复制。</li>
-<li>最后，<code>copy_process()</code>
-进行清理工作，并向调用者返回一个指向新子进程的指针。</li>
-</ol>
-<p>回到 <code>do_fork()</code>，如果 <code>copy_process()</code>
-成功返回，新的子进程会被唤醒并运行。内核有意地让<strong>子进程先运行</strong>⁸。在子进程通常只是立即调用
-<code>exec()</code>
-的常见情况下，这消除了如果父进程先运行并开始写入地址空间可能发生的任何写时复制开销。</p>
-<blockquote>
-<p>⁸
-虽然目标是让子进程先运行，但这目前（指原书写作时）并不能正确运行。</p>
-</blockquote>
-<h4 id="vfork"><strong>vfork()</strong></h4>
-<p><code>vfork()</code> 系统调用与 <code>fork()</code>
-效果相同，但<strong>不会复制父进程的页表项 (page table
-entries)</strong>。相反，子进程作为父进程地址空间中的唯一线程执行，并且<strong>父进程被阻塞</strong>，直到子进程调用
-<code>exec()</code>
-或退出。不允许子进程写入地址空间。在引入这个调用的旧版 3BSD
-时代，这是一个受欢迎的优化，因为当时还没有使用写时复制页来实现
-<code>fork()</code>。如今，有了写时复制和子进程优先运行的语义，<code>vfork()</code>
-的唯一好处就是<strong>不复制父进程的页表项</strong>。</p>
-<p>如果 Linux 有一天实现了写时复制页表项，那么 <code>vfork()</code>
-将不再有任何好处⁹。由于 <code>vfork()</code> 的语义很棘手（例如，如果
-<code>exec()</code> 失败了会发生什么？），理想情况下系统不需要
-<code>vfork()</code>，内核也不必实现它。完全可以将 <code>vfork()</code>
-实现为一个普通的 <code>fork()</code> —— 这就是 Linux 在 2.2
-版本之前所做的。</p>
-<p><code>vfork()</code> 系统调用是通过向 <code>clone()</code>
-系统调用传递一个特殊标志来实现的：</p>
-<ol type="1">
-<li>在 <code>copy_process()</code> 中，<code>task_struct</code> 的成员
-<code>vfork_done</code> 被设置为 <code>NULL</code>。</li>
-<li>在 <code>do_fork()</code>
-中，如果给定了特殊标志，<code>vfork_done</code>
-会被指向一个特定的地址。</li>
-<li>子首次运行后，父进程——不会立即返回——而是等待子进程通过
-<code>vfork_done</code> 指针向其发出信号。</li>
-<li>在 <code>mm_release()</code>
-函数中（该函数在任务退出内存地址空间时使用），会检查
-<code>vfork_done</code> 是否为
-<code>NULL</code>。如果不是，则向父进程发送信号。</li>
-<li>回到 <code>do_fork()</code>，父进程被唤醒并返回。</li>
-</ol>
-<p>如果这一切都按计划进行，那么子进程现在在新的地址空间中执行，而父进程则在其原始地址空间中恢复执行。开销是降低了，但实现并不优雅。</p>
-<blockquote>
-<p>⁹ 页表写时复制可作为补丁，已大概率加入主流内核</p>
-</blockquote>
-<h3
-id="linux-的线程实现-the-linux-implementation-of-threads"><strong>Linux
-的线程实现 (The Linux Implementation of Threads)</strong></h3>
-<p>线程是一种流行的现代编程抽象。它们在同一程序的共享内存地址空间内提供多个执行线程。它们还可以共享打开的文件和其他资源。线程实现了并发编程，并且在多处理器系统上实现了真正的并行。</p>
-<p>Linux 拥有一个独特的线程实现。<strong>对 Linux
-内核而言，没有“线程”的概念</strong>。Linux
-将所有线程实现为标准进程。Linux
-内核并不提供任何特殊的调度语义或数据结构来表示线程。相反，一个线程仅仅是一个与其他进程共享某些资源的进程。每个线程都有一个唯一的
-<code>task_struct</code>，并且在内核看来就是一个普通的进程——线程只是恰巧与其他进程共享了资源（例如地址空间）。</p>
-<p>这种线程实现方法与 Microsoft Windows 或 Sun Solaris
-等操作系统形成了巨大对比，这些操作系统在内核中提供了对线程的明确支持（有时称线程为<strong>轻量级进程
-(Lightweight Processes)</strong>）。“轻量级进程”这个名字概括了 Linux
-与其他系统在哲学上的差异。对这些其他操作系统而言，线程是一种抽象，旨在提供比笨重进程更轻量、更快速的执行单元。而对
-Linux
-而言，线程仅仅是进程之间共享资源的一种方式（而进程本身已经相当轻量）¹⁰。</p>
-<p>例如，假设一个包含四个线程的进程。在具有显式线程支持的系统中，可能会存在一个进程描述符，该描述符又指向四个不同的线程。进程描述符描述共享资源，如地址空间或打开的文件。线程则描述它们独自拥有的资源。相反，在
-Linux 中，简单地存在四个进程，因而有四个普通的 <code>task_struct</code>
-结构。这四个进程被设置为共享某些资源。结果非常优雅。</p>
-<blockquote>
-<p>¹⁰ 例如，可以对比 benchmark 一下 Linux
-的进程创建时间与其他操作系统的进程（甚至线程！）创建时间。结果对 Linux
-有利。</p>
-</blockquote>
-<h4 id="创建线程-creating-threads"><strong>创建线程 (Creating
-Threads)</strong></h4>
-<p>线程的创建方式与普通任务相同，区别在于需要向 <code>clone()</code>
-系统调用传递一些标志（flags），这些标志指定了要共享的特定资源：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 上述代码产生的行为与普通的 <code>fork()</code>
-相同，但<strong>地址空间、文件系统资源、文件描述符和信号处理程序是共享的</strong>。换句话说，新任务和其父进程就是通常所说的线程。相比之下，一个普通的
-<code>fork()</code> 可以实现为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(SIGCHLD, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 而 <code>vfork()</code>
-可以实现为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(CLONE_VFORK | CLONE_VM | SIGCHLD, <span class="number">0</span>);</span><br></pre></td></tr></table></figure> 提供给 <code>clone()</code>
-的标志有助于指定新进程的行为，并详细说明父进程和子进程将共享哪些资源。表
-3.1 列出了在 <code>&lt;linux/sched.h&gt;</code> 中定义的 clone
-标志及其作用。</p>
-<p><strong>(表 3.1 Clone 标志及含义)</strong> | 标志 (Flag) | 含义
-(Meaning) | | :----------------------- |
-:-----------------------------------------------------------------------------
-| | <code>CLONE_FILES</code> | 父子进程共享打开的文件。 | |
-<code>CLONE_FS</code> |
-父子进程共享文件系统信息（如根目录、当前工作目录）。 | |
-<code>CLONE_IDLETASK</code> | 将 PID 设置为零（仅由空闲任务使用）。 | |
-<code>CLONE_NEWNS</code> | 为子进程创建新的命名空间 (namespace)。 | |
-<code>CLONE_PARENT</code> |
-子进程与父进程拥有相同的父进程（即调用者的父进程）。 | |
-<code>CLONE_PTRACE</code> | 继续跟踪子进程。 | |
-<code>CLONE_SETTID</code> | 将 TID（线程 ID）写回用户空间。 | |
-<code>CLONE_SETTLS</code> | 为子进程创建新的 TLS（线程本地存储）。 | |
-<code>CLONE_SIGHAND</code> | 父子进程共享信号处理程序和阻塞的信号掩码。
-| | <code>CLONE_SYSVSEM</code> | 父子进程共享 System V SEM_UNDO 语义。 |
-| <code>CLONE_THREAD</code> |
-父子进程位于同一个线程组中。这是将新进程标识为线程而非普通进程的关键标志。
-| | <code>CLONE_VFORK</code> | 使用了
-<code>vfork()</code>，父进程将睡眠直到子进程唤醒它。 | |
-<code>CLONE_UNTRACED</code> | 不允许跟踪进程强制对子进程使用
-<code>CLONE_PTRACE</code>。 | | <code>CLONE_STOP</code> | 以
-<code>TASK_STOPPED</code> 状态启动进程。 | |
-<code>CLONE_CHILD_CLEARTID</code> | 在子进程中清除 TID。 | |
-<code>CLONE_CHILD_SETTID</code> | 在子进程中设置 TID。 | |
-<code>CLONE_PARENT_SETTID</code> | 在父进程中设置 TID。 | |
-<code>CLONE_VM</code> |
-父子进程共享地址空间。这是创建线程的关键标志之一。 |</p>
-<h4 id="内核线程-kernel-threads"><strong>内核线程 (Kernel
-Threads)</strong></h4>
-<p>内核在后台执行某些操作通常很有用。内核通过<strong>内核线程 (kernel
-threads)</strong>
-来实现这一点——内核线程是<strong>仅存在于内核空间的标准进程</strong>。内核线程与普通进程的显著区别在于内核线程<strong>没有地址空间</strong>（它们的
-<code>mm</code> 指针指向它们的地址空间，为
-<code>NULL</code>）。它们只在内核空间中运行，不会上下文切换到用户空间。然而，内核线程与普通进程一样，是可调度和可抢占的。</p>
-<p>Linux 将一些任务委托给内核线程，最著名的是 <code>flush</code> 任务和
-<code>ksoftirqd</code> 任务。您可以在 Linux 系统上运行
-<code>ps -ef</code> 命令来查看内核线程。数量很多！</p>
-<blockquote>
-<p>-ef 是 every full(info) 的简写。在所有进程中，CMD 带 []，TTY 为
-?，PPID 为 2 或 0， UID是0或者root，是内核线程的特征</p>
-</blockquote>
-<p>内核线程在系统启动时由其他内核线程创建。实际上，内核线程只能由另一个内核线程创建。内核通过从
-<code>kthreadd</code> 内核进程 <strong>fork</strong>
-出所有新的内核线程来自动处理此事。在
-<code>&lt;linux/kthread.h&gt;</code>
-中声明的，用于从现有内核线程生成新内核线程的接口是： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">kthread_create</span><span class="params">(<span class="type">int</span> (*threadfn)(<span class="type">void</span> *data),</span></span><br><span class="line"><span class="params">                                   <span class="type">void</span> *data,</span></span><br><span class="line"><span class="params">                                   <span class="type">const</span> <span class="type">char</span> namefmt[], ...)</span>;</span><br></pre></td></tr></table></figure>
-新任务由 kthread 内核进程通过 <code>clone()</code>
-系统调用创建。新进程将运行 <code>threadfn</code> 函数，该函数接收
-<code>data</code> 参数。进程将被命名为
-<code>namefmt</code>，该参数接受在可变参数列表中的 printf
-风格格式化参数。进程创建时处于<strong>不可运行状态 (unrunnable
-state)</strong>；只有在通过 <code>wake_up_process()</code>
-显式唤醒后，它才会开始运行。可以使用单个函数 <code>kthread_run()</code>
-来创建并使进程可运行： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct *<span class="title function_">kthread_run</span><span class="params">(<span class="type">int</span> (*threadfn)(<span class="type">void</span> *data),</span></span><br><span class="line"><span class="params">                                <span class="type">void</span> *data,</span></span><br><span class="line"><span class="params">                                <span class="type">const</span> <span class="type">char</span> namefmt[], ...)</span>;</span><br></pre></td></tr></table></figure> 这个例程（作为宏实现）简单地调用了
-<code>kthread_create()</code> 和 <code>wake_up_process()</code>：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kthread_run(threadfn, data, namefmt, ...)                     \</span></span><br><span class="line"><span class="meta">(&#123;                                                                    \</span></span><br><span class="line"><span class="meta">    struct task_struct *k;                                        \</span></span><br><span class="line"><span class="meta">                                                                      \</span></span><br><span class="line"><span class="meta">    k = kthread_create(threadfn, data, namefmt, ## __VA_ARGS__);  \</span></span><br><span class="line"><span class="meta">    <span class="keyword">if</span> (!IS_ERR(k))                                               \</span></span><br><span class="line"><span class="meta">        wake_up_process(k);                                   \</span></span><br><span class="line"><span class="meta">    k;                                                            \</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br></pre></td></tr></table></figure> 启动后，内核线程会继续存在，直到它调用
-<code>do_exit()</code>，或者内核的另一部分调用
-<code>kthread_stop()</code>（传入由 <code>kthread_create()</code> 返回的
-<code>task_struct</code> 结构体的地址）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">kthread_stop</span><span class="params">(<span class="keyword">struct</span> task_struct *k)</span>;</span><br></pre></td></tr></table></figure></p>
-<h3 id="进程终止-process-termination"><strong>进程终止 (Process
-Termination)</strong></h3>
-<p>这很遗憾，但进程最终都会消亡。当一个进程终止时，内核会释放该进程所拥有的资源，并通知其父进程关于子进程消亡的消息。</p>
-<p>通常，进程销毁是<strong>自我诱导 (self-induced)</strong>
-的。当进程调用 <code>exit()</code>
-系统调用时就会发生，这可以是在它准备终止时显式调用，也可以是在从任何程序的
-main 子程序返回时隐式调用（即 C 编译器会在 <code>main()</code>
-返回后放置一个对 <code>exit()</code>
-的调用）。进程也可能<strong>非自愿地 (involuntarily)</strong>
-终止。这发生在进程收到一个它无法处理或忽略的信号或异常时。</p>
-<p>无论进程如何终止，大部分工作都由 <code>do_exit()</code> 处理（定义在
-<code>kernel/exit.c</code> 中），它完成一系列收尾工作：</p>
-<ol type="1">
-<li>它在 <code>task_struct</code> 的 <code>flags</code> 成员中设置
-<code>PF_EXITING</code> 标志。</li>
-<li>它调用 <code>del_timer_sync()</code>
-来移除任何内核定时器。确保返回时没有定时器在排队，也没有定时器处理程序在运行。</li>
-<li>如果启用了 BSD 进程记账 (process accounting)，<code>do_exit()</code>
-会调用 <code>acct_update_integrals()</code> 来写出记账信息。</li>
-<li>它调用 <code>exit_mm()</code> 来释放该进程持有的
-<code>mm_struct</code>。如果没有其他进程在使用这个地址空间（即地址空间未被共享），内核就会销毁它。</li>
-<li>它调用 <code>exit_sem()</code>。如果进程正在排队等待一个 IPC
-信号量，它在这里被移出队列。</li>
-<li>然后它调用 <code>exit_files()</code> 和 <code>exit_fs()</code>
-来分别递减与文件描述符和文件系统数据相关的对象的引用计数。如果某个引用计数降为零，说明该对象不再被任何进程使用，随即被销毁。</li>
-<li>它将任务的退出码（存储在 <code>task_struct</code> 的
-<code>exit_code</code> 成员中）设置为 <code>exit()</code>
-提供的代码或任何强制终止它的内核机制所提供的代码。退出码存储在这里，供父进程选择性检索。</li>
-<li>它调用 <code>exit_notify()</code>
-来向任务的父进程发送信号，将该任务的任何子进程<strong>重新设定父进程
-(reparent)</strong> 给其线程组中的另一个线程或 init
-进程，并将任务的退出状态（存储在 <code>task_struct</code> 结构的
-<code>exit_state</code> 中）设置为 <code>EXIT_ZOMBIE</code>。</li>
-<li><code>do_exit()</code> 调用 <code>schedule()</code>
-来切换到新进程（参见第 4
-章）。因为该进程现在已不可调度，这是该任务将执行的最后代码。<code>do_exit()</code>
-永不返回。</li>
-</ol>
-<p>至此，与任务关联的所有对象（假设该任务是唯一使用者）都已释放。该任务不可运行（并且不再有地址空间可供运行），并处于
-<code>EXIT_ZOMBIE</code>（僵尸）退出状态。它占用的唯一内存是它的内核栈、<code>thread_info</code>
-结构和 <code>task_struct</code>
-结构。该任务存在的唯一目的是向其父进程提供信息。在父进程检索到信息，或通知内核它不感兴趣之后，进程持有的剩余内存将被释放并返回给系统使用。</p>
-<h4
-id="移除进程描述符-removing-the-process-descriptor"><strong>移除进程描述符
-(Removing the Process Descriptor)</strong></h4>
-<p>在 <code>do_exit()</code>
-完成后，已终止进程的进程描述符仍然存在，但该进程已成为僵尸 (zombie)
-且无法运行。如前所述，这使得系统能够在子进程终止后获取其信息。因此，清理进程之后和移除其进程描述符是分开的两个步骤。在父进程获取了已终止子进程的信息，或向内核表示不关心之后，子进程的
-<code>task_struct</code> 才会被释放。</p>
-<p><code>wait()</code> 函数族是通过一个单一（且复杂）的系统调用
-<code>wait4()</code>
-实现的。标准行为是<strong>挂起调用任务的执行</strong>，直到它的一个子进程退出，此时函数返回退出子进程的
-PID。此外，还提供一个指针给该函数，该指针在返回时持有已终止子进程的退出码。</p>
-<p>当最终要释放进程描述符时，会调用
-<code>release_task()</code>。它执行以下操作： 1. 它调用
-<code>__exit_signal()</code>，后者又调用
-<code>__unhash_process()</code>，继而调用 <code>detach_pid()</code>
-来将进程从 pidhash 中移除，并从任务列表中移除该进程。 2.
-<code>__exit_signal()</code>
-释放这个已死亡进程使用的任何剩余资源，并完成统计和簿记工作。 3.
-如果该任务是线程组的最后一个成员，并且领导者 (leader) 是僵尸进程，那么
-<code>release_task()</code> 会通知僵尸领导者的父进程。 4.
-<code>release_task()</code> 调用 <code>put_task_struct()</code>
-来释放包含进程内核栈和 <code>thread_info</code> 结构的内存页，并释放包含
-<code>task_struct</code> 的 slab 缓存。</p>
-<p>至此，进程描述符以及仅属于该进程的所有资源都已被释放。</p>
-<h4
-id="无父任务的困境-the-dilemma-of-the-parentless-task"><strong>无父任务的困境
-(The Dilemma of the Parentless Task)</strong></h4>
-<p>如果一个父进程在其子进程之前退出，必须存在某种机制来将任何子任务<strong>重新设定父进程
-(reparent)</strong>
-给一个新进程，否则，没有父进程的已终止进程将永远保持僵尸状态，浪费系统内存。解决方案是在退出时将一个任务的子进程重新设定父进程给当前线程组中的另一个进程，如果失败，则设定给
-init 进程。<code>do_exit()</code> 调用
-<code>exit_notify()</code>，后者调用
-<code>forget_original_parent()</code>，该函数又调用
-<code>find_new_reaper()</code> 来执行重新设定父进程的操作：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> task_struct *<span class="title function_">find_new_reaper</span><span class="params">(<span class="keyword">struct</span> task_struct *father)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">pid_namespace</span> *<span class="title">pid_ns</span> =</span> task_active_pid_ns(father);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">thread</span>;</span></span><br><span class="line"></span><br><span class="line">    thread = father;</span><br><span class="line">    while_each_thread(father, thread) &#123;</span><br><span class="line">        <span class="keyword">if</span> (thread-&gt;flags &amp; PF_EXITING)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (unlikely(pid_ns-&gt;child_reaper == father))</span><br><span class="line">            pid_ns-&gt;child_reaper = thread;</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> pid_ns-&gt;child_reaper; <span class="comment">// 通常是 init 进程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>（代码已简化，核心逻辑是查找同一线程组内未退出的线程，或最终返回 init
-进程）</p>
-<p>这段代码尝试在进程的线程组中查找并返回另一个任务。如果线程组中没有其他任务，它就查找并返回
-init
-进程。找到合适的新父进程后，需要找到每个子进程并将其重新设定父进程给这个新的“收割者”(reaper)：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">reaper = find_new_reaper(father);</span><br><span class="line">list_for_each_entry_safe(p, n, &amp;father-&gt;children, sibling) &#123;</span><br><span class="line">    p-&gt;real_parent = reaper;</span><br><span class="line">    <span class="keyword">if</span> (p-&gt;parent == father) &#123;</span><br><span class="line">        BUG_ON(p-&gt;ptrace);</span><br><span class="line">        p-&gt;parent = p-&gt;real_parent;</span><br><span class="line">    &#125;</span><br><span class="line">    reparent_thread(p, father);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后调用 <code>ptrace_exit_finish()</code>
-做同样的事情，但是针对一个被 ptrace 跟踪 (ptraced) 的子进程列表。</p>
-<p>同时拥有一个子进程列表 (child list) 和一个被跟踪子进程列表 (ptraced
-list) 的基本原理很有趣；这是 2.6 内核的一个新特性。当一个任务被
-<code>ptrace</code>
-跟踪时，它被临时重新设定父进程给调试进程。然而，当该任务的原始父进程退出时，它必须与其兄弟姐妹一起被重新设定父进程。在之前的内核中，这会导致需要循环遍历系统中的每个进程来查找子进程。解决方案就是简单地维护一个进程被
-<code>ptrace</code>
-跟踪的子进程的独立列表——将查找子进程的范围从系统中的每个进程缩小到仅仅两个相对较小的列表。</p>
-<p>随着进程成功被重新设定父进程，就不再存在 stray zombie processes（
-stray zombie processes）的风险。init 进程会例行地对其子进程调用
-<code>wait()</code>，清理分配给它的任何僵尸进程。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/20/oper_sys22processMgmt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/20/oper_sys22processMgmt/" class="post-title-link" itemprop="url">操作系统基础 | 5.1 进程管理简介</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-21 00:55:36" itemprop="dateCreated datePublished" datetime="2025-08-21T00:55:36+08:00">2025-08-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-28 09:19:55" itemprop="dateModified" datetime="2025-08-28T09:19:55+08:00">2025-08-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="进程"><strong>进程</strong></h3>
-<p>一个进程是一个正在执行中的程序（存储在某种介质上的目标代码）。然而，进程不仅仅只是执行的程序代码（在
-Unix
-中常称为文本段）。它们还包括一系列资源，例如打开的文件和待处理的信号、内核内部数据、处理器状态、包含一个或多个内存映射的内存地址空间、一个或多个执行线程，以及包含全局变量的数据段。实际上，进程是运行程序代码的动态产物。内核需要高效且透明地管理所有这些细节。</p>
-<p>执行线程（通常简称为线程）是进程内部的活动对象。每个线程包含一个唯一的程序计数器、进程栈和一组处理器寄存器。内核调度的是单个线程，而不是进程。在传统的
-Unix
-系统中，每个进程由一个线程组成。然而，在现代系统中，由多个线程组成的多线程程序非常普遍。正如您后面将看到的，Linux
-对线程的实现很独特：它并不区分线程和进程。对 Linux
-而言，线程只是一种特殊的进程。</p>
-<p>在现代操作系统上，进程提供了两种虚拟化：虚拟化处理器和虚拟内存。虚拟化处理器给进程一种假象，让它以为自己在独享系统，尽管处理器可能正与数百个其他进程共享。虚拟内存让进程可以分配和管理内存，就好像它独占了系统中的所有内存一样。</p>
-<p>有趣的是，请注意线程共享虚拟内存抽象，而每个线程则拥有自己的虚拟化处理器。</p>
-<p>程序本身并不是一个进程；进程是活动中的程序及其相关资源。实际上，可以存在两个或更多个执行同一程序的进程。事实上，也可以存在两个或更多共享各种资源（如打开的文件或地址空间）的进程。</p>
-<p>毫不奇怪，进程在其创建时开始它的生命周期。在 Linux 中，这是通过
-<code>fork()</code>
-系统调用来完成的，该系统调用通过复制一个现有进程来创建一个新进程。调用
-<code>fork()</code>
-的进程是父进程，而新进程是子进程。父进程恢复执行，而子进程则在相同的地方开始执行：即从
-<code>fork()</code> 调用返回的地方。<code>fork()</code>
-系统调用从内核返回两次：一次在父进程中，一次在新生的子进程中。</p>
-<p>通常，在 <code>fork()</code>
-之后立即需要执行一个新的、不同的程序。<code>exec()</code>
-系列函数调用会创建一个新的地址空间并将一个新的程序加载到其中。在当代的
-Linux 内核中，<code>fork()</code> 实际上是通过 <code>clone()</code>
-系统调用实现的，这将在后面讨论。</p>
-<p>最后，程序通过 <code>exit()</code>
-系统调用退出。此函数终止进程并释放其所有资源。父进程可以通过
-<code>wait4()</code>¹
-系统调用查询已终止子进程的状态，该系统调用使一个进程能够等待特定进程的终止。当一个进程退出时，它会被置于一种特殊的<strong>僵尸
-(zombie)</strong> 状态，该状态表示已终止的进程，直到父进程调用
-<code>wait()</code> 或 <code>waitpid()</code>。</p>
-<blockquote>
-<p>¹ 内核实现了 <code>wait4()</code> 系统调用。Linux 系统通过 C
-库通常提供 <code>wait()</code>, <code>waitpid()</code>,
-<code>wait3()</code>, 和 <code>wait4()</code>
-函数。所有这些函数都返回关于已终止进程的状态信息，尽管语义略有不同。</p>
-</blockquote>
-<p><strong>注意</strong> 进程的另一个名称是<strong>任务
-(task)</strong>。Linux
-内核在内部将进程称为任务。在本书中，我会交替使用这两个术语，尽管当我说“任务”时，通常是从内核的角度来指代一个进程。</p>
-<hr />
-<h3
-id="进程描述符和任务结构-task-structure"><strong>进程描述符和任务结构
-(Task Structure)</strong></h3>
-<p>内核在一个称为<strong>任务列表 (task list)</strong>²
-的环形双向链表中存储进程列表。任务列表中的每个元素都是一个类型为
-<code>struct task_struct</code> 的进程描述符，该结构定义在
-<code>&lt;linux/sched.h&gt;</code>
-中。进程描述符包含了一个特定进程的所有信息。</p>
-<p><code>task_struct</code> 是一个相对较大的数据结构，在 32 位机器上约为
-1.7
-千字节。然而，考虑到该结构包含了内核所拥有和需要的关于一个进程的所有信息，这个大小已经相当小了。进程描述符包含了描述正在执行的程序的数据——打开的文件、进程的地址空间、待处理的信号、进程的状态等等。</p>
-<blockquote>
-<p>² 一些操作系统设计文献称此列表为任务数组 (task array)。由于 Linux
-的实现是链表而非静态数组，因此在 Linux 中它被称为任务列表 (task
-list)。</p>
-</blockquote>
-<hr />
-<h3 id="分配进程描述符"><strong>分配进程描述符</strong></h3>
-<p><code>task_struct</code> 结构通过 <strong>slab 分配器 (slab
-allocator)</strong> 进行分配，以提供对象重用和缓存着色。在 2.6
-系列内核之前，<code>struct task_struct</code>
-存储在每个进程的内核栈的末端。这使得像 x86
-这样寄存器数量较少的体系结构，可以通过栈指针计算进程描述符的位置，而无需使用额外的寄存器来存储该位置。由于现在进程描述符是通过
-slab 分配器动态创建的，因此引入了一个新的结构
-<code>struct thread_info</code>，该结构再次存在于栈的底部（对于向下增长的栈）或栈的顶部（对于向上增长的栈）³。参见图
-3.2。</p>
-<blockquote>
-<p>³ 创建 <code>struct thread_info</code>
-并不仅仅是因为寄存器受限的体系结构。新结构也使得在汇编代码中计算其值的偏移量变得相当容易。</p>
-</blockquote>
-<p><code>thread_info</code> 结构在 x86 上的
-<code>&lt;asm/thread_info.h&gt;</code> 中定义如下： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thread_info</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span>    *<span class="title">task</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">exec_domain</span>    *<span class="title">exec_domain</span>;</span></span><br><span class="line">    __u32                 flags;</span><br><span class="line">    __u32                 status;</span><br><span class="line">    __u32                 cpu;</span><br><span class="line">    <span class="type">int</span>                   preempt_count;</span><br><span class="line">    <span class="type">mm_segment_t</span>          addr_limit;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">restart_block</span>  <span class="title">restart_block</span>;</span></span><br><span class="line">    <span class="type">void</span>                  *sysenter_return;</span><br><span class="line">    <span class="type">int</span>                   uaccess_err;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><strong>(图 3.2 示意图说明)</strong> 进程内核栈<br />
-栈起始处（向低地址方向增长）<br />
-- 最高内存地址<br />
-- 栈指针<br />
-- <code>struct thread_struct</code> (进程的
-<code>struct task_struct</code>)<br />
-- 最低内存地址, <code>current_thread_info()</code><br />
-<code>thread_info</code> 包含一个指向进程描述符的指针</p>
-<blockquote>
-<p>栈的增长方向：x86 体系的栈是向下（向低地址方向）增长的。 - 栈底
-(Stack Base)：为了充分利用这块内存，栈被初始化为从这块分配区的最高地址
-(0x10000)
-开始。这个初始的栈指针位置就是栈底。它是栈的“起点”，但却是分配内存块的“末尾”。
-- 栈顶 (Stack Top)：随着函数调用、压入参数等操作，%esp
-寄存器的值会不断减小（向 0xE000 方向移动）。%esp
-当前指向的位置称为栈顶。它是栈的“当前操作端”，向低地址方向延伸。</p>
-</blockquote>
-<p>每个任务的 <code>thread_info</code> 结构都分配在其栈的末端。该结构的
-<code>task</code> 元素是一个指向任务实际 <code>task_struct</code>
-的指针。</p>
-<hr />
-<h3 id="存储进程描述符"><strong>存储进程描述符</strong></h3>
-<p>系统通过一个唯一的<strong>进程标识值 (process identification
-value)</strong> 或 <strong>PID</strong> 来识别进程。PID
-是一个由不透明类型⁴ <code>pid_t</code> 表示的数值，通常是一个
-<code>int</code>。然而，为了与早期的 Unix 和 Linux
-版本向后兼容，默认最大值仅为 32,768（一个 <code>short int</code>
-的值），尽管可以选择将该值增加到高达 400 万（这由
-<code>&lt;linux/threads.h&gt;</code> 控制）。内核在每个进程描述符的
-<code>pid</code> 字段中存储此值。</p>
-<blockquote>
-<p>⁴ 不透明类型 (opaque
-type)：指其内部细节被隐藏，只通过特定接口访问的数据类型。</p>
-</blockquote>
-<p>这个最大值很重要，因为它本质上是系统上可能同时存在的最大进程数。虽然
-32,768
-对于桌面系统可能足够，但大型服务器可能需要多得多的进程。此外，该值越低，数值回绕（wrap
-around）就越快，这会破坏“数值大的进程比数值小的进程更晚运行”这一有用概念。如果系统愿意打破与旧应用程序的兼容性，管理员可以通过
-<code>/proc/sys/kernel/pid_max</code> 来增加最大值。</p>
-<p>在内核内部，通常直接通过指向其 <code>task_struct</code>
-结构的指针来引用任务。事实上，大多数处理进程的内核代码都直接使用
-<code>struct task_struct</code>。因此，能够快速查找当前正在执行的任务的进程描述符是非常有用的，这是通过
-<code>current</code>
-宏来完成的。这个宏必须由每个体系结构独立实现。一些体系结构将当前运行进程的
-<code>task_struct</code>
-结构的指针保存在一个寄存器中，以实现高效访问。其他体系结构，如
-x86（几乎没有多余的寄存器可用），则利用 <code>struct thread_info</code>
-存储在内核栈上这一条件，来计算 <code>thread_info</code> 的位置，进而找到
-<code>task_struct</code>。</p>
-<p>在 x86 上，<code>current</code> 是通过滤除栈指针的最低 13 位来获得
-<code>thread_info</code> 结构计算的。这是由
-<code>current_thread_info()</code> 函数完成的。汇编代码如下：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">movl $-8192, %eax</span><br><span class="line">andl %esp, %eax</span><br></pre></td></tr></table></figure> 这里假设栈大小是 8KB。当启用 4KB 栈时，使用 4096 代替
-8192。</p>
-<p>最后，<code>current</code> 解引用 <code>thread_info</code> 的
-<code>task</code> 成员以返回 <code>task_struct</code>：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current_thread_info()-&gt;task;</span><br></pre></td></tr></table></figure></p>
-<p>将此方法与 PowerPC（IBM 的现代基于 RISC
-的微处理器）采用的方法对比，后者将当前的 <code>task_struct</code>
-存储在一个寄存器中。因此，在 PPC 上 <code>current</code>
-仅仅返回存储在寄存器 <code>r2</code> 中的值。PPC
-可以采用这种方法是因为，与 x86
-不同，它有大量的寄存器。由于访问进程描述符是一项常见且重要的工作，PPC
-内核开发人员认为使用一个寄存器是值得的。</p>
-<h3 id="进程状态-process-state"><strong>进程状态 (Process
-State)</strong></h3>
-<p>进程描述符中的 <code>state</code> 字段描述了进程的当前状况（参见图
-3.3）。系统中的每个进程都确切地处于五种不同状态中的一种。该值由以下五个标志之一表示：</p>
-<ul>
-<li><strong>TASK_RUNNING
-(运行)</strong>：进程是可运行的；它要么正在执行，要么在运行队列（runqueue）中等待运行（运行队列将在第
-4
-章讨论）。这是在用户空间执行的进程唯一可能的状态；它也应用于正在内核空间中主动运行的进程。</li>
-<li><strong>TASK_INTERRUPTIBLE
-(可中断睡眠)</strong>：进程正在睡眠（即被阻塞），等待某个条件的发生。当此条件满足时，内核会将进程的状态设置为
-<code>TASK_RUNNING</code>。如果进程接收到信号，它也会被提前唤醒并变为可运行状态。</li>
-<li><strong>TASK_UNINTERRUPTIBLE (不可中断睡眠)</strong>：此状态与
-<code>TASK_INTERRUPTIBLE</code>
-类似，区别在于即使接收到信号，它也不会被唤醒并变为可运行状态。此状态用于进程必须不受中断地等待，或者预期事件会很快发生的场合。由于处在此状态的任务不响应信号，因此
-<code>TASK_UNINTERRUPTIBLE</code> 的使用频率低于
-<code>TASK_INTERRUPTIBLE</code>⁵。</li>
-<li>**__TASK_TRACED (被跟踪)**：进程正被另一个进程（例如调试器通过
-<code>ptrace</code>）所跟踪。</li>
-<li>**__TASK_STOPPED
-(停止)**：进程执行已停止；任务既不在运行，也没有资格运行。如果任务收到
-<code>SIGSTOP</code>、<code>SIGTSTP</code>、<code>SIGTTIN</code> 或
-<code>SIGTTOU</code>
-信号，或者在被调试时收到任何信号，就会发生这种状态。</li>
-</ul>
-<blockquote>
-<p>⁵ 这就是为什么在 <code>ps(1)</code> 命令中会出现那些状态为 D (即
-<code>TASK_UNINTERRUPTIBLE</code>)
-的、令人头疼的无法杀死的进程。因为该任务不响应信号，你无法向它发送
-<code>SIGKILL</code>
-信号。此外，即使你能终止该任务，这样做通常也不明智，因为该任务可能正在进行一项重要操作（并可能持有信号量）。</p>
-</blockquote>
-<h3
-id="操作当前进程状态-manipulating-the-current-process-state"><strong>操作当前进程状态
-(Manipulating the Current Process State)</strong></h3>
-<p>内核代码经常需要更改进程的状态。首选机制是使用： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_task_state(task, state);        <span class="comment">/* 将任务 &#x27;task&#x27; 的状态设置为 &#x27;state&#x27; */</span></span><br></pre></td></tr></table></figure>
-此函数将给定的任务设置为给定的状态。在适用的情况下，它还提供一个<strong>内存屏障
-(memory barrier)</strong> 以强制在其他处理器上的执行顺序（这仅在 SMP
-系统上需要）。否则，它等价于： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">task-&gt;state = state;</span><br></pre></td></tr></table></figure> 方法
-<code>set_current_state(state)</code> 等同于
-<code>set_task_state(current, state)</code>。请参阅
-<code>&lt;linux/sched.h&gt;</code> 以了解这些及相关函数的实现。</p>
-<hr />
-<h3 id="进程上下文-process-context"><strong>进程上下文 (Process
-Context)</strong></h3>
-<p>进程最重要的部分之一是正在执行的程序代码。这些代码从可执行文件中读入，并在程序的地址空间内执行。正常的程序执行发生在<strong>用户空间
-(user-space)</strong>。当程序执行系统调用或触发异常时，它就进入了<strong>内核空间
-(kernel-space)</strong>。此时，内核被称为“代表进程执行”并处于<strong>进程上下文
-(process context)</strong> 中。在进程上下文中，<code>current</code>
-宏是有效的⁶。退出内核后，进程会在用户空间恢复执行，除非在此期间有更高优先级的进程变为可运行状态（这种情况下将调用调度器来选择更高优先级的进程）。</p>
-<blockquote>
-<p>⁶ 除了进程上下文，还有<strong>中断上下文 (interrupt
-context)</strong>。在中断上下文中，系统并非代表某个进程运行，而是在执行一个中断处理程序。没有进程与中断处理程序相关联。</p>
-</blockquote>
-<p>系统调用和异常处理程序是进入内核的明确定义的接口。进程只能通过这些接口之一开始在内核空间中执行——所有对内核的访问都是通过这些接口进行的。</p>
-<hr />
-<h3 id="进程家族树-the-process-family-tree"><strong>进程家族树 (The
-Process Family Tree)</strong></h3>
-<p>在 Unix 系统（Linux
-也不例外）的进程之间存在着一个清晰的层次结构。所有进程都是 <strong>init
-进程</strong>（其 PID 为 1）的后代。内核在启动过程的最后步骤中启动
-<code>init</code>。然后，<code>init</code>
-进程读取系统初始化脚本并执行更多程序，最终完成启动过程。</p>
-<p>系统中的每个进程都有且只有一个<strong>父进程
-(parent)</strong>。同样，每个进程有零个或多个<strong>子进程
-(children)</strong>。同一父进程的所有直接子进程称为<strong>兄弟进程
-(siblings)</strong>。进程之间的关系存储在进程描述符中。每个
-<code>task_struct</code> 都有一个指向父进程 <code>task_struct</code>
-的指针（名为 <code>parent</code>），以及一个子进程的链表（名为
-<code>children</code>）。</p>
-<p>因此，给定当前进程，可以通过以下代码获取其父进程的描述符：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">my_parent</span> =</span> current-&gt;parent;</span><br></pre></td></tr></table></figure> 类似地，可以这样遍历一个进程的所有子进程：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">list</span>;</span></span><br><span class="line"></span><br><span class="line">list_for_each(<span class="built_in">list</span>, &amp;current-&gt;children) &#123;</span><br><span class="line">    task = list_entry(<span class="built_in">list</span>, <span class="keyword">struct</span> task_struct, sibling);</span><br><span class="line">    <span class="comment">/* task 现在指向 current 的某个子进程 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>init 任务的进程描述符是静态分配的，名为
-<code>init_task</code>。所有进程间关系的一个很好例证是下面这段代码总能执行成功：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line"><span class="keyword">for</span> (task = current; task != &amp;init_task; task = task-&gt;parent)</span><br><span class="line">    ;</span><br><span class="line"><span class="comment">/* 循环结束后，task 指向了 init */</span></span><br></pre></td></tr></table></figure>
-实际上，你可以从系统中的任何一个进程出发，循着进程层次结构到达任何其他进程。</p>
-<p>然而，通常我们更希望简单地遍历系统中的所有进程。这很容易，因为任务列表是一个<strong>循环双向链表
-(circular doubly linked
-list)</strong>。给定任何一个有效任务，要获取链表中的下一个任务，可以使用：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_entry(task-&gt;tasks.next, <span class="keyword">struct</span> task_struct, tasks)</span><br></pre></td></tr></table></figure> 获取上一个任务的方式相同： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list_entry(task-&gt;tasks.prev, <span class="keyword">struct</span> task_struct, tasks)</span><br></pre></td></tr></table></figure>
-这两个操作分别由宏 <code>next_task(task)</code> 和
-<code>prev_task(task)</code> 提供。最后，提供了宏
-<code>for_each_process(task)</code>
-用于遍历整个任务列表。每次迭代时，<code>task</code>
-指向列表中的下一个任务： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line">for_each_process(task) &#123;</span><br><span class="line">    <span class="comment">/* 这段代码无意义地打印每个任务的名称和 PID */</span></span><br><span class="line">    printk(<span class="string">&quot;%s[%d]\n&quot;</span>, task-&gt;comm, task-&gt;pid);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> <strong>注意</strong>
-在拥有大量进程的系统中，遍历每个任务的开销很大；代码在这样做之前应该有充分的理由（并且没有其他替代方案）。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys21lab_kMod/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/19/oper_sys21lab_kMod/" class="post-title-link" itemprop="url">操作系统基础 | 4.7 内核模块实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-20 01:15:49" itemprop="dateCreated datePublished" datetime="2025-08-20T01:15:49+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-21 00:31:13" itemprop="dateModified" datetime="2025-08-21T00:31:13+08:00">2025-08-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="可加载的内核模块">可加载的内核模块</h3>
-<h4 id="练习-1">练习 1</h4>
-<p>准备好实验报告</p>
-<hr />
-<h4 id="练习-2-编译内核模块">练习 2: 编译内核模块</h4>
-<ol type="1">
-<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 Linux Lab 集群上</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="comment"># 保存 simple_module.c 和 Makefile (内容: obj-m := simple_module.o)</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="built_in">export</span> LINUX_SOURCE=/path/to/your/linux_source/linux <span class="comment"># 设置内核源码路径</span></span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>make</code> 命令的完整输出。</li>
-</ol>
-<hr />
-<h4 id="练习-3-加载模块与系统日志">练习 3: 加载模块与系统日志</h4>
-<ol type="1">
-<li><strong>步骤</strong> (在树莓派上): <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/modules</span><br><span class="line"><span class="comment"># 使用 sftp 将 simple_module.ko 传输到此目录</span></span><br><span class="line">sudo dmesg --clear</span><br><span class="line">sudo insmod ~/modules/simple_module.ko</span><br><span class="line">dmesg <span class="comment"># 查看日志</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>dmesg</code>
-中显示的模块加载信息。</li>
-</ol>
-<hr />
-<h4 id="练习-4-验证模块列表与卸载">练习 4: 验证模块列表与卸载</h4>
-<ol type="1">
-<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsmod <span class="comment"># 确认 simple_module 在列表中</span></span><br><span class="line">sudo rmmod simple_module</span><br><span class="line">lsmod <span class="comment"># 确认已移除</span></span><br><span class="line">dmesg <span class="comment"># 查看卸载信息</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>lsmod</code>
-的输出（证明已卸载）和 <code>dmesg</code> 中显示的模块卸载信息。</li>
-</ol>
-<hr />
-<h4 id="练习-5-访问内核变量-jiffies">练习 5: 访问内核变量 jiffies</h4>
-<ol type="1">
-<li><strong>步骤</strong>:
-<ul>
-<li>复制 <code>simple_module.c</code> 为
-<code>jiffies_module.c</code>。</li>
-<li>修改其 init 和 exit 函数，使用 <code>printk</code> 打印
-<code>jiffies</code> 变量（类型
-<code>extern unsigned long volatile jiffies;</code>）。</li>
-<li>更新 Makefile: <code>obj-m += jiffies_module.o</code>。</li>
-<li>重新编译并传输 <code>jiffies_module.ko</code> 到树莓派。</li>
-<li>加载并卸载模块，观察 <code>dmesg</code>。</li>
-</ul></li>
-<li><strong>答案</strong>:
-<ul>
-<li>提交 <code>dmesg</code> 中显示加载和卸载时 <code>jiffies</code>
-值的日志消息。</li>
-<li>计算并说明两条消息之间发生的滴答数（tick count）。</li>
-</ul></li>
-</ol>
-<hr />
-<h3 id="需提交的内容">需提交的内容</h3>
-<p>请提交一个包含以下内容的压缩包或文档： 1. <strong>答案文件</strong>:
-包含上述所有练习的答案。 2. <strong>源代码文件</strong>: 你新创建的
-<code>jiffies_module.c</code> 文件。</p>
-<hr />
-<h3 id="可选拓展练习">可选拓展练习</h3>
-<h4 id="练习-6-模块初始化返回值实验">练习 6: 模块初始化返回值实验</h4>
-<ul>
-<li><strong>任务</strong>: 修改 init
-函数，使其分别返回正数和负数（错误码，参见
-<code>/include/uapi/asm-generic/errno-base.h</code>）。</li>
-<li><strong>提示</strong>:
-描述加载模块时发生的情况及其在系统日志中的表现。</li>
-</ul>
-<h4 id="练习-7-探查导出的内核符号">练习 7: 探查导出的内核符号</h4>
-<ul>
-<li><strong>任务</strong>: 查看 <code>/proc/kallsyms</code> 文件（例如
-<code>cat /proc/kallsyms</code>），了解内核符号表。查找带有
-<code>__kstrtab_</code> 和 <code>__ksymtab_</code>
-前缀的符号（这些是可供模块使用的导出符号）。</li>
-<li><strong>提示</strong>: 内核符号是 Linux
-内核代码中定义的函数、变量、数据结构等的名称标签。它们代表了在内核地址空间中的一个特定内存地址。
-可以将内核符号理解为内核的“公共接口”或“入口点”。主要有两种类型：</li>
-<li>导出的符号：这些是内核明确声明为可以被外部模块使用的符号。例如，printk（内核的
-printf）、kmalloc（内核的内存分配函数）等。模块通过使用 EXPORT_SYMBOL()
-或 EXPORT_SYMBOL_GPL() 宏来导出它们的符号，以便其他模块可以使用。</li>
-<li>非导出的符号：这些是内核内部的静态函数或变量，只在它们被定义的文件或内核的特定部分中使用。它们对于内核模块是不可见的，主要用于内核自身的组织</li>
-<li>EXPORT_SYMBOL(printk) 在编译后创建了两个内部符号：__ksymtab_printk
-和 __kstrtab_printk。
-<ul>
-<li>__ksymtab_printk 是一个结构体，包含了 printk 的地址和指向
-__kstrtab_printk 的指针。</li>
-<li>__kstrtab_printk 是一个字符串，存储着 printk 的名字。</li>
-</ul></li>
-<li>内核使用这个结构来高效地通过名字查找函数的地址</li>
-</ul>
-<h4 id="练习-8-实现用户态读取-cpu-周期计数器-ccnt-的模块">练习 8:
-实现用户态读取 CPU 周期计数器 (CCNT) 的模块</h4>
-<ul>
-<li><strong>任务</strong> (如果之前在系统调用工作室未完成):
-<ul>
-<li>将提供的驱动文件放入你的内核源码树的
-<code>arch/arm/include/asm</code> 目录。</li>
-<li>下载 <code>enable_ccnt.c</code> 内核模块代码到你的模块目录。</li>
-<li>编译、传输并加载此模块 (<code>insmod enable_ccnt.ko</code>)。</li>
-<li>使用 <code>dmesg | tail</code> 验证加载成功。</li>
-</ul></li>
-<li><strong>任务</strong> (主要部分):
-<ul>
-<li>在树莓派上创建一个用户态程序。</li>
-<li>该程序应 <code>#include</code> 你获取的驱动头文件。</li>
-<li>调用 <code>unsigned long long pmccntr_get(void)</code>
-函数两次。</li>
-</ul></li>
-<li><strong>答案</strong>:
-<ul>
-<li>说明运行一次 <code>pmccntr_get()</code> 函数大约需要多少 CPU
-周期（计算两次调用的差值）。</li>
-<li>如果你在系统调用工作室完成过类似的练习，请对比直接调用此函数与通过系统调用获取周期计数所需的周期数。</li>
-</ul></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys20rebuildIDRApi/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/19/oper_sys20rebuildIDRApi/" class="post-title-link" itemprop="url">操作系统基础 | 4.6 内核API重构案例：IDR API</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-08-20 01:07:16 / 修改时间：01:11:57" itemprop="dateCreated datePublished" datetime="2025-08-20T01:07:16+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>文章内容来自 LWN.net</p>
-<h3 id="文章摘要-summary">文章摘要 (Summary)</h3>
-<p>这篇发表于 2013 年 2 月的文章讨论了 Linux 内核中 <strong>IDR 子系统
-API 的一次重大简化改革</strong>，由开发者 Tejun Heo 主导。IDR
-机制用于高效分配和管理整数 ID（例如设备名、POSIX 定时器 ID 等），其旧
-API 因其复杂性和潜在的竞争条件而闻名。</p>
-<p><strong>核心问题：旧 API 的缺陷</strong> 1.
-<strong>两步分配</strong>：需要先调用 <code>idr_pre_get()</code>
-预分配内存（可休眠），再调用 <code>idr_get_new()</code> 获取
-ID（可原子上下文）。 2.
-<strong>必须重试循环</strong>：<code>idr_get_new()</code>
-可能因预分配内存被其他 CPU 耗尽而失败（返回
-<code>-EAGAIN</code>），要求调用者编写冗长且易错的循环重试代码。 3.
-<strong>全局资源竞争</strong>：<code>idr_pre_get()</code>
-预分配的内存是全局的，多个 CPU 竞争时，后执行的
-<code>idr_get_new()</code>
-可能因资源不足而失败，迫使代码退出原子上下文进行重试，这条路径往往缺乏测试。</p>
-<p><strong>解决方案：新 API 的改进</strong> Tejun Heo
-引入了三个新函数来简化流程： 1.
-<code>idr_preload(gfp_t gfp_mask)</code>: 为<strong>当前 CPU</strong>
-预分配内存，并<strong>禁用抢占</strong>以防止预分配的内存被偷。 2.
-<code>idr_alloc(...)</code>: <strong>单次调用</strong>即可完成 ID
-分配和关联。它接受 ID
-范围参数，并仅在真正需要时（未预分配或预分配不足）才使用
-<code>gfp_mask</code> 分配内存。它只会在内存分配彻底失败时报错，消除了对
-<code>-EAGAIN</code> 的重试循环需求。 3. <code>idr_preload_end()</code>:
-在 <code>idr_alloc</code> 后调用，<strong>重新启用抢占</strong>。</p>
-<p><strong>关键优势：</strong> *
-<strong>更简单</strong>：消除了遍布内核的百余处重复、易错的样板代码。 *
-<strong>更可靠</strong>：通过每 CPU
-预分配和禁用抢占，基本消除了在原子上下文中因资源竞争而失败的需要。 *
-<strong>更灵活</strong>：<code>idr_alloc</code> 可以指定 ID
-范围，并且如果能在进程上下文调用，甚至可以完全省略
-<code>idr_preload</code>/<code>idr_preload_end</code>。</p>
-<p><strong>社区反应：</strong> 尽管大部分开发者接受了这个改动（给出了
-Acked-by），但 Eric Biederman 表达了强烈反对，认为新 API 的
-<code>idr_preload</code>
-像是一种难以理解的“魔法”。然而，文章作者（Jonathan
-Corbet）预测，<strong>新 API
-带来的巨大简化优势将使其最终被内核社区接受</strong>。</p>
-<h3 id="新旧-api-对比总结">新旧 API 对比总结</h3>
-<div class="line-block">特性 | 旧 API (2013 年前) | 新 API (Tejun Heo
-提议) |<br />
-：--- | :--- | :--- |<br />
-<strong>核心函数</strong> | <code>idr_pre_get()</code>,
-<code>idr_get_new()</code> | <code>idr_preload()</code>,
-<code>idr_alloc()</code>, <code>idr_preload_end()</code> |<br />
-<strong>调用模式</strong> |
-<strong>两步过程</strong>，必须配合<strong>重试循环</strong> |
-<strong>单次调用</strong>
-(<code>idr_alloc</code>)，<strong>无需循环</strong> |<br />
-<strong>预分配内存</strong> | <strong>全局共享</strong>，易被其他 CPU
-消耗 | <strong>每 CPU
-独享</strong>，配合<strong>禁用抢占</strong>，不会被偷 |<br />
-<strong>错误处理</strong> | 可能返回
-<code>-EAGAIN</code>，要求调用者重试 | 仅在所有内存分配都失败时才报错
-|<br />
-<strong>原子上下文</strong> | 支持，但重试时必须退出原子上下文 |
-更好支持，通过 <code>preload</code>/<code>preload_end</code> 保障
-|<br />
-<strong>代码复杂度</strong> | 高，需要大量重复的样板代码 |
-低，调用逻辑非常简洁 |</div>
-<h3 id="结论">结论</h3>
-<p>这篇文章记录了一个经典的内核优化案例：通过巧妙的设计（利用每 CPU
-数据和禁用抢占）将一个复杂、易错、充满竞争条件的旧接口，重构为一个简洁、可靠、高效的新接口。尽管存在一些争议，但<strong>简化并提升广泛使用的底层
-API
-的价值是极其巨大的</strong>，这很可能是新方案最终被采纳的原因。这正是
-Linux 内核持续演进的一个缩影。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/kamacode36stock2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/19/kamacode36stock2/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划9</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-20 01:04:53" itemprop="dateCreated datePublished" datetime="2025-08-20T01:04:53+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-10 01:03:01" itemprop="dateModified" datetime="2025-09-10T01:03:01+08:00">2025-09-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="买卖股票的最佳时机iv">188.买卖股票的最佳时机IV</h3>
-<p>买卖股票三的扩展版，从最多两次交易扩充到k次交易。注意买入和卖出某个数量的股票都要单列一列dp，并采用不同的状态转移方式。
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(<span class="type">int</span> k, vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>*k+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=<span class="number">2</span>*k; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i % <span class="number">2</span> == <span class="number">1</span>)dp[<span class="number">0</span>][i] -= prices[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;=<span class="number">2</span>*k; j+=<span class="number">2</span>)&#123;</span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] - prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">2</span>; j&lt;=<span class="number">2</span>*k; j+=<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="comment">// printf(&quot;index of prices: %d, sold out stock id: %d\n&quot;, i, j);</span></span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">2</span>*k];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="最佳买卖股票时机含冷冻期">309.最佳买卖股票时机含冷冻期</h3>
-<p>我这道题还是写复杂了。其实不规定买入次数，就不需要每次买卖都开一个状态了，每天都计算持有/非持有状态即可，还可以省空间复杂度
-我采用的思路延续了每次买入都有两个不同状态的方案，当计算卖出的时候往前比较两天，就是需要注意第二天持有股票状态的递推公式的特殊情况（选择第二天买入还是第一天买入）。其实采用仅四个状态也可以：
-状态一：持有股票状态（今天买入股票，或者是之前就买入了股票然后没有操作，一直持有）
-不持有股票状态，这里就有两种卖出股票状态 -
-状态二：保持卖出股票的状态（两天前就卖出了股票，度过一天冷冻期。或者是前一天就是卖出股票状态，一直没操作）
-- 状态三：今天卖出股票
-状态四：今天为冷冻期状态，但冷冻期状态不可持续，只有一天！
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> status = prices.<span class="built_in">size</span>()*<span class="number">2</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(status+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= status; i += <span class="number">2</span>)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][i] -= prices[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= status; j += <span class="number">2</span>)&#123;</span><br><span class="line">                <span class="comment">// printf(&quot;prices: %d, hold stock cnt: %d\n&quot;, i, j);</span></span><br><span class="line">                <span class="keyword">if</span>(i &gt;= <span class="number">3</span>)&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-2</span>][j<span class="number">-1</span>] - prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(-prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">2</span>; j &lt;= status; j += <span class="number">2</span>)&#123;</span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(auto l: dp)&#123;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;&quot;prices line &quot;;</span></span><br><span class="line">        <span class="comment">//     for(auto i: l)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;i&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][status];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="买卖股票的最佳时机含手续费">714.买卖股票的最佳时机含手续费</h3>
-<p>这题延续 <em>122.买卖股票的最佳时机II</em> 的思路即可
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices, <span class="type">int</span> fee)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> status = prices.<span class="built_in">size</span>()*<span class="number">2</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>, <span class="number">0</span>));</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i]-fee, dp[i<span class="number">-1</span>][<span class="number">0</span>]);</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(int i = 0; i&lt;dp.size(); i++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int j = 0; j&lt;dp[0].size(); j++)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;dp[i][j]&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

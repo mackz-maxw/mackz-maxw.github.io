@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="进程家族树 (Process Family Tree)  实验报告：准备好实验报告 simple_fork.c：编写一个名为 simple_fork.c 的简短程序，使用 fork() 函数从父进程生成一个子进程。父进程应在 fork 之前打印一条语句，并在 fork 之后打印出子进程的 PID。子进程应在被生成后打印一条语句，使用 getpid() 和 getppid() 函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统基础 | 5.8 进程实验">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="进程家族树 (Process Family Tree)  实验报告：准备好实验报告 simple_fork.c：编写一个名为 simple_fork.c 的简短程序，使用 fork() 函数从父进程生成一个子进程。父进程应在 fork 之前打印一条语句，并在 fork 之后打印出子进程的 PID。子进程应在被生成后打印一条语句，使用 getpid() 和 getppid() 函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-27T01:27:32.248Z">
+<meta property="article:modified_time" content="2025-09-30T16:27:46.725Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/","path":"2025/09/26/oper_sys28lab_process/","title":"操作系统基础 | 5.8 进程实验"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统基础 | 5.8 进程实验 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%AE%B6%E6%97%8F%E6%A0%91-process-family-tree"><span class="nav-number">1.</span> <span class="nav-text">进程家族树 (Process
+Family Tree)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%8B%93%E5%B1%95%E7%BB%83%E4%B9%A0-optional-enrichment-exercises"><span class="nav-number">2.</span> <span class="nav-text">可选拓展练习
+(Optional Enrichment Exercises)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统基础 | 5.8 进程实验 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统基础 | 5.8 进程实验
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-27 09:27:32" itemprop="dateCreated datePublished" datetime="2025-09-27T09:27:32+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-01 00:27:46" itemprop="dateModified" datetime="2025-10-01T00:27:46+08:00">2025-10-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="进程家族树-process-family-tree"><strong>进程家族树 (Process
+Family Tree)</strong></h3>
+<ol type="1">
+<li><p><strong>实验报告</strong>：准备好实验报告</p></li>
+<li><p><strong>simple_fork.c</strong>：编写一个名为
+<code>simple_fork.c</code> 的简短程序，使用 <code>fork()</code>
+函数从父进程生成一个子进程。父进程应在 <code>fork</code>
+之前打印一条语句，并在 <code>fork</code> 之后打印出子进程的
+PID。子进程应在被生成后打印一条语句，使用 <code>getpid()</code> 和
+<code>getppid()</code> 函数打印出其自身的 PID 及其父进程的
+PID。在您的树莓派上编译并运行您的程序，并将程序的输出作为此问题的答案。
+提示：gcc编译<code>gcc [source] -o [destination]</code></p></li>
+<li><p><strong>tree_fork.c</strong>：编写第二个名为
+<code>tree_fork.c</code>
+的程序，该程序将一个整数作为命令行参数，并在最多 10
+代的固定限制内，生成一个具有指定代数的“二进制家族树”进程。这将创建
+<code>2^n - 1</code> 个进程，其中 <code>n</code> 是代数。对于
+n=1，程序将创建 1 个进程；对于 n=5，将创建 31 个进程；对于 n=10，将创建
+1023 个进程，依此类推。我们将代数限制为最多
+10，因为更大的数字会运行很长时间，甚至可能冻结您的树莓派！</p>
+<ul>
+<li>如果未提供命令行参数，程序应输出有用的用法消息并退出。</li>
+<li>否则，它应将命令行参数转换为整数并存储在 <code>generations</code>
+变量中。</li>
+<li>如果 <code>generations</code> 变量小于 1 或大于
+10，程序应输出有用的用法消息并退出。</li>
+<li>否则，它（以及它生成的任何子进程）应执行以下操作（原始程序为第一代）：
+<ul>
+<li>打印一行，说明它属于哪一代及其自身的 PID；</li>
+<li>增加当前代数计数器；</li>
+<li>如果已达到最后一代（根据 <code>generations</code> 变量），则直接返回
+0；否则，生成两个子进程；</li>
+<li>使用 <code>wait(0)</code> 等待任何成功生成的子进程完成；</li>
+<li>如果两个子进程都成功生成，则返回
+0；如果任一生成（或两者都）失败，则返回 -1。</li>
+</ul></li>
+<li><strong>提示</strong>：仔细检查每次调用
+<code>fork()</code>（或您用于生成每个子进程的任何调用）返回的
+<code>pid_t</code> 值非常重要，因为 (1)
+这些调用可能失败（由负返回值指示），(2) <code>0</code>
+表示子进程正在运行，(3) 正数表示父进程正在运行。</li>
+<li><strong>提示</strong>：基于此，使用递归，或使用带有几个
+<code>pid_t</code> 变量（每个子进程一个）的 <code>while</code>
+循环并明智地在子进程中运行的代码分支使用 <code>continue</code>
+语句，可以很直接地实现本练习的逻辑。</li>
+<li>作为此练习的答案，请展示您的程序在运行 4
+代时（如果正确实现，应总共生成 15 个进程）的输出。</li>
+</ul></li>
+<li><p><strong>修改 kobject
+示例模块</strong>：现在我们将回到使用这些思想进行内核模块设计。首先，从您的
+linux 源码目录中，找到并将文件
+<code>samples/kobject/kobject-example.c</code>
+复制到您保存内核模块代码的目录中。这是一个使用称为 <code>kobjects</code>
+的功能的内核模块，它提供了一个在内核和用户空间之间交换数据的接口。每个数据项称为一个属性（attribute），对于每个属性，您需要提供一个
+<code>show</code> 和 <code>store</code>
+函数，分别在用户空间读取和写入这些值时被调用。</p>
+<ul>
+<li>该特定模块提供三个属性：<code>foo</code>、<code>baz</code> 和
+<code>bar</code>。加载后，您可以在 sysfs 文件系统中的
+<code>/sys/kernel/kobject_example/</code> 目录下找到它们。</li>
+<li>修改此文件，以便（通过使用 <code>printk</code>）在更新
+<code>foo</code>、<code>baz</code> 或 <code>bar</code>
+中的任何一个时打印一条系统日志消息，并在消息中显示被更新变量的旧值和新值。</li>
+<li>现在我们可以像以前一样构建您修改后的模块。首先，更新您的
+<code>Makefile</code>，使其包含新模块的相应 <code>.o</code>
+文件目标，然后为您的模块生成 <code>.ko</code> 文件，如下所示：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module add arm-rpi</span><br><span class="line">LINUX_SOURCE=您的Linux内核源代码路径</span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
+<li>然后，使用 <code>sftp</code> 将生成的 <code>.ko</code>
+文件复制到您的树莓派上，并使用 <code>sudo insmod</code>
+加载该模块。</li>
+<li>在具有 root 权限的终端中，您可以使用 <code>cat</code>
+命令读取这些属性的值，并使用 <code>echo</code>
+命令将值写入这些属性，例如： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo bash</span><br><span class="line"><span class="built_in">cd</span> /sys/kernel/kobject_example/</span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示 foo 属性的当前（原始）值</span></span><br><span class="line"><span class="built_in">echo</span> 42 &gt; foo    <span class="comment"># 将值 42 写入属性 foo</span></span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示属性 foo 的新值</span></span><br></pre></td></tr></table></figure> <em>注意：您必须有一个 root
+终端（<code>sudo bash</code> 可以给您）才能写入这些命令（即
+<code>sudo echo</code> 不起作用）。</em></li>
+<li>作为此练习的答案，请展示使用这些命令成功更改
+<code>foo</code>、<code>bar</code> 和 <code>baz</code>
+值的输出演示。</li>
+</ul></li>
+<li><p><strong>family_reader.c
+模块</strong>：现在我们将编写一个内核模块，通过 sysfs 接口读取一个
+PID，并在系统日志中打印该进程的祖先谱系。</p>
+<ul>
+<li>创建一个基于您修改后的 <code>kobject-example.c</code>
+文件的新内核模块文件
+<code>family_reader.c</code>（即，首先请复制它）。该模块应在
+<code>/sys/kernel/fam_reader/</code>
+下创建单个系统属性（像上一个练习一样是整数值）。当您向此属性写入一个整数时，您的模块应尝试打印出该
+PID
+的祖先谱系（即，它的父进程，然后是父进程的父进程，依此类推，一直追溯到
+<code>init</code> 任务）。涉及几个步骤：
+<ul>
+<li><strong>旁注</strong>：现代 Linux
+内核为了便于在不同虚拟主机之间迁移进程，区分了“真实”PID
+和“虚拟”PID。虚拟 PID 是进程从用户空间看到的 PID。</li>
+<li>您需要将整数输入转换为合适的内核 PID。使用函数
+<code>find_vpid()</code>（请参阅 <code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>），它返回一个
+<code>struct pid *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>接下来，您可以通过将 <code>struct pid *</code> 和标志
+<code>PIDTYPE_PID</code> 传递给函数 <code>get_pid_task()</code>（请参阅
+<code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>）来将其转换为
+<code>struct task_struct *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>一旦您有了
+<code>struct task_struct *</code>，就可以访问它存储的任何数据。特别是，<code>real_parent</code>
+字段存储了生成它的进程的 <code>struct task_struct *</code>
+指针，<code>comm</code> 字段是给出命令名称的字符串。
+<ul>
+<li><strong>注意</strong>：有一个单独的字段叫做
+<code>parent</code>，这不是我们本练习想要的。<code>parent</code>
+是共享进程组信号并允许父子进程之间等待的逻辑父进程。</li>
+</ul></li>
+<li>回溯家族树，打印出每个任务的 PID 和命令名称，一直回溯到 PID 为 1 的
+<code>init</code> 任务。</li>
+</ul></li>
+<li>像上一个模块一样编译您的新内核模块，然后使用 <code>sftp</code>
+将生成的 <code>.ko</code>
+文件复制到您的树莓派上。在您的树莓派上，安装该模块，然后使用
+<code>sudo bash</code> 为您的终端会话提供 root
+访问权限。在该模块的目录下（将在 <code>/sys/kernel/</code> 下），使用
+<code>cat</code> 和 <code>echo</code> 读取和写入该模块属性的值，然后使用
+<code>dmesg</code> 确认系统日志显示您的模块工作正常。</li>
+<li>使用 <code>ps</code> 命令查找在您当前终端窗口中运行的
+<code>sudo</code> 进程的 PID，使用 <code>echo</code>
+将您的模块属性设置为该 PID，然后使用 <code>dmesg</code>
+查看该进程的祖先谱系。作为此练习的答案，请展示显示 <code>sudo</code>
+进程祖先谱系的系统日志消息。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="可选拓展练习-optional-enrichment-exercises"><strong>可选拓展练习
+(Optional Enrichment Exercises)</strong></h3>
+<ol start="6" type="1">
+<li><strong>探索 task_struct</strong>：<code>task_struct</code>
+包含许多有趣的进程数据和进程记账信息。尝试将其他字段打印到系统日志中，并作为此练习的答案，请简要描述您打印了哪些内容，并展示执行此操作后的一些系统日志消息。</li>
+<li><strong>探索调度程序功能</strong>：<code>kernel/sched</code> 和
+<code>include/linux/sched</code>
+中的文件包含许多用于处理任务的功能，包括修改特定任务或迭代系统中每个任务的能力。例如，<code>include/linux/sched/signal.h</code>
+定义了诸如 <code>for_each_process()</code>
+之类的宏。尝试使用其中一些功能，并作为此练习的答案，请简要描述您做了什么以及观察到了什么。</li>
+</ol>
+<hr />
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/26/kamacode37subseq/" rel="prev" title="代码随想录 | 刷题-动态规划10">
+                  <i class="fa fa-angle-left"></i> 代码随想录 | 刷题-动态规划10
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/10/02/kamabagu7/" rel="next" title="代码随想录 | 八股-TCP连接">
+                  代码随想录 | 八股-TCP连接 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/09/26/oper_sys28lab_process/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/09/26/oper_sys28lab_process/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

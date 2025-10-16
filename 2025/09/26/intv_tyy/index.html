@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mackz-maxw.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="今天笔试某厂测开岗，选择还行，算法全寄，遂复盘之 操作系统八股 内存的分页和分段 分页 分页是一种内存管理方案，它将程序的虚拟地址空间和物理内存都划分成固定大小的块。虚拟内存的块称为“页”，物理内存的块称为“页框”或“帧”。页和页框的大小通常相同（例如 4KB）。 虚拟地址 &#x3D; 页号 + 页内偏移量 物理地址 &#x3D; 页框号 + 页内偏移量 分段 分段是一种更符合程序员视角的内存管理方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法笔试 | 某厂测开复盘">
+<meta property="og:url" content="https://mackz-maxw.github.io/2025/09/26/intv_tyy/index.html">
+<meta property="og:site_name" content="Maxw的小站">
+<meta property="og:description" content="今天笔试某厂测开岗，选择还行，算法全寄，遂复盘之 操作系统八股 内存的分页和分段 分页 分页是一种内存管理方案，它将程序的虚拟地址空间和物理内存都划分成固定大小的块。虚拟内存的块称为“页”，物理内存的块称为“页框”或“帧”。页和页框的大小通常相同（例如 4KB）。 虚拟地址 &#x3D; 页号 + 页内偏移量 物理地址 &#x3D; 页框号 + 页内偏移量 分段 分段是一种更符合程序员视角的内存管理方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-27T01:24:28.393Z">
+<meta property="article:modified_time" content="2025-09-27T01:24:16.064Z">
+<meta property="article:author" content="Mackz-Maxw">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mackz-maxw.github.io/2025/09/26/intv_tyy/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mackz-maxw.github.io/2025/09/26/intv_tyy/","path":"2025/09/26/intv_tyy/","title":"算法笔试 | 某厂测开复盘"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法笔试 | 某厂测开复盘 | Maxw的小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Maxw的小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Maxw的小站</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Maxw学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%85%AB%E8%82%A1-%E5%86%85%E5%AD%98%E7%9A%84%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">操作系统八股
+内存的分页和分段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E9%A1%B5"><span class="nav-number">1.1.</span> <span class="nav-text">分页</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5"><span class="nav-number">1.2.</span> <span class="nav-text">分段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%85%AB%E8%82%A1-%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95bankers-algorithm"><span class="nav-number">2.</span> <span class="nav-text">操作系统八股
+银行家算法（Banker&#39;s Algorithm）。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E9%A2%98-%E5%88%86%E9%9B%B6%E9%A3%9F"><span class="nav-number">3.</span> <span class="nav-text">算法题 分零食</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E6%98%AF%E6%9C%80%E4%BC%98%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">为什么贪心算法是最优的？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mackz-Maxw</p>
+  <div class="site-description" itemprop="description">乘上燃犀船，还未曾去过倒悬山。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mackz-maxw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mackz-maxw" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/intv_tyy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法笔试 | 某厂测开复盘 | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法笔试 | 某厂测开复盘
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-27 09:24:28 / 修改时间：09:24:16" itemprop="dateCreated datePublished" datetime="2025-09-27T09:24:28+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>今天笔试某厂测开岗，选择还行，算法全寄，遂复盘之</p>
+<h3 id="操作系统八股-内存的分页和分段">操作系统八股
+内存的分页和分段</h3>
+<h4 id="分页">分页</h4>
+<p>分页是一种内存管理方案，它<strong>将程序的虚拟地址空间和物理内存都划分成固定大小的块</strong>。虚拟内存的块称为“页”，物理内存的块称为“页框”或“帧”。页和页框的大小通常相同（例如
+4KB）。</p>
+<p>虚拟地址 = 页号 + 页内偏移量 物理地址 = 页框号 + 页内偏移量</p>
+<h4 id="分段">分段</h4>
+<p>分段是一种更符合程序员视角的内存管理方案。<strong>一个程序被划分为若干个逻辑段</strong>，例如：代码段、数据段、堆段、栈段等。每个段都有其特定的用途（如代码段可读可执行但不可写）。</p>
+<p>操作系统为每个进程维护一张<strong>段表</strong>，该表记录了每个段的<strong>基地址</strong>（在物理内存中的起始地址）和<strong>段长</strong>（段的界限）。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">特性</th>
+<th style="text-align: left;"><strong>分页（一维）</strong></th>
+<th style="text-align: left;"><strong>分段（二维）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>地址空间视图</strong></td>
+<td style="text-align: left;"><strong>一个</strong>连续的线性空间</td>
+<td
+style="text-align: left;"><strong>多个</strong>独立的逻辑空间（段）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>“号”的含义</strong></td>
+<td
+style="text-align: left;">系统管理的<strong>索引号</strong>（第几页）</td>
+<td
+style="text-align: left;">程序定义的<strong>逻辑标识</strong>（哪个段）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>对程序员可见</strong></td>
+<td
+style="text-align: left;"><strong>透明</strong>（由硬件和OS管理）</td>
+<td
+style="text-align: left;"><strong>可见</strong>（通常由编译器管理，但理念上符合程序员思维）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>类比</strong></td>
+<td
+style="text-align: left;"><strong>一本书</strong>：只需要一个页码和行号</td>
+<td
+style="text-align: left;"><strong>文件柜</strong>：需要先选抽屉，再选文件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="操作系统八股-银行家算法bankers-algorithm">操作系统八股
+银行家算法（Banker's Algorithm）。</h3>
+<p>银行家算法用于检查系统是否处于安全状态，即是否存在一个安全序列，每个进程按顺序执行，执行完后释放所有资源，使得所有进程都能完成而不导致死锁。</p>
+<h3 id="算法题-分零食">算法题 分零食</h3>
+<p>题目：小明和弟弟分零食，分零食的次数为c，每次会给到零食的数量n和最便宜的零食价格m,在价目表中，每个零食的价格是前一个零食的m倍（第一个零食价格为m）,小明想给弟弟总和比自己贵的零食，但为了弟弟的自尊心他想自己和弟弟的零食价格差尽量小，每次请输出小明的零食数和小明每个零食的单价</p>
+<h4 id="为什么贪心算法是最优的">为什么贪心算法是最优的？</h4>
+<ol type="1">
+<li><strong>几何序列的超级递增性质</strong>：当 (m &gt; 1)
+时，零食价格序列是超级递增的，即每个后续零食的价格都大于之前所有零食价格之和。例如，对于
+(m=2)，序列为 (2, 4, 8, 16, )，其中 (4 &gt; 2), (8 &gt; 2+4), (16 &gt;
+2+4+8)，等等。这种性质意味着贪心算法从大到小选择零食可以确保得到最接近总价一半的子集和，从而最小化价格差。</li>
+<li><strong>对于 (m = 1) 的情况</strong>：所有零食价格均为
+1。小明最多能拿的零食数为 (k = (n-1)/2 )，这样弟弟拿 (n-k)
+个零食，总价差为 1（最小可能值）。贪心算法在这里本质上是直接计算最大 (k)
+使得 (k &lt; n/2)。</li>
+</ol>
+<p>因此，贪心算法在两种情况下都能保证找到最优解，使价格差最小。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">    cin &gt;&gt; c;</span><br><span class="line">    <span class="keyword">while</span> (c--) &#123;</span><br><span class="line">        <span class="type">int</span> n, m;</span><br><span class="line">        cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (m == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 所有零食价格均为1：小明拿k个，使得k &lt; n/2，且k尽可能大</span></span><br><span class="line">            <span class="type">int</span> k = (n - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            cout &lt;&lt; k &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="number">1</span> &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 计算零食价格序列和总价S</span></span><br><span class="line">            vector&lt;ll&gt; <span class="built_in">prices</span>(n);</span><br><span class="line">            ll total_sum = <span class="number">0</span>;</span><br><span class="line">            ll current = m;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">                prices[i] = current;</span><br><span class="line">                total_sum += current;</span><br><span class="line">                current *= m;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            ll小明_sum = <span class="number">0</span>;</span><br><span class="line">            vector&lt;ll&gt; xiaoming_prices;</span><br><span class="line">            <span class="comment">// 从最贵的零食（序列末尾）开始贪心选择</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="number">2</span> * (小明_sum + prices[i]) &lt;= total_sum) &#123;</span><br><span class="line">                    小明_sum += prices[i];</span><br><span class="line">                    xiaoming_prices.<span class="built_in">push_back</span>(prices[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 输出小明的零食数量和每个零食的单价（价格从大到小）</span></span><br><span class="line">            cout &lt;&lt; xiaoming_prices.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = xiaoming_prices.<span class="built_in">size</span>() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                cout &lt;&lt; xiaoming_prices[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/14/oper_sys27orphan_err/" rel="prev" title="操作系统基础 | 5.7 孤儿进程；错误检查">
+                  <i class="fa fa-angle-left"></i> 操作系统基础 | 5.7 孤儿进程；错误检查
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/26/kamacode37subseq/" rel="next" title="代码随想录 | 刷题-动态规划10">
+                  代码随想录 | 刷题-动态规划10 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="zh-CN" data-href="/2025/09/26/intv_tyy/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2025/09/26/intv_tyy/" selected="">
+          English
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Mackz-Maxw</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

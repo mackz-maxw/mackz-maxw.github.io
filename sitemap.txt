@@ -1,4 +1,10 @@
+https://mackz-maxw.github.io/2025/10/02/kamacode38seq2/
+https://mackz-maxw.github.io/2025/10/02/kamabagu7/
+https://mackz-maxw.github.io/2025/07/31/kamabagu6/
+https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/
+https://mackz-maxw.github.io/2025/09/26/intv_tyy/
 https://mackz-maxw.github.io/2025/07/22/oper_sys14lab_syscall/
+https://mackz-maxw.github.io/2025/09/26/kamacode37subseq/
 https://mackz-maxw.github.io/2025/06/06/intv_mock/
 https://mackz-maxw.github.io/2025/06/22/oper_sys4lab_kinstall/
 https://mackz-maxw.github.io/2025/06/21/oper_sys3lab_ksetup/
@@ -23,7 +29,6 @@ https://mackz-maxw.github.io/2025/08/08/oper_sys17%E6%98%A0%E5%B0%84/
 https://mackz-maxw.github.io/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/
 https://mackz-maxw.github.io/2025/08/06/oper_sys15%E9%93%BE%E8%A1%A8/
 https://mackz-maxw.github.io/2025/07/22/kamacode33/
-https://mackz-maxw.github.io/2025/07/31/kamabagu6/
 https://mackz-maxw.github.io/2025/07/30/kamabagu5/
 https://mackz-maxw.github.io/2025/07/03/kamabagu4/
 https://mackz-maxw.github.io/2025/07/25/kamabagu26/
@@ -98,8 +103,8 @@ https://mackz-maxw.github.io/categories/index.html
 https://mackz-maxw.github.io/links/index.html
 https://mackz-maxw.github.io/comment/index.html
 https://mackz-maxw.github.io/
-https://mackz-maxw.github.io/categories/linux-tricks/
 https://mackz-maxw.github.io/categories/leetcode/
+https://mackz-maxw.github.io/categories/linux-tricks/
 https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/interview/
 https://mackz-maxw.github.io/categories/wsl2/
