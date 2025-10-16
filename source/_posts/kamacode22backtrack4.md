@@ -199,3 +199,79 @@ public:
     }
 };
 ```
+
+### 牛客acm模式 REAL492 数独(leetcode37解数独) 
+按照回溯算法的思路解决即可
+注意递归函数需要传引用
+
+1. 遍历每一行每一列的格子，如果需要填入数字，就遍历1-9中哪些数字符合要求
+2. 符合要求的数字需要在每行，每列和每3*3小格子都没出现过
+3. 如果符合要求，则沿着这个分支继续递归，如果返回一个符合要求的板子，那么回溯函数返回true
+4. 重置当前格子为0
+5. 最里层的递归函数何时返回true false呢？
+    - false是当遍历完1-9所有数字，都没有出现一个true分支的时候
+    - true是遍历完每一行每一列的格子，都没有出现false的时候
+
+```cpp
+#include <iostream>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+bool is_valid(int i, int j, int k, vector<vector<int>> board){
+    for(int a = 0; a < 9; a++){
+        if(board[i][a] == k)return false;
+        if(board[a][j] == k)return false;
+    }
+    int i_start = (i / 3)*3;
+    int j_start = (j / 3)*3;
+    for(int a = i_start; a < (i_start+3); a++){
+        for(int b = j_start; b < (j_start+3); b++){
+            if(board[a][b] == k)return false;
+        }
+    }
+    return true;
+}
+
+bool backtrack(vector<vector<int>> &board){
+    for(int i = 0; i < board.size(); i++){
+        for(int j = 0; j < board[0].size(); j++){
+            if(board[i][j] == 0){
+                for(int k = 1; k <= 9; k++){
+                    if(is_valid(i, j, k, board) == true){
+                        board[i][j] = k;
+                        int recall = backtrack(board);
+                        if(recall == true)return true;
+                        board[i][j] = 0;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    vector<vector<int>> input;
+    string line;
+    vector<int> i_line;
+    while(getline(cin, line)){
+        for(char c: line){
+            if(c != ' ')i_line.push_back(c - '0');
+        }
+        input.push_back(i_line);
+        i_line.clear();
+    }
+
+    int ret = backtrack(input);
+
+    for(auto i: input){
+        for(auto j: i){
+            cout<< j<< ' ';
+        }
+        cout<<endl;
+    }
+}
+// 64 位输出请用 printf("%lld")
+```

@@ -1,5 +1,6 @@
 ---
 title: 为wsl2安装中文输入法
+categories: wsl2
 lang: zh-CN
 ---
 

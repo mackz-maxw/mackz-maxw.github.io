@@ -6,81 +6,68 @@ categories:
 lang: zh-CN
 ---
 
-## 树莓派 Linux 内核源码下载与编译流程
+**注意**：本教学实验因为使用较早版本的树莓派Linux内核，内核源码的symlink仅适配Linux系统，请使用Linux平台主机进行交叉编译，若要使用window主机编译请更换使用的内核
 
 ### 1. 下载适用于树莓派的内核源码
-
 一般项目可以直接去 [kernel.org](https://kernel.org) 下载 Linux 源码，但本课程针对树莓派，需要用树莓派官方维护的内核版本（在 [https://github.com/raspberrypi](https://github.com/raspberrypi)）。
-
-在你的 `/project/scratch01/compile/user-name/` 目录下，新建 `linux_source` 文件夹用于存放源码和编译文件：
-
+在你的工程目录下，新建 `linux_source` 文件夹用于存放源码和编译文件：
 ```sh
 mkdir linux_source
 cd linux_source
 ```
-
 下载指定版本的树莓派内核源码（此过程可能需要20-30分钟）：
-
 ```sh
 wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz
 ```
-
 解压源码包：
-
 ```sh
 tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz
 ```
-
 解压后会得到一个新目录，建议用 `mv` 命令重命名为 `linux`，便于后续操作。解压完成后请删除 `.tar.gz` 文件以节省空间。
 
 进入 `linux` 目录，运行以下命令查看内核版本：
-
 ```sh
 make kernelversion
 ```
-
 并用文本编辑器（如 emacs、vim、nano）打开 `Makefile`，查看前几行定义的内核版本常量，记录 `NAME` 常量的值。
 
----
-
 ### 2. 针对树莓派 4/4B 的设备树修改
-
 如果你使用的是 Raspberry Pi 4 或 4B，需要修改设备树文件 `arch/arm/boot/dts/bcm2711.dtsi`，找到 `arm-pmu` 条目，将 `compatible` 行改为：
-
 ```c
 compatible = "arm,cortex-a72-pmu", "arm,cortex-a15-pmu", "arm,armv8-pmuv3";
 ```
 
----
-
 ### 3. 配置交叉编译环境
-
 添加交叉编译器和新版 gcc 到 PATH（并将以下两行添加到 `~/.bashrc` 文件末尾，确保下次登录自动生效）：
-
 ```sh
+# 将交叉编译工具链添加到PATH
 module add arm-rpi
+# 将c编译器添加到PATH
 module add gcc-8.3.0
 ```
 
----
-
+> 注意：如果使用wsl2等，linux并不自带environment-modules的情况，需要手动安装编译工具并添加PATH：
+> 更新包列表
+> `sudo apt update`
+> 安装依赖，如果出现包依赖版本问题，请参照本站wsl2分类下的文章“在wsl2安装ros2遇到的一些坑”解决
+> `sudo apt install bc bison flex libssl-dev make libc6-dev libncurses5-dev`
+> 安装32位工具链
+> `sudo apt install crossbuild-essential-armhf`
+> 检查是否已添加到PATH
+> `arm-linux-gnueabihf-gcc --version`
+  
 ### 4. 配置内核
-
 对于 Raspberry Pi 3B+，运行：
-
 ```sh
-make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
+make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
 ```
 
 对于 Raspberry Pi 4/4B，运行：
-
 ```sh
-make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig
+make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig
 ```
-
 这会生成树莓派的默认内核配置。
 
----
 
 ### 5. 自定义内核配置
 
@@ -101,11 +88,21 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
 
 ### 6. 编译内核
 
-记录编译开始和结束时间：
+记录编译开始和结束时间
 
 ```sh
-date>>time.txt; make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; date>>time.txt
+date>>time.txt; make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; date>>time.txt
 ```
+
+> 注意：如果使用wsl2出现类似以下错误
+> `Error: selected processor does not support 'dmb ish' in ARM mode`
+> 请尝试指定编译环境变量（编译参数会报错冲突）：
+> ```
+> sudo su
+> export KCFLAGS="-march=armv7-a -mfpu=vfpv3"
+> make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+> unset KCFLAGS
+> ```
 
 编译完成后，创建用于存放模块的目录：
 
@@ -116,17 +113,10 @@ mkdir ../modules
 安装内核模块：
 
 ```sh
-make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install
+make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install
 ```
-
----
 
 ### 7. 回答与说明
 
 - 用 `cat time.txt` 查看编译所用时间。
 - 说明为何要用交叉编译器：因为 linuxlab 服务器的架构与树莓派不同，必须用交叉编译器生成适用于 ARM 架构的内核和模块。
-
----
-
-**总结**  
-本流程涵盖了树莓派专用 Linux 内核源码的下载、解压、配置、定制、编译和模块安装，并介绍了如何设置交叉编译环境和设备树修改。通过这些步骤，你可以为树莓派编译和定制属于自己的 Linux 内核。

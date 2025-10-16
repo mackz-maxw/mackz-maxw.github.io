@@ -1,5 +1,6 @@
 ---
 title: 在wsl2安装ros2遇到的一些坑
+categories: wsl2
 lang: zh-CN
 ---
 

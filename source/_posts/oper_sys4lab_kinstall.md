@@ -24,7 +24,6 @@ lang: zh-CN
 - 点击“Save”，然后点击“WRITE”写入镜像。
 - 写入完成后，卸载 MicroSD 卡，插入树莓派并开机。
 
----
 
 ### 2. 首次启动与 SSH 连接
 
@@ -67,16 +66,16 @@ lang: zh-CN
 
 ### 5. 传输并安装自编译内核与模块
 
-- 用 ssh 连接学校提供的linux工作平台，进入你编译内核的目录：
+- 进入你交叉编译内核的目录：
   ```sh
-  cd /project/scratch01/compile/"your username"/linux_source
+  cd ~/linux_source
   ```
-- 打包模块和内核启动文件：
+- 打包模块和内核：
   ```sh
   tar -C modules/lib -czf modules.tgz modules
   tar -C linux/arch/arm -czf boot.tgz boot
   ```
-- 在树莓派上新建 linux_source 目录，进入后用 sftp 下载上述两个压缩包：
+- 在树莓派上新建 linux_source 目录，进入后用 sftp ，或其它方式下载上述两个压缩包：
   ```sh
   sftp [学校统一登陆平台key]@shell.cec.学校曾用简称.edu
   cd /project/scratch01/compile/"your username"/linux_source
