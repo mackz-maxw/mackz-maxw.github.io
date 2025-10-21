@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,180 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Learn_gdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Learn_gdb/" class="post-title-link" itemprop="url">学习GCC和GDB</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:26" itemprop="dateModified" datetime="2025-01-22T10:30:26+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="gcc编译">GCC编译</h3>
+<p>gcc编译hello.c，指定输出为hello： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure> 运行可执行文件：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure></p>
+<h3 id="一个简单的makefile示例">一个简单的Makefile示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hello:hello.c   # 目标文件名:依赖文件列表</span><br><span class="line">	gcc hello.c -o hello	# 用于生成目标文件的命令序列</span><br><span class="line">.PHONY: clean   # 声明伪目标，使用make clean执行clean操作而不是生成clean文件</span><br><span class="line">clean:</span><br><span class="line">	rm hello</span><br></pre></td></tr></table></figure>
+<h3 id="debug-bash脚本">debug bash脚本</h3>
+<p>直接输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;function_name(): value of \\$var is $&#123;var&#125;&quot;</span><br></pre></td></tr></table></figure>
+可以在脚本shebang列设置需要使用的xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -x</span><br></pre></td></tr></table></figure>
+仅在指定列设置xtrace选项： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">read -p &quot;Path to be added: &quot; $path</span><br><span class="line">set -xv</span><br><span class="line">if [ &quot;$path&quot; = &quot;/home/mike/bin&quot; ]; then</span><br><span class="line">	echo $path &gt;&gt; $PATH</span><br><span class="line">	echo &quot;new path: $PATH&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;did not modify PATH&quot;</span><br><span class="line">fi</span><br><span class="line">set +xv</span><br></pre></td></tr></table></figure>
+使用trap，EXIT模式仅检测退出时状态: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">trap &#x27;echo score is $score, status is $status&#x27; EXIT</span><br><span class="line">if [ -z $1 ]; then</span><br><span class="line">	status=&quot;default&quot;</span><br><span class="line">else</span><br><span class="line">	status=$1</span><br><span class="line">fi</span><br><span class="line">score=0</span><br><span class="line">if [ $&#123;USER&#125; = &#x27;superman&#x27; ]; then</span><br><span class="line">	score=99</span><br><span class="line">elif [ $# -gt 1 ]; then</span><br><span class="line">	score=$2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+DEBUG模式可以检测每步状态： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trap &#x27;echo &quot;line $&#123;LINENO&#125;: score is $score&quot;&#x27; DEBUG</span><br></pre></td></tr></table></figure></p>
+<h3 id="gdb-debug">GDB debug</h3>
+<p>使用友好的GDB debug会话： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb test.c -o test.out</span><br></pre></td></tr></table></figure> 设置核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ! grep -qi &#x27;kernel.core_pattern&#x27; /etc/sysctl.conf; then</span><br><span class="line">  sudo sh -c &#x27;echo &quot;kernel.core_pattern=core.%p.%u.%s.%e.%t&quot; &gt;&gt; /etc/sysctl.conf&#x27;</span><br><span class="line">  sudo sysctl -p</span><br><span class="line">fi</span><br><span class="line">ulimit -c unlimited # 使得当前会话解除核心文件大小限制</span><br></pre></td></tr></table></figure>
+永久解除核心文件大小限制： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &quot;cat &lt;&lt; EOF &gt; /etc/security/limits.conf</span><br><span class="line">* soft core unlimited</span><br><span class="line">* hard core unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure> 检查核心文件元数据：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure> 使用GDB分析核心转储： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./test.out ./core.1341870.1000.8.test.out.1598867712</span><br></pre></td></tr></table></figure>
+在GDB会话中，可以使用以下操作： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt	# 回溯</span><br><span class="line">(gdb) f 2	# 转到特定帧</span><br><span class="line">(gdb) list 	# 打印源代码</span><br><span class="line">(gdb) p a/b 	# 打印变量或表达式</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Ubuntu_setup/" class="post-title-link" itemprop="url">设置Ubuntu</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="设置apt源">设置apt源</h3>
+<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
+<h3 id="vim技巧">vim技巧</h3>
+<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
+<h3 id="设置vim">设置vim</h3>
+<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -287,6 +461,95 @@ k 个元素，那么 nums 的前 k 个元素应该保存最终结果。</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/algorithm2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/algorithm2/" class="post-title-link" itemprop="url">刷题-初级算法：字符串</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:29:46" itemprop="dateModified" datetime="2025-01-22T10:29:46+08:00">2025-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这两天感觉做题的速度快起来了！可以一到一个半小时做完一道题（当然是比较简单的题目啦）。</p>
+<p>试着做了一点牛客网上的面试题库，发现数据结构这块果然不能一点书不看（之前我是不是飘了？），准备看数据结构书了。</p>
+<p>最近发现了力扣的笔记功能，虽然题目集的笔记和题目的笔记是分开的，有点坑，不过还是打算不写博客的时候先记在题目集笔记里，方便之后翻阅整理。</p>
+<h2 id="section">3/2-3/11</h2>
+<p>（累了，摸会🐟）</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/bash_var/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -355,117 +618,6 @@ class="math inline">\(# - 参数个数\)</span>? - 前一个命令的返回值 $
 sudo !!再尝试一次。 $_ -
 上一条命令的最后一个参数。如果你正在使用的是交互式 shell，你可以通过按下
 Esc 之后键入 . 来获取这个值。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/gametime/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/gametime/" class="post-title-link" itemprop="url">摸鱼时间</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:13" itemprop="dateModified" datetime="2025-01-22T10:30:13+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p>
-<h2 id="section">3/18</h2>
-<p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p>
-<p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），git
-bash安装了http-server，http-server可以这么启动：</p>
-<p><code>http-server [path]</code></p>
-<p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p>
-<p>下载git
-bash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p>
-<p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p>
-<p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p>
-<p>整了挺久累了，下次再更🕊~</p>
-<p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p>
-<h2 id="section-1">3/18</h2>
-<p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p>
-<blockquote>
-<p>Here's a solution:</p>
-<ol type="1">
-<li>Right click and click “Save As...”</li>
-<li>Edit the html file that just saved, overwrite jQuery reference
-<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>
-as
-<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>
-or other reference you trust.</li>
-<li>run the html.</li>
-</ol>
-</blockquote>
-<p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p>
-<p><code>E:\works\untrusted-master\scripts\build</code></p>
-<p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p>
-<p>对了，别忘了</p>
-<p><code>http-server *:/.../untrusted-master</code></p>
-<p>（*：code所在盘符，...：code所在目录）</p>
-<p>终于可以玩了！</p>
-<p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -577,6 +729,117 @@ https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
 <p>最近总感觉自己记性有点差，这是写完博客后如何deploy:
 在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/gametime/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/gametime/" class="post-title-link" itemprop="url">摸鱼时间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:13" itemprop="dateModified" datetime="2025-01-22T10:30:13+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>心血来潮想找几个javascript小游戏玩玩，github上找到了untrusted这个游戏。</p>
+<h2 id="section">3/18</h2>
+<p>想打开网页直接玩来着，结果网页显示一些资源无法访问。于是按issues里的问题换了源，还是没办法。看来只好搭个本地服务器了。</p>
+<p>直接down zip文件到了本地（文件有点大 怕git拉到本地中途出问题），git
+bash安装了http-server，http-server可以这么启动：</p>
+<p><code>http-server [path]</code></p>
+<p>结果跟网页端一样无法显示...一看报错发现没有编译.js文件出来，这就网上搜一圈看看怎么弄。</p>
+<p>下载git
+bash的时候就看到附带了mingw，结果不能直接用make命令，而是得用mingw32-make，好家伙，然而整完还报错：</p>
+<p><code>Makefile:14: *** File mods/default/intro.js not found!.  Stop.</code></p>
+<p>本来以为是下载的时候出了问题，上github一看，人家的描述是会自动生成这个文件，那我这是哪里出了问题？</p>
+<p>整了挺久累了，下次再更🕊~</p>
+<p>对了！make不能用cmd，会报奇怪的错！git bash就不会。</p>
+<h2 id="section-1">3/18</h2>
+<p>在github的issues里找到了这个解决换源，虽然说的是网页问题，但也可以改下载下来的code解决404问题。</p>
+<blockquote>
+<p>Here's a solution:</p>
+<ol type="1">
+<li>Right click and click “Save As...”</li>
+<li>Edit the html file that just saved, overwrite jQuery reference
+<code>&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;</code>
+as
+<code>&lt;script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</code>
+or other reference you trust.</li>
+<li>run the html.</li>
+</ol>
+</blockquote>
+<p>最后就是上面的file缺失问题了，我找到了一个较早的branch，copy了里面untrusted.js的代码并整到本地的对应文件夹</p>
+<p><code>E:\works\untrusted-master\scripts\build</code></p>
+<p>这样就不用make了，虽然感觉可能会出些错，但是我只是想玩个游戏，先这样啦~</p>
+<p>对了，别忘了</p>
+<p><code>http-server *:/.../untrusted-master</code></p>
+<p>（*：code所在盘符，...：code所在目录）</p>
+<p>终于可以玩了！</p>
+<p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -877,268 +1140,8 @@ Kopytin</a>大神！</p>
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/network/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/network/" class="post-title-link" itemprop="url">计算机网络相关</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:49" itemprop="dateModified" datetime="2025-01-22T10:30:49+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在b站看斯坦福CS144作为教程，打算后期跟着《计算机网络
-自顶向下方法》（Kurose&amp;Ross版）再过一过。</p>
-<p>突然发现看了英文教程再看中文版书有点不理解一些概念用语😂，想看纯英文版的书又怕自己看不懂，纠结了。</p>
-<h2 id="section">3/17</h2>
-<p>（摘自Kurose&amp;Ross的《计算机网络 自顶向下方法》）</p>
-<p>什么是套接字（socket）：</p>
-<p>套接字说同一台主机内应用层与传输层之间的接口，由于该套接字是在网络上建立网络应用程序的可编程接口，因此也将套接字称为应用程序和网络之间的应用程序编程接口（Application
-Programming Interface，API）。</p>
-<p>什么是传输层的多路复用（multiplexing）和解复用（demultiplexing，多路分解）：</p>
-<p>多路复用和多路分解是因特网中的基本传输层服务。</p>
-<p>从源主机的不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在多路分解时使用）从而生成报文段，然后将报文段传递到网络层的工作称为多路复用。</p>
-<p>将运输层报文段中的数据交付到正确的套接字的工作称为多路分解。</p>
-<h2 id="section-1">4/22</h2>
-<p>一个连异或怎么算都记不住的人今天看到了一个神解释：异或=不进位二进制加法</p>
-<p>绝了！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/wx-frtnd/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/wx-frtnd/" class="post-title-link" itemprop="url">微信小程序项目</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:59" itemprop="dateModified" datetime="2025-01-22T10:30:59+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>试着做一个微信小程序的项目，还不知道会遇到多少坑......</p>
-<h2 id="section">4/26</h2>
-<p>网页后端体系架构（自下而上）：</p>
-<p><strong>数据库</strong>：存储字段（列）组成的实体集（表）</p>
-<p>通过MyBatisPlus将数据库实体集与Java对象建立联系，其中实体集中的字段与Java类中的属性一一对应。</p>
-<p><strong>DAO层/Mapper层</strong>：提供CRUD的Java方法，处理/提供data
-object</p>
-<p>DO即数据库实体集对应的Java对象。</p>
-<p><strong>Service层：</strong>统一业务逻辑处理，为不同服务提供可复用的调用接口；为CRUD方法赋予实际业务意义；处理param数据，提供VO对象</p>
-<p>将从controller层拿到的param数据转化成DO对象，传至DAO层；将DAO层提供的DO对象转化成VO对象，提供给controller层。</p>
-<p><strong>Controller层：</strong>分配URL，接受来自页面的请求，向下处理后，拿到返回数据返回页面。</p>
-<p>从页面拿到param数据提供给service层，接受service层传递的VO对象给页面展示。</p>
-<p>更多关于数据结构层的介绍：https://blog.csdn.net/qq_27022241/article/details/112002345</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/thoughts_0927/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/20/thoughts_0927/" class="post-title-link" itemprop="url">杂记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:53" itemprop="dateModified" datetime="2025-01-22T10:30:53+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="一些感慨">一些感慨</h3>
-<p>最近学了好多好多东西，有gdb debug, 有rust,
-也刷了些题。正在看很有意思的操作系统网课，还有项目组要求看的书...感觉这些事情都忙不过来了，更别说整理成博客。我这个博客网站的archive也一直没好好利用。</p>
-<p>完全提不起兴致玩游戏，心理上好累又睡不着。大概是最近游戏不好玩吧，大概是没有朋友和我一起玩？大概是游戏打多了忙一忙就觉得游戏好玩了...好多年前我就只有听着Owl
-City的歌才能睡着了，但那个时候只觉得是自己压力太大。三两年前觉着是实验室事情太多，是画图太累，后来安慰自己年轻人熬熬夜怎么了。</p>
-<p>很多年前还小的时候我就总觉着，如果社交上出现一些问题，那个念头就会总在脑子里转动消不去，到了有点影响生活的地步了。我总被这样的思绪叨扰，我没办法解释这种事情，只好跟家长说我头疼。我以为是我性格太执拗，是我太内向，是我表达的方式不对...哦，我该改改总是自我检讨的毛病，所作所为，留予世人评好了</p>
-<p>好歹还能感受到朋友的关心，好歹还有兴致吃点什么，好歹今天中午睡得不错。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/zh-CN/page/11/">11</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/zh-CN/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

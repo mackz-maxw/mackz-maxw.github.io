@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,391 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/11/kamacode35stock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/11/kamacode35stock/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划8</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-12 00:46:58" itemprop="dateCreated datePublished" datetime="2025-08-12T00:46:58+08:00">2025-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-20 01:04:30" itemprop="dateModified" datetime="2025-08-20T01:04:30+08:00">2025-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="买卖股票的最佳时机">121. 买卖股票的最佳时机</h3>
+<p>贪心方法：取最左最小值，取最右最大值 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> profit = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;prices.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>((prices[j] - prices[i])&gt;profit)profit = prices[j] - prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[j] &lt; prices[i])i = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> profit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+动态规划方法：每天保存两个数值 - 当天持有股票的最大值 -
+第i-1天就持有股票，那么就保持现状，所得现金就是昨天持有股票的所得现金
+即：dp[i - 1][0] -
+第i天买入股票，所得现金就是买入今天的股票后所得现金即：-prices[i] -
+当天不持有股票的最大值 -
+第i-1天就不持有股票，那么就保持现状，所得现金就是昨天不持有股票的所得现金
+即：dp[i - 1][1] -
+第i天卖出股票，所得现金就是按照今天股票价格卖出后所得现金即：prices[i] +
+dp[i - 1][0]</p>
+<h3 id="买卖股票的最佳时机ii">122.买卖股票的最佳时机II</h3>
+<p>尝试一下动态规划方法 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printdp</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; dp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> i: dp)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> j: i)&#123;</span><br><span class="line">                cout&lt;&lt;j&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout&lt;&lt;endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="comment">// printdp(dp);</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">0</span>]);</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>], dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// printdp(dp);</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="买卖股票的最佳时机iii">123.买卖股票的最佳时机III</h3>
+<p>为什么“选择两个最大的上升区间”这种解决方式不正确：
+由于交易次数限制，并不是所有上升区间都需要被单独考虑。有时一笔交易可能覆盖多个上升区间</p>
+<p>本题建议使用动态规划，推导四个状态： - 第一次持有股票 -
+第一次不持有股票 - 第二次持有股票 - 第二次不持有股票 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">5</span>, <span class="number">0</span>));</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">3</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">1</span>]);</span><br><span class="line">            dp[i][<span class="number">2</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">2</span>]);</span><br><span class="line">            dp[i][<span class="number">3</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">2</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">3</span>]);</span><br><span class="line">            dp[i][<span class="number">4</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">3</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">4</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">4</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/08/oper_sys17%E6%98%A0%E5%B0%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/08/oper_sys17%E6%98%A0%E5%B0%84/" class="post-title-link" itemprop="url">操作系统基础 | 4.3 内核数据结构-映射</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-09 02:01:45" itemprop="dateCreated datePublished" datetime="2025-08-09T02:01:45+08:00">2025-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-11 00:18:43" itemprop="dateModified" datetime="2025-08-11T00:18:43+08:00">2025-08-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="映射maps">映射（Maps）</h3>
+<h4 id="基本概念">基本概念</h4>
+<p>映射（又称关联数组）是由唯一键组成的集合，每个键关联一个特定值。键与值的关系称为<strong>映射关系</strong>，支持以下基本操作：<br />
+- <strong>添加</strong>（Add）：插入键值对<br />
+- <strong>移除</strong>（Remove）：删除指定键<br />
+- <strong>查找</strong>（Lookup）：通过键获取值</p>
+<p>尽管哈希表是一种映射实现，但并非所有映射都基于哈希。映射也可使用<strong>自平衡二叉搜索树</strong>存储数据：<br />
+-
+<strong>哈希表</strong>：平均时间复杂度更优（O(1)），但最坏情况为线性（O(n)）<br />
+- <strong>二叉搜索树</strong>：最坏情况为对数复杂度（O(log
+n)），且支持有序遍历，无需哈希函数（仅需定义比较操作符）</p>
+<p>在Linux内核中，映射的特定实现称为<code>idr</code>（ID Radix
+Tree-旧版实现，现为XArray），专用于将唯一ID（UID）映射到指针。</p>
+<hr />
+<h4 id="初始化idr">初始化idr</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/idr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">id_huh</span>;</span>       <span class="comment">// 静态定义  </span></span><br><span class="line">idr_init(&amp;id_huh);      <span class="comment">// 初始化  </span></span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="分配uid">分配UID</h4>
+<h5 id="预分配资源">1. 预分配资源</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_pre_get</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">gfp_t</span> gfp_mask)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：必要时调整底层树结构，准备分配新UID  </span><br><span class="line">- **参数**：  </span><br><span class="line">  - `idp`：目标idr结构  </span><br><span class="line">  - `gfp_mask`：内存分配标志（如`GFP_KERNEL`）  </span><br><span class="line">- **返回值**：成功返回<span class="number">1</span>，失败返回<span class="number">0</span>（与其他内核函数相反！）  </span><br><span class="line"></span><br><span class="line">##### <span class="number">2.</span> 分配UID并关联指针  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配新UID，将其与`ptr`关联  </span><br><span class="line">- **返回值**：  </span><br><span class="line">  - 成功：返回<span class="number">0</span>，UID存储在`id`中  </span><br><span class="line">  - 失败：返回`-EAGAIN`（需重试`idr_pre_get`）或`-ENOSPC`（idr已满）  </span><br><span class="line"></span><br><span class="line">##### 示例：分配UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> id, ret;</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!idr_pre_get(&amp;id_huh, GFP_KERNEL)) </span><br><span class="line">        <span class="keyword">return</span> -ENOSPC;</span><br><span class="line">    ret = idr_get_new(&amp;id_huh, ptr, &amp;id); </span><br><span class="line">&#125; <span class="keyword">while</span> (ret == -EAGAIN);</span><br></pre></td></tr></table></figure>
+<h5 id="分配指定最小uid">分配指定最小UID</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new_above</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> starting_id, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配不小于`starting_id`的UID，确保UID单调递增  </span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> next_id = <span class="number">1</span>;  <span class="comment">// 全局计数器</span></span><br><span class="line"><span class="keyword">if</span> (!idr_get_new_above(&amp;id_huh, ptr, next_id, &amp;id))</span><br><span class="line">    next_id = id + <span class="number">1</span>;    <span class="comment">// 更新下一个起始ID  </span></span><br></pre></td></tr></table></figure>
+<h5 id="xarray方式-linux-4.2以后">XArray方式 (Linux 4.2以后)</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 原子分配 (无需预分配) */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">xa_alloc</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">int</span> *id, </span></span><br><span class="line"><span class="params">             <span class="type">void</span> *entry, <span class="keyword">struct</span> xa_limit limit, <span class="type">gfp_t</span> gfp)</span>;</span><br><span class="line"><span class="comment">/* 分配递增ID示例 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> next_id = <span class="number">1</span>;</span><br><span class="line">xa_alloc(&amp;xa_huh, &amp;next_id, ptr, XA_LIMIT(next_id, UINT_MAX), GFP_KERNEL);</span><br><span class="line"><span class="comment">// 成功后 next_id 自动递增</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="查找与删除">查找与删除</h4>
+<h5 id="查找uid">查找UID</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">idr_find</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **返回值**：成功返回关联指针，失败返回`<span class="literal">NULL</span>`  </span><br><span class="line">- **注意**：在分配UID时，禁止将`<span class="literal">NULL</span>`作为有效idr值映射，否则无法区分查找失败与有效`<span class="literal">NULL</span>`  </span><br><span class="line"></span><br><span class="line">##### 移除UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **注意**：无错误返回值，需调用者确保UID存在  </span><br><span class="line"></span><br><span class="line">##### XArray方式</span><br><span class="line">```c</span><br><span class="line"><span class="comment">/* 查找 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_load</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br><span class="line"><span class="comment">/* 删除并返回删除项 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_erase</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="销毁">销毁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">idr_destroy</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;                  <span class="comment">// 释放未使用内存  </span></span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove_all</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;               <span class="comment">// 强制移除所有UID  </span></span><br><span class="line">```  </span><br><span class="line">**典型流程**：  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">idr_remove_all</span><span class="params">(&amp;id_huh)</span>;  <span class="comment">// 先清空所有映射  </span></span><br><span class="line">idr_destroy(&amp;id_huh);     <span class="comment">// 再释放内存，确保所有idr内存被释放  </span></span><br><span class="line">kfree(user_data_ptr);  <span class="comment">// 释放实际业务数据</span></span><br></pre></td></tr></table></figure>
+<h5 id="xarray方式">XArray方式</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 销毁并释放所有资源 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">xa_destroy</span><span class="params">(<span class="keyword">struct</span> xarray *xa)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 安全销毁流程示例 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">module_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> id;</span><br><span class="line">    <span class="type">void</span> *entry;</span><br><span class="line">    <span class="comment">// 遍历释放关联资源</span></span><br><span class="line">    xa_for_each(&amp;xa_huh, id, entry) &#123;</span><br><span class="line">        xa_erase(&amp;xa_huh, id);</span><br><span class="line">        kfree(entry);</span><br><span class="line">    &#125;</span><br><span class="line">    xa_destroy(&amp;xa_huh); <span class="comment">// 释放XArray管理内存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="关键注意事项">关键注意事项</h4>
+<ol type="1">
+<li><strong>并发控制</strong>：
+<ul>
+<li><code>idr_pre_get</code>无需加锁<br />
+</li>
+<li><code>idr_get_new</code>等操作需自旋锁保护（参见第9/10章）</li>
+</ul></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/" class="post-title-link" itemprop="url">操作系统基础 | 4.2 内核数据结构-队列</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-08 00:28:10" itemprop="dateCreated datePublished" datetime="2025-08-08T00:28:10+08:00">2025-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-09 00:28:09" itemprop="dateModified" datetime="2025-08-09T00:28:09+08:00">2025-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="队列">队列</h3>
+<p>任何操作系统内核中常见的编程模式是<strong>生产者与消费者</strong>。实现此模式的最简单方式通常是使用队列，即<strong>先进先出</strong>（FIFO）。</p>
+<p>Linux内核的通用队列实现称为<code>kfifo</code>，代码位于<code>kernel/kfifo.c</code>，头文件为<code>&lt;linux/kfifo.h&gt;</code>。本节讨论2.6.33版本更新后的API（早期版本用法略有不同，编写代码前请确认头文件）。</p>
+<hr />
+<h4 id="kfifo">kfifo</h4>
+<p>Linux的<code>kfifo</code>与其他队列抽象类似，提供两个核心操作：<br />
+- <strong>入队</strong>（<code>in</code>）：将数据写入队列<br />
+- <strong>出队</strong>（<code>out</code>）：从队列中读取数据</p>
+<p><code>kfifo</code>对象维护两个偏移量：<br />
+- <strong>in偏移量</strong>：下一次入队的起始位置<br />
+- <strong>out偏移量</strong>：下一次出队的起始位置</p>
+<p><strong>规则</strong>：<br />
+1.
+<code>out</code>偏移量始终≤<code>in</code>偏移量（否则会读取未入队的数据）。<br />
+2. 当<code>out == in</code>时，队列为空（无法出队）。<br />
+3. 当<code>in</code>到达队列末尾时，需重置队列才能继续入队。</p>
+<hr />
+<h4 id="创建队列">创建队列</h4>
+<h5 id="动态初始化常用">动态初始化（常用）</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">kfifo_alloc</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">unsigned</span> <span class="type">int</span> size, <span class="type">gfp_t</span> gfp_mask)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：分配大小为`size`字节的队列（`size`必须为<span class="number">2</span>的幂次），内存分配标志为`gfp_mask`（参见第<span class="number">12</span>章“内存管理”）。  </span><br><span class="line">- **返回值**：成功返回`<span class="number">0</span>`，失败返回错误码。  </span><br><span class="line">- **示例**：  </span><br><span class="line">  ```c</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">fifo</span>;</span></span><br><span class="line">  <span class="type">int</span> ret = kfifo_alloc(&amp;fifo, PAGE_SIZE, GFP_KERNEL);</span><br><span class="line">  <span class="keyword">if</span> (ret)</span><br><span class="line">      <span class="keyword">return</span> ret; <span class="comment">// 初始化失败</span></span><br></pre></td></tr></table></figure>
+<h5 id="自定义缓冲区">自定义缓冲区</h5>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_init</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *buffer, <span class="type">unsigned</span> <span class="type">int</span> size)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：使用用户提供的`buffer`初始化队列，`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">##### 静态声明（较少用）  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">DECLARE_KFIFO</span><span class="params">(name, size)</span>;  <span class="comment">// 声明队列</span></span><br><span class="line">INIT_KFIFO(name);           <span class="comment">// 初始化队列</span></span><br><span class="line">```  </span><br><span class="line">- **要求**：`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 数据入队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_in</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">const</span> <span class="type">void</span> *from, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从`from`复制`len`字节到队列`fifo`。  </span><br><span class="line">- **返回值**：实际入队的字节数（若空间不足，可能小于`len`）。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 数据出队  </span><br><span class="line">##### 标准出队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从队列`fifo`复制最多`len`字节到`to`缓冲区。  </span><br><span class="line">- **返回值**：实际出队的字节数。  </span><br><span class="line">- **注意**：出队后数据不再保留在队列中。  </span><br><span class="line"></span><br><span class="line">##### 查看数据（不删除）  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out_peek</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len, <span class="type">unsigned</span> offset)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：与`kfifo_out`类似，但**不移动out偏移量**，数据仍可后续读取。  </span><br><span class="line">- **参数**：`offset`指定队列中的起始位置（<span class="number">0</span>表示队头）。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 获取队列信息</span><br><span class="line"><span class="number">1.</span> **获取队列总容量**</span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_size</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回队列底层缓冲区的总字节数</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>获取已入队数据量</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_len</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>返回当前队列中已存储的字节数</li>
+<li>（注：内核命名存在不一致性，需特别注意）</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>获取剩余空间</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_avail</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>返回可继续写入的剩余字节数</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>队列状态检查</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_empty</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_full</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>返回非零值表示队列为空/满</li>
+<li>返回零表示非空/非满</li>
+</ul>
+<h4 id="重置与销毁队列">重置与销毁队列</h4>
+<ol type="1">
+<li><strong>重置队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">kfifo_reset</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>清空队列所有内容（不释放内存）</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>销毁动态分配的队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_free</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>释放通过<code>kfifo_alloc()</code>创建的队列</li>
+<li>注意：使用<code>kfifo_init()</code>创建的队列需手动释放关联缓冲区</li>
+</ul>
+<h4 id="实际应用示例">实际应用示例</h4>
+<p>创建8KB大小的kfifo队列： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kfifo.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">my_fifo</span>;</span>  <span class="comment">// 声明 kfifo 结构体</span></span><br><span class="line"><span class="type">int</span> ret;</span><br><span class="line"><span class="comment">// 分配 8KB 队列</span></span><br><span class="line">ret = kfifo_alloc(&amp;my_fifo, <span class="number">8192</span>, GFP_KERNEL);  <span class="comment">// 8192 = 8 * 1024</span></span><br><span class="line"><span class="keyword">if</span> (ret) &#123;</span><br><span class="line">    pr_err(<span class="string">&quot;Failed to allocate kfifo: error %d\n&quot;</span>, ret);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 验证大小</span></span><br><span class="line">pr_info(<span class="string">&quot;Created FIFO size: %u bytes\n&quot;</span>, kfifo_size(&amp;my_fifo));  <span class="comment">// 输出 8192</span></span><br></pre></td></tr></table></figure> &gt; 队列总容量 = 8 KB = 8 ×
+1024 字节 = 8192 字节（环形缓冲区无需减一） &gt;
+<code>unsigned int</code>大小 = 4
+字节（也可能是8字节，可以通过<code>sizeof(unsigned int)</code>获取）
+&gt; 这样一个队列最多可以容纳8192 字节 / 4 字节 = 2048
+个<code>unsigned int</code></p>
+<p><strong>入队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 入队0-31的整数 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> i;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">    kfifo_in(fifo, &amp;i, <span class="keyword">sizeof</span>(i));</span><br></pre></td></tr></table></figure></p>
+<p><strong>查看队首元素（不移除）</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line"><span class="type">int</span> ret = kfifo_out_peek(fifo, &amp;val, <span class="keyword">sizeof</span>(val), <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">    <span class="keyword">return</span> -EINVAL;</span><br><span class="line">printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); <span class="comment">/* 输出: 0 */</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>完整出队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (kfifo_avail(fifo)) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line">    <span class="type">int</span> ret = kfifo_out(fifo, &amp;val, <span class="keyword">sizeof</span>(val));</span><br><span class="line">    <span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 输出: 0 1 2 ... 31 (严格保持FIFO顺序) */</span></span><br></pre></td></tr></table></figure> -
+输出顺序为0→31证明是标准的FIFO队列 - 若输出为31→0则变为栈结构（LIFO） -
+所有操作均保持原子性，适合生产者-消费者场景
+（注：实际开发中通常入队复杂结构体而非基础类型）</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1285,466 +1670,6 @@ target="_blank" rel="noopener" href="https://example.com/sys_read_ccnt.c">模板
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numSquares</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完全平方数就是物品（可以无限件使用），凑个正整数n就是背包，问凑满这个背包最少有多少物品？</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, INT_MAX)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n; i++) &#123; <span class="comment">// 遍历背包</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j * j &lt;= i; j++) &#123; <span class="comment">// 遍历物品</span></span><br><span class="line">                dp[i] = <span class="built_in">min</span>(dp[i - j * j] + <span class="number">1</span>, dp[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="单词拆分">139.单词拆分</h3>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;string&gt; <span class="title">wordSet</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(s.size()+<span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=s.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                string subS = s.<span class="built_in">substr</span>(j, i-j);</span><br><span class="line">                <span class="keyword">if</span>(wordSet.<span class="built_in">find</span>(subS) != wordSet.<span class="built_in">end</span>() &amp;&amp; dp[j])&#123;</span><br><span class="line">                    dp[i] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[s.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/18/rust_os/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/18/rust_os/" class="post-title-link" itemprop="url">操作系统项目 | perf验证性能瓶颈</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-19 03:58:52 / 修改时间：04:01:06" itemprop="dateCreated datePublished" datetime="2025-07-19T03:58:52+08:00">2025-07-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/rust-os/" itemprop="url" rel="index"><span itemprop="name">rust os</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="使用-perf-验证性能瓶颈">使用 <code>perf</code> 验证性能瓶颈</h3>
-<p>用 <code>perf</code>
-找系统慢在哪，就像给系统做一次‘全身CT扫描’加‘血液化验’。在我那个操作系统框架项目里，我们特别关心调度算法在任务多到快‘撑爆’的时候表现如何（超负荷场景）。这个过程大概是这样的：</p>
-<ol type="1">
-<li><strong>‘挂号’与‘检查’ (启动Perf &amp; 记录数据)：</strong>
-<ul>
-<li>我先给系统‘挂号’，告诉 <code>perf</code> 我要检查什么：CPU
-干了啥、内存怎么用的、任务等了多久、程序内部函数调用了多少次等等。这些信息就是‘检查项目’（<code>perf</code>
-事件，如 <code>cycles</code>, <code>instructions</code>,
-<code>cache-misses</code>, <code>context-switches</code>,
-<code>sched:sched_stat_runtime</code>,
-<code>sched:sched_stat_wait</code> 等）。</li>
-<li>然后，我让系统开始‘干活’（运行特定负载，模拟超负荷），同时
-<code>perf</code>
-就像个精密的仪器在旁边‘抽血化验’、‘拍片子’，全程记录下所有关键指标（<code>perf record -e &lt;事件列表&gt; -ag -- sleep 30</code>
-或针对特定进程/命令）。</li>
-<li>这个负载是精心设计的，包含不同类型（CPU计算狂、慢悠悠的I/O读写手、要求准时完成的‘急脾气’任务）和不同数量的任务，把它们一股脑儿塞给系统，看它啥时候‘顶不住’。</li>
-</ul></li>
-<li><strong>‘看化验单’与‘读CT片’ (分析Perf报告)：</strong>
-<ul>
-<li>等系统跑完，<code>perf</code>
-会生成一份厚厚的‘检查报告’（<code>perf report</code>）。这份报告特别有用：
-<ul>
-<li><strong>‘谁最累？’ (CPU时间分布)：</strong>
-报告会列出哪个程序、哪个函数吃掉最多的CPU时间（<code>Overhead</code>
-列）。如果某个调度器函数或者内核里处理任务切换/通信(IPC)的函数占比异常高，那它可能就是‘罪魁祸首’。</li>
-<li><strong>‘效率高不高？’ (指令效率)：</strong> 我重点看
-<code>CPI</code> 或 <code>IPC</code>。<code>CPI</code>
-是说CPU执行一条指令平均花了多少个时钟周期，<code>IPC</code>
-是反过来（一个周期执行多少条指令）。<strong>理想值：</strong>
-现代CPU在跑得很顺的代码时，<code>IPC</code>
-应该接近1甚至更高（比如1.5-2.0+）。<strong>瓶颈信号：</strong>
-如果整个系统或者关键函数的 <code>IPC</code>
-掉得很低（比如低于0.5），或者 <code>CPI</code>
-飙升（比如&gt;2.0），那CPU可能没在高效干活，而是在‘空等’或者‘干杂活’。</li>
-<li><strong>‘等得久不久？’ (调度延迟)：</strong>
-报告里能看到任务从‘准备好’到‘真正上CPU跑’等了多久（<code>sched:sched_stat_wait</code>）。<strong>合理范围：</strong>
-在超负荷前，这个等待时间应该比较稳定且符合预期（比如微秒到毫秒级，看系统要求）。<strong>瓶颈信号：</strong>
-如果这个等待时间在超负荷时急剧增加（比如从毫秒级跳到几十甚至几百毫秒），或者大量时间花在
-<code>sched</code>
-相关的内核函数上，说明调度器本身或者任务太多成了瓶颈，任务在‘排队等CPU等太久’。</li>
-<li><strong>‘找东西慢不慢？’ (缓存失效)：</strong>
-<code>cache-misses</code>
-事件特别重要。CPU从自己高速缓存(<code>L1/L2/L3</code>)拿数据比去慢悠悠的主内存(<code>RAM</code>)拿快百倍。<strong>合理范围：</strong>
-有一定比例的 <code>cache-misses</code>
-是正常的。<strong>瓶颈信号：</strong> 如果 <code>cache-misses</code>
-率非常高（比如LLC Last Level Cache miss rate &gt;
-5-10%，具体看CPU和负载），或者某个关键数据结构相关的代码段
-<code>cache-misses</code>
-特别多，说明CPU经常‘找不到需要的东西’，得跑去慢速内存取，这会<strong>严重拖慢速度</strong>，是内存访问瓶颈的典型标志。</li>
-<li><strong>‘沟通顺畅吗？’ (IPC开销)：</strong>
-在微内核里，任务间沟通(<code>IPC</code>)是大事。我会专门看花在内核处理IPC消息的函数（比如消息复制、权限检查、调度切换）上的时间占比。<strong>合理范围：</strong>
-IPC本身就有成本，时间占比应该相对稳定。<strong>瓶颈信号：</strong>
-如果IPC处理时间占比在超负荷时不成比例地暴增，或者
-<code>context-switches</code> (上下文切换次数)
-高得吓人，说明系统资源大量消耗在‘传话’和‘换人’上了，任务本身的‘正事’反而没时间做，这就是<strong>通信开销过大或调度切换太频繁</strong>的瓶颈。</li>
-</ul></li>
-</ul></li>
-<li><strong>‘病灶’在哪？ (我们发现的瓶颈)：</strong>
-在我们的超负荷测试中，<code>perf</code>
-的‘化验单’清晰地指出了几个‘病灶’：
-<ul>
-<li><strong>‘沟通成本’太高 (IPC开销陡增)：</strong>
-当任务数量超过某个阈值，花在内核处理IPC上的CPU时间占比从正常的 ~15%
-一下子跳到 40%+！<code>perf report</code> 显示 <code>ipc_send</code>,
-<code>ipc_receive</code> 及相关内核锁函数耗时剧增。同时
-<code>context-switches</code>
-也翻倍了。这说明微内核架构的‘双刃剑’——隔离性好但沟通成本高——在重压下成了主要瓶颈。</li>
-<li><strong>‘找东西’越来越慢 (Cache效率下降)：</strong>
-<code>LLC cache-misses</code> 率在超负荷时从 ~3% 升高到 12%+。结合
-<code>annotate</code>
-功能看热点代码，发现是调度器内部的任务队列数据结构访问冲突加剧，导致多个CPU核心频繁互相使对方的缓存失效
-(<code>False Sharing</code>)，逼得CPU频繁去慢速内存找数据。</li>
-<li><strong>‘急脾气’任务被耽误 (调度延迟波动)：</strong>
-<code>sched:sched_stat_wait</code>
-显示实时任务的等待时间方差(<code>jitter</code>)在超负荷时变得很大，偶尔出现远超截止期限的等待峰值。<code>perf</code>
-指向调度器在重载下决策变慢，以及非实时任务过多挤占了CPU资源。</li>
-</ul></li>
-<li><strong>‘化验单’靠谱吗？ (判断数据合理性)：</strong>
-光看一次‘化验’结果不行，得判断数据靠不靠谱：
-<ul>
-<li><strong>‘对照实验’：</strong>
-我会在<strong>相同硬件、相同负载</strong>下，跑不同的调度算法配置或内核版本，用
-<code>perf</code> 收集数据对比。如果瓶颈指标（如IPC耗时、Cache
-Miss率）的变化趋势一致，且能解释性能差异（如吞吐量下降、延迟上升），数据就合理。</li>
-<li><strong>‘符合常识’：</strong> 数据要符合计算机原理。比如：
-<ul>
-<li><code>CPI</code> 不可能无限低（受限于CPU物理极限）。</li>
-<li>一个纯计算任务如果 <code>IPC</code> 很低且 <code>cache-misses</code>
-不高，那瓶颈可能在指令依赖或分支预测失败(<code>branch-misses</code>)。</li>
-<li>调度延迟不可能为0，总有个基础开销。</li>
-</ul></li>
-<li><strong>‘多指标印证’：</strong> 单一指标可能误导。比如高
-<code>%sys</code> (内核态CPU占用) 是瓶颈信号，但必须结合
-<code>perf report</code> 看具体是内核哪部分耗时。高
-<code>cache-misses</code> 是信号，但要看 <code>annotate</code>
-确认热点代码位置是否合理。</li>
-<li><strong>‘可重复性’：</strong>
-多次运行测试，关键指标（如平均延迟、最大延迟、瓶颈函数占比）的波动应在小范围内，结果要能稳定复现。</li>
-<li><strong>‘符合理论模型’ (效用边界分析)：</strong> 我们用
-<code>perf</code>
-采集的响应时间、CPU利用率等数据，输入到调度理论模型（如排队论模型）中计算‘效用边界’。如果模型预测的系统饱和点、性能拐点与
-<code>perf</code>
-观测到的实际瓶颈出现点（如IPC开销暴增、延迟突变的负载阈值）能<strong>吻合</strong>，那这些
-<code>perf</code> 数据及其揭示的瓶颈就非常可信了。</li>
-</ul></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/12/kamacode32/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/12/kamacode32/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划5</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-12 22:51:02" itemprop="dateCreated datePublished" datetime="2025-07-12T22:51:02+08:00">2025-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-23 03:54:52" itemprop="dateModified" datetime="2025-07-23T03:54:52+08:00">2025-07-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="零钱兑换-ii">518. 零钱兑换 II</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">change</span><span class="params">(<span class="type">int</span> amount, vector&lt;<span class="type">int</span>&gt;&amp; coins)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">uint64_t</span>&gt; <span class="title">dp</span><span class="params">(amount + <span class="number">1</span>, <span class="number">0</span>)</span></span>; <span class="comment">// 防止相加数据超int</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 第一轮循环应该将所有j = coins[i]置1</span></span><br><span class="line">        <span class="comment">// 想清楚这一点，就可以明确组合数的状态转移方程和排列数不一样</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;coins.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="type">int</span> coin = coins[i];</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = coin; j&lt;(amount+<span class="number">1</span>); j++)&#123;</span><br><span class="line">                dp[j] += dp[j - coins[i]];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// cout&lt;&lt;&quot;coins[i]=&quot;&lt;&lt;coins[i]&lt;&lt;endl;</span></span><br><span class="line">            <span class="comment">// for(int d:dp)cout&lt;&lt;d&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">            <span class="comment">// cout&lt;&lt;endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dp[amount];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="组合总和-ⅳ">377. 组合总和 Ⅳ</h3>
-<p>如果求组合数就是外层for循环遍历物品，内层for遍历背包，因为物品处理顺序固定。
-如果求排列数就是外层for遍历背包，内层for循环遍历物品，因为每个容量下都重新扫描所有物品。
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">combinationSum4</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(target + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>;j&lt;=target;j++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>((j - nums[i])&gt;=<span class="number">0</span> &amp;&amp; dp[j] &lt;= INT_MAX - dp[j - nums[i]])&#123;</span><br><span class="line">                    dp[j] += dp[j - nums[i]];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// for(auto d:dp)cout&lt;&lt;d&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">            <span class="comment">// cout&lt;&lt;endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="爬楼梯-进阶">70. 爬楼梯 （进阶）</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">climbStairs</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n+<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;=n; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;=<span class="number">2</span>; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i-j) &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">                    dp[i] += dp[i - j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/10/kamacode31/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/kamacode31/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划4</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-10 22:59:08" itemprop="dateCreated datePublished" datetime="2025-07-10T22:59:08+08:00">2025-07-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-13 07:05:11" itemprop="dateModified" datetime="2025-07-13T07:05:11+08:00">2025-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="背包问题中一维和二维-dp-的遍历顺序">01背包问题中一维和二维 dp
-的遍历顺序</h3>
-<h4 id="一维-dp倒序遍历容量">一维 dp：<strong>倒序遍历容量</strong></h4>
-<ul>
-<li><strong>原因</strong>：倒序遍历可以保证每个物品只被放入一次。</li>
-<li><strong>原理</strong>：每次更新 <code>dp[j]</code>
-时，使用的是上一轮（未加入当前物品）的状态，避免重复加入同一个物品。</li>
-<li><strong>举例</strong>：
-<ul>
-<li>物品0，重量1，价值15<br />
-</li>
-<li>正序遍历：<code>dp[2] = dp[1] + 15 = 30</code>（物品0被加了两次，错误！）</li>
-<li>倒序遍历：<code>dp[2] = dp[1] + 15 = 15</code>，<code>dp[1] = dp[0] + 15 = 15</code>（每个容量只加一次物品0）</li>
-</ul></li>
-</ul>
-<h4 id="二维-dp正序遍历容量">二维 dp：<strong>正序遍历容量</strong></h4>
-<ul>
-<li><strong>原因</strong>：二维 dp 的 <code>dp[i][j]</code>
-都是通过上一层 <code>dp[i-1][j]</code>
-计算的，本层不会覆盖上一层，所以不会重复加入物品。</li>
-<li><strong>原理</strong>：每一层代表一个物品，状态转移只依赖于上一层，天然保证每个物品只选一次。</li>
-</ul>
-<h3 id="最后一块石头的重量-ii">1049. 最后一块石头的重量 II</h3>
-<ul>
-<li>目标：将所有石头分成两组，使两组总重量尽量接近，最后剩下的石头重量就是两组重量差的绝对值。</li>
-<li>转化为<strong>01背包问题</strong>：每个石头只能选一次，背包容量为所有石头重量和的一半，尽量让一组的重量最大且不超过容量。</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lastStoneWeightII</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; stones)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> hlf_sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> s: stones)&#123;</span><br><span class="line">            sum += s;</span><br><span class="line">        &#125;</span><br><span class="line">        hlf_sum = sum / <span class="number">2</span>; <span class="comment">// 注意hlf_sum / 2是向下取整的</span></span><br><span class="line"></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(<span class="number">1501</span>, <span class="number">0</span>)</span></span>; <span class="comment">// 一定要保证dp[j]是可以比较的，所以我们选择重量为j</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;stones.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = hlf_sum; j&gt;=stones[i]; j--)&#123;</span><br><span class="line">                dp[j] = <span class="built_in">max</span>(dp[j], dp[j - stones[i]] + stones[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> sum - dp[hlf_sum] * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="目标和">494. 目标和</h3>
-<p>该问题可以转化为一个子集和问题：在数组中找到一些数字，使它们的和等于
-<code>(target + sum(nums)) / 2</code>（记为
-<code>bagSize</code>），每个数字只能使用一次。以下是详细步骤：</p>
-<ol type="1">
-<li><strong>问题转化</strong>：
-<ul>
-<li>设加法总和为 <code>x</code>，则减法总和为
-<code>sum - x</code>。</li>
-<li>根据条件 <code>x - (sum - x) = target</code>，解得
-<code>x = (target + sum) / 2</code>。</li>
-<li>问题转化为：在 <code>nums</code> 中选取若干数字，使它们的和等于
-<code>bagSize</code>，求选取方案数。</li>
-</ul></li>
-<li><strong>边界条件</strong>：
-<ul>
-<li>若 <code>abs(target) &gt; sum</code>，无解。</li>
-<li>若 <code>(target + sum)</code> 为奇数，无解（<code>bagSize</code>
-必须是整数）。</li>
-</ul></li>
-<li><strong>动态规划</strong>：
-<ul>
-<li>使用一维数组 <code>dp[j]</code> 表示装满容量 <code>j</code>
-的背包的方案数。</li>
-<li>初始化 <code>dp[0] = 1</code>（空集方案）。</li>
-<li>遍历每个数字，逆序更新 <code>dp</code>
-数组（避免重复使用数字）。</li>
-</ul></li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findTargetSumWays</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 回溯法容易超时</span></span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n:nums)&#123;</span><br><span class="line">            sum += n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> sz = (target + sum) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>((target + sum) % <span class="number">2</span> == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">abs</span>(target) &gt; sum)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(sz+<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = sz; j &gt;= nums[i]; j--)&#123;</span><br><span class="line">                dp[j] += dp[j-nums[i]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[sz];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h4 id="代码解释">代码解释</h4>
-<ol type="1">
-<li><strong>初始化</strong>：
-<ul>
-<li><code>dp[0] = 1</code>：表示容量为0的背包有1种方案（不选任何数字）。</li>
-<li>其他位置初始化为0。</li>
-</ul></li>
-<li><strong>遍历更新</strong>：
-<ul>
-<li>对每个数字 <code>num</code>，从 <code>bagSize</code> 到
-<code>num</code> 逆序遍历。</li>
-<li>更新公式：<code>dp[j] += dp[j - num]</code>，表示：
-<ul>
-<li><strong>不选 <code>num</code>达成j</strong>：方案数保持
-<code>dp[j]</code>。</li>
-<li><strong>选 <code>num</code>达成j</strong>：方案数加上
-<code>dp[j - num]</code>（剩余容量 <code>j - num</code>
-的方案数）。</li>
-</ul></li>
-</ul></li>
-<li><strong>示例</strong>：
-<ul>
-<li><code>nums = [1, 1, 1, 1, 1]</code>, <code>target = 3</code>：
-<ul>
-<li><code>total = 5</code>,
-<code>bagSize = (3 + 5) / 2 = 4</code>。</li>
-<li><code>dp</code> 数组初始为 <code>[1, 0, 0, 0, 0]</code>。</li>
-<li>遍历每个 <code>1</code>
-后，<code>dp[4] = 5</code>（5种组合方式）。</li>
-</ul></li>
-</ul></li>
-</ol>
-<h4 id="复杂度">复杂度</h4>
-<ul>
-<li><strong>时间复杂度</strong>：O(n × bagSize)，其中 <code>n</code>
-为数组长度。</li>
-<li><strong>空间复杂度</strong>：O(bagSize)。</li>
-</ul>
-<h3 id="一和零">474.一和零</h3>
-<p>本题容易被看成多重背包问题，识别清楚问题本质就容易做了
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">count</span><span class="params">(string s)</span></span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; cnt;</span><br><span class="line">        <span class="type">int</span> zeroes = <span class="number">0</span>, ones = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c:s)&#123;</span><br><span class="line">            <span class="keyword">if</span>(c == <span class="string">&#x27;0&#x27;</span>)zeroes++;</span><br><span class="line">            <span class="keyword">if</span>(c == <span class="string">&#x27;1&#x27;</span>)ones++;</span><br><span class="line">        &#125;</span><br><span class="line">        cnt.<span class="built_in">push_back</span>(zeroes);</span><br><span class="line">        cnt.<span class="built_in">push_back</span>(ones);</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findMaxForm</span><span class="params">(vector&lt;string&gt;&amp; strs, <span class="type">int</span> m, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(m+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;strs.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; cnt = <span class="built_in">count</span>(strs[i]);</span><br><span class="line">            <span class="keyword">if</span>(cnt[<span class="number">0</span>] &gt; m || cnt[<span class="number">1</span>] &gt; n)&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> a = m; a &gt;= cnt[<span class="number">0</span>]; a--)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> b = n; b &gt;= cnt[<span class="number">1</span>]; b--)&#123;</span><br><span class="line">                    dp[a][b] = <span class="built_in">max</span>(dp[a][b], dp[a-cnt[<span class="number">0</span>]][b-cnt[<span class="number">1</span>]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[m][n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

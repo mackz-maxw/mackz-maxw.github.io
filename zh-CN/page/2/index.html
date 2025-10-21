@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,601 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/05/intv_io/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/05/intv_io/" class="post-title-link" itemprop="url">算法笔试 | acm模式输入输出指南</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-05 23:18:58 / 修改时间：03:50:44" itemprop="dateCreated datePublished" datetime="2025-09-05T23:18:58+08:00">2025-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>使用c++作为笔试语言 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;climits&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ====== 基础输入输出 ======</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取多个整数</span></span><br><span class="line">    <span class="type">int</span> a, b, c;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入三个整数(用空格分隔): &quot;</span>;</span><br><span class="line">    cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;三个整数分别是: &quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; b &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; c &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 清除输入缓冲区</span></span><br><span class="line">    cin.<span class="built_in">ignore</span>(INT_MAX, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 读取整行输入 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n整行输入示例:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    string line;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入一行文本: &quot;</span>;</span><br><span class="line">    <span class="built_in">getline</span>(cin, line);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;你输入的文本是: &quot;</span> &lt;&lt; line &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 处理大数字 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n大数字处理示例:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 32位大整数 (使用long)</span></span><br><span class="line">    <span class="type">long</span> big32;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入一个32位大整数: &quot;</span>;</span><br><span class="line">    cin &gt;&gt; big32;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;32位大整数: &quot;</span> &lt;&lt; big32 &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 64位大整数 (使用long long)</span></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> big64;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入一个64位大整数: &quot;</span>;</span><br><span class="line">    cin &gt;&gt; big64;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;64位大整数: &quot;</span> &lt;&lt; big64 &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    cin.<span class="built_in">ignore</span>(INT_MAX, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 字符串流处理 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n字符串流处理示例:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入多个用空格分隔的整数: &quot;</span>;</span><br><span class="line">    <span class="built_in">getline</span>(cin, line);  <span class="comment">// 使用逗号作为分隔符：getline(ss, line, &#x27;,&#x27;)</span></span><br><span class="line">    <span class="function">stringstream <span class="title">ss</span><span class="params">(line)</span></span>;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; numbers;</span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line">    <span class="keyword">while</span> (ss &gt;&gt; num) &#123;</span><br><span class="line">        numbers.<span class="built_in">push_back</span>(num);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;提取的数字: &quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> n : numbers) &#123;</span><br><span class="line">        cout &lt;&lt; n &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 多组输入数据 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n多组输入数据示例:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入多行数据，每行两个整数(输入0 0结束):&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">    <span class="keyword">while</span> (cin &gt;&gt; x &gt;&gt; y) &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="number">0</span> &amp;&amp; y == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;和: &quot;</span> &lt;&lt; (x + y) &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 清除状态并忽略剩余内容</span></span><br><span class="line">    cin.<span class="built_in">clear</span>();</span><br><span class="line">    cin.<span class="built_in">ignore</span>(INT_MAX, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 文件结束处理 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n文件结束处理示例(输入Ctrl+Z或Ctrl+D结束):&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入多个整数:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; eofNumbers;</span><br><span class="line">    <span class="type">int</span> input;</span><br><span class="line">    <span class="keyword">while</span> (cin &gt;&gt; input) &#123;</span><br><span class="line">        eofNumbers.<span class="built_in">push_back</span>(input);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    cin.<span class="built_in">clear</span>();</span><br><span class="line">    cin.<span class="built_in">ignore</span>(INT_MAX, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入的数字: &quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> n : eofNumbers) &#123;</span><br><span class="line">        cout &lt;&lt; n &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 格式化输出 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n格式化输出示例:&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="type">double</span> pi = <span class="number">3.141592653589793</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;默认输出: &quot;</span> &lt;&lt; pi &lt;&lt; endl;</span><br><span class="line">    cout.<span class="built_in">precision</span>(<span class="number">4</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;保留4位: &quot;</span> &lt;&lt; pi &lt;&lt; endl;</span><br><span class="line">    cout.<span class="built_in">precision</span>(<span class="number">10</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;保留10位: &quot;</span> &lt;&lt; pi &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 恢复默认精度</span></span><br><span class="line">    cout.<span class="built_in">precision</span>(<span class="number">6</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ====== 实战示例 ======</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\n实战示例: 计算一系列数字的平均值&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;输入多个数字(用空格分隔): &quot;</span>;</span><br><span class="line">    <span class="built_in">getline</span>(cin, line);</span><br><span class="line">    <span class="function">stringstream <span class="title">ss2</span><span class="params">(line)</span></span>;</span><br><span class="line">    <span class="type">double</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (ss2 &gt;&gt; num) &#123;</span><br><span class="line">        sum += num;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;平均值: &quot;</span> &lt;&lt; (sum / count) &lt;&lt; endl;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;没有输入数字&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/03/oper_sys25exit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/03/oper_sys25exit/" class="post-title-link" itemprop="url">操作系统基础 | 5.5 终止进程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-04 08:03:19 / 修改时间：08:03:43" itemprop="dateCreated datePublished" datetime="2025-09-04T08:03:19+08:00">2025-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="终止进程_exit-和-exit">终止进程：<code>_exit()</code> 和
+<code>exit()</code></h3>
+<p>进程可以通过两种通用方式终止。其中一种是<strong>异常终止</strong>，由接收到一个默认动作为终止进程（可能伴随核心转储）的信号引起。另一种方式是，进程可以使用
+<code>_exit()</code> 系统调用进行<strong>正常终止</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> _exit(<span class="type">int</span> status);</span><br></pre></td></tr></table></figure>
+<p>传递给 <code>_exit()</code> 的 <code>status</code>
+参数定义了进程的<strong>终止状态</strong>，该状态在此进程的父进程调用
+<code>wait()</code> 时可用。虽然定义为 <code>int</code>
+类型，但实际上只有 <code>status</code> 的低 <strong>8
+位</strong>会提供给父进程。按照惯例，终止状态 <strong>0</strong>
+表示进程<strong>成功完成</strong>，而<strong>非零</strong>状态值表示进程<strong>未成功终止</strong>。对于如何解释非零状态值没有固定规则；不同的应用程序遵循自己的惯例，这些惯例应在它们的文档中描述。SUSv3
+规定了两个常量 <code>EXIT_SUCCESS</code> (0) 和
+<code>EXIT_FAILURE</code> (1)，本书中的大多数程序都使用它们。进程总是被
+<code>_exit()</code> <strong>成功终止</strong>（即 <code>_exit()</code>
+从不返回）。</p>
+<p>尽管任何在 0 到 255 范围内的值都可以通过 <code>_exit()</code> 的
+<code>status</code> 参数传递给父进程，但指定大于 128 的值可能会在 shell
+脚本中引起混淆。原因是，当一个命令被信号终止时，shell 通过将变量
+<code>$?</code> 的值设置为 <strong>128 加上信号编号</strong>
+来表明这一事实，而这个值与进程以相同的状态值调用 <code>_exit()</code>
+所产生的值无法区分。</p>
+<p>程序通常不直接调用 <code>_exit()</code>，而是调用 <code>exit()</code>
+库函数，该函数在调用 <code>_exit()</code> 之前会执行各种操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">exit</span><span class="params">(<span class="type">int</span> status)</span>;</span><br></pre></td></tr></table></figure>
+<p><code>exit()</code> 执行以下操作： *
+调用<strong>退出处理程序</strong>（使用 <code>atexit()</code> 和
+<code>on_exit()</code>
+注册的函数），调用顺序与注册顺序<strong>相反</strong>。 *
+<strong>刷新</strong> stdio 流缓冲区。 * 使用 <code>status</code>
+中提供的值调用 <code>_exit()</code> 系统调用。</p>
+<p>与 UNIX 特有的 <code>_exit()</code> 不同，<code>exit()</code>
+被定义为标准 C 库的一部分；也就是说，它在每个 C 实现中都可用。</p>
+<p>进程终止的另一种方式是从 <code>main()</code> 返回，无论是通过显式
+<code>return</code> 语句，还是通过执行到 <code>main()</code>
+函数末尾而隐式返回。执行显式的 <code>return n</code> 通常等同于调用
+<code>exit(n)</code>，因为调用 <code>main()</code> 的运行时函数会在调用
+<code>exit()</code> 时使用 <code>main()</code> 的返回值。</p>
+<p>在一种情况下，调用 <code>exit()</code> 和从 <code>main()</code>
+返回并不等效。如果在退出处理期间执行的任何步骤访问了 <code>main()</code>
+的局部变量，那么从 <code>main()</code>
+返回会导致<strong>未定义行为</strong>。例如，如果在调用
+<code>setvbuf()</code> 或 <code>setbuf()</code>（第13.2节）时指定了
+<code>main()</code> 的局部变量，就可能发生这种情况。</p>
+<p>执行不指定值的 <code>return</code>，或者执行到 <code>main()</code>
+函数末尾，也会导致 <code>main()</code> 的调用者调用
+<code>exit()</code>，但结果会根据所支持的 C
+标准版本和所使用的编译选项而有所不同： * 在 <strong>C89</strong>
+中，这些情况下的行为是<strong>未定义的</strong>；程序可能以任意状态值终止。这是在
+Linux 上使用 <code>gcc</code> 时的默认行为，程序的退出状态取自栈上或特定
+CPU 寄存器中的某个随机值。应避免以这种方式终止程序。 *
+<strong>C99</strong> 标准要求执行到主程序末尾应等同于调用
+<code>exit(0)</code>。如果我们在 Linux 上使用 <code>gcc –std=c99</code>
+编译程序，就会得到这种行为。</p>
+<h3 id="进程终止的细节">进程终止的细节</h3>
+<p>在进程的正常和异常终止期间，会发生以下操作： *
+打开的<strong>文件描述符</strong>、<strong>目录流</strong>（第18.8节）、<strong>消息目录描述符</strong>（参见
+<code>catopen(3)</code> 和 <code>catgets(3)</code>
+手册页）和<strong>转换描述符</strong>（参见 <code>iconv_open(3)</code>
+手册页）被关闭。 *
+作为关闭文件描述符的后果，此进程持有的任何<strong>文件锁</strong>（第55章）都会被释放。
+* 任何附加的 <strong>System V
+共享内存段</strong>都会被分离（detach），并且相应每个段的
+<code>shm_nattch</code> 计数器减一（参见第48.8节）。 * 对于进程已设置了
+<code>semadj</code> 值的每个 <strong>System V 信号量</strong>，该
+<code>semadj</code> 值会被添加到信号量值中（参见第47.8节）。 *
+如果此进程是某个控制终端的<strong>控制进程</strong>，则
+<strong><code>SIGHUP</code>
+信号</strong>会被发送到该控制终端前台进程组中的每个进程，并且该终端与会话分离。我们将在第34.6节进一步讨论这一点。
+* 调用进程中打开的任何 <strong>POSIX
+命名信号量</strong>都会被关闭，就像调用了 <code>sem_close()</code>
+一样。 * 调用进程中打开的任何 <strong>POSIX
+消息队列</strong>都会被关闭，就像调用了 <code>mq_close()</code> 一样。 *
+如果由于此进程退出导致一个进程组变为<strong>孤儿进程组</strong>，并且该组中存在任何<strong>停止的
+(stopped)</strong> 进程，则该组中的所有进程都会收到一个
+<code>SIGHUP</code> 信号，随后是一个 <code>SIGCONT</code>
+信号。我们将在第34.7.4节进一步讨论这一点。 * 此进程使用
+<code>mlock()</code> 或
+<code>mlockall()</code>（第50.2节）建立的任何<strong>内存锁</strong>会被移除。
+* 此进程使用 <code>mmap()</code>
+建立的任何<strong>内存映射</strong>会被取消映射（unmapped）。</p>
+<h3 id="退出处理程序-exit-handlers">退出处理程序 (Exit Handlers)</h3>
+<p>有时，应用程序需要在进程终止时自动执行一些操作。考虑这样一个例子：一个应用程序库，如果在进程的生命周期中被使用，需要在进程退出时自动执行一些清理操作。由于该库无法控制进程何时以及如何退出，也不能强制主程序在退出前调用库特定的清理函数，因此无法保证清理一定会发生。在这种情况下，一种方法是使用<strong>退出处理程序</strong>（exit
+handler）（较老的 System V 手册使用术语“程序终止例程”）。</p>
+<p>退出处理程序是由程序员提供的函数，在进程生命周期的某个时间点<strong>注册</strong>，然后在进程通过
+<code>exit()</code>
+正常终止时被<strong>自动调用</strong>。如果程序直接调用
+<code>_exit()</code>
+或者进程被信号异常终止，则<strong>不会调用</strong>退出处理程序。</p>
+<p>在某种程度上，进程被信号终止时不调用退出处理程序这一事实限制了它们的实用性。我们能做的最好方式是为可能发送给进程的信号建立处理程序，并让这些处理程序设置一个标志，促使主程序调用
+<code>exit()</code>。（因为 <code>exit()</code>
+不在表21-1（第426页）列出的异步信号安全函数中，所以我们通常不能从信号处理程序中调用它。）即使这样，也无法处理
+<code>SIGKILL</code>
+的情况，因为它的默认动作无法更改。这是我们应避免使用
+<code>SIGKILL</code> 终止进程（如第20.2节所述）而应使用
+<code>SIGTERM</code>（这是 <code>kill</code>
+命令发送的默认信号）的又一个理由。</p>
+<p><strong>注册退出处理程序</strong> GNU C
+库提供了两种注册退出处理程序的方法。第一种方法，由 SUSv3 规定，是使用
+<code>atexit()</code> 函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">atexit</span><span class="params">(<span class="type">void</span> (*func)(<span class="type">void</span>))</span>;</span><br></pre></td></tr></table></figure>
+<p>成功返回 0，错误返回非零值</p>
+<p><code>atexit()</code> 函数将 <code>func</code>
+添加到一个函数列表中，这些函数在进程终止时被调用。函数 <code>func</code>
+应定义为不接收参数且不返回值，因此具有以下一般形式： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* 执行一些操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+注意，<code>atexit()</code> 在出错时返回一个非零值（不一定是 -1）。</p>
+<p>可以注册多个退出处理程序（甚至多次注册同一个退出处理程序）。当程序调用
+<code>exit()</code>
+时，这些函数按<strong>注册顺序的逆序</strong>被调用。这个顺序是合乎逻辑的，因为通常较早注册的函数执行更基本的清理类型，这些清理可能需要在后注册的函数之后执行。</p>
+<p>本质上，可以在退出处理程序内部执行任何所需的操作，包括注册额外的退出处理程序（这些新处理程序会被放在待调用退出处理程序列表的头部）。但是，如果其中一个退出处理程序<strong>未能返回</strong>——要么是因为它调用了
+<code>_exit()</code>，要么是因为进程被信号终止（例如，退出处理程序调用了
+<code>raise()</code>）——那么剩余的退出处理程序将不会被调用。此外，<code>exit()</code>
+通常会执行的剩余操作（即刷新 stdio 缓冲区）也不会执行。</p>
+<p>SUSv3 规定，如果退出处理程序自身调用
+<code>exit()</code>，结果是未定义的。在 Linux
+上，剩余的退出处理程序会正常调用。然而，在一些系统上，这会导致所有退出处理程序再次被调用，这可能引发无限递归（直到栈溢出杀死进程）。可移植的应用程序应避免在退出处理程序内部调用
+<code>exit()</code>。</p>
+<p>SUSv3 要求实现允许一个进程至少能够注册 32 个退出处理程序。使用调用
+<code>sysconf(_SC_ATEXIT_MAX)</code>，程序可以确定实现定义的可以注册的退出处理程序数量的上限。（但是，无法查明已经注册了多少退出处理程序。）通过将注册的退出处理程序链入一个动态分配的链表，glibc
+允许注册几乎无限数量的退出处理程序。在 Linux
+上，<code>sysconf(_SC_ATEXIT_MAX)</code> 返回
+2,147,482,647（即最大的有符号 32
+位整数）。换句话说，在达到可注册函数数量的限制之前，其他东西（例如内存不足）就会先出问题。</p>
+<p>通过 <code>fork()</code>
+创建的子进程<strong>继承</strong>其父进程的退出处理程序注册的一个副本。当进程执行
+<code>exec()</code>
+时，<strong>所有</strong>退出处理程序注册都会被<strong>移除</strong>。（这必然是如此的，因为
+<code>exec()</code>
+会替换掉退出处理程序的代码以及现有程序的其余代码。）</p>
+<p>我们无法<strong>注销</strong>一个已经用
+<code>atexit()</code>（或下面描述的
+<code>on_exit()</code>）注册的退出处理程序。但是，我们可以让退出处理程序在执行其操作之前检查某个全局标志是否设置，并通过清除该标志来禁用该退出处理程序。</p>
+<p>用 <code>atexit()</code>
+注册的退出处理程序有<strong>几个局限性</strong>。第一个是当被调用时，退出处理程序<strong>不知道</strong>传递给
+<code>exit()</code>
+的状态（status）是什么。偶尔，了解这个状态可能有用；例如，我们可能希望根据进程是成功退出还是不成功退出执行不同的操作。第二个局限性是，我们无法在调用退出处理程序时为其指定<strong>参数</strong>。这种功能可能有助于定义一个根据其参数执行不同操作的退出处理程序，或者用不同的参数多次注册同一个函数。</p>
+<p>为了解决这些局限性，glibc
+提供了一种（非标准的）注册退出处理程序的替代方法：<code>on_exit()</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE           <span class="comment">/* 或者: #define _SVID_SOURCE */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">on_exit</span><span class="params">(<span class="type">void</span> (*func)(<span class="type">int</span>, <span class="type">void</span> *), <span class="type">void</span> *arg)</span>;</span><br></pre></td></tr></table></figure>
+<p>成功返回 0，错误返回非零值</p>
+<p><code>on_exit()</code> 的 <code>func</code>
+参数是一个指向如下类型函数的指针： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">int</span> status, <span class="type">void</span> *arg)</span> &#123;</span><br><span class="line">    <span class="comment">/* 执行清理操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当被调用时，<code>func()</code> 被传入两个参数：提供给
+<code>exit()</code> 的 <code>status</code> 参数，以及注册该函数时提供给
+<code>on_exit()</code> 的 <code>arg</code>
+参数的副本。虽然定义为指针类型，但 <code>arg</code>
+可由程序员自由解释。它可以被用作指向某个结构的指针；同样地，通过明智地使用类型转换，它可以被视为整数或其他标量类型。</p>
+<p>与 <code>atexit()</code> 一样，<code>on_exit()</code>
+出错时返回非零值（不一定是 -1）。与 <code>atexit()</code> 一样，可以使用
+<code>on_exit()</code> 注册多个退出处理程序。使用 <code>atexit()</code>
+和 <code>on_exit()</code>
+注册的函数被放在同一个列表中。如果在同一个程序中同时使用这两种方法，则退出处理程序按使用这两种方法<strong>注册顺序的逆序</strong>调用。</p>
+<p>虽然比 <code>atexit()</code> 更灵活，但 <code>on_exit()</code>
+在旨在可移植的程序中应<strong>避免使用</strong>，因为它不受任何标准涵盖，并且在其他
+UNIX 实现上很少可用。</p>
+<p><strong>示例程序</strong> 以下代码演示了使用 <code>atexit()</code> 和
+<code>on_exit()</code> 注册退出处理程序。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _BSD_SOURCE     <span class="comment">/* 从 &lt;stdlib.h&gt; 获取 on_exit() 声明 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">atexitFunc1</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;atexit function 1 called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">atexitFunc2</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;atexit function 2 called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">onexitFunc</span><span class="params">(<span class="type">int</span> exitStatus, <span class="type">void</span> *arg)</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;on_exit function called: status=%d, arg=%ld\n&quot;</span>,</span><br><span class="line">                exitStatus, (<span class="type">long</span>) arg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (on_exit(onexitFunc, (<span class="type">void</span> *) <span class="number">10</span>) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;on_exit 1&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (atexit(atexitFunc1) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;atexit 1&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (atexit(atexitFunc2) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;atexit 2&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (on_exit(onexitFunc, (<span class="type">void</span> *) <span class="number">20</span>) != <span class="number">0</span>)</span><br><span class="line">        fatal(<span class="string">&quot;on_exit 2&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当我们运行这个程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./exit_handlers</span><br><span class="line">on_exit function called: status=2, arg=20</span><br><span class="line">atexit function 2 called</span><br><span class="line">atexit function 1 called</span><br><span class="line">on_exit function called: status=2, arg=10</span><br></pre></td></tr></table></figure></p>
+<p><strong>(输出顺序解释)</strong>
+处理程序按<strong>注册顺序的逆序</strong>调用： * 最后注册的是
+<code>on_exit</code> (arg=20)，所以最先调用。 * 然后是
+<code>atexitFunc2</code>。 * 然后是 <code>atexitFunc1</code>。 *
+最后是第一个注册的 <code>on_exit</code> (arg=10)。</p>
+<h3 id="forkstdio-缓冲区与-_exit-之间的交互"><code>fork()</code>、stdio
+缓冲区与 <code>_exit()</code> 之间的交互</h3>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world\n&quot;</span>);</span><br><span class="line">    write(STDOUT_FILENO, <span class="string">&quot;Ciao\n&quot;</span>, <span class="number">5</span>); <span class="comment">// 直接写入当前打开的文件描述符</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fork() == <span class="number">-1</span>)</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 父子进程都会执行到这里 */</span></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上程序的输出展示了一个起初令人费解的现象。当我们直接在终端运行此程序时，会看到预期的结果：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./fork_stdio_buf</span><br><span class="line">Hello world</span><br><span class="line">Ciao</span><br></pre></td></tr></table></figure> 然而，当我们将标准输出重定向到一个文件时，却看到以下情况：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./fork_stdio_buf &gt; a</span><br><span class="line">$ <span class="built_in">cat</span> a</span><br><span class="line">Ciao</span><br><span class="line">Hello world</span><br><span class="line">Hello world</span><br></pre></td></tr></table></figure> 在上面的输出中，我们看到两件奇怪的事情：由
+<code>printf()</code> 写入的行出现了两次，并且 <code>write()</code>
+的输出先于 <code>printf()</code> 的输出出现。</p>
+<p>要理解为什么用 <code>printf()</code>
+写入的消息会出现两次，需要回忆一下：<strong>stdio
+缓冲区是在进程的用户空间内存中维护的</strong>（参见第13.2节）。因此，这些缓冲区在
+<code>fork()</code> 时会被<strong>子进程复制</strong>。</p>
+<p>当标准输出指向终端时，默认是<strong>行缓冲</strong>的，因此由
+<code>printf()</code>
+写入的以换行符终止的字符串会<strong>立即显示</strong>。然而，当标准输出重定向到文件时，默认是<strong>块缓冲</strong>的。因此，在我们的例子中，在
+<code>fork()</code> 发生时，由 <code>printf()</code>
+写入的字符串仍然位于父进程的 stdio
+缓冲区中，并且这个字符串被子进程复制。当父进程和子进程随后调用
+<code>exit()</code> 时，它们都会<strong>刷新</strong>各自的 stdio
+缓冲区副本，从而导致<strong>重复的输出</strong>。</p>
+<p>我们可以通过以下方法之一来防止出现这种重复输出： * 作为解决 stdio
+缓冲问题的特定方案，我们可以在调用 <code>fork()</code>
+<strong>之前</strong>使用 <code>fflush()</code> 来刷新 stdio
+缓冲区。或者，我们可以使用 <code>setvbuf()</code> 或
+<code>setbuf()</code> 来<strong>禁用</strong> stdio 流的缓冲。 *
+子进程可以调用 <code>_exit()</code> 而不是
+<code>exit()</code>，这样它就不会刷新 stdio
+缓冲区。这项技术阐明了一个更通用的原则：在创建子进程的应用程序中，通常<strong>只有一个进程</strong>（最常见的是父进程）应该通过
+<code>exit()</code> 终止，而其他进程应该通过 <code>_exit()</code>
+终止。这确保了只有一个进程调用退出处理程序并刷新 stdio
+缓冲区，这通常是可取的。</p>
+<p>也存在其他允许父进程和子进程都调用 <code>exit()</code>
+的方法（有时是必要的）。例如，可以设计退出处理程序，使得即使从多个进程调用也能正确运行；或者让应用程序在调用
+<code>fork()</code>
+<strong>之后</strong>才安装退出处理程序。此外，有时我们可能确实希望所有进程在
+<code>fork()</code> 后都刷新其 stdio
+缓冲区。在这种情况下，我们可以选择使用 <code>exit()</code>
+终止进程，或者根据情况在每个进程中使用显式的 <code>fflush()</code>
+调用。</p>
+<p>示例程序中 <code>write()</code> 的输出没有出现两次，是因为
+<code>write()</code>
+将数据<strong>直接传输到内核缓冲区</strong>，而该缓冲区在
+<code>fork()</code> 期间<strong>不会被复制</strong>。</p>
+<p>现在，程序输出重定向到文件时的第二个奇怪之处的原因应该很清楚了。<code>write()</code>
+的输出出现在 <code>printf()</code> 的<strong>输出之前</strong>，是因为
+<code>write()</code>
+的输出会<strong>立即</strong>传输到内核缓冲区缓存，而
+<code>printf()</code> 的输出只有在调用 <code>exit()</code> 刷新 stdio
+缓冲区时才会被传输。（通常，如第13.7节所述，在同一文件上混合使用 stdio
+函数和系统调用来执行 I/O 时需要小心。）</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/27/oper_sys24fork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/27/oper_sys24fork/" class="post-title-link" itemprop="url">操作系统基础 | 5.3 信号；fork</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-08-28 09:15:23 / 修改时间：09:17:07" itemprop="dateCreated datePublished" datetime="2025-08-28T09:15:23+08:00">2025-08-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="信号的概念">信号的概念</h3>
+<p>信号（Signal）是通知进程已发生某种事件的一种机制。信号有时被描述为<strong>软件中断</strong>（software
+interrupts）。信号与硬件中断类似，因为它们会中断程序的正常执行流程；在大多数情况下，无法精确预测信号何时到达。一个进程（如果它具有适当的权限）可以向另一个进程发送信号。这种用途下，信号可以作为一种同步技术，甚至作为一种原始的<strong>进程间通信（IPC）</strong>
+形式。进程也可以向自己发送信号。</p>
+<p>然而，传递给进程的许多信号的通常来源是<strong>内核</strong>（kernel）。导致内核为进程生成信号的事件类型包括：</p>
+<ul>
+<li><strong>发生硬件异常</strong>：这意味着硬件检测到故障条件并通知内核，内核随后向相关进程发送相应的信号。硬件异常的例子包括：执行格式错误的机器语言指令、除以0、或引用了无法访问的内存区域。</li>
+<li><strong>用户键入了能生成信号的终端特殊字符</strong>。这些字符包括中断字符（通常是
+<code>Control-C</code>）和挂起字符（通常是
+<code>Control-Z</code>）。</li>
+<li><strong>发生软件事件</strong>。例如：文件描述符上有输入可用、终端窗口大小改变、定时器超时、进程的CPU时间限制已超过、或该进程的一个子进程终止。</li>
+</ul>
+<p>每个信号都被定义为一个唯一的（小）整数，从1开始顺序编号。这些整数在
+<code>&lt;signal.h&gt;</code> 头文件中用 <code>SIGxxxx</code>
+形式的符号名定义。由于每个信号使用的实际数字因实现而异，因此在程序中总是使用这些符号名称。例如，当用户键入中断字符时，<code>SIGINT</code>（信号编号2）被传递给进程。</p>
+<p>信号分为两大类。第一组构成了<strong>传统或标准信号</strong>（standard
+signals），内核使用它们来通知进程事件。在Linux上，标准信号编号从1到31。本章我们描述标准信号。另一组信号由<strong>实时信号</strong>（realtime
+signals）组成，其与标准信号的区别将在第22.8节描述。</p>
+<p>信号被认为是<strong>由某个事件产生</strong>（generated）。一旦产生，信号随后会被<strong>递送</strong>（delivered）给一个进程，该进程随后会采取某些<strong>动作</strong>（action）来响应信号。在信号产生和递送之间的时间段，信号被称为<strong>处于等待状态</strong>（pending）。通常，一个等待中的信号会在进程下一次被调度运行时立即递送，如果进程已经在运行则立即递送（例如，进程向自己发送信号）。</p>
+<p>然而，有时我们需要确保一段代码不会因信号的递送而中断。为此，我们可以将一个信号添加到进程的<strong>信号掩码</strong>（signal
+mask）中——这是一组当前<strong>被阻塞</strong>（blocked）递送的信号。如果一个信号在阻塞状态下产生，它将保持等待状态，直到后来被<strong>解除阻塞</strong>（unblocked）（从信号掩码中移除）。各种系统调用允许进程向其信号掩码中添加和移除信号。</p>
+<p>根据信号的不同，信号被递送时，进程会执行以下<strong>默认动作</strong>（default
+actions）之一：</p>
+<ul>
+<li><strong>忽略信号</strong>（Ignored）：即信号被内核丢弃，对进程没有影响。（进程甚至不知道它发生了。）</li>
+<li><strong>进程被终止</strong>（Terminated）（杀死）。这有时被称为异常进程终止，与进程使用
+<code>exit()</code> 终止的正常进程终止相对。</li>
+<li><strong>生成核心转储文件</strong>（Core dump
+file）且进程被终止。核心转储文件包含进程虚拟内存的一个映像，可以将其加载到调试器中，以检查进程终止时的状态。</li>
+<li><strong>进程被停止</strong>（Stopped）——进程的执行被暂停。</li>
+<li><strong>进程被恢复</strong>（Resumed）执行——在之前被停止后恢复执行。</li>
+</ul>
+<p>程序可以改变信号递送时发生的动作，而不是接受特定信号的默认动作。这被称为设置信号的<strong>处置方式</strong>（disposition）。程序可以为信号设置以下处置方式之一：</p>
+<ul>
+<li>发生<strong>默认动作</strong>。这对于撤销之前将信号处置方式更改为非默认值的操作很有用。</li>
+<li><strong>忽略</strong>信号。这对于那些默认动作是终止进程的信号很有用。</li>
+<li>执行一个<strong>信号处理程序</strong>（signal
+handler）。信号处理程序是由程序员编写的函数，它执行适当的任务以响应信号的递送。例如，shell
+有一个用于 <code>SIGINT</code> 信号（由中断字符 <code>Control-C</code>
+产生）的处理程序，该处理程序使其停止当前正在做的事情并将控制权返回给主输入循环，从而再次向用户显示
+shell 提示符（用户按下 <code>Control-C</code>
+-shell中断当前处理-用户可以再次在shell中输入指令了）。通知内核应调用某个处理函数通常被称为<strong>安装</strong>（installing）或<strong>建立</strong>（establishing）一个信号处理程序。当信号处理程序因信号递送而被调用时，我们说信号已被<strong>处理</strong>（handled）或，同义词，被<strong>捕获</strong>（caught）。
+<em>注意：不可能将信号的处置方式设置为终止或转储核心（除非其中一个是该信号的默认处置方式）。最接近这一点的是为该信号安装一个处理程序，然后该处理程序调用
+<code>exit()</code> 或 <code>abort()</code>。<code>abort()</code>
+函数（第21.2.2节）为进程生成一个 <code>SIGABRT</code>
+信号，这会导致其转储核心并终止。</em></li>
+</ul>
+<p>Linux特有的 <code>/proc/PID/status</code>
+文件包含各种位掩码字段，可以检查这些字段以确定进程对信号的处理情况。位掩码以十六进制数显示，最低有效位代表信号1，左边下一位代表信号2，依此类推。这些字段是：
+* <code>SigPnd</code>（线程内等待信号，per-thread pending signals） *
+<code>ShdPnd</code>（进程范围内等待信号，process-wide pending
+signals；自Linux 2.6起） * <code>SigBlk</code>（阻塞信号，blocked
+signals） * <code>SigIgn</code>（忽略信号，ignored signals） *
+<code>SigCgt</code>（捕获信号，caught signals）。
+（当我们第33.2节描述多线程进程中的信号处理时，<code>SigPnd</code> 和
+<code>ShdPnd</code> 字段之间的区别将变得清晰。）同样的信息也可以使用
+<code>ps(1)</code> 命令的各种选项来获取。</p>
+<h3 id="fork-exit-wait-和-execve-概述"><code>fork()</code>,
+<code>exit()</code>, <code>wait()</code> 和 <code>execve()</code>
+概述</h3>
+<ul>
+<li><p><strong><code>fork()</code></strong> <code>fork()</code>
+系统调用允许一个进程（称为<strong>父进程</strong>）创建一个新的进程（称为<strong>子进程</strong>）。这是通过使新的子进程成为父进程的（近乎）完全副本来实现的：子进程获取父进程栈、数据、堆和文本段（第6.3节）的副本。“Fork”一词源于我们可以将父进程视为<strong>分裂
+(forking)</strong> 以产生自身的两个副本这一构想。</p></li>
+<li><p><strong><code>exit(status)</code></strong> <code>exit()</code>
+库函数<strong>终止</strong>一个进程，使该进程使用的所有资源（内存、打开的文件描述符等）可供内核后续重新分配。<code>status</code>
+参数是一个整数，用于确定进程的<strong>终止状态</strong>。通过
+<code>wait()</code> 系统调用，父进程可以检索此状态。 <code>exit()</code>
+库函数是基于 <code>_exit()</code>
+系统调用构建的。在第25章，我们将解释这两个接口之间的区别。在此我们只需注意，在
+<code>fork()</code>
+之后，通常只有父进程和子进程中的<strong>一个</strong>通过调用
+<code>exit()</code> 终止；<strong>另一个</strong>进程应使用
+<code>_exit()</code> 终止。</p></li>
+<li><p><strong><code>wait(&amp;status)</code></strong>
+<code>wait(&amp;status)</code>
+系统调用有两个目的。首先，如果该进程的某个子进程尚未调用
+<code>exit()</code> 终止，那么 <code>wait()</code>
+会<strong>暂停</strong>该进程的执行，直到它的一个子进程终止为止。其次，子进程的终止状态通过
+<code>wait()</code> 的 <code>status</code>
+参数<strong>返回</strong>。</p></li>
+<li><p><strong><code>execve(pathname, argv, envp)</code></strong>
+<code>execve(pathname, argv, envp)</code>
+系统调用将一个新的程序（<code>pathname</code>，带有参数列表
+<code>argv</code> 和环境列表
+<code>envp</code>）<strong>加载</strong>到一个进程的内存中。现有的程序文本被丢弃，并为新程序<strong>全新创建</strong>栈、数据和堆段。此操作通常被称为
+<strong>execing</strong> 一个新程序。后面我们会看到，有几个库函数是基于
+<code>execve()</code>
+构建的，每个函数都在编程接口上提供了有用的变体。当我们不关心这些接口变体时，我们遵循通用惯例，将这些调用统称为
+<code>exec()</code>，但请注意，并没有叫这个名字的系统调用或库函数。</p></li>
+</ul>
+<p><strong>与其他系统的对比：</strong> 一些其他操作系统将
+<code>fork()</code> 和 <code>exec()</code>
+的功能组合到单个操作中——即所谓的
+<strong>spawn</strong>——该操作创建一个新进程然后执行指定的程序。相比之下，UNIX
+的方法通常更简单、更优雅。将这两个步骤分开使得 API
+更简单（<code>fork()</code>
+系统调用不需要参数），并且允许程序在两个步骤之间执行的操作具有极大的灵活性。此外，只进行
+<code>fork()</code> 而不接着执行 <code>exec()</code> 通常也很有用。</p>
+<p>SUSv3 规定了可选的 <code>posix_spawn()</code> 函数，它结合了
+<code>fork()</code> 和 <code>exec()</code> 的效果。此函数以及 SUSv3
+规定的几个相关 API 已在 glibc 中为 Linux 实现。SUSv3 规定
+<code>posix_spawn()</code>
+是为了允许为那些不提供交换设施或内存管理单元（这在许多嵌入式系统中很典型）的硬件架构编写可移植应用程序。在此类架构上，传统的
+<code>fork()</code> 难以或无法实现。</p>
+<p><strong>协同工作概述：</strong> <code>fork()</code>,
+<code>exit()</code>, <code>wait()</code>, 和 <code>execve()</code>
+通常是如何一起使用的。（shell
+持续执行一个循环，该循环读取命令、对其进行各种处理，然后 fork
+一个子进程来 exec 该命令。）</p>
+<h3 id="创建新进程fork">创建新进程：<code>fork()</code></h3>
+<p><code>fork()</code>
+系统调用创建一个新的进程，即<strong>子进程</strong>，它是调用进程，即<strong>父进程</strong>的一个几乎完全相同的副本。</p>
+<p>理解 <code>fork()</code>
+的关键在于认识到，在它完成工作后，存在<strong>两个进程</strong>，并且在每个进程中，执行都从
+<code>fork()</code>
+<strong>返回的地方继续</strong>。两个进程执行相同的程序代码，但它们拥有独立的栈、数据和堆段副本。子进程的栈、数据和堆段最初是父进程内存相应部分的精确副本。在
+<code>fork()</code>
+之后，每个进程都可以修改其栈、数据和堆段中的变量，而<strong>不会影响另一个进程</strong>。</p>
+<p>在程序代码中，我们可以通过 <code>fork()</code>
+的返回值来区分这两个进程：</p>
+<ul>
+<li>对于<strong>父进程</strong>，<code>fork()</code>
+返回新创建子进程的<strong>进程ID
+(PID)</strong>。这很有用，因为父进程可能会创建多个子进程，并因此需要（通过
+<code>wait()</code> 或其相关函数）跟踪它们。</li>
+<li>对于<strong>子进程</strong>，<code>fork()</code> 返回
+<strong>0</strong>。</li>
+<li>如果无法创建新进程，<code>fork()</code> 返回
+<strong>-1</strong>。失败的可能原因包括：已达到允许该（真实）用户ID创建的进程数的资源限制（<code>RLIMIT_NPROC</code>，在第36.3节描述），或者已达到系统范围内可创建进程数的上限。</li>
+</ul>
+<p>必要时，子进程可以使用 <code>getpid()</code> 获取自身的进程ID，使用
+<code>getppid()</code> 获取其父进程的进程ID。</p>
+<p>调用 <code>fork()</code> 时有时会使用以下惯用法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pid_t</span> childPid; <span class="comment">/* 在父进程中用于记录成功 fork() 后的子进程 PID */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">-1</span>: <span class="comment">/* fork() 失败 */</span></span><br><span class="line">    <span class="comment">/* 处理错误 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="number">0</span>:  <span class="comment">/* 成功 fork() 后的子进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行子进程特定的操作 */</span></span><br><span class="line">    <span class="keyword">break</span>; <span class="comment">// 或 exit()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">default</span>: <span class="comment">/* 成功 fork() 后的父进程进入此处 */</span></span><br><span class="line">    <span class="comment">/* 执行父进程特定的操作 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重要的是要认识到，在 <code>fork()</code>
+之后，<strong>无法确定接下来是哪个进程被调度使用CPU</strong>。在编写不佳的程序中，这种不确定性可能导致称为<strong>竞争条件
+(race conditions)</strong> 的错误，我们将在第24.4节进一步描述。</p>
+<p>代码清单24-1演示了 <code>fork()</code>
+的用法。该程序创建一个子进程，修改它在 <code>fork()</code>
+期间继承的全局变量和自动变量的副本。在程序中（由父进程执行的代码中）使用
+<code>sleep()</code>，是为了让子进程能在父进程之前被调度到CPU上，从而使子进程可以在父进程继续执行之前完成其工作并终止。使用
+<code>sleep()</code>
+这种方式并<strong>不是</strong>保证此结果的万无一失的方法；我们将在第24.5节探讨一种更好的方法。
+<strong>代码清单 24-1: 使用 fork()</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> idata = <span class="number">111</span>;             <span class="comment">/* 分配在数据段 (data segment) */</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> istack = <span class="number">222</span>;               <span class="comment">/* 分配在栈段 (stack segment) */</span></span><br><span class="line">    <span class="type">pid_t</span> childPid;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (childPid = fork()) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">        errExit(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:                         <span class="comment">/* 子进程分支 */</span></span><br><span class="line">        idata *= <span class="number">3</span>;                 <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        istack *= <span class="number">3</span>;                <span class="comment">/* 修改继承的变量副本 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:                        <span class="comment">/* 父进程分支 */</span></span><br><span class="line">        sleep(<span class="number">3</span>);                   <span class="comment">/* 给子进程一个执行的机会 */</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 父进程和子进程都会执行到这里 */</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;PID=%ld %s idata=%d istack=%d\n&quot;</span>, (<span class="type">long</span>) getpid(),</span><br><span class="line">            (childPid == <span class="number">0</span>) ? <span class="string">&quot;(child) &quot;</span> : <span class="string">&quot;(parent)&quot;</span>, idata, istack);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+当我们运行清单24-1中的程序时，会看到以下输出： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./t_fork</span><br><span class="line">PID=28557 (child)  idata=333 istack=666</span><br><span class="line">PID=28556 (parent) idata=111 istack=222</span><br></pre></td></tr></table></figure>
+上面的输出证明，子进程在 <code>fork()</code>
+时获得了栈段和数据段的<strong>自有副本</strong>，并且它能够修改这些段中的变量而<strong>不影响父进程</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1816,393 +2411,8 @@ Linux 内核持续演进的一个缩影。</p>
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/11/kamacode35stock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/11/kamacode35stock/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划8</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-12 00:46:58" itemprop="dateCreated datePublished" datetime="2025-08-12T00:46:58+08:00">2025-08-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-20 01:04:30" itemprop="dateModified" datetime="2025-08-20T01:04:30+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="买卖股票的最佳时机">121. 买卖股票的最佳时机</h3>
-<p>贪心方法：取最左最小值，取最右最大值 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> profit = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;prices.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>((prices[j] - prices[i])&gt;profit)profit = prices[j] - prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[j] &lt; prices[i])i = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> profit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-动态规划方法：每天保存两个数值 - 当天持有股票的最大值 -
-第i-1天就持有股票，那么就保持现状，所得现金就是昨天持有股票的所得现金
-即：dp[i - 1][0] -
-第i天买入股票，所得现金就是买入今天的股票后所得现金即：-prices[i] -
-当天不持有股票的最大值 -
-第i-1天就不持有股票，那么就保持现状，所得现金就是昨天不持有股票的所得现金
-即：dp[i - 1][1] -
-第i天卖出股票，所得现金就是按照今天股票价格卖出后所得现金即：prices[i] +
-dp[i - 1][0]</p>
-<h3 id="买卖股票的最佳时机ii">122.买卖股票的最佳时机II</h3>
-<p>尝试一下动态规划方法 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printdp</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; dp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> i: dp)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> j: i)&#123;</span><br><span class="line">                cout&lt;&lt;j&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout&lt;&lt;endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="comment">// printdp(dp);</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">0</span>]);</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>], dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// printdp(dp);</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="买卖股票的最佳时机iii">123.买卖股票的最佳时机III</h3>
-<p>为什么“选择两个最大的上升区间”这种解决方式不正确：
-由于交易次数限制，并不是所有上升区间都需要被单独考虑。有时一笔交易可能覆盖多个上升区间</p>
-<p>本题建议使用动态规划，推导四个状态： - 第一次持有股票 -
-第一次不持有股票 - 第二次持有股票 - 第二次不持有股票 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">5</span>, <span class="number">0</span>));</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">3</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">1</span>]);</span><br><span class="line">            dp[i][<span class="number">2</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">2</span>]);</span><br><span class="line">            dp[i][<span class="number">3</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">2</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">3</span>]);</span><br><span class="line">            dp[i][<span class="number">4</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">3</span>]+prices[i], dp[i<span class="number">-1</span>][<span class="number">4</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">4</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/08/oper_sys17%E6%98%A0%E5%B0%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/08/oper_sys17%E6%98%A0%E5%B0%84/" class="post-title-link" itemprop="url">操作系统基础 | 4.3 内核数据结构-映射</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-09 02:01:45" itemprop="dateCreated datePublished" datetime="2025-08-09T02:01:45+08:00">2025-08-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-11 00:18:43" itemprop="dateModified" datetime="2025-08-11T00:18:43+08:00">2025-08-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="映射maps">映射（Maps）</h3>
-<h4 id="基本概念">基本概念</h4>
-<p>映射（又称关联数组）是由唯一键组成的集合，每个键关联一个特定值。键与值的关系称为<strong>映射关系</strong>，支持以下基本操作：<br />
-- <strong>添加</strong>（Add）：插入键值对<br />
-- <strong>移除</strong>（Remove）：删除指定键<br />
-- <strong>查找</strong>（Lookup）：通过键获取值</p>
-<p>尽管哈希表是一种映射实现，但并非所有映射都基于哈希。映射也可使用<strong>自平衡二叉搜索树</strong>存储数据：<br />
--
-<strong>哈希表</strong>：平均时间复杂度更优（O(1)），但最坏情况为线性（O(n)）<br />
-- <strong>二叉搜索树</strong>：最坏情况为对数复杂度（O(log
-n)），且支持有序遍历，无需哈希函数（仅需定义比较操作符）</p>
-<p>在Linux内核中，映射的特定实现称为<code>idr</code>（ID Radix
-Tree-旧版实现，现为XArray），专用于将唯一ID（UID）映射到指针。</p>
-<hr />
-<h4 id="初始化idr">初始化idr</h4>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/idr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">id_huh</span>;</span>       <span class="comment">// 静态定义  </span></span><br><span class="line">idr_init(&amp;id_huh);      <span class="comment">// 初始化  </span></span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="分配uid">分配UID</h4>
-<h5 id="预分配资源">1. 预分配资源</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_pre_get</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">gfp_t</span> gfp_mask)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：必要时调整底层树结构，准备分配新UID  </span><br><span class="line">- **参数**：  </span><br><span class="line">  - `idp`：目标idr结构  </span><br><span class="line">  - `gfp_mask`：内存分配标志（如`GFP_KERNEL`）  </span><br><span class="line">- **返回值**：成功返回<span class="number">1</span>，失败返回<span class="number">0</span>（与其他内核函数相反！）  </span><br><span class="line"></span><br><span class="line">##### <span class="number">2.</span> 分配UID并关联指针  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配新UID，将其与`ptr`关联  </span><br><span class="line">- **返回值**：  </span><br><span class="line">  - 成功：返回<span class="number">0</span>，UID存储在`id`中  </span><br><span class="line">  - 失败：返回`-EAGAIN`（需重试`idr_pre_get`）或`-ENOSPC`（idr已满）  </span><br><span class="line"></span><br><span class="line">##### 示例：分配UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">int</span> id, ret;</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!idr_pre_get(&amp;id_huh, GFP_KERNEL)) </span><br><span class="line">        <span class="keyword">return</span> -ENOSPC;</span><br><span class="line">    ret = idr_get_new(&amp;id_huh, ptr, &amp;id); </span><br><span class="line">&#125; <span class="keyword">while</span> (ret == -EAGAIN);</span><br></pre></td></tr></table></figure>
-<h5 id="分配指定最小uid">分配指定最小UID</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">idr_get_new_above</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">void</span> *ptr, <span class="type">int</span> starting_id, <span class="type">int</span> *id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **功能**：分配不小于`starting_id`的UID，确保UID单调递增  </span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> next_id = <span class="number">1</span>;  <span class="comment">// 全局计数器</span></span><br><span class="line"><span class="keyword">if</span> (!idr_get_new_above(&amp;id_huh, ptr, next_id, &amp;id))</span><br><span class="line">    next_id = id + <span class="number">1</span>;    <span class="comment">// 更新下一个起始ID  </span></span><br></pre></td></tr></table></figure>
-<h5 id="xarray方式-linux-4.2以后">XArray方式 (Linux 4.2以后)</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 原子分配 (无需预分配) */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">xa_alloc</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">int</span> *id, </span></span><br><span class="line"><span class="params">             <span class="type">void</span> *entry, <span class="keyword">struct</span> xa_limit limit, <span class="type">gfp_t</span> gfp)</span>;</span><br><span class="line"><span class="comment">/* 分配递增ID示例 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> next_id = <span class="number">1</span>;</span><br><span class="line">xa_alloc(&amp;xa_huh, &amp;next_id, ptr, XA_LIMIT(next_id, UINT_MAX), GFP_KERNEL);</span><br><span class="line"><span class="comment">// 成功后 next_id 自动递增</span></span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="查找与删除">查找与删除</h4>
-<h5 id="查找uid">查找UID</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">idr_find</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **返回值**：成功返回关联指针，失败返回`<span class="literal">NULL</span>`  </span><br><span class="line">- **注意**：在分配UID时，禁止将`<span class="literal">NULL</span>`作为有效idr值映射，否则无法区分查找失败与有效`<span class="literal">NULL</span>`  </span><br><span class="line"></span><br><span class="line">##### 移除UID  </span><br><span class="line">```c</span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove</span><span class="params">(<span class="keyword">struct</span> idr *idp, <span class="type">int</span> id)</span>;  </span><br><span class="line">```  </span><br><span class="line">- **注意**：无错误返回值，需调用者确保UID存在  </span><br><span class="line"></span><br><span class="line">##### XArray方式</span><br><span class="line">```c</span><br><span class="line"><span class="comment">/* 查找 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_load</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br><span class="line"><span class="comment">/* 删除并返回删除项 */</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_erase</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="销毁">销毁</h4>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">idr_destroy</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;                  <span class="comment">// 释放未使用内存  </span></span><br><span class="line"><span class="type">void</span> <span class="title function_">idr_remove_all</span><span class="params">(<span class="keyword">struct</span> idr *idp)</span>;               <span class="comment">// 强制移除所有UID  </span></span><br><span class="line">```  </span><br><span class="line">**典型流程**：  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">idr_remove_all</span><span class="params">(&amp;id_huh)</span>;  <span class="comment">// 先清空所有映射  </span></span><br><span class="line">idr_destroy(&amp;id_huh);     <span class="comment">// 再释放内存，确保所有idr内存被释放  </span></span><br><span class="line">kfree(user_data_ptr);  <span class="comment">// 释放实际业务数据</span></span><br></pre></td></tr></table></figure>
-<h5 id="xarray方式">XArray方式</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 销毁并释放所有资源 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">xa_destroy</span><span class="params">(<span class="keyword">struct</span> xarray *xa)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 安全销毁流程示例 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">module_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> id;</span><br><span class="line">    <span class="type">void</span> *entry;</span><br><span class="line">    <span class="comment">// 遍历释放关联资源</span></span><br><span class="line">    xa_for_each(&amp;xa_huh, id, entry) &#123;</span><br><span class="line">        xa_erase(&amp;xa_huh, id);</span><br><span class="line">        kfree(entry);</span><br><span class="line">    &#125;</span><br><span class="line">    xa_destroy(&amp;xa_huh); <span class="comment">// 释放XArray管理内存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="关键注意事项">关键注意事项</h4>
-<ol type="1">
-<li><strong>并发控制</strong>：
-<ul>
-<li><code>idr_pre_get</code>无需加锁<br />
-</li>
-<li><code>idr_get_new</code>等操作需自旋锁保护（参见第9/10章）</li>
-</ul></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/07/oper_sys16%E9%98%9F%E5%88%97/" class="post-title-link" itemprop="url">操作系统基础 | 4.2 内核数据结构-队列</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-08 00:28:10" itemprop="dateCreated datePublished" datetime="2025-08-08T00:28:10+08:00">2025-08-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-09 00:28:09" itemprop="dateModified" datetime="2025-08-09T00:28:09+08:00">2025-08-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="队列">队列</h3>
-<p>任何操作系统内核中常见的编程模式是<strong>生产者与消费者</strong>。实现此模式的最简单方式通常是使用队列，即<strong>先进先出</strong>（FIFO）。</p>
-<p>Linux内核的通用队列实现称为<code>kfifo</code>，代码位于<code>kernel/kfifo.c</code>，头文件为<code>&lt;linux/kfifo.h&gt;</code>。本节讨论2.6.33版本更新后的API（早期版本用法略有不同，编写代码前请确认头文件）。</p>
-<hr />
-<h4 id="kfifo">kfifo</h4>
-<p>Linux的<code>kfifo</code>与其他队列抽象类似，提供两个核心操作：<br />
-- <strong>入队</strong>（<code>in</code>）：将数据写入队列<br />
-- <strong>出队</strong>（<code>out</code>）：从队列中读取数据</p>
-<p><code>kfifo</code>对象维护两个偏移量：<br />
-- <strong>in偏移量</strong>：下一次入队的起始位置<br />
-- <strong>out偏移量</strong>：下一次出队的起始位置</p>
-<p><strong>规则</strong>：<br />
-1.
-<code>out</code>偏移量始终≤<code>in</code>偏移量（否则会读取未入队的数据）。<br />
-2. 当<code>out == in</code>时，队列为空（无法出队）。<br />
-3. 当<code>in</code>到达队列末尾时，需重置队列才能继续入队。</p>
-<hr />
-<h4 id="创建队列">创建队列</h4>
-<h5 id="动态初始化常用">动态初始化（常用）</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">kfifo_alloc</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">unsigned</span> <span class="type">int</span> size, <span class="type">gfp_t</span> gfp_mask)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：分配大小为`size`字节的队列（`size`必须为<span class="number">2</span>的幂次），内存分配标志为`gfp_mask`（参见第<span class="number">12</span>章“内存管理”）。  </span><br><span class="line">- **返回值**：成功返回`<span class="number">0</span>`，失败返回错误码。  </span><br><span class="line">- **示例**：  </span><br><span class="line">  ```c</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">fifo</span>;</span></span><br><span class="line">  <span class="type">int</span> ret = kfifo_alloc(&amp;fifo, PAGE_SIZE, GFP_KERNEL);</span><br><span class="line">  <span class="keyword">if</span> (ret)</span><br><span class="line">      <span class="keyword">return</span> ret; <span class="comment">// 初始化失败</span></span><br></pre></td></tr></table></figure>
-<h5 id="自定义缓冲区">自定义缓冲区</h5>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_init</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *buffer, <span class="type">unsigned</span> <span class="type">int</span> size)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：使用用户提供的`buffer`初始化队列，`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">##### 静态声明（较少用）  </span><br><span class="line">```c</span><br><span class="line"><span class="title function_">DECLARE_KFIFO</span><span class="params">(name, size)</span>;  <span class="comment">// 声明队列</span></span><br><span class="line">INIT_KFIFO(name);           <span class="comment">// 初始化队列</span></span><br><span class="line">```  </span><br><span class="line">- **要求**：`size`必须为<span class="number">2</span>的幂次。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 数据入队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_in</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">const</span> <span class="type">void</span> *from, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从`from`复制`len`字节到队列`fifo`。  </span><br><span class="line">- **返回值**：实际入队的字节数（若空间不足，可能小于`len`）。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 数据出队  </span><br><span class="line">##### 标准出队  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：从队列`fifo`复制最多`len`字节到`to`缓冲区。  </span><br><span class="line">- **返回值**：实际出队的字节数。  </span><br><span class="line">- **注意**：出队后数据不再保留在队列中。  </span><br><span class="line"></span><br><span class="line">##### 查看数据（不删除）  </span><br><span class="line">```c</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_out_peek</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo, <span class="type">void</span> *to, <span class="type">unsigned</span> <span class="type">int</span> len, <span class="type">unsigned</span> offset)</span>;</span><br><span class="line">```  </span><br><span class="line">- **功能**：与`kfifo_out`类似，但**不移动out偏移量**，数据仍可后续读取。  </span><br><span class="line">- **参数**：`offset`指定队列中的起始位置（<span class="number">0</span>表示队头）。  </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">#### 获取队列信息</span><br><span class="line"><span class="number">1.</span> **获取队列总容量**</span><br><span class="line">```c</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_size</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>返回队列底层缓冲区的总字节数</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>获取已入队数据量</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_len</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回当前队列中已存储的字节数</li>
-<li>（注：内核命名存在不一致性，需特别注意）</li>
-</ul>
-<ol start="3" type="1">
-<li><strong>获取剩余空间</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">kfifo_avail</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回可继续写入的剩余字节数</li>
-</ul>
-<ol start="4" type="1">
-<li><strong>队列状态检查</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_empty</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">int</span> <span class="title function_">kfifo_is_full</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>返回非零值表示队列为空/满</li>
-<li>返回零表示非空/非满</li>
-</ul>
-<h4 id="重置与销毁队列">重置与销毁队列</h4>
-<ol type="1">
-<li><strong>重置队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">kfifo_reset</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>清空队列所有内容（不释放内存）</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>销毁动态分配的队列</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">kfifo_free</span><span class="params">(<span class="keyword">struct</span> kfifo *fifo)</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>释放通过<code>kfifo_alloc()</code>创建的队列</li>
-<li>注意：使用<code>kfifo_init()</code>创建的队列需手动释放关联缓冲区</li>
-</ul>
-<h4 id="实际应用示例">实际应用示例</h4>
-<p>创建8KB大小的kfifo队列： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kfifo.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kfifo</span> <span class="title">my_fifo</span>;</span>  <span class="comment">// 声明 kfifo 结构体</span></span><br><span class="line"><span class="type">int</span> ret;</span><br><span class="line"><span class="comment">// 分配 8KB 队列</span></span><br><span class="line">ret = kfifo_alloc(&amp;my_fifo, <span class="number">8192</span>, GFP_KERNEL);  <span class="comment">// 8192 = 8 * 1024</span></span><br><span class="line"><span class="keyword">if</span> (ret) &#123;</span><br><span class="line">    pr_err(<span class="string">&quot;Failed to allocate kfifo: error %d\n&quot;</span>, ret);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 验证大小</span></span><br><span class="line">pr_info(<span class="string">&quot;Created FIFO size: %u bytes\n&quot;</span>, kfifo_size(&amp;my_fifo));  <span class="comment">// 输出 8192</span></span><br></pre></td></tr></table></figure> &gt; 队列总容量 = 8 KB = 8 ×
-1024 字节 = 8192 字节（环形缓冲区无需减一） &gt;
-<code>unsigned int</code>大小 = 4
-字节（也可能是8字节，可以通过<code>sizeof(unsigned int)</code>获取）
-&gt; 这样一个队列最多可以容纳8192 字节 / 4 字节 = 2048
-个<code>unsigned int</code></p>
-<p><strong>入队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 入队0-31的整数 */</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> i;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">    kfifo_in(fifo, &amp;i, <span class="keyword">sizeof</span>(i));</span><br></pre></td></tr></table></figure></p>
-<p><strong>查看队首元素（不移除）</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line"><span class="type">int</span> ret = kfifo_out_peek(fifo, &amp;val, <span class="keyword">sizeof</span>(val), <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">    <span class="keyword">return</span> -EINVAL;</span><br><span class="line">printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); <span class="comment">/* 输出: 0 */</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>完整出队操作</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (kfifo_avail(fifo)) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> val;</span><br><span class="line">    <span class="type">int</span> ret = kfifo_out(fifo, &amp;val, <span class="keyword">sizeof</span>(val));</span><br><span class="line">    <span class="keyword">if</span> (ret != <span class="keyword">sizeof</span>(val))</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;%u\n&quot;</span>, val); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 输出: 0 1 2 ... 31 (严格保持FIFO顺序) */</span></span><br></pre></td></tr></table></figure> -
-输出顺序为0→31证明是标准的FIFO队列 - 若输出为31→0则变为栈结构（LIFO） -
-所有操作均保持原子性，适合生产者-消费者场景
-（注：实际开发中通常入队复杂结构体而非基础类型）</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="page-number current">2</span><a class="page-number" href="/zh-CN/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/10/">10</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/zh-CN/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="page-number current">2</span><a class="page-number" href="/zh-CN/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/11/">11</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/zh-CN/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
