@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">107</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,403 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamacode7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/21/kamacode7/" class="post-title-link" itemprop="url">代码随想录 | 刷题-字符串</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:28:50" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="反转字符串">344.反转字符串</h3>
+<p>双指针法 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">reverseString</span><span class="params">(vector&lt;<span class="type">char</span>&gt;&amp; s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> h = s.<span class="built_in">size</span>() / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> j = s.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;h;i++)&#123;</span><br><span class="line">            <span class="type">char</span> c = s[i];</span><br><span class="line">            s[i] = s[j];</span><br><span class="line">            s[j] = c;</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="反转字符串ii">541. 反转字符串II</h3>
+<p>主要还是注意语法的学习 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rev</span><span class="params">(<span class="type">char</span>* left, <span class="type">char</span>* right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(left&lt; right)&#123;</span><br><span class="line">            <span class="type">char</span> c = *left;</span><br><span class="line">            *left = *right;</span><br><span class="line">            *right = c;</span><br><span class="line">            left++;</span><br><span class="line">            right--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">string <span class="title">reverseStr</span><span class="params">(string s, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> end = s.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> n = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(p&lt;end)&#123;</span><br><span class="line">            n = p + k - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(n &lt;= end)&#123;</span><br><span class="line">                <span class="built_in">rev</span>(&amp;s[p], &amp;s[n]);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">rev</span>(&amp;s[p], &amp;s[end]);</span><br><span class="line">            &#125;</span><br><span class="line">            p = p+ <span class="number">2</span>* k;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="卡码网54.替换数字">卡码网：54.替换数字</h3>
+<p>题目描述：</p>
+<blockquote>
+<p>给定一个字符串
+s，它包含小写字母和数字字符，请编写一个函数，将字符串中的字母字符保持不变，而将每个数字字符替换为number。<br />
+例如，对于输入字符串 "a1b2c3"，函数应该将其转换为
+"anumberbnumbercnumber"。<br />
+对于输入字符串 "a5b"，函数应该将其转换为 "anumberb"<br />
+输入：一个字符串 s,s 仅包含小写字母和数字字符。<br />
+输出：打印一个新的字符串，其中每个数字字符都被替换为了number<br />
+样例输入：a1b2c3<br />
+样例输出：anumberbnumbercnumber<br />
+数据范围：1 &lt;= s.length &lt; 10000</p>
+</blockquote>
+<p>主要是学习字符串输入输出</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    string line, s;</span><br><span class="line">    <span class="built_in">getline</span>(cin, line);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">char</span> c: line)&#123;</span><br><span class="line">        <span class="keyword">if</span>(c &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; c &lt;= <span class="string">&#x27;9&#x27;</span>)&#123;</span><br><span class="line">            s.<span class="built_in">append</span>(<span class="string">&quot;number&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            s.<span class="built_in">push_back</span>(c);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamacode6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/21/kamacode6/" class="post-title-link" itemprop="url">代码随想录 | 刷题-哈希表2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:27:36" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="四数相加ii">454. 四数相加II</h3>
+<p>这道题目我没什么思路，看了题解是两组两组遍历，存储和的值和出现次数
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">fourSumCount</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2, vector&lt;<span class="type">int</span>&gt;&amp; nums3, vector&lt;<span class="type">int</span>&gt;&amp; nums4)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>,<span class="type">int</span>&gt; m1;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> a: nums1)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> b: nums2)&#123;</span><br><span class="line">                m1[a+b]++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> c: nums3)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> d: nums4)&#123;</span><br><span class="line">                <span class="type">int</span> r = <span class="number">0</span>-(c+d);</span><br><span class="line">                <span class="keyword">if</span>(m1.<span class="built_in">find</span>(r) != m1.<span class="built_in">end</span>())&#123;</span><br><span class="line">                    count += m1[r];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="赎金信">383. 赎金信</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">canConstruct</span><span class="params">(string ransomNote, string magazine)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">char</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: magazine)&#123;</span><br><span class="line">            m[c]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> cr: ransomNote)&#123;</span><br><span class="line">            <span class="keyword">if</span>(m.<span class="built_in">find</span>(cr) == m.<span class="built_in">end</span>())<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            m[cr]--;</span><br><span class="line">            <span class="keyword">if</span>(m[cr]&lt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="三数之和">15. 三数之和</h3>
+<p>这题我的思路可能就是暴力解了，看了题解发现可以在for循环里同时利用下标和双指针来解决<br />
+一开始想用set解决去重的问题，但是发现不排序的话去重还是有问题
+这题的去重套路，初始化等要注意的地方还是很多的，这一遍刷题我也只是照着题解的意思敲了一遍，以后还是得多加练习
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">threeSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(),nums.<span class="built_in">end</span>());</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; v;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt; nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="comment">// 遍历到第一个元素已经大于零，那么无论如何组合都不可能凑成三元组，可以剪枝</span></span><br><span class="line">            <span class="keyword">if</span>(nums[i]&gt;<span class="number">0</span>)<span class="keyword">return</span> v;</span><br><span class="line">            <span class="type">int</span> left = i+<span class="number">1</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">            <span class="comment">// 错误去重第一个数方法，将会漏掉-1,-1,2 这种情况</span></span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            if (nums[i] == nums[i + 1]) &#123;</span></span><br><span class="line"><span class="comment">                continue;</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; nums[i] == nums[i<span class="number">-1</span>])<span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">while</span>(left &lt; right &amp;&amp; right &lt; nums.<span class="built_in">size</span>())&#123;</span><br><span class="line">                <span class="type">int</span> sum = nums[i] + nums[left] + nums[right];</span><br><span class="line">                <span class="keyword">if</span>(sum == <span class="number">0</span>)&#123;</span><br><span class="line">                    v.<span class="built_in">push_back</span>(&#123;nums[i], nums[left], nums[right]&#125;);</span><br><span class="line">                    <span class="comment">// 去重逻辑应该放在找到一个三元组之后，对b 和 c去重</span></span><br><span class="line">                    <span class="keyword">while</span>(left &lt; right &amp;&amp; nums[left] == nums[left+<span class="number">1</span>])&#123;</span><br><span class="line">                        left++;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">while</span>(left &lt; right &amp;&amp; nums[right] == nums [right<span class="number">-1</span>])&#123;</span><br><span class="line">                        right--;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 如果判断找到答案，双指针同时收缩</span></span><br><span class="line">                    left++;</span><br><span class="line">                    right--;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(sum &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="comment">//否则单向收缩</span></span><br><span class="line">                    left++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    right--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="四数之和">18. 四数之和</h3>
+<p>还是看题解：</p>
+<blockquote>
+<p>四数之和的双指针解法是两层for循环<code>nums[k] + nums[i]</code>为确定值，依然是循环内有left和right下标作为双指针，找出<code>nums[k] + nums[i] + nums[left] + nums[right] == target</code>的情况，三数之和的时间复杂度是
+<span class="math inline">\(O(n^2)\)</span> ，四数之和的时间复杂度是
+<span class="math inline">\(O(n^3)\)</span><br />
+那么一样的道理，五数之和、六数之和等等都采用这种解法。<br />
+对于15.三数之和双指针法就是将原本暴力 <span
+class="math inline">\(O(n^3)\)</span> 的解法，降为 <span
+class="math inline">\(O(n^2)\)</span>
+的解法，四数之和的双指针解法就是将原本暴力 <span
+class="math inline">\(O(n^4)\)</span> 的解法，降为 <span
+class="math inline">\(O(n^3)\)</span> 的解法</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">fourSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target) &#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; v;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>()&lt;<span class="number">4</span>)<span class="keyword">return</span> v;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt;=<span class="number">0</span> &amp;&amp; nums[i]&gt; target)<span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; nums[i<span class="number">-1</span>] == nums[i])<span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = (i+<span class="number">1</span>);j&lt;nums.<span class="built_in">size</span>();j++)&#123;</span><br><span class="line">                <span class="comment">// 第二级剪枝和去重，注意表达式变化</span></span><br><span class="line">                <span class="keyword">if</span>((nums[i] + nums[j])&gt;=<span class="number">0</span> &amp;&amp;(nums[i] + nums[j])&gt;target)<span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span>(j&gt;(i+<span class="number">1</span>) &amp;&amp; nums[j<span class="number">-1</span>] == nums[j])<span class="keyword">continue</span>;</span><br><span class="line">                <span class="type">int</span> left = j+<span class="number">1</span>, right = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">                <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">                    <span class="type">long</span> sum = (<span class="type">long</span>)nums[i]+nums[j]+nums[left]+nums[right];</span><br><span class="line">                    <span class="keyword">if</span>(sum == target)&#123;</span><br><span class="line">                        v.<span class="built_in">push_back</span>(&#123;nums[i],nums[j],nums[left],nums[right]&#125;);</span><br><span class="line">                        <span class="comment">//先去重，再移动指针到下一个判定位置</span></span><br><span class="line">                        <span class="keyword">while</span>(left&lt;right &amp;&amp; nums[left] == nums[left+<span class="number">1</span>])left++;</span><br><span class="line">                        <span class="keyword">while</span>(right&gt;left &amp;&amp; nums[right] == nums[right<span class="number">-1</span>])right--;</span><br><span class="line">                        right--;</span><br><span class="line">                        left++;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(sum &gt; target)&#123;</span><br><span class="line">                        right--;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        left++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/21/kamacode5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/21/kamacode5/" class="post-title-link" itemprop="url">代码随想录 | 刷题-哈希表</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-21 22:18:29 / 修改时间：22:19:56" itemprop="dateCreated datePublished" datetime="2025-05-21T22:18:29+08:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="数据结构">数据结构</h3>
+<p>在C++中，set 和 map
+分别提供以下三种数据结构，其底层实现以及优劣如下表所示：</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>集合</th>
+<th>底层实现</th>
+<th>是否有序</th>
+<th>数值是否可以重复</th>
+<th>能否更改数值</th>
+<th>查询效率</th>
+<th>增删效率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std::set</td>
+<td>红黑树</td>
+<td>有序</td>
+<td>否</td>
+<td>否</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>std::multiset</td>
+<td>红黑树</td>
+<td>有序</td>
+<td>是</td>
+<td>否</td>
+<td>O(logn)</td>
+<td>O(logn)</td>
+</tr>
+<tr>
+<td>std::unordered_set</td>
+<td>哈希表</td>
+<td>无序</td>
+<td>否</td>
+<td>否</td>
+<td>O(1)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<p>std::unordered_set底层实现为哈希表，std::set 和std::multiset
+的底层实现是红黑树，红黑树是一种平衡二叉搜索树，所以key值是有序的，但key不可以修改，改动key值会导致整棵树的错乱，所以只能删除和增加。</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>映射</th>
+<th>底层实现</th>
+<th>是否有序</th>
+<th>数值是否可以重复</th>
+<th>能否更改数值</th>
+<th>查询效率</th>
+<th>增删效率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std::map</td>
+<td>红黑树</td>
+<td>key有序</td>
+<td>key不可重复</td>
+<td>key不可修改</td>
+<td>O(logn)</td>
+<td>O(logn)</td>
+</tr>
+<tr>
+<td>std::multimap</td>
+<td>红黑树</td>
+<td>key有序</td>
+<td>key可重复</td>
+<td>key不可修改</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>std::unordered_map</td>
+<td>哈希表</td>
+<td>key无序</td>
+<td>key不可重复</td>
+<td>key不可修改</td>
+<td>O(1)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<p>std::unordered_map 底层实现为哈希表，std::map 和std::multimap
+的底层实现是红黑树。同理，std::map 和std::multimap 的key也是有序的</p>
+<h3 id="有效的字母异位词">242.有效的字母异位词</h3>
+<p>基本上都是语法问题了，比如<code>m[c]</code>自动初始化（int则为0），pair的first和second都是成员变量
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isAnagram</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">char</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: s)&#123;</span><br><span class="line">            m[c]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: t)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!m[c])<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            m[c]--;</span><br><span class="line">            <span class="keyword">if</span>(m[c]&lt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(pair&lt;<span class="type">char</span>, <span class="type">int</span>&gt; p: m)&#123;</span><br><span class="line">            <span class="keyword">if</span>(p.second&gt;<span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 349. 两个数组的交集</p>
+<p>绞尽脑汁想半天如果结果有重复数字怎么办，结果是去重的。。。以后看题要更仔细呀！<br />
+题解里使用set的特性去重也挺巧思的 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">intersection</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">m</span><span class="params">(nums1.begin(), nums1.end())</span></span>;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; r;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n: nums2)&#123;</span><br><span class="line">            <span class="keyword">if</span>(m.<span class="built_in">find</span>(n)!=m.<span class="built_in">end</span>())&#123;</span><br><span class="line">                r.<span class="built_in">insert</span>(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(r.<span class="built_in">begin</span>(),r.<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 202. 快乐数</p>
+<p>思路差不多了，还是有代码实现的问题，例如<code>to_string(int)</code>的用法,如何char转int等
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isHappy</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; nums;</span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">while</span>(nums.<span class="built_in">find</span>(n) == nums.<span class="built_in">end</span>())&#123;</span><br><span class="line">            nums.<span class="built_in">insert</span>(n);</span><br><span class="line">            string s = <span class="built_in">to_string</span>(n);</span><br><span class="line">            <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">char</span> c:s)&#123;</span><br><span class="line">                <span class="type">int</span> num = c - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                sum += num*num;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(sum == <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            n = sum;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> ### 1. 两数之和</p>
+<p>看到题目例子的时候我就觉得数组如果有两个一样的值，用哈希表就比较麻烦。先存数组所有值再判断会出现索引相等的问题。使用一个循环，先判断是否已有互补值，再存当前值进map，可以避免配对同一个元素
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; r;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="type">int</span> v = target - nums[i];</span><br><span class="line">            <span class="keyword">if</span>(m.<span class="built_in">find</span>(v) != m.<span class="built_in">end</span>())&#123;</span><br><span class="line">                r.<span class="built_in">push_back</span>(i);</span><br><span class="line">                r.<span class="built_in">push_back</span>(m[v]);</span><br><span class="line">                <span class="keyword">return</span> r;</span><br><span class="line">            &#125;</span><br><span class="line">            m[nums[i]] = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1485,675 +1882,6 @@ CPU，或者被一个更高优先级的进程抢占。同样的规则适用于
 <p>此外，可以使用进程的 CPU 亲和性掩码（CPU affinity
 mask）来限制进程仅运行在多处理器系统的某些 CPU
 上。这有助于提高某些应用程序类型的性能。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/02/linux_sched3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/01/02/linux_sched3/" class="post-title-link" itemprop="url">Linux调度算法相关3</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-01-03 09:43:33" itemprop="dateCreated datePublished" datetime="2025-01-03T09:43:33+08:00">2025-01-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:40" itemprop="dateModified" datetime="2025-01-22T10:30:40+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="实时进程调度-api">实时进程调度 API</h1>
-<p>我们现在来看一下组成实时进程调度 API
-的各种系统调用。这些系统调用允许我们控制进程的调度策略和优先级。</p>
-<h2 id="实时优先级范围">实时优先级范围</h2>
-<p><code>sched_get_priority_min()</code> 和
-<code>sched_get_priority_max()</code>
-系统调用返回特定调度策略的可用优先级范围。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_get_priority_min</span><span class="params">(<span class="type">int</span> policy)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_get_priority_max</span><span class="params">(<span class="type">int</span> policy)</span>;</span><br><span class="line"><span class="comment">//返回值：成功时返回非负整数优先级，出错时返回 -1。</span></span><br></pre></td></tr></table></figure> -
-对于这两个系统调用，<code>policy</code>
-指定我们想要获取信息的调度策略。我们可以指定 <code>SCHED_RR</code> 或
-<code>SCHED_FIFO</code>。 - <code>sched_get_priority_min()</code>
-系统调用返回指定策略的最小优先级，<code>sched_get_priority_max()</code>
-返回最大优先级。 - 在 Linux 系统中，这两个系统调用分别返回数字 1 和
-99，适用于 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code> 策略。 -
-换句话说，<code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
-的优先级范围完全相同，<code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
-的进程在同一优先级时是同样有资格被调度的。首先调度哪个进程取决于它们在该优先级队列中的顺序。</p>
-<h3 id="实时优先级范围的差异">实时优先级范围的差异</h3>
-<ul>
-<li>实时优先级范围在不同的 UNIX
-实现中有所不同。因此，在应用程序中避免硬编码优先级值时，我们应该根据从这些函数返回的值来指定优先级。</li>
-<li>例如，最低的 <code>SCHED_RR</code> 优先级可以指定为
-<code>sched_get_priority_min(SCHED_RR)</code>，下一个较高的优先级可以指定为
-<code>sched_get_priority_min(SCHED_RR) + 1</code>，以此类推。</li>
-</ul>
-<h3 id="susv3-和-unix-实现的差异">SUSv3 和 UNIX 实现的差异</h3>
-<ul>
-<li>SUSv3 并不要求 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
-策略使用相同的优先级范围，但在大多数 UNIX 实现中，它们是相同的。</li>
-<li>例如，在 Solaris 8 中，两个策略的优先级范围为 0 到 59，而在 FreeBSD
-6.1 中为 0 到 31。</li>
-</ul>
-<h1 id="修改和检索调度策略及优先级">修改和检索调度策略及优先级</h1>
-<h2 id="修改调度策略和优先级">修改调度策略和优先级</h2>
-<p><code>sched_setscheduler()</code> 系统调用可以更改指定进程（通过
-<code>pid</code> 参数指定）的调度策略和优先级。</p>
-<ul>
-<li><strong>参数说明</strong>：
-<ul>
-<li>如果 <code>pid</code> 参数被设置为
-<code>0</code>，则更改的是调用该系统调用的当前进程的属性。</li>
-</ul></li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_setscheduler</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> policy, <span class="type">const</span> <span class="keyword">struct</span> sched_param *param)</span>;</span><br></pre></td></tr></table></figure>
-<p>成功时返回 0。出错时返回 -1。</p>
-<p>param：指向如下包含调度优先级信息的结构体的指针。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> sched_priority;  <span class="comment">/* 调度优先级 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure> SUSv3
-定义了 <code>param</code>
-参数为一个结构体，以允许实现包括特定于实现的额外字段，这在提供额外的调度策略时可能很有用。然而，与大多数
-UNIX 实现一样，Linux 仅提供了 <code>sched_priority</code>
-字段，用于指定调度优先级。</p>
-<p>对于 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
-策略，该字段的值必须位于由 <code>sched_get_priority_min()</code> 和
-<code>sched_get_priority_max()</code>
-确定的范围内；对于其他策略，该优先级必须为 0。</p>
-<p><code>policy</code>
-参数决定了进程的调度策略。它可以是以下策略之一（如表 35-1 所示）：</p>
-<h3 id="表-35-1linux-的实时和非实时调度策略">表 35-1：Linux
-的实时和非实时调度策略</h3>
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 83%" />
-</colgroup>
-<thead>
-<tr>
-<th>策略</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SCHED_FIFO</code></td>
-<td>实时先进先出（First-in First-out）</td>
-</tr>
-<tr>
-<td><code>SCHED_RR</code></td>
-<td>实时轮转（Round-robin）</td>
-</tr>
-<tr>
-<td><code>SCHED_OTHER</code></td>
-<td>标准轮转时间共享</td>
-</tr>
-<tr>
-<td><code>SCHED_BATCH</code></td>
-<td>类似于 <code>SCHED_OTHER</code>，但用于批处理（自 Linux 2.6.16
-起提供）</td>
-</tr>
-<tr>
-<td><code>SCHED_IDLE</code></td>
-<td>类似于 <code>SCHED_OTHER</code>，但优先级比 <code>nice +19</code>
-更低（自 Linux 2.6.23 起提供）</td>
-</tr>
-</tbody>
-</table>
-<h3 id="sched_setscheduler-系统调用"><code>sched_setscheduler()</code>
-系统调用</h3>
-<ul>
-<li>成功的 <code>sched_setscheduler()</code> 调用会将指定的进程（由
-<code>pid</code> 参数指定）移动到其优先级队列的末尾。</li>
-</ul>
-<p>SUSv3 指定，成功的 <code>sched_setscheduler()</code>
-调用应返回之前的调度策略。然而，Linux 与标准不同，成功调用时返回值为
-<code>0</code>。<br />
-便携式应用程序应通过检查返回值是否为 <code>-1</code>
-来判断是否成功。</p>
-<ul>
-<li>子进程通过 <code>fork()</code>
-继承其父进程的调度策略和优先级，并在调用 <code>exec()</code>
-时保留这些属性。</li>
-</ul>
-<h3 id="sched_setparam-系统调用"><code>sched_setparam()</code>
-系统调用</h3>
-<ul>
-<li><p><code>sched_setparam()</code> 系统调用提供了
-<code>sched_setscheduler()</code> 功能的子集：</p>
-<ul>
-<li>它可以修改进程的调度优先级，但不会更改其调度策略。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sched_setparam</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">const</span> <span class="keyword">struct</span> sched_param *param)</span>;</span><br></pre></td></tr></table></figure>
-成功时返回 0。出错时返回 -1。 <code>pid</code> 和 <code>param</code>
-参数的含义与 <code>sched_setscheduler()</code> 中的相同。</li>
-</ul></li>
-<li><p><strong>成功的 <code>sched_setparam()</code>
-调用</strong>：<br />
-成功调用 <code>sched_setparam()</code> 后，指定的进程（通过
-<code>pid</code> 参数指定）会被移动到其优先级队列的队尾。</p></li>
-<li><p><strong>代码示例</strong>：<br />
-以下程序使用 <code>sched_setscheduler()</code>
-来根据命令行参数设置指定进程的调度策略和优先级。</p>
-<ul>
-<li><strong>参数说明</strong>：
-<ol type="1">
-<li>第一个参数是一个字母，用于指定调度策略（如 <code>SCHED_RR</code> 或
-<code>SCHED_FIFO</code>）。</li>
-<li>第二个参数是一个整数，用于指定调度优先级。</li>
-<li>剩余参数是需要更改调度属性的进程 ID 列表。 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;tlpi_hdr.h&quot;</span><span class="comment">//自定义的头文件，提供错误处理和辅助函数</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> &#123;</span><br><span class="line">    <span class="type">int</span> j, pol;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">sp</span>;</span></span><br><span class="line">    <span class="keyword">if</span> (argc &lt; <span class="number">3</span> || <span class="built_in">strchr</span>(<span class="string">&quot;rfobi&quot;</span>, argv[<span class="number">1</span>][<span class="number">0</span>]) == <span class="literal">NULL</span>)</span><br><span class="line">        usageErr(<span class="string">&quot;%s policy priority [pid...]\n&quot;</span></span><br><span class="line">                 <span class="string">&quot;    policy is &#x27;r&#x27; (RR), &#x27;f&#x27; (FIFO), &quot;</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_BATCH</span></span><br><span class="line">                 <span class="string">&quot; &#x27;b&#x27; (BATCH), &quot;</span> <span class="comment">/* Linux-specific */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_IDLE</span></span><br><span class="line">                 <span class="string">&quot; &#x27;i&#x27; (IDLE), &quot;</span>  <span class="comment">/* Linux-specific */</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">                 <span class="string">&quot;or &#x27;o&#x27; (OTHER)\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析调度策略</span></span><br><span class="line">    pol = (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;r&#x27;</span>) ? SCHED_RR :</span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;f&#x27;</span>) ? SCHED_FIFO :</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_BATCH</span></span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;b&#x27;</span>) ? SCHED_BATCH :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCHED_IDLE</span></span><br><span class="line">          (argv[<span class="number">1</span>][<span class="number">0</span>] == <span class="string">&#x27;i&#x27;</span>) ? SCHED_IDLE :</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">          SCHED_OTHER;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析优先级</span></span><br><span class="line">    sp.sched_priority = getInt(argv[<span class="number">2</span>], <span class="number">0</span>, <span class="string">&quot;priority&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置每个指定进程的调度策略和优先级</span></span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">3</span>; j &lt; argc; j++)</span><br><span class="line">        <span class="keyword">if</span> (sched_setscheduler(getLong(argv[j], <span class="number">0</span>, <span class="string">&quot;pid&quot;</span>), pol, &amp;sp) == <span class="number">-1</span>)</span><br><span class="line">            errExit(<span class="string">&quot;sched_setscheduler&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ###
-权限和资源限制对调度参数更改的影响</li>
-</ol></li>
-</ul></li>
-</ul>
-<h4 id="版本之前的内核行为">1. <strong>2.6.12
-版本之前的内核行为</strong></h4>
-<ul>
-<li>在 Linux 2.6.12
-内核之前，进程通常需要具有特权（<code>CAP_SYS_NICE</code>）才能更改调度策略和优先级。</li>
-<li>唯一的例外是：如果调用者的有效用户 ID 与目标进程的真实或有效用户 ID
-匹配，则非特权进程可以将目标进程的调度策略更改为
-<code>SCHED_OTHER</code>。</li>
-</ul>
-<h4 id="版本及之后的内核行为">2. <strong>2.6.12
-版本及之后的内核行为</strong></h4>
-<ul>
-<li>自 Linux 2.6.12 起，引入了一个新的非标准资源限制
-<code>RLIMIT_RTPRIO</code>，调整了实时调度策略和优先级的设置规则：
-<ul>
-<li>拥有特权的进程（<code>CAP_SYS_NICE</code>）可以对任意进程的调度策略和优先级进行更改。</li>
-<li>非特权进程也可以根据以下规则更改调度策略和优先级：</li>
-</ul></li>
-</ul>
-<ol type="1">
-<li><strong><code>RLIMIT_RTPRIO</code> 的非零软限制</strong>：
-<ul>
-<li>如果进程具有非零的 <code>RLIMIT_RTPRIO</code>
-软限制，则可以任意更改其调度策略和优先级。</li>
-<li>但有以下限制：
-<ul>
-<li>实时优先级的最大值不能超过当前实时优先级和
-<code>RLIMIT_RTPRIO</code> 软限制中的较大值。</li>
-</ul></li>
-</ul></li>
-<li><strong>如果<code>RLIMIT_RTPRIO</code> 的软限制为零</strong>：
-<ul>
-<li>唯一可以进行的更改是：
-<ul>
-<li>将实时优先级降低。</li>
-<li>或从实时调度策略切换到非实时调度策略。</li>
-</ul></li>
-</ul></li>
-<li><strong><code>SCHED_IDLE</code> 策略的特殊性</strong>：
-<ul>
-<li>运行在 <code>SCHED_IDLE</code> 策略下的进程无法更改其调度策略，无论
-<code>RLIMIT_RTPRIO</code> 的值如何。</li>
-</ul></li>
-<li><strong>从其他非特权进程进行更改</strong>：
-<ul>
-<li>如果调用者的有效用户 ID 与目标进程的真实或有效用户 ID
-匹配，则可以更改目标进程的调度策略和优先级。</li>
-</ul></li>
-<li><strong><code>RLIMIT_RTPRIO</code> 软限制的作用</strong>：
-<ul>
-<li>仅决定进程对自身或其它非特权进程对该进程调度策略和优先级的更改。</li>
-<li>一个非零限制并不赋予非特权进程对其他进程的调度策略和优先级进行更改的能力。</li>
-</ul></li>
-</ol>
-<h3 id="特殊说明">特殊说明</h3>
-<ul>
-<li>自 Linux 2.6.25 起，添加了实时调度组（Realtime Scheduling
-Groups）的概念：
-<ul>
-<li>可通过 <code>CONFIG_RT_GROUP_SCHED</code> 内核选项进行配置。</li>
-<li>这一选项影响设置实时调度策略时可以进行的更改。</li>
-<li>详情请参阅内核源码文档
-<code>Documentation/scheduler/sched-rt-group.txt</code>。</li>
-</ul></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/28/linux_sched2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/28/linux_sched2/" class="post-title-link" itemprop="url">Linux调度算法相关2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-29 00:10:36" itemprop="dateCreated datePublished" datetime="2024-12-29T00:10:36+08:00">2024-12-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:36" itemprop="dateModified" datetime="2025-01-22T10:30:36+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="实时进程调度概述">实时进程调度概述</h1>
-<h2 id="标准调度与实时调度的差异">标准调度与实时调度的差异</h2>
-<p>标准内核调度算法通常可以为交互式和后台进程的混合提供足够的性能和响应能力。然而，实时应用程序对调度器的需求更加严格</p>
-<h3 id="提供外部输入的最大响应时间保证">1.
-提供外部输入的最大响应时间保证</h3>
-<ul>
-<li>实时应用程序必须保证对外部输入的最大响应时间。在许多情况下，这些最大响应时间需要非常短，例如在毫秒或几分之一秒的级别。</li>
-</ul>
-<h4 id="附加措施">附加措施</h4>
-<ul>
-<li>一些时间关键型的应用可能需要采取其他措施来避免不可接受的延迟。例如：
-<ul>
-<li>使用 <code>mlock()</code> 或 <code>mlockall()</code>
-将应用程序的所有虚拟内存锁定到 RAM 中，避免页面错误造成的延迟。</li>
-</ul></li>
-</ul>
-<h3 id="保持对-cpu-的独占访问权">2. 保持对 CPU 的独占访问权</h3>
-<ul>
-<li>高优先级进程在完成任务或自愿放弃 CPU 之前，应该能够独占地使用
-CPU，确保任务的顺利执行。 ### 3. 进程顺序控制</li>
-<li><h2
-id="实时应用程序需要对其成员进程精确顺序的调度权">实时应用程序需要对其成员进程精确顺序的调度权。</h2></li>
-</ul>
-<h1 id="实时调度的-posix-api">实时调度的 POSIX API</h1>
-<h2 id="susv3-的实时调度-api">SUSv3 的实时调度 API</h2>
-<p>SUSv3 定义了一个实时进程调度 API，部分满足了实时应用的严格需求： -
-提供两种实时调度策略： - <code>SCHED_FIFO</code>（先进先出） -
-<code>SCHED_RR</code>（轮转） - 使用这些策略的进程优先级总是高于采用
-<code>SCHED_OTHER</code>（普通时间共享）的进程。</p>
-<h2 id="实时优先级范围">实时优先级范围</h2>
-<ul>
-<li>每种实时调度策略至少需要支持 32 个离散优先级。</li>
-<li>高优先级的进程总是优先于低优先级的进程。</li>
-</ul>
-<h3 id="多处理器系统中的调度行为">多处理器系统中的调度行为</h3>
-<p>在多处理器系统（包括超线程系统）中，调度行为有一些特殊性： 1. 每个
-CPU
-维护一个独立的运行队列。这种设计优于单一的系统级运行队列，可以提高性能。
-2. 进程只能在其所属 CPU 的运行队列中被调度。 3. <strong>举例</strong>：
-- 在一个双处理器系统中，如果有三个进程： - 进程 A：实时优先级为 20； -
-进程 B：实时优先级为 30； - 进程 C：实时优先级为 10； - 如果当前 CPU0
-正在运行 B，A 只能等待 CPU0 空闲，即使 A 的优先级高于 CPU1 上正在运行的
-C。</p>
-<p>Linux 提供了 99 个实时优先级，从 1（最低）到
-99（最高）。这一区间适用于两种实时调度策略（<code>SCHED_RR</code> 和
-<code>SCHED_FIFO</code>）。两种策略中的优先级是等效的。</p>
-<p>这意味着： - 如果两个进程具有相同的优先级，一个使用
-<code>SCHED_RR</code> 策略，另一个使用 <code>SCHED_FIFO</code>
-策略，那么哪个进程会被调度取决于它们被放入队列的顺序。</p>
-<p>实际上，每个优先级都维护着一个可运行进程的队列。 -
-调度时，系统会从最高优先级的非空队列中选择队列头部的进程来运行。 ---</p>
-<h1 id="posix-实时-vs-硬实时">POSIX 实时 vs 硬实时</h1>
-<h3 id="posix-实时软实时">POSIX 实时（软实时）</h3>
-<p>POSIX 提供的是软实时调度功能，具体表现为： - 可以控制进程何时被调度。
-- 不能完全保证处理输入时的响应时间。 -
-适用于绝大多数实时场景，但无法满足某些严格的硬实时需求。</p>
-<h3 id="硬实时">硬实时</h3>
-<ul>
-<li>硬实时系统保证所有任务在规定的时限内完成。</li>
-<li>实现硬实时通常需要操作系统支持额外的功能，而 Linux 默认不支持。</li>
-<li>Linux 内核自 2.6.18
-版本以来添加了一些功能，目标是原生支持硬实时应用，但仍需配置和优化。</li>
-</ul>
-<hr />
-<h1 id="sched_rr-策略详解">SCHED_RR 策略详解</h1>
-<h3 id="基本规则">基本规则</h3>
-<p>在 <code>SCHED_RR</code> 策略下： - 同一优先级的任务按照轮转方式共享
-CPU，每个任务在每次使用 CPU 时获得一个固定长度的时间片。</p>
-<h3 id="执行控制">执行控制</h3>
-<p>任务保持对 CPU 的控制直到以下任一情况发生： 1. 时间片耗尽： -
-任务被移至同一优先级队列的末尾，其他同优先级任务可以被调度。 2. 自愿放弃
-CPU： - 例如，调用了 <code>sched_yield()</code> 或执行了阻塞操作。 3.
-任务终止。 4. 被更高优先级的任务抢占。</p>
-<p>对于前两个事件（时间片耗尽或主动放弃 CPU）中的情况，当运行在
-<code>SCHED_RR</code> 策略下的进程失去对 CPU
-的访问权限时，它会被移至其优先级队列的末尾。<br />
-在最后一种情况中（被更高优先级的进程抢占），当高优先级进程结束执行后，被抢占的进程会继续运行，使用其剩余的时间片（即被抢占的进程会回到其优先级队列的头部）。</p>
-<h3 id="sched_rr-和-sched_fifo"><code>SCHED_RR</code> 和
-<code>SCHED_FIFO</code></h3>
-<p>在 <code>SCHED_RR</code> 和 <code>SCHED_FIFO</code>
-策略中，当前运行中的进程可能因以下原因之一被抢占： 1.
-一个更高优先级的进程从阻塞状态变为非阻塞状态（例如，I/O 操作完成）。 2.
-另一个进程的优先级被提升到高于当前运行进程的优先级。 3.
-当前运行进程的优先级被降低到低于某些其他可运行进程的优先级。</p>
-<p><code>SCHED_RR</code>
-策略类似于标准的轮转时间共享调度算法（<code>SCHED_OTHER</code>），它允许一组相同优先级的进程共享
-CPU。</p>
-<h3 id="两者的主要区别">两者的主要区别：</h3>
-<ol type="1">
-<li><strong>优先级规则</strong>：
-<ul>
-<li><code>SCHED_RR</code>
-策略严格区分优先级，高优先级的进程总是优先于低优先级的进程。</li>
-<li>而 <code>SCHED_OTHER</code> 策略中，较低的 <code>nice</code>
-值（即较高的优先级）虽然增加了调度权重，但不能保证独占 CPU。</li>
-</ul></li>
-<li><strong>时间片保障</strong>：
-<ul>
-<li>在 <code>SCHED_OTHER</code> 策略中，任何具有低优先级（高
-<code>nice</code> 值）的进程始终可以获得一定的 CPU 时间。</li>
-<li><h2
-id="sched_rr-策略允许我们更精确地控制进程的调度顺序和执行时间"><code>SCHED_RR</code>
-策略允许我们更精确地控制进程的调度顺序和执行时间。</h2></li>
-</ul></li>
-</ol>
-<h1 id="sched_fifo-策略详解">SCHED_FIFO 策略详解</h1>
-<h3 id="基本规则-1">基本规则</h3>
-<p><code>SCHED_FIFO</code>（先进先出）策略与 <code>SCHED_RR</code>
-类似，但没有时间片限制。 - 任务可以一直运行，直到以下任一情况发生： 1.
-主动放弃 CPU（例如阻塞操作）。 2. 任务终止。 3.
-被更高优先级任务抢占。</p>
-<p>在第一种情况下，进程会被放置到其优先级队列的末尾。
-在最后一种情况下，当高优先级的进程停止执行（例如由于阻塞或终止）时，被抢占的进程会继续执行（即，被抢占的进程会保持在其优先级队列的队首）。</p>
-<hr />
-<h1 id="sched_batch-和-sched_idle-策略">SCHED_BATCH 和 SCHED_IDLE
-策略</h1>
-<h2 id="sched_batch-策略">SCHED_BATCH 策略</h2>
-<ul>
-<li><strong>功能</strong>：用于批处理型任务。</li>
-<li><strong>特点</strong>：
-<ul>
-<li>适用于 CPU 密集型任务。</li>
-<li>对调度延迟不敏感。</li>
-<li>调度器会根据任务的 <code>nice</code> 值决定优先级。</li>
-</ul></li>
-<li><strong>引入版本</strong>：Linux 2.6.16。</li>
-</ul>
-<h2 id="sched_idle-策略">SCHED_IDLE 策略</h2>
-<ul>
-<li><strong>功能</strong>：用于低优先级任务，仅在系统完全空闲时执行。</li>
-<li><strong>特点</strong>：
-<ul>
-<li>优先级比所有其他任务都低（甚至低于 <code>nice +19</code>）。</li>
-<li><code>nice</code> 值对该策略没有影响。</li>
-</ul></li>
-<li><strong>引入版本</strong>：Linux 2.6.23。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/27/linux_sched/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/12/27/linux_sched/" class="post-title-link" itemprop="url">Linux调度算法相关</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-12-28 02:35:39" itemprop="dateCreated datePublished" datetime="2024-12-28T02:35:39+08:00">2024-12-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:30" itemprop="dateModified" datetime="2025-01-22T10:30:30+08:00">2025-01-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="实时调度策略及算法概述">实时调度策略及算法概述</h1>
-<p>Linux 提供了两种实时调度策略，<code>SCHED_FIFO</code> 和
-<code>SCHED_RR</code>。非实时的普通调度策略是
-<code>SCHED_NORMAL</code>。</p>
-<p>通过调度类框架，这些实时调度策略并非由完全公平调度器（CFS）管理，而是由一个特殊的实时调度器管理，该调度器定义在
-<code>kernel/sched_rt.c</code> 文件中。</p>
-<h2 id="sched_fifo-策略">1. SCHED_FIFO 策略</h2>
-<p><code>SCHED_FIFO</code>
-实现了一种简单的先进先出（FIFO）调度算法，<strong>没有时间片限制</strong>，可以无限期运行。
-- 一个可运行的 <code>SCHED_FIFO</code> 任务始终优先于任何
-<code>SCHED_NORMAL</code> 任务。 - 当 <code>SCHED_FIFO</code>
-任务变为可运行状态时，它会一直运行，直到阻塞或显式放弃处理器。 -
-<strong>抢占规则</strong>：只有更高优先级的 <code>SCHED_FIFO</code> 或
-<code>SCHED_RR</code> 任务可以抢占当前的 <code>SCHED_FIFO</code> 任务。
-- 如果多个 <code>SCHED_FIFO</code>
-任务具有相同优先级，它们以轮转的方式运行。</p>
-<h2 id="sched_rr-策略">2. SCHED_RR 策略</h2>
-<p><code>SCHED_RR</code> 与 <code>SCHED_FIFO</code>
-类似，但有时间片限制。 -
-每个任务运行到时间片耗尽时，会被切换到同一优先级队列中的下一个任务。 -
-只有更高优先级的任务可以抢占当前任务，即使 <code>SCHED_RR</code>
-任务的时间片耗尽，低优先级的进程也无法抢占它的执行。 -
-<strong>时间片的作用</strong>：仅用于同优先级进程之间的调度。</p>
-<h2 id="静态优先级">3. 静态优先级</h2>
-<ul>
-<li>两种实时调度策略都实现了<strong>静态优先级</strong>。</li>
-<li>内核不会为实时任务计算动态优先级。</li>
-<li>给定优先级的实时任务总是会抢占低优先级的任务。</li>
-</ul>
-<h2 id="软实时与硬实时">4. 软实时与硬实时</h2>
-<ul>
-<li>Linux
-的实时调度策略提供的是<strong>软实时</strong>行为：内核会尽力在时限内调度应用程序，但不保证一定达成。</li>
-<li>硬实时系统则保证严格的时限要求，而 Linux 并不原生支持。</li>
-</ul>
-<hr />
-<h1 id="实时优先级范围">实时优先级范围</h1>
-<ul>
-<li>实时优先级范围为 <code>0</code> 到
-<code>MAX_RT_PRIO - 1</code>，默认情况下 <code>MAX_RT_PRIO</code> 为
-<code>100</code>。99为最高实时优先级。</li>
-<li>普通任务（<code>SCHED_NORMAL</code>）与实时任务共享优先级空间：
-<ul>
-<li><code>-20</code> 到 <code>+19</code> 的 nice 值映射到优先级范围
-<code>100</code> 到
-<code>139</code>。这是用户空间的进程评级，-20为最高优先级。</li>
-</ul></li>
-</ul>
-<hr />
-<h1 id="与调度器相关的系统调用">与调度器相关的系统调用</h1>
-<p>以下是管理调度参数的系统调用列表：</p>
-<table>
-<thead>
-<tr>
-<th><strong>系统调用</strong></th>
-<th><strong>描述</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nice()</code></td>
-<td>设置进程的 nice 值</td>
-</tr>
-<tr>
-<td><code>sched_setscheduler()</code></td>
-<td>设置进程的调度策略</td>
-</tr>
-<tr>
-<td><code>sched_getscheduler()</code></td>
-<td>获取进程的调度策略</td>
-</tr>
-<tr>
-<td><code>sched_setparam()</code></td>
-<td>设置进程的实时优先级</td>
-</tr>
-<tr>
-<td><code>sched_getparam()</code></td>
-<td>获取进程的实时优先级</td>
-</tr>
-<tr>
-<td><code>sched_get_priority_max()</code></td>
-<td>获取实时调度的最大优先级</td>
-</tr>
-<tr>
-<td><code>sched_get_priority_min()</code></td>
-<td>获取实时调度的最小优先级</td>
-</tr>
-<tr>
-<td><code>sched_rr_get_interval()</code></td>
-<td>获取进程的时间片值</td>
-</tr>
-<tr>
-<td><code>sched_setaffinity()</code></td>
-<td>设置进程的处理器亲和性</td>
-</tr>
-<tr>
-<td><code>sched_getaffinity()</code></td>
-<td>获取进程的处理器亲和性</td>
-</tr>
-<tr>
-<td><code>sched_yield()</code></td>
-<td>临时将处理器让给其他任务</td>
-</tr>
-</tbody>
-</table>
 
       
     </div>

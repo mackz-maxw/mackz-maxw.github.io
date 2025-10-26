@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">107</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,676 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/21/oper_sys3lab_ksetup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/21/oper_sys3lab_ksetup/" class="post-title-link" itemprop="url">操作系统基础 | 2.3 初试linux内核实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-22 08:53:37" itemprop="dateCreated datePublished" datetime="2025-06-22T08:53:37+08:00">2025-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-24 01:59:02" itemprop="dateModified" datetime="2025-09-24T01:59:02+08:00">2025-09-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><strong>注意</strong>：本教学实验因为使用较早版本的树莓派Linux内核，内核源码的symlink仅适配Linux系统，请使用Linux平台主机进行交叉编译，若要使用window主机编译请更换使用的内核</p>
+<h3 id="下载适用于树莓派的内核源码">1. 下载适用于树莓派的内核源码</h3>
+<p>一般项目可以直接去 <a target="_blank" rel="noopener" href="https://kernel.org">kernel.org</a> 下载
+Linux 源码，但本课程针对树莓派，需要用树莓派官方维护的内核版本（在 <a
+target="_blank" rel="noopener" href="https://github.com/raspberrypi">https://github.com/raspberrypi</a>）。
+在你的工程目录下，新建 <code>linux_source</code>
+文件夹用于存放源码和编译文件： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> linux_source</span><br><span class="line"><span class="built_in">cd</span> linux_source</span><br></pre></td></tr></table></figure>
+下载指定版本的树莓派内核源码（此过程可能需要20-30分钟）： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/raspberrypi/linux/archive/raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure>
+解压源码包： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf raspberrypi-kernel_1.20210527-1.tar.gz</span><br></pre></td></tr></table></figure> 解压后会得到一个新目录，建议用
+<code>mv</code> 命令重命名为
+<code>linux</code>，便于后续操作。解压完成后请删除 <code>.tar.gz</code>
+文件以节省空间。</p>
+<p>进入 <code>linux</code> 目录，运行以下命令查看内核版本：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make kernelversion</span><br></pre></td></tr></table></figure> 并用文本编辑器（如 emacs、vim、nano）打开
+<code>Makefile</code>，查看前几行定义的内核版本常量，记录
+<code>NAME</code> 常量的值。</p>
+<h3 id="针对树莓派-44b-的设备树修改">2. 针对树莓派 4/4B
+的设备树修改</h3>
+<p>如果你使用的是 Raspberry Pi 4 或 4B，需要修改设备树文件
+<code>arch/arm/boot/dts/bcm2711.dtsi</code>，找到 <code>arm-pmu</code>
+条目，将 <code>compatible</code> 行改为： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = <span class="string">&quot;arm,cortex-a72-pmu&quot;</span>, <span class="string">&quot;arm,cortex-a15-pmu&quot;</span>, <span class="string">&quot;arm,armv8-pmuv3&quot;</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置交叉编译环境">3. 配置交叉编译环境</h3>
+<p>添加交叉编译器和新版 gcc 到 PATH（并将以下两行添加到
+<code>~/.bashrc</code> 文件末尾，确保下次登录自动生效）：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将交叉编译工具链添加到PATH</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="comment"># 将c编译器添加到PATH</span></span><br><span class="line">module add gcc-8.3.0</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：如果使用wsl2等，linux并不自带environment-modules的情况，需要手动安装编译工具并添加PATH：
+更新包列表 <code>sudo apt update</code>
+安装依赖，如果出现包依赖版本问题，请参照本站wsl2分类下的文章“在wsl2安装ros2遇到的一些坑”解决
+<code>sudo apt install bc bison flex libssl-dev make libc6-dev libncurses5-dev</code>
+安装32位工具链 <code>sudo apt install crossbuild-essential-armhf</code>
+检查是否已添加到PATH <code>arm-linux-gnueabihf-gcc --version</code></p>
+</blockquote>
+<h3 id="配置内核">4. 配置内核</h3>
+<p>对于 Raspberry Pi 3B+，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig</span><br></pre></td></tr></table></figure></p>
+<p>对于 Raspberry Pi 4/4B，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig</span><br></pre></td></tr></table></figure>
+这会生成树莓派的默认内核配置。</p>
+<h3 id="自定义内核配置">5. 自定义内核配置</h3>
+<p>进入菜单配置界面：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在 "General setup" -&gt; "Local version" 里，添加你的唯一标识（如
+<code>-v7</code> 或 <code>-v7l</code> 后面加你的名字，无空格）。</li>
+<li>修改 "Preemption Model" 选项为 "Preemptible Kernel (Low-Latency
+Desktop)"，以获得更低延迟的抢占模型。</li>
+<li>启用 ARM 性能监控单元驱动（"Kernel Performance Events and
+Counters"），并确保 "Profiling support" 也已启用。</li>
+<li>任选一个有趣的选项，按 <code>H</code>
+键查看简介，记录该选项的名称、简介和符号（symbol），并简述为何选择
+"Preemptible Kernel (Low-Latency
+Desktop)"（提示：该模式适合需要低延迟响应的场景，如桌面或实时应用）。</li>
+</ul>
+<p>保存并退出配置。</p>
+<hr />
+<h3 id="编译内核">6. 编译内核</h3>
+<p>记录编译开始和结束时间</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span>&gt;&gt;time.txt; make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs; <span class="built_in">date</span>&gt;&gt;time.txt</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：如果使用wsl2出现类似以下错误
+<code>Error: selected processor does not support 'dmb ish' in ARM mode</code>
+请尝试指定编译环境变量（编译参数会报错冲突）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line">export KCFLAGS=&quot;-march=armv7-a -mfpu=vfpv3&quot;</span><br><span class="line">make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs</span><br><span class="line">unset KCFLAGS</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>编译完成后，创建用于存放模块的目录：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ../modules</span><br></pre></td></tr></table></figure>
+<p>安装内核模块：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j$(<span class="built_in">nproc</span>) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=../modules modules_install</span><br></pre></td></tr></table></figure>
+<h3 id="回答与说明">7. 回答与说明</h3>
+<ul>
+<li>用 <code>cat time.txt</code> 查看编译所用时间。</li>
+<li>说明为何要用交叉编译器：因为 linuxlab
+服务器的架构与树莓派不同，必须用交叉编译器生成适用于 ARM
+架构的内核和模块。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys2%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/20/oper_sys2%E4%B8%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">操作系统基础 | 2.2 linux内核与用户空间的不同</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-21 10:18:37" itemprop="dateCreated datePublished" datetime="2025-06-21T10:18:37+08:00">2025-06-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-22 08:17:17" itemprop="dateModified" datetime="2025-06-22T08:17:17+08:00">2025-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2
+id="与众不同的野兽内核与用户空间的区别">与众不同的“野兽”：内核与用户空间的区别</h2>
+<p>Linux
+内核与普通用户空间程序相比，有许多独特之处。这些差异并不一定让内核开发更难，但确实让它与用户空间开发大不相同。内核开发有一些“特殊规则”，有些显而易见，有些则不那么直观。主要区别包括：</p>
+<ol type="1">
+<li><strong>内核无法使用 C 标准库（libc）和标准 C 头文件。</strong></li>
+<li><strong>内核使用 GNU C 语言编写。</strong></li>
+<li><strong>内核没有用户空间的内存保护机制。</strong></li>
+<li><strong>内核中不能轻易执行浮点运算。</strong></li>
+<li><strong>内核每个进程的栈空间很小且固定。</strong></li>
+<li><strong>由于内核有异步中断、支持抢占和多处理器（SMP），因此同步和并发问题非常重要。</strong></li>
+<li><strong>可移植性很重要。</strong></li>
+</ol>
+<p>下面简要解释这些差异：</p>
+<hr />
+<h3 id="没有-libc-或标准头文件">没有 libc 或标准头文件</h3>
+<p>与用户空间程序不同，内核不会链接标准 C
+库（libc）或其他外部库。主要原因是速度和体积——完整的 C
+库太大、效率太低，不适合内核使用。</p>
+<p>不用担心，内核自己实现了很多常用的 libc
+函数。例如，常见的字符串操作函数在 <code>lib/string.c</code>
+中实现，只需包含 <code>&lt;linux/string.h&gt;</code>
+头文件即可使用。</p>
+<h4 id="头文件">头文件</h4>
+<p>内核源码只能包含内核源码树中的头文件，不能引用外部头文件或库。<br />
+- 基础头文件位于源码根目录的 <code>include/</code>
+目录下。例如，<code>&lt;linux/inotify.h&gt;</code> 实际路径为
+<code>include/linux/inotify.h</code>。 - 架构相关的头文件位于
+<code>arch/&lt;architecture&gt;/include/asm</code>，如 x86 架构下为
+<code>arch/x86/include/asm</code>，引用时用
+<code>&lt;asm/ioctl.h&gt;</code>。</p>
+<h4 id="没有-printf用-printk">没有 printf()，用 printk()</h4>
+<p>内核没有 <code>printf()</code>，但提供了类似的 <code>printk()</code>
+用于内核日志输出。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(<span class="string">&quot;Hello world! A string &#x27;%s&#x27; and an integer &#x27;%d&#x27;\n&quot;</span>, str, i);</span><br></pre></td></tr></table></figure> 与 <code>printf()</code>
+不同，<code>printk()</code> 可以指定优先级（priority flag），用于
+syslogd 判断消息显示位置。例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(KERN_ERR <span class="string">&quot;this is an error!\n&quot;</span>);</span><br></pre></td></tr></table></figure>
+注意：<code>KERN_ERR</code>
+和消息之间没有逗号，这是因为优先级标志是字符串宏，编译时会自动拼接。</p>
+<h3 id="gnu-c">GNU C</h3>
+<p>和大多数 Unix 内核一样，Linux 内核主要用 C 语言编写。但它并不是严格的
+ANSI C，而是大量使用了 gcc（GNU
+编译器套件）提供的各种语言扩展。内核开发者会用到 ISO C99 和 GNU C
+的扩展特性，这使得 Linux 内核基本只能用 gcc 编译（近年 Intel C
+编译器也支持了大部分 gcc 特性，可以编译内核）。目前推荐使用 gcc 4.4
+或更高版本。</p>
+<p>C99 的扩展比较常见，而 GNU C 的扩展则是 Linux 内核代码区别于普通 C
+项目的重要原因。下面介绍几个常见的 GNU C 扩展：</p>
+<h4 id="内联函数inline-functions">内联函数（Inline Functions）</h4>
+<p>C99 和 GNU C 都支持内联函数（inline
+function）。内联函数会在每个调用点直接插入函数体，避免了函数调用和返回的开销（如寄存器保存/恢复），有利于编译器整体优化调用者和被调用者的代码。但缺点是会增加代码体积和内存消耗。</p>
+<p>内核开发者通常只对小型、对性能要求高的函数使用内联。大函数或不常用的函数不建议内联。</p>
+<p>内联函数的声明方式如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">wolf</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> tail_size)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>static inline</code> 关键字用于定义内联函数。</li>
+<li>内联函数的声明要在使用前，否则编译器无法内联。</li>
+<li>通常内联函数会放在头文件中（因为是 static，不会导出符号）。</li>
+</ul>
+<p>内核更倾向于用内联函数而不是复杂的宏，因为内联函数有类型安全和可读性好等优点。</p>
+<h4 id="内联汇编inline-assembly">内联汇编（Inline Assembly）</h4>
+<p>gcc 支持在 C
+代码中嵌入汇编指令，这在与硬件密切相关的内核代码中很有用。用法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> low, high;</span><br><span class="line"><span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(<span class="string">&quot;rdtsc&quot;</span> : <span class="string">&quot;=a&quot;</span> (low), <span class="string">&quot;=d&quot;</span> (high))</span>;</span><br><span class="line"><span class="comment">/* low 和 high 现在分别保存了 64 位 tsc 的低 32 位和高 32 位 */</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>asm</code> 关键字用于插入汇编代码。</li>
+<li>这种用法主要用于体系结构相关或对性能极致要求的代码。</li>
+<li>大部分内核代码还是用 C 语言编写，汇编只用于底层和关键路径。</li>
+</ul>
+<h4 id="分支预测注解branch-annotation">分支预测注解（Branch
+Annotation）</h4>
+<p>gcc
+提供了分支预测指令，可以告诉编译器某个条件分支更可能被执行，从而优化生成的代码。内核通过
+<code>likely()</code> 和 <code>unlikely()</code> 宏来使用这些特性。</p>
+<p>例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unlikely(error)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 error 很少为真 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (likely(success)) &#123;</span><br><span class="line">    <span class="comment">/* 这里假设 success 几乎总为真 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> - 只有在分支方向非常明确时才建议使用这些宏。 -
+如果预测正确，可以提升性能；预测错误则可能降低性能。 -
+在内核中，<code>unlikely()</code>
+常用于错误处理分支，因为大多数情况下不会出错。</p>
+<h3 id="没有内存保护">没有内存保护</h3>
+<p>当用户空间程序非法访问内存时，内核可以捕获错误，发送 SIGSEGV
+信号并终止该进程。但如果内核自身非法访问内存，后果就不可控了（毕竟，谁来保护内核呢？）。内核中的内存违规会导致
+oops（严重内核错误）。因此，在内核中绝不能非法访问内存，比如解引用 NULL
+指针——在内核里，这样的错误代价更高！</p>
+<p>另外，内核内存是不可换页的（not
+pageable），即内核占用的每一字节物理内存都不能被换出。你在内核里多用一点内存，系统可用物理内存就少一点。每次想给内核加新功能时，请记住这一点！</p>
+<h3 id="不能轻易使用浮点运算">不能（轻易）使用浮点运算</h3>
+<p>用户空间进程使用浮点指令时，内核会负责从整数模式切换到浮点模式。具体做法依赖于体系结构，通常是通过陷阱（trap）实现的。</p>
+<p>但内核自身不能像用户空间那样方便地使用浮点运算，因为内核无法轻松地“陷阱”自己。内核里用浮点数需要手动保存和恢复浮点寄存器等操作，非常麻烦。<strong>简而言之：不要在内核里用浮点运算！</strong>
+除极少数特殊情况外，内核代码中基本没有浮点操作。</p>
+<h3 id="小而固定的栈空间">小而固定的栈空间</h3>
+<p>用户空间可以在栈上分配大量变量，包括大结构体和大数组，因为用户空间的栈很大且可以动态增长。但内核栈既不大也不能动态扩展，而是小且固定的。</p>
+<ul>
+<li>栈的具体大小依赖于体系结构。例如 x86 架构下，栈大小可在编译时配置为
+4KB 或 8KB。</li>
+<li>通常，32 位系统为 8KB，64 位系统为
+16KB，每个进程有自己的内核栈，这个大小是固定的。</li>
+</ul>
+<p>因此，内核开发时要避免在栈上分配大对象。</p>
+<h3 id="同步与并发">同步与并发</h3>
+<p>内核容易出现竞态条件（race
+condition）。与单线程的用户空间程序不同，内核有多种并发访问共享资源的情况，必须通过同步机制防止竞态：</p>
+<ul>
+<li>Linux
+是抢占式多任务操作系统，进程会被调度器随时切换，内核需要在这些任务间同步。</li>
+<li>Linux
+支持对称多处理（SMP），多个处理器上的内核代码可能同时访问同一资源。</li>
+<li>中断是异步发生的，可能在访问资源时被打断，导致中断处理程序也访问同一资源。</li>
+<li>内核本身是可抢占的，内核代码可能被抢占，切换到另一个访问同一资源的代码。</li>
+</ul>
+<p>常见的同步机制有自旋锁（spinlock）和信号量（semaphore）。后续章节会详细介绍。</p>
+<h3 id="可移植性的重要性">可移植性的重要性</h3>
+<p>虽然用户空间程序不一定要追求可移植性，但 Linux
+作为一个可移植操作系统，必须保证代码能在多种体系结构上正确编译和运行。体系结构相关的代码要放在专门的目录下，体系结构无关的代码要保持通用。</p>
+<p>一些基本规则包括：保持字节序中立、支持 64
+位、不要假设字长或页面大小等。后续章节会详细讨论可移植性。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95%E5%86%85%E6%A0%B8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/20/oper_sys1%E5%88%9D%E8%AF%95%E5%86%85%E6%A0%B8/" class="post-title-link" itemprop="url">操作系统基础 | 2. 初试linux内核</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-21 06:57:37" itemprop="dateCreated datePublished" datetime="2025-06-21T06:57:37+08:00">2025-06-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-22 08:44:08" itemprop="dateModified" datetime="2025-06-22T08:44:08+08:00">2025-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="内核源码相关">内核源码相关</h2>
+<h3 id="获取内核源码">获取内核源码</h3>
+<p>当前的 Linux 源代码总是可以在 <a
+target="_blank" rel="noopener" href="http://www.kernel.org">http://www.kernel.org</a>
+官方网站上以完整的 tarball（用 tar
+命令创建的归档文件）和增量补丁的形式获得。 可以利用<a
+target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.10.17/source">Elixir Cross
+Referencer</a>网站在线查看源码</p>
+<h4 id="使用-git">使用 Git</h4>
+<p>你可以用 Git 获取 Linus 主线最新的源码树： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git</span><br></pre></td></tr></table></figure>
+检出后，可以用如下命令更新你的源码树到 Linus 的最新版本：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure></p>
+<h4 id="安装内核源码">安装内核源码</h4>
+<p>内核 tarball 以 GNU zip（gzip）和 bzip2 两种格式发布。bzip2
+是默认且推荐的格式，因为它通常压缩得更好。bzip2 格式的内核包名为
+linux-x.y.z.tar.bz2，其中 x.y.z
+是内核版本号。下载源码后，解压和解包很简单。如果你的 tarball 是 bzip2
+压缩的，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvjf linux-x.y.z.tar.bz2</span><br></pre></td></tr></table></figure> 如果是 gzip 压缩的，运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvzf linux-x.y.z.tar.gz</span><br></pre></td></tr></table></figure>
+这会将源码解压到 linux-x.y.z 目录。如果你用 git 获取源码，就不需要下载
+tarball，只需运行 git clone，Git 会自动下载并解包最新源码。</p>
+<h4 id="源码安装与开发位置">源码安装与开发位置</h4>
+<p>内核源码通常安装在
+<code>/usr/src/linux</code>。但你不应该在这个目录下开发，因为你的 C
+库可能会链接到这里的内核版本。此外，修改内核源码不应需要 root
+权限——建议在你的 home 目录下开发，只在安装新内核时用
+root。即使安装新内核，也不要动 <code>/usr/src/linux</code>。</p>
+<h4 id="使用补丁">使用补丁</h4>
+<p>在 Linux
+内核社区，补丁是交流的通用语言。你会以补丁的形式分发你的代码更改，也会以补丁的形式接收别人的代码。增量补丁可以让你轻松地从一个内核版本升级到下一个，无需每次都下载完整的大包，只需应用增量补丁即可，节省带宽和时间。要应用增量补丁，在内核源码目录下运行：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patch -p1 &lt; ../patch-x.y.z</span><br></pre></td></tr></table></figure> 通常，补丁是针对前一个版本的源码生成的。</p>
+<h3 id="内核源码树结构简介">内核源码树结构简介</h3>
+<p>Linux 内核源码树（source
+tree）被划分为多个目录，每个目录下又包含许多子目录。下表列出了源码树根目录下的主要目录及其说明：</p>
+<table>
+<thead>
+<tr>
+<th>目录（Directory）</th>
+<th>说明（Description）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>arch</td>
+<td>架构相关源码（不同CPU架构的实现）</td>
+</tr>
+<tr>
+<td>block</td>
+<td>块设备I/O层</td>
+</tr>
+<tr>
+<td>crypto</td>
+<td>加密API</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>内核源码文档</td>
+</tr>
+<tr>
+<td>drivers</td>
+<td>设备驱动</td>
+</tr>
+<tr>
+<td>firmware</td>
+<td>某些驱动需要用到的设备固件</td>
+</tr>
+<tr>
+<td>fs</td>
+<td>虚拟文件系统（VFS）及各类文件系统实现</td>
+</tr>
+<tr>
+<td>include</td>
+<td>内核头文件</td>
+</tr>
+<tr>
+<td>init</td>
+<td>内核启动与初始化代码</td>
+</tr>
+<tr>
+<td>ipc</td>
+<td>进程间通信代码</td>
+</tr>
+<tr>
+<td>kernel</td>
+<td>核心子系统（如调度器等）</td>
+</tr>
+<tr>
+<td>lib</td>
+<td>辅助函数库</td>
+</tr>
+<tr>
+<td>mm</td>
+<td>内存管理子系统及虚拟内存</td>
+</tr>
+<tr>
+<td>net</td>
+<td>网络子系统</td>
+</tr>
+<tr>
+<td>samples</td>
+<td>示例和演示代码</td>
+</tr>
+<tr>
+<td>scripts</td>
+<td>构建内核用的脚本</td>
+</tr>
+<tr>
+<td>security</td>
+<td>Linux安全模块</td>
+</tr>
+<tr>
+<td>sound</td>
+<td>声音子系统</td>
+</tr>
+<tr>
+<td>usr</td>
+<td>早期用户空间代码（如initramfs）</td>
+</tr>
+<tr>
+<td>tools</td>
+<td>内核开发相关工具</td>
+</tr>
+<tr>
+<td>virt</td>
+<td>虚拟化基础设施</td>
+</tr>
+</tbody>
+</table>
+<h4 id="源码树根目录下的一些文件">源码树根目录下的一些文件</h4>
+<ul>
+<li><strong>COPYING</strong>：内核许可证（GNU GPL v2）。</li>
+<li><strong>CREDITS</strong>：内核主要开发者名单。</li>
+<li><strong>MAINTAINERS</strong>：各子系统和驱动的维护者名单。</li>
+<li><strong>Makefile</strong>：内核主
+Makefile，用于编译和构建整个内核。</li>
+</ul>
+<h2 id="配置内核configuring-the-kernel">配置内核（Configuring the
+Kernel）</h2>
+<p>因为 Linux
+源码是开放的，所以你可以在编译前根据自己的需求进行配置和定制。实际上，你可以只为你需要的功能和驱动编译支持。<strong>配置内核</strong>是编译前的必经步骤。由于内核功能丰富、支持的硬件种类繁多，配置选项也非常多。</p>
+<h3 id="内核配置选项configuration-options">内核配置选项（Configuration
+Options）</h3>
+<p>内核配置通过一系列以 <code>CONFIG_</code> 开头的选项控制，例如
+<code>CONFIG_SMP</code> 控制对称多处理（SMP）支持。设置该选项即启用
+SMP，未设置则禁用。配置选项既决定编译哪些文件，也通过预处理指令影响源码。</p>
+<ul>
+<li><strong>布尔型（Boolean）</strong>：只有 yes 或 no 两种状态。比如
+<code>CONFIG_PREEMPT</code>。</li>
+<li><strong>三态（Tristate）</strong>：yes、no 或 module。module
+表示编译为可动态加载的模块（.ko 文件）；yes
+表示直接编译进内核镜像。</li>
+<li><strong>字符串或整数</strong>：用于指定某些参数值，比如数组大小，这些不会影响编译流程，而是作为宏被源码访问。</li>
+</ul>
+<h3 id="发行版内核与自定义内核">发行版内核与自定义内核</h3>
+<p>各大 Linux 发行版（如
+Ubuntu、Fedora）自带的内核都是预编译好的，通常会启用大部分常用功能，并把绝大多数驱动编译为模块，以便支持各种硬件。但如果你想深入学习或开发内核，还是需要自己编译内核，并选择合适的模块。</p>
+<h3 id="配置工具">配置工具</h3>
+<p>内核提供了多种配置工具：</p>
+<ul>
+<li><p><strong>文本命令行工具</strong><br />
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make config</span><br></pre></td></tr></table></figure> 逐项询问每个选项，适合有耐心的用户。</p></li>
+<li><p><strong>基于 ncurses 的图形界面</strong><br />
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br></pre></td></tr></table></figure> 推荐使用，界面友好，选项分门别类。</p></li>
+<li><p><strong>基于 GTK+ 的图形界面</strong><br />
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make gconfig</span><br></pre></td></tr></table></figure> 适合喜欢图形界面的用户。</p></li>
+</ul>
+<p>这些工具会把配置选项分为不同类别（如“处理器类型与特性”），你可以浏览、修改各项配置。</p>
+<h3 id="快速生成默认配置">快速生成默认配置</h3>
+<p>如果你不想从零开始配置，可以用默认配置： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make defconfig</span><br></pre></td></tr></table></figure>
+这会生成一个适合你当前架构的默认配置（比如 i386 下据说是 Linus
+的配置），适合新手快速上手。之后可以再根据自己的硬件调整配置。</p>
+<h3 id="配置文件的位置与管理">配置文件的位置与管理</h3>
+<p>所有配置选项最终会保存在源码根目录下的 <code>.config</code>
+文件中。你也可以直接编辑这个文件（很多内核开发者都这么做），只需搜索并修改对应的配置项即可。</p>
+<p>如果你用现有的 <code>.config</code>
+文件，或者升级到新内核后想沿用旧配置，可以用： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make oldconfig</span><br></pre></td></tr></table></figure>
+它会根据新内核的选项补全或更新你的配置。</p>
+<h3 id="复制当前内核配置">复制当前内核配置</h3>
+<p>如果当前内核启用了 <code>CONFIG_IKCONFIG_PROC</code>，你可以直接从
+<code>/proc/config.gz</code> 拷贝当前内核的配置： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zcat /proc/config.gz &gt; .config</span><br><span class="line">make oldconfig</span><br></pre></td></tr></table></figure>
+这样可以方便地克隆当前系统的内核配置。</p>
+<h2 id="编译内核">编译内核</h2>
+<p>配置好后，只需一条命令即可编译内核： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure> 自 2.6
+版本起，无需再手动运行 <code>make dep</code> 或分别编译
+bzImage、modules，默认的 Makefile 规则会自动处理所有依赖和构建流程。</p>
+<h3
+id="降低编译输出噪音minimizing-build-noise">降低编译输出噪音（Minimizing
+Build Noise）</h3>
+<p>在编译内核时，终端会输出大量信息。为了减少这些“噪音”，但又能看到警告和错误，可以将
+<code>make</code> 的标准输出重定向到文件：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &gt; ../detritus</span><br></pre></td></tr></table></figure>
+<p>如果需要查看详细输出，可以阅读该文件。由于警告和错误信息会输出到标准错误（stderr），通常你不需要关心标准输出。实际上，你可以直接把输出丢到“黑洞”：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<p>这样所有无用的输出都会被丢弃，只在终端显示警告和错误。</p>
+<hr />
+<h3 id="并行编译spawning-multiple-build-jobs">并行编译（Spawning
+Multiple Build Jobs）</h3>
+<p><code>make</code>
+支持并行编译，可以同时运行多个编译任务，大大加快多核系统上的编译速度。方法如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -jN</span><br></pre></td></tr></table></figure>
+<p>其中 <code>N</code>
+是并行任务数。通常建议每个处理器核心分配1~2个任务。例如，16核机器可以这样：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j32 &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<p>此外，使用如 <code>distcc</code> 或 <code>ccache</code>
+等工具也能进一步提升编译速度。</p>
+<hr />
+<h2 id="安装新内核installing-the-new-kernel">安装新内核（Installing the
+New Kernel）</h2>
+<p>内核编译完成后，需要安装。安装方式依赖于你的硬件架构和引导程序（boot
+loader），请查阅对应引导程序的文档。</p>
+<p><strong>以 x86 + grub 为例：</strong></p>
+<ol type="1">
+<li>将 <code>arch/i386/boot/bzImage</code> 复制到
+<code>/boot</code>，并命名为如 <code>vmlinuz-version</code>。</li>
+<li>编辑 <code>/boot/grub/grub.conf</code>，为新内核添加启动项。</li>
+</ol>
+<p><strong>如果使用 LILO：</strong></p>
+<ol type="1">
+<li>编辑 <code>/etc/lilo.conf</code>，添加新内核项。</li>
+<li>重新运行 <code>lilo</code> 命令。</li>
+</ol>
+<h3 id="安装模块installing-modules">安装模块（Installing Modules）</h3>
+<p>模块的安装是自动且与架构无关的。只需以 root 权限运行： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make modules_install</span><br></pre></td></tr></table></figure>
+这会把所有编译好的模块安装到 <code>/lib/modules</code>
+下的对应目录。</p>
+<h3 id="system.map-文件">System.map 文件</h3>
+<p>编译过程中还会在源码根目录生成 <code>System.map</code>
+文件。它是一个符号查找表，用于将内核符号映射到内存地址，在调试时可以把地址转换为函数或变量名。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1145,373 +1815,6 @@ i=2：0&lt;1 → 十位置9, 百位减1 → digits=[0,9,0] 结果 = 0<em>10⁰ +
 且是奇数，说明还有一次取反机会，把当前最小值（绝对值最小的数）再取反一次</strong>；
 4. 最后返回数组的总和。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">largestSumAfterKNegations</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>(), [](<span class="type">int</span> a, <span class="type">int</span> b)&#123;<span class="keyword">return</span> <span class="built_in">abs</span>(a) &gt; <span class="built_in">abs</span>(b);&#125;);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(k == <span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                nums[i] = <span class="number">0</span> - nums[i];</span><br><span class="line">                k--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(k % <span class="number">2</span> == <span class="number">1</span>)nums[nums.<span class="built_in">size</span>()<span class="number">-1</span>] = <span class="number">0</span> - nums[nums.<span class="built_in">size</span>()<span class="number">-1</span>];</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n: nums)&#123;</span><br><span class="line">            sum += n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/08/kamacode23/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/08/kamacode23/" class="post-title-link" itemprop="url">代码随想录 | 刷题-贪心算法1</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-09 00:29:37 / 修改时间：09:09:52" itemprop="dateCreated datePublished" datetime="2025-06-09T00:29:37+08:00">2025-06-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="分发饼干">455.分发饼干</h3>
-<p>这题题解上两个思路：</p>
-<ul>
-<li>思路1：优先考虑饼干，小饼干先喂饱小胃口</li>
-<li>思路2：优先考虑胃口，先喂饱大胃口</li>
-</ul>
-<p>我这里优先考虑饼干 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findC</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; g, vector&lt;<span class="type">int</span>&gt;&amp; s, <span class="type">int</span> gStart, <span class="type">int</span> sStart)</span></span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(gStart == g.<span class="built_in">size</span>() || sStart == s.<span class="built_in">size</span>())<span class="keyword">return</span> count;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = sStart; i&lt;s.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s[i] &gt;= g[gStart])&#123;</span><br><span class="line">                count += <span class="number">1</span>;</span><br><span class="line">                count += <span class="built_in">findC</span>(g, s, gStart+<span class="number">1</span>, i+<span class="number">1</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findContentChildren</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; g, vector&lt;<span class="type">int</span>&gt;&amp; s)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(g.<span class="built_in">begin</span>(), g.<span class="built_in">end</span>());</span><br><span class="line">        <span class="built_in">sort</span>(s.<span class="built_in">begin</span>(), s.<span class="built_in">end</span>());</span><br><span class="line">        <span class="type">int</span> cnt = <span class="built_in">findC</span>(g, s, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="摆动序列">376. 摆动序列</h3>
-<p>按题解思路，因为题目要求的是最长摆动子序列的长度，所以只需要统计数组的峰值数量就可以了（相当于是删除单一坡度上的节点，然后统计长度）
-这就是贪心所贪的地方，让峰值尽可能的保持峰值，然后删除单一坡度上的节点
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">wiggleMaxLength</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> waveCnt = <span class="number">1</span>;</span><br><span class="line">        vector&lt;<span class="type">bool</span>&gt; isPos;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> waveCnt;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i<span class="number">-1</span>] == nums[i])<span class="keyword">continue</span>; <span class="comment">// 需要跳过相等的情况，不计入后面的判断条件中</span></span><br><span class="line">            <span class="keyword">if</span>(nums[i<span class="number">-1</span>] &lt; nums[i])&#123;</span><br><span class="line">                isPos.<span class="built_in">push_back</span>(<span class="literal">true</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[i<span class="number">-1</span>] &gt; nums[i])&#123;</span><br><span class="line">                isPos.<span class="built_in">push_back</span>(<span class="literal">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(i &gt;= <span class="number">1</span> &amp;&amp; !isPos.<span class="built_in">empty</span>() &amp;&amp; isPos.<span class="built_in">size</span>() == <span class="number">1</span>)waveCnt++;</span><br><span class="line">            <span class="keyword">if</span>(!isPos.<span class="built_in">empty</span>() &amp;&amp; isPos.<span class="built_in">size</span>() &gt;= <span class="number">2</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(isPos[isPos.<span class="built_in">size</span>()<span class="number">-1</span>] != isPos[isPos.<span class="built_in">size</span>()<span class="number">-2</span>])waveCnt++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> waveCnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="最大子序和">53.最大子序和</h3>
-<p>由题解可以得知 如果 -2 1 在一起，计算起点的时候，一定是从 1
-开始计算，因为负数只会拉低总和，这就是贪心贪的地方！</p>
-<ul>
-<li>局部最优：当前“连续和”为负数的时候立刻放弃，从下一个元素重新计算“连续和”，因为负数加上下一个元素“连续和”只会越来越小。</li>
-<li>全局最优：选取最大“连续和”</li>
-</ul>
-<p>区间的终止位置，其实就是如果 count 取到最大值了，及时记录下来</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxSubArray</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxCnt = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            cnt = cnt + nums[i];</span><br><span class="line">            <span class="keyword">if</span>(cnt &gt; maxCnt)&#123;<span class="comment">// 要先赋值，再判断是否小于零，不然全是负数的情况会不正确</span></span><br><span class="line">                maxCnt = cnt;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(cnt &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                cnt = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxCnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/06/intv_mock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/06/intv_mock/" class="post-title-link" itemprop="url">模拟面试 | 云计算，云平台开发岗</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-07 09:37:42" itemprop="dateCreated datePublished" datetime="2025-06-07T09:37:42+08:00">2025-06-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-25 04:46:45" itemprop="dateModified" datetime="2025-09-25T04:46:45+08:00">2025-09-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>把面试可能遇到的题目和回答存一下，面完来看看有哪些问到了 更新：
-面完了，全在拷问项目，一点八股没问，凉了。迭代一下模拟面试题目</p>
-<p>我的简历项目有三个：通用操作系统框架（Rust，研究生阶段跟着导师组里做的项目），自己开发的博客平台（Spring
-boot），智能菜市场物联网数据平台后端（Spring
-Boot，本科阶段实习的项目）</p>
-<h3
-id="请用3分钟左右的时间介绍一下你自己-考察总结和表达能力引导面试官关注你的亮点"><strong>请用3分钟左右的时间介绍一下你自己</strong>
-(考察总结和表达能力，引导面试官关注你的亮点)</h3>
-<p>面试官您好！我是来自XX大学计算机科学专业的硕士研究生XX，非常荣幸能参加贵公司云架构平台部后台开发岗位的面试。
-(背景 &amp; 核心项目 - 1 min)
-在研究生阶段，我的核心研究聚焦于构建高性能、可扩展的<strong>操作系统框架</strong>。我主导了其中<strong>调度算法模块</strong>的设计与实现。我的任务是将导师提出的新型*联合调度模型<strong>落地到基于Rust开发的</strong>微内核<strong>框架中。该模型的核心是根据任务的</strong>CPU占用<strong>特征（高/低利用率）</strong>动态匹配<strong>最优调度策略（如EDF或Rate-Monotonic），以提升统在超负荷以及</strong>实时调度<strong>场景下的整体效用。
-为了实现并验证该模型：
-充分利用</strong>Rust的所有权机制<strong>实现安全高效的</strong>任务状态管理<strong>
-我设计了模块化的调度器接口，支持灵活集成和对比不同策略，并通过Linux内核工程实践（在Raspberry
-Pi上进行</strong>内核模块定制<strong>、交叉编译） 搭建了真实的测试环境。
-我利用</strong>perf**等工具采集并分析任务响应时间、CPU利用率等指标，量化验证了该联合调度模型在极端负载下的性能优势，达到了理论预期。这个项目不仅锻炼了我系统级编程（Rust）、核原理和性能调优的能力，也让我深刻理解了高并发、实时性保障的挑战。</p>
-<p>(其他项目经验 - 突出相关技术 - 45 sec)
-除了研究项目，我也积极将技术应用于实践：
-我独立设计并开发了一个高性能多线程TCP服务器（Rust）。采用Reactor模式和<strong>非阻塞I/O</strong>处理并发连接，精心设计了<strong>线程安全的任务队列</strong>和共享数据模型，降低了系统调度开销通过优化，服务器在压力测试下峰值处理能力达到300+请求/秒，并保持了99.9%的运行时间可靠性。这强化了我对网络编程、并发控制和系统稳定性的理解。
-在XX公司实习期间，我参与了智能菜市场物联网数据平台后端（Spring
-Boot/Java）
-的开发。针对日均5000+设备数据的高并发接入场景，我参与了<strong>分库分表方案设计</strong>，并通过优化复查询（使用联合索引）降低关键接口耗时。我还负责了服务的Docker容器化部署，实现了资源的有效利用和快速扩容。这让我熟悉了企业级Java开发、数据库性能优化（MySQL/MyBatis）和容器化技术。</p>
-<p>(技能总结 &amp; 匹配岗位 - 30 sec)
-通过这些经历，我熟练掌握<strong>C++、Python</strong>，并具备扎实的<strong>Rust系统级开发</strong>经验；深入理解操作系统、网络、并发编程原理；在分布式系统设（分库分表）、高并发优化等方面有实际项目积累；并具备良好的问题定位和解决能力。</p>
-<p>(结尾 - 表达热情与匹配 - 15 sec)
-我了解到贵部门专注于<strong>构建和优化云平台</strong>的核心服务与基础设施，这正是我的兴趣所在。我的系统底层经验、性能优化意识、对分布式和云原生技的热情，以及扎实的后端开发技能，都与这个岗位高度契合。我非常渴望能加入团队，贡献我的力量，并持续学习成长。谢谢</p>
-<h3
-id="描述一次需要在有限资源下完成任务的经历">描述一次需要在有限资源下完成任务的经历</h3>
-<p>基于项目：智能菜市场物联网数据平台后端（实习经历）
-Situation（情境）：在实习期间，我参与开发智能菜市场物联网数据平台。项目面临两个关键限制：一是时间紧迫（核心查询接口优化需在1周内完成，同时还有上线前的测试工作），二是测试资源有限（只有一台低配测试服务器，无法模拟高并发场景）。</p>
-<p>Task（任务）：我的任务是在有限时间和资源下，将核心查询接口的响应时间从300ms以上优化到150ms以下，以支持平台的高并发需求。
-Action（行动）：
-优先级聚焦：我首先分析慢查询日志，识别出最影响性能的SQL语句（如多表关联查询），放弃全面优化，集中精力攻克关键点。
-创造性解决：由于无法进行大规模负载测试，我使用Docker容器在本机模拟小型数据库环境，通过指数生成测试数据。然后，我设计了联合索引来优化查询，避免了硬件依赖。
-迭代验证：我采用敏捷方式，每完成一个索引优化就立即测试，确保每次微改进都有效果，同时用Docker快速部署验证，节省了运维时间。
-Result（结果）：最终，核心查询耗时降低150ms（性能提升50%），任务提前完成。这次经历让我学会了在约束条件下优先解决瓶颈问题，并灵活使用工具（如Docker）来弥补资源不足</p>
-<h3 id="描述一次成功说服别人的经历">描述一次成功说服别人的经历</h3>
-<p>基于项目：通用操作系统框架（Rust+C+gcc+Perf）
-Situation（情境）：在2024年参与通用操作系统框架项目时，团队在设计任务调度模块时出现了分歧。部分成员倾向于使用传统的轮转（RR）调度算法，因为它简单易实现；但我通过前期研究发现，在混合任务场景（如实时任务和批处理任务共存）下，RR调度会导致性能瓶颈，尤其是系统超负荷时响应时间恶化。</p>
-<p>Task（任务）：我的任务是通过数据和演示，说服团队采纳我提出的联合调度模型（结合优先级和时间片调整），以优化系统吞吐量和响应时间。
-Action（行动）： 我首先收集了基准数据：使用Perf工具在Raspberry
-Pi上模拟了150%超负荷场景，对比了RR调度和联合调度的性能指标（如CPU利用率、任务响应时间）。
-然后，我组织了一次技术评审会，用可视化图表展示数据：RR调度在超负荷下CPU利用率仅65%，而联合调度达到85%以上；同时，调度开销降低了10%。
-针对团队对复杂性的担忧，我解释了模块化设计如何降低维护成本，并承诺主导核心代码实现。我还邀请了导师Prof.
-G提供反馈，增强了说服力。
-Result（结果）：团队最终同意采用联合调度模型。实施后，项目成果显示系统在超负荷场景下性能显著提升，CPU利用率提升20%，调度开销降低10%。这次经历不仅优化了系统，还锻炼了我用数据驱动决策的能力。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/06/kamacode22backtrack4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/06/kamacode22backtrack4/" class="post-title-link" itemprop="url">代码随想录 | 刷题-回溯算法4</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-07 01:26:48" itemprop="dateCreated datePublished" datetime="2025-06-07T01:26:48+08:00">2025-06-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-10 01:18:53" itemprop="dateModified" datetime="2025-09-10T01:18:53+08:00">2025-09-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="递增子序列">491.递增子序列</h3>
-<p>题解说这里用数组做哈希，效率会更高 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">findSS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, vector&lt;<span class="type">int</span>&gt; path, <span class="type">int</span> left)</span></span>&#123;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; used; <span class="comment">// 当前层去重</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = left; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(used.<span class="built_in">find</span>(nums[i]) != used.<span class="built_in">end</span>())<span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span>(path.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                path.<span class="built_in">push_back</span>(nums[i]);</span><br><span class="line">                used.<span class="built_in">insert</span>(nums[i]);</span><br><span class="line">                <span class="built_in">findSS</span>(nums, path, i+<span class="number">1</span>);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(!path.<span class="built_in">empty</span>() &amp;&amp; nums[i]&gt;=path.<span class="built_in">back</span>())&#123;</span><br><span class="line">                <span class="comment">// if(i&gt;left &amp;&amp; nums[i-1] == nums[i])continue; // 重复元素不一定相邻</span></span><br><span class="line">                path.<span class="built_in">push_back</span>(nums[i]);</span><br><span class="line">                result.<span class="built_in">push_back</span>(path);</span><br><span class="line">                used.<span class="built_in">insert</span>(nums[i]);</span><br><span class="line">                <span class="built_in">findSS</span>(nums, path, i+<span class="number">1</span>);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">findSubsequences</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="built_in">findSS</span>(nums, path, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="全排列">46.全排列</h3>
-<ol type="1">
-<li><strong>索引限制错误</strong>：
-<ul>
-<li>使用 <code>left</code>
-参数限制选择范围，导致只能生成<strong>索引递增的子序列</strong>而非全排列</li>
-<li>例如输入 <code>[1,2,3]</code> 时，代码只能生成
-<code>[1,2,3]</code>，无法生成 <code>[2,1,3]</code> 等排列</li>
-</ul></li>
-<li><strong>缺少元素使用状态跟踪</strong>：
-<ul>
-<li>排列需要从<strong>所有未使用元素</strong>中选择，而不仅仅是当前索引后的元素</li>
-<li>没有记录哪些元素已被使用，导致：
-<ul>
-<li>无法重新选择左侧元素</li>
-<li>无法避免重复使用同一元素</li>
-</ul></li>
-</ul></li>
-<li><strong>递归逻辑错误</strong>：
-<ul>
-<li>每次递归都从 <code>i+1</code> 开始，使得路径只能向右扩展</li>
-<li>排列需要任意顺序组合，需能回头选择左侧元素</li>
-</ul></li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">perm</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, vector&lt;<span class="type">int</span>&gt;&amp; path, vector&lt;<span class="type">bool</span>&gt;&amp; used)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (path.<span class="built_in">size</span>() == nums.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;  <span class="comment">// 必须遍历所有元素</span></span><br><span class="line">            <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>;  <span class="comment">// 跳过已用元素</span></span><br><span class="line">            used[i] = <span class="literal">true</span>;</span><br><span class="line">            path.<span class="built_in">push_back</span>(nums[i]);</span><br><span class="line">            <span class="built_in">perm</span>(nums, path, used);  <span class="comment">// 注意：这里递归时不限制索引</span></span><br><span class="line">            path.<span class="built_in">pop_back</span>();</span><br><span class="line">            used[i] = <span class="literal">false</span>;  <span class="comment">// 回溯</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">permute</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">used</span><span class="params">(nums.size(), <span class="literal">false</span>)</span></span>;  <span class="comment">// 添加使用状态数组</span></span><br><span class="line">        <span class="built_in">perm</span>(nums, path, used);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="全排列-ii">47.全排列 II</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">perm</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, vector&lt;<span class="type">int</span>&gt; path, vector&lt;<span class="type">bool</span>&gt;&amp; used)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(path.<span class="built_in">size</span>() == nums.<span class="built_in">size</span>())&#123;</span><br><span class="line">            result.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="comment">// return;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(used[i] == <span class="literal">true</span>)<span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// used[i - 1] == true，说明同一树枝nums[i - 1]使用过</span></span><br><span class="line">            <span class="comment">// used[i - 1] == false，说明同一树层nums[i - 1]使用过</span></span><br><span class="line">            <span class="comment">// 👇同一层使用过则跳过</span></span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; nums[i] == nums[i<span class="number">-1</span>] &amp;&amp; used[i<span class="number">-1</span>] == <span class="literal">false</span>)<span class="keyword">continue</span>;</span><br><span class="line">            path.<span class="built_in">push_back</span>(nums[i]);</span><br><span class="line">            used[i] = <span class="literal">true</span>;</span><br><span class="line">            <span class="built_in">perm</span>(nums, path, used);</span><br><span class="line">            path.<span class="built_in">pop_back</span>();</span><br><span class="line">            used[i] = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">permuteUnique</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">used</span><span class="params">(nums.size(),<span class="literal">false</span>)</span></span>;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="built_in">perm</span>(nums, path, used);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="n皇后">51. N皇后</h3>
-<h4 id="问题分析">问题分析：</h4>
-<ol type="1">
-<li><p><strong>列起始位置错误</strong>： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = l; i&lt;n; i++)  <span class="comment">// 错误：每行都应从0开始尝试所有列</span></span><br></pre></td></tr></table></figure></p></li>
-<li><p><strong>赋值操作符错误</strong>： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">li[i] == <span class="number">1</span>;  <span class="comment">// 应该是 =，不是 ==</span></span><br></pre></td></tr></table></figure></p></li>
-<li><p><strong>皇后位置检查逻辑错误</strong>：</p>
-<ul>
-<li>检查时使用<code>continue</code>导致死循环，应记录检查结果后设置皇后位置
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; result;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; cur, <span class="type">int</span> n, <span class="type">int</span> row)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (row == n) &#123;</span><br><span class="line">            vector&lt;string&gt; solution;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; line : cur) &#123;</span><br><span class="line">                string s;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> p : line) &#123;</span><br><span class="line">                    s.<span class="built_in">push_back</span>(p == <span class="number">1</span> ? <span class="string">&#x27;Q&#x27;</span> : <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                solution.<span class="built_in">push_back</span>(s);</span><br><span class="line">            &#125;</span><br><span class="line">            result.<span class="built_in">push_back</span>(solution);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> col = <span class="number">0</span>; col &lt; n; col++) &#123;  <span class="comment">// 每行都尝试所有列</span></span><br><span class="line">            <span class="type">bool</span> valid = <span class="literal">true</span>;</span><br><span class="line">            <span class="comment">// 检查正上方</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> r = <span class="number">0</span>; r &lt; row; r++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (cur[r][col] == <span class="number">1</span>) &#123;</span><br><span class="line">                    valid = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!valid) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// 检查左上对角线</span></span><br><span class="line">            <span class="type">int</span> r = row - <span class="number">1</span>, c = col - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (r &gt;= <span class="number">0</span> &amp;&amp; c &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (cur[r][c] == <span class="number">1</span>) &#123;</span><br><span class="line">                    valid = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                r--;</span><br><span class="line">                c--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!valid) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// 检查右上对角线</span></span><br><span class="line">            r = row - <span class="number">1</span>;</span><br><span class="line">            c = col + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (r &gt;= <span class="number">0</span> &amp;&amp; c &lt; n) &#123;</span><br><span class="line">                <span class="keyword">if</span> (cur[r][c] == <span class="number">1</span>) &#123;</span><br><span class="line">                    valid = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                r--;</span><br><span class="line">                c++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!valid) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// 放置皇后</span></span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">new_row</span><span class="params">(n, <span class="number">0</span>)</span></span>;</span><br><span class="line">            new_row[col] = <span class="number">1</span>;  <span class="comment">// 正确赋值</span></span><br><span class="line">            cur.<span class="built_in">push_back</span>(new_row);</span><br><span class="line">            <span class="comment">// 递归下一行（列从0开始）</span></span><br><span class="line">            <span class="built_in">solve</span>(cur, n, row + <span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 回溯</span></span><br><span class="line">            cur.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">solveNQueens</span>(<span class="type">int</span> n) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; cur;</span><br><span class="line">        <span class="built_in">solve</span>(cur, n, <span class="number">0</span>);  <span class="comment">// 从第0行开始</span></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-</ul></li>
-</ol>
-<h3 id="牛客acm模式-real492-数独leetcode37解数独">牛客acm模式 REAL492
-数独(leetcode37解数独)</h3>
-<p>按照回溯算法的思路解决即可 注意递归函数需要传引用</p>
-<ol type="1">
-<li>遍历每一行每一列的格子，如果需要填入数字，就遍历1-9中哪些数字符合要求</li>
-<li>符合要求的数字需要在每行，每列和每3*3小格子都没出现过</li>
-<li>如果符合要求，则沿着这个分支继续递归，如果返回一个符合要求的板子，那么回溯函数返回true</li>
-<li>重置当前格子为0</li>
-<li>最里层的递归函数何时返回true false呢？
-<ul>
-<li>false是当遍历完1-9所有数字，都没有出现一个true分支的时候</li>
-<li>true是遍历完每一行每一列的格子，都没有出现false的时候</li>
-</ul></li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">is_valid</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j, <span class="type">int</span> k, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; board)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> a = <span class="number">0</span>; a &lt; <span class="number">9</span>; a++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(board[i][a] == k)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(board[a][j] == k)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i_start = (i / <span class="number">3</span>)*<span class="number">3</span>;</span><br><span class="line">    <span class="type">int</span> j_start = (j / <span class="number">3</span>)*<span class="number">3</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> a = i_start; a &lt; (i_start+<span class="number">3</span>); a++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> b = j_start; b &lt; (j_start+<span class="number">3</span>); b++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(board[a][b] == k)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">backtrack</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; &amp;board)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; board.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; board[<span class="number">0</span>].<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(board[i][j] == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> k = <span class="number">1</span>; k &lt;= <span class="number">9</span>; k++)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="built_in">is_valid</span>(i, j, k, board) == <span class="literal">true</span>)&#123;</span><br><span class="line">                        board[i][j] = k;</span><br><span class="line">                        <span class="type">int</span> recall = <span class="built_in">backtrack</span>(board);</span><br><span class="line">                        <span class="keyword">if</span>(recall == <span class="literal">true</span>)<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                        board[i][j] = <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; input;</span><br><span class="line">    string line;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; i_line;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">getline</span>(cin, line))&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: line)&#123;</span><br><span class="line">            <span class="keyword">if</span>(c != <span class="string">&#x27; &#x27;</span>)i_line.<span class="built_in">push_back</span>(c - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        input.<span class="built_in">push_back</span>(i_line);</span><br><span class="line">        i_line.<span class="built_in">clear</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> ret = <span class="built_in">backtrack</span>(input);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i: input)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> j: i)&#123;</span><br><span class="line">            cout&lt;&lt; j&lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 64 位输出请用 printf(&quot;%lld&quot;)</span></span><br></pre></td></tr></table></figure>
 
       
     </div>

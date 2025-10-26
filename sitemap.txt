@@ -1,3 +1,6 @@
+https://mackz-maxw.github.io/2025/10/25/kamacode41monos/
+https://mackz-maxw.github.io/2025/10/24/kamacode40palin/
+https://mackz-maxw.github.io/2025/10/21/kamabagu8/
 https://mackz-maxw.github.io/2025/10/21/kamacode39editd/
 https://mackz-maxw.github.io/2025/10/21/kamapentest_data/
 https://mackz-maxw.github.io/2025/10/21/intv_xp/
@@ -109,8 +112,8 @@ https://mackz-maxw.github.io/
 https://mackz-maxw.github.io/categories/leetcode/
 https://mackz-maxw.github.io/categories/realtime-sched/
 https://mackz-maxw.github.io/categories/linux-tricks/
-https://mackz-maxw.github.io/categories/interview/
 https://mackz-maxw.github.io/categories/wsl2/
+https://mackz-maxw.github.io/categories/interview/
 https://mackz-maxw.github.io/categories/comp-basic/
 https://mackz-maxw.github.io/categories/os-basic/
 https://mackz-maxw.github.io/categories/os-basic/lab/

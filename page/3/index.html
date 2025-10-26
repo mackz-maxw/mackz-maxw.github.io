@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">107</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,647 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/kamacode36stock2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/19/kamacode36stock2/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划9</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-20 01:04:53" itemprop="dateCreated datePublished" datetime="2025-08-20T01:04:53+08:00">2025-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-10 01:03:01" itemprop="dateModified" datetime="2025-09-10T01:03:01+08:00">2025-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="买卖股票的最佳时机iv">188.买卖股票的最佳时机IV</h3>
+<p>买卖股票三的扩展版，从最多两次交易扩充到k次交易。注意买入和卖出某个数量的股票都要单列一列dp，并采用不同的状态转移方式。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(<span class="type">int</span> k, vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>*k+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=<span class="number">2</span>*k; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i % <span class="number">2</span> == <span class="number">1</span>)dp[<span class="number">0</span>][i] -= prices[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j&lt;=<span class="number">2</span>*k; j+=<span class="number">2</span>)&#123;</span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] - prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">2</span>; j&lt;=<span class="number">2</span>*k; j+=<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="comment">// printf(&quot;index of prices: %d, sold out stock id: %d\n&quot;, i, j);</span></span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">2</span>*k];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最佳买卖股票时机含冷冻期">309.最佳买卖股票时机含冷冻期</h3>
+<p>我这道题还是写复杂了。其实不规定买入次数，就不需要每次买卖都开一个状态了，每天都计算持有/非持有状态即可，还可以省空间复杂度
+我采用的思路延续了每次买入都有两个不同状态的方案，当计算卖出的时候往前比较两天，就是需要注意第二天持有股票状态的递推公式的特殊情况（选择第二天买入还是第一天买入）。其实采用仅四个状态也可以：
+状态一：持有股票状态（今天买入股票，或者是之前就买入了股票然后没有操作，一直持有）
+不持有股票状态，这里就有两种卖出股票状态 -
+状态二：保持卖出股票的状态（两天前就卖出了股票，度过一天冷冻期。或者是前一天就是卖出股票状态，一直没操作）
+- 状态三：今天卖出股票
+状态四：今天为冷冻期状态，但冷冻期状态不可持续，只有一天！
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> status = prices.<span class="built_in">size</span>()*<span class="number">2</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(status+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= status; i += <span class="number">2</span>)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][i] -= prices[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= status; j += <span class="number">2</span>)&#123;</span><br><span class="line">                <span class="comment">// printf(&quot;prices: %d, hold stock cnt: %d\n&quot;, i, j);</span></span><br><span class="line">                <span class="keyword">if</span>(i &gt;= <span class="number">3</span>)&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-2</span>][j<span class="number">-1</span>] - prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(-prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">2</span>; j &lt;= status; j += <span class="number">2</span>)&#123;</span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + prices[i], dp[i<span class="number">-1</span>][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(auto l: dp)&#123;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;&quot;prices line &quot;;</span></span><br><span class="line">        <span class="comment">//     for(auto i: l)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;i&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][status];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="买卖股票的最佳时机含手续费">714.买卖股票的最佳时机含手续费</h3>
+<p>这题延续 <em>122.买卖股票的最佳时机II</em> 的思路即可
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices, <span class="type">int</span> fee)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> status = prices.<span class="built_in">size</span>()*<span class="number">2</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(prices.<span class="built_in">size</span>(), <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">2</span>, <span class="number">0</span>));</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] -= prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">1</span>]+prices[i]-fee, dp[i<span class="number">-1</span>][<span class="number">0</span>]);</span><br><span class="line">            dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">0</span>]-prices[i], dp[i<span class="number">-1</span>][<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(int i = 0; i&lt;dp.size(); i++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int j = 0; j&lt;dp[0].size(); j++)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;dp[i][j]&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> dp[prices.<span class="built_in">size</span>()<span class="number">-1</span>][<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/12/oper_sys19kernelMod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/12/oper_sys19kernelMod/" class="post-title-link" itemprop="url">操作系统基础 | 4.5 内核数据结构-内核模块</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-13 00:14:02" itemprop="dateCreated datePublished" datetime="2025-08-13T00:14:02+08:00">2025-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-16 06:49:37" itemprop="dateModified" datetime="2025-08-16T06:49:37+08:00">2025-08-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="linux-内核模块开发简介">Linux 内核模块开发简介</h3>
+<h4 id="设备类型分类">设备类型分类</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 9%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>缩写</strong></th>
+<th><strong>访问方式</strong></th>
+<th><strong>典型设备</strong></th>
+<th><strong>特殊文件</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>块设备</strong></td>
+<td>blkdevs</td>
+<td>按块随机访问（支持寻址）</td>
+<td>硬盘/SSD/光驱</td>
+<td><code>/dev/sda1</code></td>
+</tr>
+<tr>
+<td><strong>字符设备</strong></td>
+<td>cdevs</td>
+<td>字节流顺序访问</td>
+<td>键盘/打印机/伪设备</td>
+<td><code>/dev/ttyS0</code></td>
+</tr>
+<tr>
+<td><strong>网络设备</strong></td>
+<td>-</td>
+<td>套接字API（破坏"一切皆文件"原则）</td>
+<td>网卡/无线适配器</td>
+<td>无设备节点</td>
+</tr>
+<tr>
+<td><strong>混杂设备</strong></td>
+<td>miscdevs</td>
+<td>字符设备简化形式</td>
+<td>简单专用设备</td>
+<td><code>/dev/random</code> 等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>伪设备示例</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/dev/random   <span class="comment"># 内核随机数生成器</span></span><br><span class="line">/dev/null     <span class="comment"># 空设备（丢弃所有写入）</span></span><br><span class="line">/dev/zero     <span class="comment"># 零设备（提供无限\0字节）</span></span><br><span class="line">/dev/full     <span class="comment"># 满设备（写入总返回ENOSPC错误）</span></span><br><span class="line">/dev/mem      <span class="comment"># 物理内存访问设备</span></span><br></pre></td></tr></table></figure></p>
+<hr />
+<h3 id="内核模块开发">内核模块开发</h3>
+<h4 id="hello-world-模块示例">Hello World 模块示例</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kernel.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块加载时执行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">hello_init</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;I bear a charmed life.\n&quot;</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 返回0表示成功</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块卸载时执行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> __exit <span class="title function_">hello_exit</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    printk(KERN_INFO <span class="string">&quot;Out, out, brief candle!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 注册入口/出口函数 */</span></span><br><span class="line">module_init(hello_init);  <span class="comment">// 不是函数调用，而是宏定义</span></span><br><span class="line">module_exit(hello_exit);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 模块元信息 */</span></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);                  <span class="comment">// 必须声明许可证</span></span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;Shakespeare&quot;</span>);           <span class="comment">// 作者信息</span></span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;Hello World Module&quot;</span>); <span class="comment">// 模块描述</span></span><br></pre></td></tr></table></figure>
+<h4 id="关键机制解析">关键机制解析</h4>
+<ol type="1">
+<li><strong>入口函数</strong>：
+<ul>
+<li>形式：<code>int init_func(void)</code></li>
+<li>职责：注册资源/初始化硬件/分配数据结构</li>
+<li>返回值：0=成功，非0=失败</li>
+</ul></li>
+<li><strong>出口函数</strong>：
+<ul>
+<li>形式：<code>void exit_func(void)</code></li>
+<li>职责：释放资源/复位硬件/清理状态</li>
+</ul></li>
+<li><strong>许可证声明</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);  <span class="comment">// 合法选项：GPL/MIT/BSD等</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>非GPL模块会导致内核标记为"tainted"</li>
+<li>无法调用GPL-only符号</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="模块构建指南">模块构建指南</h3>
+<h4 id="集成到内核源码树推荐">集成到内核源码树（推荐）</h4>
+<ol type="1">
+<li><strong>选择路径</strong>：
+<ul>
+<li>字符设备 → <code>drivers/char/</code></li>
+<li>块设备 → <code>drivers/block/</code></li>
+<li>USB设备 → <code>drivers/usb/</code></li>
+</ul></li>
+<li><strong>修改Makefile</strong>： <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># drivers/char/Makefile 添加</span></span><br><span class="line">obj-<span class="variable">$(CONFIG_FISHING_POLE)</span> += fishing/</span><br><span class="line"></span><br><span class="line"><span class="comment"># drivers/char/fishing/Makefile 内容</span></span><br><span class="line">obj-<span class="variable">$(CONFIG_FISHING_POLE)</span> += fishing.o</span><br><span class="line">fishing-objs := main.o line.o  <span class="comment"># 多文件模块</span></span><br><span class="line">EXTRA_CFLAGS += -DTITANIUM_POLE  <span class="comment"># 自定义编译标志</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="外部独立构建">外部独立构建</h4>
+<ol type="1">
+<li><p><strong>Makefile示例</strong>： <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">obj-m := fishing.o</span><br><span class="line">fishing-objs := fishing-main.o fishing-line.o</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    make -C /path/to/kernel/source M=<span class="variable">$(PWD)</span> modules</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>构建命令</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在模块目录执行</span></span><br><span class="line">make -C /lib/modules/$(<span class="built_in">uname</span> -r)/build M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure> ### 模块管理</p></li>
+</ol>
+<h4 id="模块安装路径规范">模块安装路径规范</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准安装路径模板</span></span><br><span class="line">/lib/modules/$(<span class="built_in">uname</span> -r)/kernel/&lt;源码树路径&gt;/&lt;模块名&gt;.ko</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例：2.6.34内核的钓鱼竿模块</span></span><br><span class="line">/lib/modules/2.6.34/kernel/drivers/char/fishing.ko</span><br></pre></td></tr></table></figure>
+<p><strong>安装命令</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make modules_install  <span class="comment"># 需root权限</span></span><br></pre></td></tr></table></figure></p>
+<hr />
+<h3 id="模块依赖管理">模块依赖管理</h3>
+<h4 id="依赖关系生成">1. 依赖关系生成</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成完整依赖关系</span></span><br><span class="line">sudo depmod</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增量更新（仅处理新模块）</span></span><br><span class="line">sudo depmod -A</span><br></pre></td></tr></table></figure>
+<h4 id="依赖存储位置">2. 依赖存储位置</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖关系文件路径</span></span><br><span class="line">/lib/modules/$(<span class="built_in">uname</span> -r)/modules.dep</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件内容示例</span></span><br><span class="line">kernel/drivers/char/fishing.ko: kernel/drivers/net/bait.ko</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>智能加载原理</strong>：<br />
+当加载 <code>chum.ko</code> 时，系统自动解析其依赖并先加载
+<code>bait.ko</code></p>
+</blockquote>
+<hr />
+<h3 id="模块加载与卸载">模块加载与卸载</h3>
+<h4 id="基础工具不推荐">基础工具（不推荐）</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 27%" />
+<col style="width: 29%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>缺陷</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加载</td>
+<td><code>insmod module.ko</code></td>
+<td>无依赖解析</td>
+<td><code>insmod fishing.ko</code></td>
+</tr>
+<tr>
+<td>卸载</td>
+<td><code>rmmod module_name</code></td>
+<td>不检查依赖</td>
+<td><code>rmmod fishing</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="高级工具推荐">高级工具（推荐）</h4>
+<p><strong>1. 智能加载</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载模块（自动处理依赖）</span></span><br><span class="line">sudo modprobe fishing pole_length=300 material=titanium</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看加载的模块</span></span><br><span class="line">lsmod | grep fishing</span><br></pre></td></tr></table></figure></p>
+<p><strong>2. 安全卸载</strong>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载模块（自动移除未用依赖）</span></span><br><span class="line">sudo modprobe -r fishing</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制卸载（危险！）</span></span><br><span class="line">sudo modprobe -rf fishing  <span class="comment"># 可能破坏依赖树</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="内核配置与模块开发高级指南">内核配置与模块开发高级指南</h3>
+<h4 id="配置选项管理-kconfig">配置选项管理 (Kconfig)</h4>
+<p>linux使用kbuild系统，可以通过修改Kconfig文件便捷地管理配置选项
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># drivers/char/Kconfig 示例</span><br><span class="line">config FISHING_POLE</span><br><span class="line">    tristate &quot;Fish Master 3000 support&quot;  # 三态选项，表示模块在编译配置中可以内置编译到内核（Y），作为模块编译（M）或者不编译（N）</span><br><span class="line">    default n                            # 默认禁用</span><br><span class="line">    depends on FISH_TANK &amp;&amp; !NO_FISHING  # 依赖条件</span><br><span class="line">    select BAIT                          # 强制关联选项</span><br><span class="line">    help                                 # 帮助文档</span><br><span class="line">        Enable support for the Fish Master 3000 computer interface.</span><br><span class="line">        Choose Y to build into kernel, M for module (fishing.ko), or N to disable.</span><br></pre></td></tr></table></figure></p>
+<p><strong>核心指令解析</strong>： | <strong>指令</strong> |
+<strong>功能</strong> | <strong>示例</strong> |
+|----------------|----------------------------------|-----------------------------------|
+| <code>tristate</code> | 三态选项 (Y/M/N) | 驱动标准配置 | |
+<code>bool</code> | 布尔选项 (Y/N) | 特性开关 | | <code>default</code> |
+默认值 | <code>default y</code> 默认启用 | | <code>depends on</code> |
+依赖关系 | <code>depends on NET</code> 需网络支持 | |
+<code>select</code> | 强制启用其他选项 | <code>select CRC32</code>
+自动启用CRC校验 | | <code>if</code> | 条件显示 |
+<code>if EMBEDDED</code> 嵌入式场景可见 | | <code>help</code> | 帮助文档
+| 用户配置时的说明文本 |</p>
+<hr />
+<h3 id="模块参数系统">模块参数系统</h3>
+<h4 id="基础参数声明">1. 基础参数声明</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> pole_length = <span class="number">200</span>;  <span class="comment">// 默认值</span></span><br><span class="line">module_param(pole_length, <span class="type">int</span>, <span class="number">0644</span>);  <span class="comment">// 整型参数</span></span><br><span class="line">MODULE_PARM_DESC(pole_length, <span class="string">&quot;Pole length in cm&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="高级参数类型">2. 高级参数类型</h4>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 32%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>charp</code></td>
+<td>字符串指针</td>
+<td><code>module_param(name, charp, 0);</code></td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>布尔值</td>
+<td><code>module_param(enable, bool, 0);</code></td>
+</tr>
+<tr>
+<td><code>module_param_string</code></td>
+<td>直接复制到数组</td>
+<td><code>char target[32]; module_param_string(dest, target, sizeof(target), 0);</code></td>
+</tr>
+<tr>
+<td><code>module_param_array</code></td>
+<td>数组参数</td>
+<td><code>int ids[5]; int count; module_param_array(ids, int, &amp;count, 0);</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="参数传递方式">3. 参数传递方式</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载时指定参数</span></span><br><span class="line">sudo modprobe fishing pole_length=300 material=carbon</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看参数信息</span></span><br><span class="line">modinfo fishing</span><br><span class="line">parm:           pole_length:Pole length <span class="keyword">in</span> cm (int)</span><br><span class="line">parm:           material:Construction material (charp)</span><br></pre></td></tr></table></figure>
+<h4 id="sysfs集成">4. sysfs集成</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数自动暴露到sysfs</span></span><br><span class="line">/sys/module/fishing/parameters/pole_length  <span class="comment"># 权限0644=rwr--r--</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="符号导出机制">符号导出机制</h3>
+<h4 id="基础导出">1. 基础导出</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明可被模块调用的函数</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_pole_strength</span><span class="params">(<span class="keyword">struct</span> pole *p)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> p-&gt;load_capacity;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(get_pole_strength);  <span class="comment">// 全局导出</span></span><br></pre></td></tr></table></figure>
+<h4 id="gpl受限导出">2. GPL受限导出</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPORT_SYMBOL_GPL(calculate_bait_ratio);  <span class="comment">// 仅GPL模块可用</span></span><br></pre></td></tr></table></figure>
+<h4 id="导出规则">3. 导出规则</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>导出类型</strong></th>
+<th><strong>调用权限</strong></th>
+<th><strong>典型场景</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXPORT_SYMBOL</code></td>
+<td>所有模块</td>
+<td>通用内核API</td>
+</tr>
+<tr>
+<td><code>EXPORT_SYMBOL_GPL</code></td>
+<td>仅GPL许可证模块</td>
+<td>核心子系统接口</td>
+</tr>
+<tr>
+<td>未导出符号</td>
+<td>仅内核内部使用</td>
+<td>静态函数/私有实现</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="配置系统元选项">配置系统元选项</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">config EXPERIMENTAL</span><br><span class="line">    bool &quot;Enable experimental features&quot;  # 高风险功能开关</span><br><span class="line">    default n</span><br><span class="line"></span><br><span class="line">config DEBUG_KERNEL</span><br><span class="line">    bool &quot;Kernel debugging&quot;  # 调试选项总开关</span><br><span class="line">    default y if DEBUG</span><br></pre></td></tr></table></figure>
+<p><strong>关键元选项</strong>： -
+<code>CONFIG_EMBEDDED</code>：嵌入式系统优化选项 -
+<code>CONFIG_BROKEN_ON_SMP</code>：标记非SMP安全驱动 -
+<code>CONFIG_EXPERIMENTAL</code>：实验性功能入口</p>
+<hr />
+<h3 id="开发工作流示例">开发工作流示例</h3>
+<h4 id="添加新驱动">1. 添加新驱动</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建Kconfig</span></span><br><span class="line"><span class="comment"># drivers/char/fishing/Kconfig</span></span><br><span class="line">config FISHING_PRO</span><br><span class="line">    tristate <span class="string">&quot;Professional Fishing Module&quot;</span></span><br><span class="line">    select FISHING_ADVANCED</span><br><span class="line">    <span class="built_in">help</span></span><br><span class="line">      Support <span class="keyword">for</span> professional-grade fishing equipment</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改上级Kconfig</span></span><br><span class="line"><span class="comment"># drivers/char/Kconfig</span></span><br><span class="line"><span class="built_in">source</span> <span class="string">&quot;drivers/char/fishing/Kconfig&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="实现参数化模块">2. 实现参数化模块</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/moduleparam.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">char</span> material[<span class="number">20</span>] = <span class="string">&quot;fiberglass&quot;</span>;</span><br><span class="line">module_param_string(material, material, <span class="keyword">sizeof</span>(material), <span class="number">0644</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> lengths[] = &#123;<span class="number">180</span>, <span class="number">240</span>&#125;;</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> nr_lengths = <span class="number">2</span>;</span><br><span class="line">module_param_array(lengths, <span class="type">int</span>, &amp;nr_lengths, <span class="number">0444</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">bool</span> enable_ai;</span><br><span class="line">module_param(enable_ai, <span class="type">bool</span>, <span class="number">0644</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="编译验证">3. 编译验证</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置内核</span></span><br><span class="line">make menuconfig</span><br><span class="line"><span class="comment"># -&gt; Device Drivers -&gt; Character devices -&gt; Professional Fishing Module (M)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>) modules</span><br><span class="line">sudo make modules_install</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="生产环境最佳实践">生产环境最佳实践</h3>
+<ol type="1">
+<li><p><strong>参数安全</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> max_load = <span class="number">100</span>;</span><br><span class="line">module_param(max_load, <span class="type">int</span>, <span class="number">0644</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">init_func</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (max_load &gt; MAX_SAFE_LIMIT) &#123;</span><br><span class="line">        pr_warn(<span class="string">&quot;Dangerous load limit %d, capping at %d\n&quot;</span>, </span><br><span class="line">                max_load, MAX_SAFE_LIMIT);</span><br><span class="line">        max_load = MAX_SAFE_LIMIT;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>版本兼容</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/version.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> LINUX_VERSION_CODE &gt;= KERNEL_VERSION(5,15,0)</span></span><br><span class="line"><span class="comment">// 新版内核API</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="comment">// 旧版兼容实现</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>错误处理</strong>： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> err = register_device();</span><br><span class="line"><span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="comment">// 彻底回滚初始化</span></span><br><span class="line">    unregister_previous();</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<blockquote>
+<p><strong>性能提示</strong>：高频访问的模块参数应复制到局部变量，避免频繁查sysfs</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/12/oper_sys18btree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/12/oper_sys18btree/" class="post-title-link" itemprop="url">操作系统基础 | 4.4 内核数据结构-二叉树</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-12 22:25:51" itemprop="dateCreated datePublished" datetime="2025-08-12T22:25:51+08:00">2025-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-13 00:13:25" itemprop="dateModified" datetime="2025-08-13T00:13:25+08:00">2025-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="二叉树">二叉树</h3>
+<h4 id="二叉搜索树bst核心特性">1. 二叉搜索树（BST）核心特性</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">根节点左子树的所有节点值 &lt; 根节点值</span><br><span class="line">根节点右子树的所有节点值 &gt; 根节点值</span><br><span class="line">所有子树都是二叉搜索树</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>操作复杂度</strong>：
+<ul>
+<li>查找：O(log n)<br />
+</li>
+<li>有序遍历：O(n)</li>
+</ul></li>
+<li><strong>缺陷</strong>：不平衡树可能导致操作退化到O(n)</li>
+</ul>
+<h4 id="自平衡二叉搜索树">2. 自平衡二叉搜索树</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">叶子节点深度差 ≤ 1   →   树高度 = O(log n)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>平衡机制</strong>：在插入/删除时自动调整结构</li>
+<li><strong>常见类型</strong>：
+<ul>
+<li>AVL树（严格平衡）</li>
+<li><strong>红黑树</strong>（半平衡，Linux首选）</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="红黑树red-black-trees">红黑树（Red-Black Trees）</h3>
+<h4 id="六大约束条件">六大约束条件</h4>
+<ol type="1">
+<li>节点非红即黑</li>
+<li>叶子节点（NIL）为黑</li>
+<li>叶子节点不存储数据</li>
+<li>非叶子节点必有双子</li>
+<li><strong>红节点的子节点必为黑</strong>（核心约束）</li>
+<li>根到任意叶子的黑节点数相同</li>
+</ol>
+<h4 id="优势">优势</h4>
+<ul>
+<li>插入/删除只需O(1)次旋转（AVL需O(log n)）</li>
+<li>查找效率稳定在O(log n)</li>
+<li>内存开销小（仅1bit存储颜色）</li>
+</ul>
+<hr />
+<h3 id="linux实现rbtree">Linux实现（rbtree）</h3>
+<h4 id="初始化">初始化</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/rbtree.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">rb_root</span> <span class="title">root</span> =</span> RB_ROOT;  <span class="comment">// 声明并初始化根节点</span></span><br></pre></td></tr></table></figure>
+<h4 id="节点定义">节点定义</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">my_node</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> <span class="title">rb</span>;</span>  <span class="comment">// 嵌入红黑树节点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="查找实现页缓存示例">查找实现（页缓存示例）</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> page *<span class="title function_">rb_search_page_cache</span><span class="params">(<span class="keyword">struct</span> inode *inode, <span class="type">unsigned</span> <span class="type">long</span> offset)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> *<span class="title">n</span> =</span> inode-&gt;i_rb_page_cache.rb_node;</span><br><span class="line">    <span class="keyword">while</span> (n) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span> =</span> rb_entry(n, <span class="keyword">struct</span> page, rb_page_cache);</span><br><span class="line">        <span class="keyword">if</span> (offset &lt; page-&gt;offset)</span><br><span class="line">            n = n-&gt;rb_left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (offset &gt; page-&gt;offset)</span><br><span class="line">            n = n-&gt;rb_right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> page;  <span class="comment">// 命中</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">// 未命中</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="插入实现">插入实现</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> page *<span class="title function_">rb_insert_page_cache</span><span class="params">(<span class="keyword">struct</span> inode *inode, <span class="type">unsigned</span> <span class="type">long</span> offset, </span></span><br><span class="line"><span class="params">                                  <span class="keyword">struct</span> rb_node *node)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> **<span class="title">p</span> =</span> &amp;inode-&gt;i_rb_page_cache.rb_node;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_node</span> *<span class="title">parent</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 查找插入位置</span></span><br><span class="line">    <span class="keyword">while</span> (*p) &#123;</span><br><span class="line">        parent = *p;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span> =</span> rb_entry(parent, <span class="keyword">struct</span> page, rb_page_cache);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (offset &lt; page-&gt;offset)</span><br><span class="line">            p = &amp;(*p)-&gt;rb_left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (offset &gt; page-&gt;offset)</span><br><span class="line">            p = &amp;(*p)-&gt;rb_right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> page;  <span class="comment">// 已存在</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 执行插入</span></span><br><span class="line">    rb_link_node(node, parent, p);      <span class="comment">// 链接新节点</span></span><br><span class="line">    rb_insert_color(node, &amp;inode-&gt;i_rb_page_cache);  <span class="comment">// 重平衡</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">// 插入成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="xarray对比说明">XArray对比说明</h3>
+<h4 id="适用场景差异">适用场景差异</h4>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 34%" />
+<col style="width: 26%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th><strong>数据结构</strong></th>
+<th><strong>最佳场景</strong></th>
+<th><strong>内核应用实例</strong></th>
+<th><strong>XArray替代性</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>红黑树</td>
+<td>范围查询/有序遍历</td>
+<td>进程调度CFS</td>
+<td>❌ 不可替代</td>
+</tr>
+<tr>
+<td>XArray</td>
+<td>稀疏ID映射/快速点查</td>
+<td>页缓存/文件描述符</td>
+<td>✅ 专精领域</td>
+</tr>
+</tbody>
+</table>
+<h4 id="性能对比">性能对比</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">操作        红黑树        XArray</span><br><span class="line">---------------------------------</span><br><span class="line">插入        O(log n)      O(k)  // k=键长</span><br><span class="line">范围查询     O(log n + m)  O(m)  // m=结果数</span><br><span class="line">内存开销     40字节/节点   8字节/条目</span><br></pre></td></tr></table></figure>
+<h4 id="xarray替代红黑树的条件">XArray替代红黑树的条件</h4>
+<ol type="1">
+<li><strong>键为整数类型</strong>（非复杂比较键）</li>
+<li><strong>无需有序遍历</strong></li>
+<li><strong>超高并发需求</strong>（XArray内置RCU） <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// XArray实现类似功能</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_store</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index, <span class="type">void</span> *entry)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">xa_load</span><span class="params">(<span class="keyword">struct</span> xarray *xa, <span class="type">unsigned</span> <span class="type">long</span> index)</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr />
+<h3 id="关键结论">关键结论</h3>
+<ol type="1">
+<li><strong>红黑树适用场景</strong>：
+<ul>
+<li>VFS目录树（<code>dentry</code>缓存）</li>
+<li>进程调度器（CFS运行队列）</li>
+<li>EPoll事件管理</li>
+</ul></li>
+<li><strong>XArray优先场景</strong>：
+<ul>
+<li>文件页缓存（<code>address_space</code>）</li>
+<li>内存反向映射</li>
+<li>UID到指针映射</li>
+</ul></li>
+</ol>
+<blockquote>
+<p><strong>迁移建议</strong>：新代码中整数键映射优先采用XArray；复杂键/范围查询仍需红黑树。<br />
+<strong>性能数据</strong>：XArray在ext4文件系统中减少40%缓存操作耗时（内核5.15测试）</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1218,458 +1859,6 @@ SSL/TLS协议还会对数据进行完整性校验，防止数据被篡改。</p>
 <li>UDP：适合对实时性要求高的场景，如语音通话、视频会议等。</li>
 </ul></li>
 </ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/25/kamabagu26/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/25/kamabagu26/" class="post-title-link" itemprop="url">代码随想录 | 八股-c++动态内存分配</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-26 09:32:48 / 修改时间：10:04:00" itemprop="dateCreated datePublished" datetime="2025-07-26T09:32:48+08:00">2025-07-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="new和malloc有什么区别">new和malloc有什么区别</h3>
-<p>new和malloc在C++中都用于动态内存分配，但它们之间有几个关键的区别：</p>
-<p>语法层面： new是C++的操作符，可以直接用来分配对象或数组。
-malloc是一个函数，通常需要包含头文件<cstdlib>，并且只分配原始内存。
-类型安全：
-new是类型安全的，它会根据分配的对象类型进行正确的内存分配和构造函数调用。
-malloc 不是类型安全的，它只分配原始内存，不调用构造函数。返回类型是
-void*，需要强制类型转换为具体的指针类型。 构造与析构： 使用 new
-分配的对象在对象生命周期结束时需要使用 delete 来释放，delete
-会自动调用对象的析构函数。 使用 malloc 分配的内存需要使用 free
-来释放，free
-不会自动调用析构函数，因此如果分配的是对象数组，需要手动调用析构函数。
-异常安全性： new在分配失败时会抛出std::bad_alloc异常。
-malloc在分配失败时返回NULL指针。 管理机制：
-C++中的new和delete通常由编译器实现，可能包含一些额外的内存管理机制。
-C语言的malloc和free由C标准库提供，与编译器无关。
-总结来说，new和malloc都是动态内存分配的手段，但new提供了类型安全和构造/析构的自动化，而malloc则提供了更底层的内存分配方式，需要手动管理构造和析构。在C++中，推荐使用new来分配对象，以保持类型安全和自动化的资源管理。</p>
-<h3 id="delete-和-free-有什么区别">delete 和 free 有什么区别？</h3>
-<p>delete和free都是用来释放动态分配的内存，但它们有不同的使用方式：</p>
-<p>语法：</p>
-<p>delete是C++中的关键字，用于释放由new分配的对象。
-free是C语言中的函数，通常包含在&lt;stdlib.h&gt;头文件中，用于释放由malloc分配的内存。
-对象销毁：</p>
-<p>当使用 delete 释放对象内存时，C++
-编译器会自动调用对象的析构函数，释放与对象相关的资源，并执行对象的清理工作。
-free 仅释放内存，不调用析构函数。因此，如果使用 malloc 分配了 C++
-对象的内存，需要手动调用析构函数后再调用 free。 数组处理：</p>
-<p>如果是数组，C++提供了delete[]来释放整个数组的内存，而C语言中仍然使用free，没有区分单个对象和数组。
-返回值:</p>
-<p>free 没有返回值，即使内存释放失败，也不会反馈任何信息。</p>
-<p>delete 之后，指针会自动置为 nullptr</p>
-<p>类型检查:</p>
-<p>delete 进行类型检查，确保删除的对象类型与 new 分配时的类型一致。</p>
-<p>free 不进行类型检查，因为它只处理 void* 类型的指针。</p>
-<p>总结来说，delete和free都是用来释放动态内存的，但它们分别用于C++和C语言中的内存管理。delete适用于C++对象，会自动调用析构函数；而free适用于C语言分配的内存，不涉及对象的析构。</p>
-<h3 id="堆区和栈区的区别">堆区和栈区的区别</h3>
-<p>堆 （Heap） 和栈 （Stack） 是程序运行时两种不同的内存分配区域</p>
-<p>内存分配：</p>
-<p>栈 是由编译器自动管理的，用于存储局部变量和函数调用的上下文信息。
-栈上的对象在定义它们的块或函数调用结束后自动销毁。
-栈的内存分配和释放速度很快，因为栈的内存管理是连续的，不需要搜索空闲内存。
-堆 由程序员手动管理的，用于存储动态分配的对象。
-堆上的对象需要程序员手动释放，否则可能导致内存泄漏。
-堆的内存分配和释放速度通常比栈慢，因为可能需要搜索合适的内存块，并且涉及内存碎片整理。
-大小限制：</p>
-<p>栈的大小通常有限制，远小于堆的大小，且在不同系统和编译器中可能不同。
-堆的大小通常很大，受限于系统可用内存。 使用场景：</p>
-<p>栈主要用于存储函数参数、局部变量等。
-堆用于存储生存期不受限于单个函数调用的对象，如使用 new 或 malloc
-分配的对象。</p>
-<h3 id="补充-如何定义只能在堆上或栈上生成对象的类">补充：
-如何定义只能在堆上或栈上生成对象的类</h3>
-<p>在 C++
-中，可以通过控制构造函数和析构函数的访问权限来限制对象只能在堆上或栈上创建。以下是两种实现方式的详细说明和代码示例：</p>
-<h4 id="只能在堆上创建对象禁止栈上创建">1.
-只能在堆上创建对象（禁止栈上创建）</h4>
-<p><strong>核心原理</strong>：私有析构函数 + 智能指针管理生命周期<br />
-<strong>关键点</strong>： - 私有析构函数阻止栈对象自动销毁 -
-静态工厂函数返回智能指针 - 智能指针自定义删除器调用
-<code>destroy()</code> - <code>destroy()</code> 调用
-<code>delete this</code>（需谨慎使用） - 禁用拷贝构造/赋值</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HeapOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 工厂函数：返回带有自定义删除器的 unique_ptr</span></span><br><span class="line">    <span class="function"><span class="type">static</span> std::unique_ptr&lt;HeapOnly, <span class="title">void</span><span class="params">(*)</span><span class="params">(HeapOnly*)</span>&gt; <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="built_in">HeapOnly</span>(), </span><br><span class="line">            [](HeapOnly* p) &#123; p-&gt;<span class="built_in">destroy</span>(); &#125; <span class="comment">// 自定义删除器</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 销毁函数（必须公开）</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>; <span class="comment">// 调用私有析构函数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 禁用拷贝操作</span></span><br><span class="line">    <span class="built_in">HeapOnly</span>(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    HeapOnly&amp; <span class="keyword">operator</span>=(<span class="type">const</span> HeapOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;       <span class="comment">// 私有构造</span></span><br><span class="line">    ~<span class="built_in">HeapOnly</span>() = <span class="keyword">default</span>;      <span class="comment">// 私有析构</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">auto</span> obj = HeapOnly::<span class="built_in">create</span>();  <span class="comment">// 只能在堆上创建</span></span><br></pre></td></tr></table></figure>
-<h4 id="只能在栈上创建对象禁止堆上创建">2.
-只能在栈上创建对象（禁止堆上创建）</h4>
-<p><strong>核心原理</strong>：禁用 <code>new</code> 操作符</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StackOnly</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">StackOnly</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 禁用 new 操作符</span></span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line">    <span class="type">void</span>* <span class="keyword">operator</span> <span class="keyword">new</span>[](<span class="type">size_t</span>) = <span class="keyword">delete</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>, <span class="type">void</span>* p)</span> </span>= <span class="keyword">delete</span>; <span class="comment">// 禁用 malloc + placement new</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line">StackOnly stackObj;           <span class="comment">// 合法：栈上创建</span></span><br><span class="line"><span class="comment">// auto heapObj = new StackOnly(); // 编译错误：new 被禁用</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>⚠️ 注意：<code>delete this</code> 是特殊技术，必须确保： - 对象通过
-<code>new</code> 创建 - 调用 <code>delete this</code> 后不再访问任何成员
-- 通常只用于精确控制生命周期的场景</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/22/oper_sys14lab_syscall/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/22/oper_sys14lab_syscall/" class="post-title-link" itemprop="url">操作系统基础 | 3.4 系统调用实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-23 04:34:49" itemprop="dateCreated datePublished" datetime="2025-07-23T04:34:49+08:00">2025-07-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-27 09:20:55" itemprop="dateModified" datetime="2025-09-27T09:20:55+08:00">2025-09-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="必做练习"><strong>必做练习</strong></h3>
-<h4 id="练习1"><strong>练习1</strong></h4>
-<p>准备好实验报告</p>
-<h4 id="练习2"><strong>练习2</strong></h4>
-<p>我们将通过 libc
-包装器发起系统调用（标准用户程序调用内核的方式）。系统调用完整列表可通过
-<code>man 2 syscalls</code> 查看手册页。<br />
-1. 启动树莓派，在终端中<strong>脱离 Linux
-源码目录</strong>新建用户程序目录<br />
-2. 创建文件 <code>lib_call.c</code>，编写 C 程序：<br />
-- 使用库函数 <code>getuid</code> 读取并打印用户 ID<br />
-- 尝试用 <code>setuid</code> 将 ID 设为 0（root）并报告是否成功<br />
-- 再次读取并打印用户 ID<br />
-3. 通过 <code>man 2 getuid</code> 和 <code>man 2 setuid</code>
-查阅：<br />
-- 函数调用语法和返回值类型<br />
-- 编译所需的头文件<br />
-4. 错误检查：若 <code>setuid</code> 失败，输出错误原因（使用
-<code>strerror(errno)</code>）。<br />
-- 相关手册页：<code>man 3 printf</code>, <code>man 3 strerror</code>,
-<code>man 3 errno</code><br />
-5. 在实验机上编译运行：</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc lib_call.c -o lib_call &amp;&amp; ./lib_call</span><br></pre></td></tr></table></figure></p>
-<h4 id="练习3"><strong>练习3</strong></h4>
-<p>从树莓派用户程序目录执行：<br />
-1. 通过 sftp 从 <code>shell.cec.学校简称.edu</code> 获取
-<code>lib_call.c</code><br />
-2. 在树莓派上编译并运行程序（分别用普通用户和 <code>sudo</code>
-权限运行）</p>
-<h4 id="练习4"><strong>练习4</strong></h4>
-<p>修改程序使用原生系统调用接口（<code>man 2 syscall</code>）：<br />
-1. 复制 <code>lib_call.c</code> 为 <code>native_call.c</code><br />
-2. 将 <code>getuid/setuid</code> 替换为 <code>syscall</code><br />
-3. 通过 Linux 源码确定 ARM 系统调用号：<br />
-- 查看 <code>arch/arm/include/uapi/asm/unistd.h</code><br />
-- 查看生成的
-<code>arch/arm/include/generated/uapi/asm/unistd-common.h</code><br />
-4. <strong>使用常量</strong>（如
-<code>__NR_getuid</code>）而非硬编码数字<br />
-5. 可能需包含头文件 <code>asm/unistd.h</code><br />
-6. 在树莓派上编译运行</p>
-<h4 id="练习5"><strong>练习5</strong></h4>
-<p>为内核添加两个新系统调用（各打印一条内核日志）：<br />
-<strong>任务清单</strong><br />
-1. 在内核中声明函数原型<br />
-2. 实现函数逻辑<br />
-3. 分配系统调用号<br />
-4. 更新 ARM 系统调用表<br />
-5. 更新系统调用总数</p>
-<p><strong>操作步骤</strong><br />
-1. 登录用于交叉编译的Linux主机 → 进入 Linux 源码目录<br />
-2. <strong>修改前备份文件</strong>（如
-<code>cp syscalls.h syscalls.h.092125</code>）</p>
-<p><strong>声明函数原型</strong>（在
-<code>include/linux/syscalls.h</code> 底部添加）：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 092125</span></span><br><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_noargs</span><span class="params">(<span class="type">void</span>)</span>; </span><br><span class="line">asmlinkage <span class="type">long</span> <span class="title function_">sys_onearg</span><span class="params">(<span class="type">int</span> arg)</span>;</span><br></pre></td></tr></table></figure>
-<h4 id="练习6"><strong>练习6</strong></h4>
-<p><strong>实现系统调用函数</strong>：<br />
-1. 在 <code>arch/arm/kernel/</code> 创建文件：<br />
-- <code>sys_noargs.c</code>（无参数函数）<br />
-- <code>sys_onearg.c</code>（带参数函数）<br />
-2. <code>sys_noargs.c</code> 内容参考</p>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kernel.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/syscalls.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这个宏定义了一个不携带参数的系统调用，它定义于syscalls.h</span></span><br><span class="line">SYSCALL_DEFINE0( noargs )&#123;</span><br><span class="line"><span class="comment">// print out a simple message indicating the function was called, and return SUCCESS</span></span><br><span class="line">printk(<span class="string">&quot;Someone invoked the sys_noargs system call&quot;</span>);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ol start="3" type="1">
-<li><code>sys_onearg.c</code> 模板：<br />
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个宏定义了携带一个参数的系统调用，它定义于syscalls.h</span></span><br><span class="line">SYSCALL_DEFINE1(onearg, <span class="type">int</span>, arg) &#123;</span><br><span class="line">    printk(<span class="string">&quot;Received argument: %d\n&quot;</span>, arg); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 返回适当值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h4 id="练习7"><strong>练习7</strong></h4>
-<p><strong>添加文件到构建系统</strong>：<br />
-修改 <code>arch/arm/kernel/Makefile</code>：<br />
-1. 备份原文件(例如<code>Makefile.092125</code>) 2. 在 <code>obj-y</code>
-列表末尾添加（<strong>不在 <code>\</code> 后</strong>）：<br />
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sys_noargs.o sys_onearg.o</span><br></pre></td></tr></table></figure></p>
-<h4 id="练习8"><strong>练习8</strong></h4>
-<p><strong>更新系统调用表</strong>：<br />
-修改 <code>arch/arm/tools/syscall.tbl</code>：<br />
-1. 备份原文件（ 例如 <code>syscall.tbl.092125</code> ） 2.
-在末尾添加（分配新调用号）：<br />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(调用号)  ...  （系统调用名称）    （实际调用的函数名）</span><br></pre></td></tr></table></figure></p>
-<hr />
-<h4 id="练习9"><strong>练习9</strong></h4>
-<p><strong>编译并验证新内核</strong>：<br />
-1. 在 Linux 源码根目录执行：<br />
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make clean</span><br></pre></td></tr></table></figure> 2. 修改本地版本标识：<br />
-- 编辑 <code>.config</code> 文件<br />
-- 更新 <code>CONFIG_LOCALVERSION</code> 值（如
-<code>-syscallstudio</code>）<br />
-3. 按实验1/2的步骤编译安装内核<br />
-4. 树莓派上运行：<br />
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -a</span><br></pre></td></tr></table></figure></p>
-<hr />
-<h4 id="练习10"><strong>练习10</strong></h4>
-<p><strong>调用新系统调用</strong>：<br />
-1. 通过 sftp 获取
-<code>arch/arm/include/generated/uapi/asm/unistd-common.h</code><br />
-2. 复制到 GCC 头文件目录：<br />
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> unistd-common.h /usr/include/arm-linux-gnueabihf/asm</span><br></pre></td></tr></table></figure> 3. 创建 <code>new_call.c</code>（基于
-<code>native_call.c</code>）：<br />
-- 将 <code>getuid</code> 调用号替换为 <code>__NR_...</code><br />
-- 将 <code>setuid</code> 调用号替换为 <code>__NR_...</code><br />
-- 为单参数调用声明变量（勿直接传常量）<br />
-4. 编译运行后检查内核日志：<br />
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dmesg</span><br></pre></td></tr></table></figure></p>
-<hr />
-<h3 id="可选拓展练习"><strong>可选拓展练习</strong></h3>
-<p>完成任意拓展练习后简述收获（附问题答案）。</p>
-<p><strong>练习1</strong><br />
-用汇编接口实现系统调用（参考课堂 ARM 调用流程），使用 GCC
-内联汇编（<code>asm</code> 扩展）。<br />
-&gt; 提示：详细流程见 <code>man 2 syscall</code>，内核入口代码见
-<code>arch/arm/kernel/entry-common.S</code>。</p>
-<p><strong>练习2</strong><br />
-实现读取周期计数器（CCNT）的系统调用：<br />
-1. 下载<a target="_blank" rel="noopener" href="https://example.com/perf_regs.h">性能监控头文件</a> 至
-<code>arch/arm/include/asm</code><br />
-2.
-声明函数原型：<code>asmlinkage long sys_read_ccnt(unsigned long long *val)</code><br />
-3. 创建 <code>sys_read_ccnt.c</code>（参考<a
-target="_blank" rel="noopener" href="https://example.com/sys_read_ccnt.c">模板</a>）<br />
-4. 更新 <code>Makefile</code> 和 <code>syscall.tbl</code><br />
-5. 编写程序连续调用两次，计算调用耗时（周期数）</p>
-<p><strong>练习3</strong><br />
-修复 <code>read_ccnt</code> 的安全缺陷：<br />
-1. 使用 <code>copy_to_user()</code> 替代直接写入用户指针<br />
-2. 失败时返回 <code>-EFAULT</code></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/22/kamacode33/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/22/kamacode33/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划6</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-23 03:55:11" itemprop="dateCreated datePublished" datetime="2025-07-23T03:55:11+08:00">2025-07-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-06 04:43:52" itemprop="dateModified" datetime="2025-08-06T04:43:52+08:00">2025-08-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="零钱兑换">322. 零钱兑换</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;limits&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span> <span class="comment">// 包含 std::min 和 std::max</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">coinChange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; coins, <span class="type">int</span> amount)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(amount+<span class="number">1</span>, std::numeric_limits&lt;<span class="type">int</span>&gt;::max())</span></span>;<span class="comment">// 每个amount需要的最少coin数</span></span><br><span class="line">        <span class="comment">// 第一遍遍历需要把coins中有的coin数置1，所以dp[0] = 0方便+1</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 针对每个amount, 遍历减去coin看哪一种最少</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;=amount; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt; coins.<span class="built_in">size</span>();j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i - coins[j]) &gt;= <span class="number">0</span> &amp;&amp; dp[i - coins[j]] &lt; std::numeric_limits&lt;<span class="type">int</span>&gt;::<span class="built_in">max</span>())&#123;</span><br><span class="line">                    dp[i] = <span class="built_in">min</span>(dp[i], dp[i - coins[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[amount] == std::numeric_limits&lt;<span class="type">int</span>&gt;::<span class="built_in">max</span>() ? <span class="number">-1</span> : dp[amount];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="完全平方数">279.完全平方数</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numSquares</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完全平方数就是物品（可以无限件使用），凑个正整数n就是背包，问凑满这个背包最少有多少物品？</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, INT_MAX)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n; i++) &#123; <span class="comment">// 遍历背包</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j * j &lt;= i; j++) &#123; <span class="comment">// 遍历物品</span></span><br><span class="line">                dp[i] = <span class="built_in">min</span>(dp[i - j * j] + <span class="number">1</span>, dp[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="单词拆分">139.单词拆分</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;string&gt; <span class="title">wordSet</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(s.size()+<span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=s.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                string subS = s.<span class="built_in">substr</span>(j, i-j);</span><br><span class="line">                <span class="keyword">if</span>(wordSet.<span class="built_in">find</span>(subS) != wordSet.<span class="built_in">end</span>() &amp;&amp; dp[j])&#123;</span><br><span class="line">                    dp[i] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[s.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
