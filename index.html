@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,181 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/11/20/kamacode43graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/11/20/kamacode43graph/" class="post-title-link" itemprop="url">代码随想录 | 刷题-图论1</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-11-21 04:56:23 / 修改时间：04:56:32" itemprop="dateCreated datePublished" datetime="2025-11-21T04:56:23+08:00">2025-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="卡码网-98.-所有可达路径">卡码网 98. 所有可达路径</h3>
+<p>给定一个有 n 个节点的有向无环图，节点编号从 1 到
+n。请编写一个程序，找出并返回所有从节点 1 到节点 n
+的路径。每条路径应以节点编号的列表形式表示</p>
+<p>输入描述 &gt; 第一行包含两个整数 N，M，表示图中拥有 N 个节点，M 条边
+&gt; 后续 M 行，每行包含两个整数 s 和 t，表示图中的 s 节点与 t
+节点中有一条路径</p>
+<p>输出描述 &gt;
+输出所有的可达路径，路径中所有节点之间空格隔开，每条路径独占一行，存在多条路径，路径输出的顺序可任意。如果不存在任何一条路径，则输出
+-1。 &gt; 注意输出的序列中，最后一个节点后面没有空格！ 例如正确的答案是
+<code>1 3 5</code>,而不是 <code>1 3 5</code>， 5后面没有空格！</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">const</span> vector&lt;list&lt;<span class="type">int</span>&gt;&gt; &amp;vnode, <span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="comment">// if(path.empty())path.push_back(1);</span></span><br><span class="line">    <span class="type">int</span> cur_i = path.<span class="built_in">back</span>();</span><br><span class="line">    <span class="keyword">if</span>(cur_i == n)&#123;</span><br><span class="line">        result.<span class="built_in">push_back</span>(path);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        list&lt;<span class="type">int</span>&gt; n_i = vnode[cur_i];</span><br><span class="line">        <span class="keyword">if</span>(!n_i.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i : n_i)&#123;</span><br><span class="line">                path.<span class="built_in">push_back</span>(i);</span><br><span class="line">                <span class="built_in">dfs</span>(vnode, n);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n, m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    vector&lt;list&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">vnode</span>(n+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; i++)&#123;</span><br><span class="line">        <span class="type">int</span> node, next_i;</span><br><span class="line">        cin &gt;&gt; node &gt;&gt; next_i;</span><br><span class="line">        vnode[node].<span class="built_in">push_back</span>(next_i);</span><br><span class="line">    &#125;</span><br><span class="line">    path.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">dfs</span>(vnode, n);</span><br><span class="line">    <span class="keyword">if</span>(result.<span class="built_in">empty</span>())&#123;</span><br><span class="line">        cout &lt;&lt; <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;path : result)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; path.<span class="built_in">size</span>()<span class="number">-1</span>; i++)&#123;</span><br><span class="line">            cout &lt;&lt; path[i] &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; path.<span class="built_in">back</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/11/20/kamacode42monos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/11/20/kamacode42monos/" class="post-title-link" itemprop="url">代码随想录 | 刷题-单调栈2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-11-21 04:55:57 / 修改时间：04:56:09" itemprop="dateCreated datePublished" datetime="2025-11-21T04:55:57+08:00">2025-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="接雨水">42. 接雨水</h3>
+<p>求雨水高度，需要弹出当前池底值，再求两边最小：min(凹槽左边高度,
+凹槽右边高度) - 凹槽底部高度 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> water = <span class="number">0</span>;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        st.<span class="built_in">push</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; height.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">while</span>(!st.<span class="built_in">empty</span>() &amp;&amp; height[i] &gt; height[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                <span class="type">int</span> mid = st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">                <span class="keyword">if</span>(!st.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                    <span class="type">int</span> h = <span class="built_in">min</span>(height[i], height[st.<span class="built_in">top</span>()]) - height[mid];</span><br><span class="line">                    <span class="type">int</span> w = i - st.<span class="built_in">top</span>()<span class="number">-1</span>;</span><br><span class="line">                    water += h * w;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> water;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="柱状图中最大的矩形">84. 柱状图中最大的矩形</h3>
+<p>这题我初步想法是对于每个柱，求以它为高度的最大矩形。但是具体怎么用类似前后缀表的方法优化查询，我有点没思路。
+看了题解反应过来还是要用单调栈求区间的宽和高，同时因为我们要弹出一个元素来获取左边元素的下标，为了头尾元素能顺利出栈，需要在前后都加入0
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">largestRectangleArea</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; heights)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        <span class="type">int</span> max_h = <span class="number">0</span>;</span><br><span class="line">        heights.<span class="built_in">insert</span>(heights.<span class="built_in">begin</span>(), <span class="number">0</span>);</span><br><span class="line">        heights.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">        st.<span class="built_in">push</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; heights.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(heights[i] &gt;= heights[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                st.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(!st.<span class="built_in">empty</span>() &amp;&amp; heights[i] &lt; heights[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                    <span class="type">int</span> mid_i = st.<span class="built_in">top</span>();</span><br><span class="line">                    st.<span class="built_in">pop</span>();</span><br><span class="line">                    <span class="type">int</span> left_i = st.<span class="built_in">top</span>();</span><br><span class="line">                    <span class="type">int</span> w = i - left_i - <span class="number">1</span>;</span><br><span class="line">                    <span class="type">int</span> h = heights[mid_i];</span><br><span class="line">                    max_h = <span class="built_in">max</span>(max_h, w * h);</span><br><span class="line">                &#125;</span><br><span class="line">                st.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max_h;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -912,329 +1087,6 @@ Keepalive会发送探测包来检查连接是否仍然有效。</p>
 <p>补充说明：</p>
 <p>其实这里tcp的keepalive，不只是支持http，还可以支持ftp和smtp的，他是一个能力，类似于gc。</p>
 <p>http的这个keepalive感觉更是一种策略吧，比如你有一个http用了keepalive，然后过了一会，你不传输数据了，这个时候没有通知对方close，这个时候tcp的keepalive就会起到用处去关闭这次链接。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/09/26/oper_sys28lab_process/" class="post-title-link" itemprop="url">操作系统基础 | 5.8 进程实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-09-27 09:27:32" itemprop="dateCreated datePublished" datetime="2025-09-27T09:27:32+08:00">2025-09-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-01 00:27:46" itemprop="dateModified" datetime="2025-10-01T00:27:46+08:00">2025-10-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="进程家族树-process-family-tree"><strong>进程家族树 (Process
-Family Tree)</strong></h3>
-<ol type="1">
-<li><p><strong>实验报告</strong>：准备好实验报告</p></li>
-<li><p><strong>simple_fork.c</strong>：编写一个名为
-<code>simple_fork.c</code> 的简短程序，使用 <code>fork()</code>
-函数从父进程生成一个子进程。父进程应在 <code>fork</code>
-之前打印一条语句，并在 <code>fork</code> 之后打印出子进程的
-PID。子进程应在被生成后打印一条语句，使用 <code>getpid()</code> 和
-<code>getppid()</code> 函数打印出其自身的 PID 及其父进程的
-PID。在您的树莓派上编译并运行您的程序，并将程序的输出作为此问题的答案。
-提示：gcc编译<code>gcc [source] -o [destination]</code></p></li>
-<li><p><strong>tree_fork.c</strong>：编写第二个名为
-<code>tree_fork.c</code>
-的程序，该程序将一个整数作为命令行参数，并在最多 10
-代的固定限制内，生成一个具有指定代数的“二进制家族树”进程。这将创建
-<code>2^n - 1</code> 个进程，其中 <code>n</code> 是代数。对于
-n=1，程序将创建 1 个进程；对于 n=5，将创建 31 个进程；对于 n=10，将创建
-1023 个进程，依此类推。我们将代数限制为最多
-10，因为更大的数字会运行很长时间，甚至可能冻结您的树莓派！</p>
-<ul>
-<li>如果未提供命令行参数，程序应输出有用的用法消息并退出。</li>
-<li>否则，它应将命令行参数转换为整数并存储在 <code>generations</code>
-变量中。</li>
-<li>如果 <code>generations</code> 变量小于 1 或大于
-10，程序应输出有用的用法消息并退出。</li>
-<li>否则，它（以及它生成的任何子进程）应执行以下操作（原始程序为第一代）：
-<ul>
-<li>打印一行，说明它属于哪一代及其自身的 PID；</li>
-<li>增加当前代数计数器；</li>
-<li>如果已达到最后一代（根据 <code>generations</code> 变量），则直接返回
-0；否则，生成两个子进程；</li>
-<li>使用 <code>wait(0)</code> 等待任何成功生成的子进程完成；</li>
-<li>如果两个子进程都成功生成，则返回
-0；如果任一生成（或两者都）失败，则返回 -1。</li>
-</ul></li>
-<li><strong>提示</strong>：仔细检查每次调用
-<code>fork()</code>（或您用于生成每个子进程的任何调用）返回的
-<code>pid_t</code> 值非常重要，因为 (1)
-这些调用可能失败（由负返回值指示），(2) <code>0</code>
-表示子进程正在运行，(3) 正数表示父进程正在运行。</li>
-<li><strong>提示</strong>：基于此，使用递归，或使用带有几个
-<code>pid_t</code> 变量（每个子进程一个）的 <code>while</code>
-循环并明智地在子进程中运行的代码分支使用 <code>continue</code>
-语句，可以很直接地实现本练习的逻辑。</li>
-<li>作为此练习的答案，请展示您的程序在运行 4
-代时（如果正确实现，应总共生成 15 个进程）的输出。</li>
-</ul></li>
-<li><p><strong>修改 kobject
-示例模块</strong>：现在我们将回到使用这些思想进行内核模块设计。首先，从您的
-linux 源码目录中，找到并将文件
-<code>samples/kobject/kobject-example.c</code>
-复制到您保存内核模块代码的目录中。这是一个使用称为 <code>kobjects</code>
-的功能的内核模块，它提供了一个在内核和用户空间之间交换数据的接口。每个数据项称为一个属性（attribute），对于每个属性，您需要提供一个
-<code>show</code> 和 <code>store</code>
-函数，分别在用户空间读取和写入这些值时被调用。</p>
-<ul>
-<li>该特定模块提供三个属性：<code>foo</code>、<code>baz</code> 和
-<code>bar</code>。加载后，您可以在 sysfs 文件系统中的
-<code>/sys/kernel/kobject_example/</code> 目录下找到它们。</li>
-<li>修改此文件，以便（通过使用 <code>printk</code>）在更新
-<code>foo</code>、<code>baz</code> 或 <code>bar</code>
-中的任何一个时打印一条系统日志消息，并在消息中显示被更新变量的旧值和新值。</li>
-<li>现在我们可以像以前一样构建您修改后的模块。首先，更新您的
-<code>Makefile</code>，使其包含新模块的相应 <code>.o</code>
-文件目标，然后为您的模块生成 <code>.ko</code> 文件，如下所示：
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module add arm-rpi</span><br><span class="line">LINUX_SOURCE=您的Linux内核源代码路径</span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
-<li>然后，使用 <code>sftp</code> 将生成的 <code>.ko</code>
-文件复制到您的树莓派上，并使用 <code>sudo insmod</code>
-加载该模块。</li>
-<li>在具有 root 权限的终端中，您可以使用 <code>cat</code>
-命令读取这些属性的值，并使用 <code>echo</code>
-命令将值写入这些属性，例如： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo bash</span><br><span class="line"><span class="built_in">cd</span> /sys/kernel/kobject_example/</span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示 foo 属性的当前（原始）值</span></span><br><span class="line"><span class="built_in">echo</span> 42 &gt; foo    <span class="comment"># 将值 42 写入属性 foo</span></span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示属性 foo 的新值</span></span><br></pre></td></tr></table></figure> <em>注意：您必须有一个 root
-终端（<code>sudo bash</code> 可以给您）才能写入这些命令（即
-<code>sudo echo</code> 不起作用）。</em></li>
-<li>作为此练习的答案，请展示使用这些命令成功更改
-<code>foo</code>、<code>bar</code> 和 <code>baz</code>
-值的输出演示。</li>
-</ul></li>
-<li><p><strong>family_reader.c
-模块</strong>：现在我们将编写一个内核模块，通过 sysfs 接口读取一个
-PID，并在系统日志中打印该进程的祖先谱系。</p>
-<ul>
-<li>创建一个基于您修改后的 <code>kobject-example.c</code>
-文件的新内核模块文件
-<code>family_reader.c</code>（即，首先请复制它）。该模块应在
-<code>/sys/kernel/fam_reader/</code>
-下创建单个系统属性（像上一个练习一样是整数值）。当您向此属性写入一个整数时，您的模块应尝试打印出该
-PID
-的祖先谱系（即，它的父进程，然后是父进程的父进程，依此类推，一直追溯到
-<code>init</code> 任务）。涉及几个步骤：
-<ul>
-<li><strong>旁注</strong>：现代 Linux
-内核为了便于在不同虚拟主机之间迁移进程，区分了“真实”PID
-和“虚拟”PID。虚拟 PID 是进程从用户空间看到的 PID。</li>
-<li>您需要将整数输入转换为合适的内核 PID。使用函数
-<code>find_vpid()</code>（请参阅 <code>include/linux/pid.h</code> 和
-<code>kernel/pid.c</code>），它返回一个
-<code>struct pid *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
-<li>接下来，您可以通过将 <code>struct pid *</code> 和标志
-<code>PIDTYPE_PID</code> 传递给函数 <code>get_pid_task()</code>（请参阅
-<code>include/linux/pid.h</code> 和
-<code>kernel/pid.c</code>）来将其转换为
-<code>struct task_struct *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
-<li>一旦您有了
-<code>struct task_struct *</code>，就可以访问它存储的任何数据。特别是，<code>real_parent</code>
-字段存储了生成它的进程的 <code>struct task_struct *</code>
-指针，<code>comm</code> 字段是给出命令名称的字符串。
-<ul>
-<li><strong>注意</strong>：有一个单独的字段叫做
-<code>parent</code>，这不是我们本练习想要的。<code>parent</code>
-是共享进程组信号并允许父子进程之间等待的逻辑父进程。</li>
-</ul></li>
-<li>回溯家族树，打印出每个任务的 PID 和命令名称，一直回溯到 PID 为 1 的
-<code>init</code> 任务。</li>
-</ul></li>
-<li>像上一个模块一样编译您的新内核模块，然后使用 <code>sftp</code>
-将生成的 <code>.ko</code>
-文件复制到您的树莓派上。在您的树莓派上，安装该模块，然后使用
-<code>sudo bash</code> 为您的终端会话提供 root
-访问权限。在该模块的目录下（将在 <code>/sys/kernel/</code> 下），使用
-<code>cat</code> 和 <code>echo</code> 读取和写入该模块属性的值，然后使用
-<code>dmesg</code> 确认系统日志显示您的模块工作正常。</li>
-<li>使用 <code>ps</code> 命令查找在您当前终端窗口中运行的
-<code>sudo</code> 进程的 PID，使用 <code>echo</code>
-将您的模块属性设置为该 PID，然后使用 <code>dmesg</code>
-查看该进程的祖先谱系。作为此练习的答案，请展示显示 <code>sudo</code>
-进程祖先谱系的系统日志消息。</li>
-</ul></li>
-</ol>
-<hr />
-<h3 id="可选拓展练习-optional-enrichment-exercises"><strong>可选拓展练习
-(Optional Enrichment Exercises)</strong></h3>
-<ol start="6" type="1">
-<li><strong>探索 task_struct</strong>：<code>task_struct</code>
-包含许多有趣的进程数据和进程记账信息。尝试将其他字段打印到系统日志中，并作为此练习的答案，请简要描述您打印了哪些内容，并展示执行此操作后的一些系统日志消息。</li>
-<li><strong>探索调度程序功能</strong>：<code>kernel/sched</code> 和
-<code>include/linux/sched</code>
-中的文件包含许多用于处理任务的功能，包括修改特定任务或迭代系统中每个任务的能力。例如，<code>include/linux/sched/signal.h</code>
-定义了诸如 <code>for_each_process()</code>
-之类的宏。尝试使用其中一些功能，并作为此练习的答案，请简要描述您做了什么以及观察到了什么。</li>
-</ol>
-<hr />
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/kamacode37subseq/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/09/26/kamacode37subseq/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划10</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-09-27 09:25:21 / 修改时间：06:47:29" itemprop="dateCreated datePublished" datetime="2025-09-27T09:25:21+08:00">2025-09-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="最长递增子序列">300.最长递增子序列</h3>
-<p>这题我一开始想使用回溯找最长子序列，但是我发现需要记录的状态太多，回溯没办法解决；同时对于序列中的相同数字，如何记住遍历前后的状态也是个问题。
-题解中这题使用的是动态规划，对于每一个索引求它所在的最长递增子序列，再求所有子序列中最长的那个。</p>
-<ul>
-<li>外层循环：遍历序列中每一个索引<code>i</code></li>
-<li>内层循环：求从开头到<code>i</code>之前的数字<code>j</code>中最长的子序列，如果<code>nums[i] &gt; nums[j]</code>，则开头到<code>i</code>所在处最长子序列为<code>j</code>所在处+1</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size(), <span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> mx = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i] &gt; nums[j])dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// cout&lt;&lt;dp[i]&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">            &#125;</span><br><span class="line">            mx = <span class="built_in">max</span>(mx, dp[i]);</span><br><span class="line">            <span class="comment">// cout&lt;&lt;endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mx;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="最长连续递增序列">674. 最长连续递增序列</h3>
-<p>这题不要想得太复杂了就行 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLengthOfLCIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> lng = <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> max_l = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; nums[i<span class="number">-1</span>])&#123;</span><br><span class="line">                lng++;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                lng = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            max_l = <span class="built_in">max</span>(max_l, lng);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max_l;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="最长重复子数组">718. 最长重复子数组</h3>
-<p>这题我想可不可以分别求两个数组的最长相等前后缀表，再找重复子数组。看了动规解法我发现，一个两数组比较表能解决的事情，用前后缀表似乎有点浪费？</p>
-<p>动规解法中，<code>dp[i][j]</code>表示两个数组下标i-1，j-1个数进行比较，这样0行和0列默认初始化为0即可。如果表示下标i，j个数，则需要再初始化一下0行和0列
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLength</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(nums1.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(nums2.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; (nums1.<span class="built_in">size</span>()+<span class="number">1</span>); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt; (nums2.<span class="built_in">size</span>()+<span class="number">1</span>); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums1[i<span class="number">-1</span>] == nums2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] &gt; len)len = dp[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(auto line:dp)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int l:line)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;l&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

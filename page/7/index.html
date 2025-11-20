@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,281 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/12/kamacode25/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/12/kamacode25/" class="post-title-link" itemprop="url">代码随想录 | 刷题-贪心算法3</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-13 05:58:06" itemprop="dateCreated datePublished" datetime="2025-06-13T05:58:06+08:00">2025-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-14 01:02:57" itemprop="dateModified" datetime="2025-06-14T01:02:57+08:00">2025-06-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="加油站">134. 加油站</h3>
+<h4 id="初始思路">初始思路：</h4>
+<ol type="1">
+<li><strong>先找一段正收益连续区间（油量盈余最大的起点）</strong>
+<ul>
+<li>用 <code>curMax</code> 累加正收益段，记录最大盈余时的起点
+<code>maxSt</code>。</li>
+<li>如果遇到油不够的站点，就重置 <code>curMax</code> 并将
+<code>start</code> 改为下一个站点。</li>
+<li>如果到最后一站没找完，循环一圈回来继续查找。</li>
+</ul></li>
+<li><strong>再从 <code>maxSt</code> 模拟绕一圈</strong>
+<ul>
+<li>从 <code>maxSt</code> 出发，逐站加减油量，确认是否能绕完整圈。</li>
+<li>只要中途油量不足就返回 <code>-1</code>。</li>
+</ul></li>
+</ol>
+<h4 id="存在的问题">⚠️ 存在的问题：</h4>
+<p>其实这种逻辑完善完善也是可以做出来的，题解中有，就是比较繁琐</p>
+<h4 id="更优的做法贪心-一次遍历">✅ 更优的做法（贪心 + 一次遍历）：</h4>
+<p>只要 <strong>总油量 ≥
+总花费</strong>，一定有解。解的起点是：当前累加油量一旦为负，就从下一个站点重启。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">canCompleteCircuit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; gas, vector&lt;<span class="type">int</span>&gt;&amp; cost)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> tank = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> startInd = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> total = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; gas.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="type">int</span> store = gas[i] - cost[i];</span><br><span class="line">            total += store;</span><br><span class="line">            tank += store;</span><br><span class="line">            <span class="keyword">if</span>(tank &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                startInd = i + <span class="number">1</span>;</span><br><span class="line">                tank = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> total &lt; <span class="number">0</span> ? <span class="number">-1</span> : startInd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="分发糖果">135. 分发糖果</h3>
+<p>这在leetcode上是一道困难的题目，其难点就在于贪心的策略，如果在考虑局部的时候想两边兼顾，就会顾此失彼。
+题解采用了两次贪心的策略： *
+一次是从左到右遍历，只比较右边孩子评分比左边大的情况。 *
+一次是从右到左遍历，只比较左边孩子评分比右边大的情况。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">candy</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; ratings)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; candy;</span><br><span class="line">        candy.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>;i&lt;ratings.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i<span class="number">-1</span>])&#123;</span><br><span class="line">                candy.<span class="built_in">push_back</span>(candy[i<span class="number">-1</span>] + <span class="number">1</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                candy.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> total = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = (ratings.<span class="built_in">size</span>()<span class="number">-1</span>); i&gt;<span class="number">0</span>;i--)&#123;</span><br><span class="line">            <span class="keyword">if</span>(ratings[i<span class="number">-1</span>] &gt; ratings[i] &amp;&amp; candy[i<span class="number">-1</span>] &lt;= candy[i])&#123;</span><br><span class="line">                candy[i<span class="number">-1</span>] = candy[i] + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            total += candy[i];</span><br><span class="line">        &#125;</span><br><span class="line">        total += candy[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="柠檬水找零">860.柠檬水找零</h3>
+<p>这题不用map,用两个整数表示5和10的钞票数也是可以的 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">lemonadeChange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; bills)</span> </span>&#123;</span><br><span class="line">        map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; changes;</span><br><span class="line">        changes[<span class="number">5</span>] = <span class="number">0</span>;</span><br><span class="line">        changes[<span class="number">10</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;bills.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="type">int</span> exc = bills[i] - <span class="number">5</span>;</span><br><span class="line">            <span class="keyword">if</span>(exc == <span class="number">0</span>)&#123;</span><br><span class="line">                changes[<span class="number">5</span>]++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(exc == <span class="number">5</span>)&#123;</span><br><span class="line">                changes[<span class="number">5</span>]--;</span><br><span class="line">                changes[<span class="number">10</span>]++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(exc == <span class="number">15</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(changes[<span class="number">10</span>] &gt;= <span class="number">1</span>)&#123;</span><br><span class="line">                    changes[<span class="number">10</span>]--;</span><br><span class="line">                    changes[<span class="number">5</span>]--;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    changes[<span class="number">5</span>] -= <span class="number">3</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(changes[<span class="number">5</span>] &lt; <span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="根据身高重建队列">406.根据身高重建队列</h3>
+<p>看题解可知，当身高是按照从高到矮，第二个数字从小到大排列的时候，按顺序插入即可满足条件
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">bool</span> <span class="title">cmp</span><span class="params">(<span class="type">const</span> vector&lt;<span class="type">int</span>&gt; a, <span class="type">const</span> vector&lt;<span class="type">int</span>&gt; b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[<span class="number">0</span>] &gt; b[<span class="number">0</span>])&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a[<span class="number">0</span>] == b[<span class="number">0</span>] &amp;&amp; a[<span class="number">1</span>] &lt; b[<span class="number">1</span>])&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">reconstructQueue</span>(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; people) &#123;</span><br><span class="line">        <span class="built_in">sort</span>(people.<span class="built_in">begin</span>(), people.<span class="built_in">end</span>(), cmp);</span><br><span class="line">        list&lt;vector&lt;<span class="type">int</span>&gt;&gt; que;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;people.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="type">int</span> insPos = people[i][<span class="number">1</span>];</span><br><span class="line">            std::list&lt;vector&lt;<span class="type">int</span>&gt;&gt;::iterator p = que.<span class="built_in">begin</span>();</span><br><span class="line">            <span class="keyword">while</span>(insPos &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                p++;</span><br><span class="line">                insPos--;</span><br><span class="line">            &#125;</span><br><span class="line">            que.<span class="built_in">insert</span>(p, people[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;(que.<span class="built_in">begin</span>(), que.<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/09/kamacode24/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/09/kamacode24/" class="post-title-link" itemprop="url">代码随想录 | 刷题-贪心算法2</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-10 10:01:13" itemprop="dateCreated datePublished" datetime="2025-06-10T10:01:13+08:00">2025-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-12 08:25:24" itemprop="dateModified" datetime="2025-06-12T08:25:24+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="买卖股票的最佳时机ii">122.买卖股票的最佳时机II</h3>
+<p>和之前的贪心算法题目一样，注意到局部最佳和整体的关系
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> prof = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; prices.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="type">int</span> left = prices[i] - prices[i<span class="number">-1</span>];</span><br><span class="line">                <span class="keyword">if</span>(left &gt; <span class="number">0</span>)prof += left;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> prof;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="跳跃游戏">55. 跳跃游戏</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">canJump</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxi = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; nums.<span class="built_in">size</span>()<span class="number">-1</span> &amp;&amp; nums[i] == <span class="number">0</span> &amp;&amp; maxi &lt;= i)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="type">int</span> fari = i + nums[i];</span><br><span class="line">            maxi = <span class="built_in">max</span>(maxi, fari);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(maxi &gt;= nums.<span class="built_in">size</span>() - <span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="跳跃游戏ii">45.跳跃游戏II</h3>
+<h4 id="最开始的思路"><strong>最开始的思路：</strong></h4>
+<ul>
+<li>定义了一个 <code>minJumps</code> 数组，其中 <code>minJumps[i]</code>
+表示到达位置 <code>i</code> 所需的最少跳跃次数。</li>
+<li>初始用 <code>minJumps[i] = i</code>，默认每一步都跳一步。</li>
+<li>然后你从前向后遍历每个位置 <code>i</code>，对于它可以跳到的最远位置
+<code>reach = i + nums[i]</code>，尝试用 <code>minJumps[i] + 1</code>
+来更新 <code>minJumps[reach]</code>。</li>
+<li>最后返回的是 <code>minJumps[n - 1]</code>。</li>
+</ul>
+<h4 id="问题和可改进点">❌ <strong>问题和可改进点：</strong></h4>
+<ol type="1">
+<li><strong>只更新了 <code>reach</code>，没更新从 <code>i+1</code> 到
+<code>reach</code> 的所有中间位置</strong>：
+<ul>
+<li>你只更新了 <code>minJumps[reach]</code>，但跳到
+<code>[i+1, reach]</code> 的每一个点其实都可能是通过 <code>i</code>
+达到的，因此都可能能更新为 <code>minJumps[i] + 1</code>。</li>
+</ul></li>
+<li><strong>时间复杂度仍是 <code>O(n^2)</code> 的最坏情况</strong>：
+<ul>
+<li>因为如果要更新 <code>[i+1, reach]</code>
+中的所有点需要嵌套循环。</li>
+</ul></li>
+</ol>
+<h4 id="题解思路遍历过程">✅ <strong>题解思路遍历过程</strong>：</h4>
+<p>每次跳跃的起点在哪里不重要，关键是这次最远跳跃是否可以次数内完成 *
+对每个位置 <code>i</code>，更新
+<code>far = max(far, i + nums[i])</code>，表示当前范围内下一跳能跳到的最远位置。
+* 当遍历到边界 <code>i == beg</code>
+时，说明当前跳跃结束，需要再跳一次，并更新新的边界
+<code>beg = far</code>。 * 如果新的 <code>beg</code>
+已经到达或超过数组末尾，则可以提前 <code>break</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">jump</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> minJump = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> beg = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> far = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>() == <span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            far = <span class="built_in">max</span>(far, i + nums[i]);</span><br><span class="line">            <span class="keyword">if</span>(i == beg)&#123;</span><br><span class="line">                minJump++;</span><br><span class="line">                beg = far;</span><br><span class="line">                <span class="keyword">if</span>(beg &gt;= nums.<span class="built_in">size</span>()<span class="number">-1</span>)<span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> minJump;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="k次取反后最大化的数组和">1005.K次取反后最大化的数组和</h3>
+<h4 id="最开始的思路-1"><strong>最开始的思路</strong></h4>
+<p>用了一个递归函数 <code>lsum(nums, k)</code> 来处理问题，思路如下： 1.
+<strong>遍历数组找出最小值 <code>minN</code> 及其下标
+<code>minI</code></strong>； 2. <strong>将 <code>nums[minI]</code>
+取反</strong>（也就是对当前最小值执行一次取反操作）； 3.
+<strong>继续递归调用 <code>lsum(nums, k - 1)</code></strong>； 4.
+<strong>递归终止条件</strong>：<code>k == 0</code>，此时返回整个数组的和；
+5. <strong>优化点尝试</strong>：当数组中最小值已经 ≥ 0，尝试用
+<code>k % 2</code>
+代替多余的取反操作（只取反一次或不取反）以减少递归次数。</p>
+<h4 id="当前实现存在的问题">❌
+<strong>当前实现存在的问题：</strong></h4>
+<ol type="1">
+<li><strong>每次递归都重新遍历整个数组，效率低</strong>：
+<ul>
+<li>时间复杂度接近 <code>O(k * n)</code>，最坏情况下可能是
+<code>10^5 * 10^3</code>，会超时。</li>
+</ul></li>
+<li><strong>递归开销大</strong>：
+<ul>
+<li>每次递归都复制 <code>nums</code>
+数组（因为是传引用再递归），可能带来严重的性能瓶颈。</li>
+</ul></li>
+<li><strong>贪心策略不够高效</strong>：</li>
+</ol>
+<h4 id="推荐的优化思路">✅ <strong>推荐的优化思路：</strong></h4>
+<p>采用<strong>排序 + 贪心策略</strong>来完成任务，流程如下： 1.
+<strong>先将数组按绝对值从大到小排序</strong>； 2.
+<strong>从左到右遍历数组，把负数取反，直到 k
+用完或者没有负数了</strong>； 3. <strong>如果还有剩余的 k
+且是奇数，说明还有一次取反机会，把当前最小值（绝对值最小的数）再取反一次</strong>；
+4. 最后返回数组的总和。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">largestSumAfterKNegations</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>(), [](<span class="type">int</span> a, <span class="type">int</span> b)&#123;<span class="keyword">return</span> <span class="built_in">abs</span>(a) &gt; <span class="built_in">abs</span>(b);&#125;);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(k == <span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                nums[i] = <span class="number">0</span> - nums[i];</span><br><span class="line">                k--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(k % <span class="number">2</span> == <span class="number">1</span>)nums[nums.<span class="built_in">size</span>()<span class="number">-1</span>] = <span class="number">0</span> - nums[nums.<span class="built_in">size</span>()<span class="number">-1</span>];</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> n: nums)&#123;</span><br><span class="line">            sum += n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1025,379 +1300,6 @@ set）中，比如“所有子集”或“子集和”等问题，使用类似�
 </ul></li>
 </ul>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">deleteNode</span><span class="params">(TreeNode* root, <span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">        <span class="keyword">if</span>(root-&gt;val == key)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!root-&gt;left)<span class="keyword">return</span> root-&gt;right;</span><br><span class="line">            <span class="keyword">if</span>(!root-&gt;right)<span class="keyword">return</span> root-&gt;left;</span><br><span class="line">            TreeNode* minR = root-&gt;right;</span><br><span class="line">            <span class="keyword">while</span>(minR-&gt;left)minR = minR-&gt;left;</span><br><span class="line">            minR-&gt;left = root-&gt;left;</span><br><span class="line">            <span class="keyword">return</span> root-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root-&gt;val &gt; key)&#123;</span><br><span class="line">            root-&gt;left = <span class="built_in">deleteNode</span>(root-&gt;left, key);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            root-&gt;right = <span class="built_in">deleteNode</span>(root-&gt;right, key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/01/kamabagu3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/01/kamabagu3/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP请求2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-01 23:16:58" itemprop="dateCreated datePublished" datetime="2025-06-01T23:16:58+08:00">2025-06-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-04 08:05:52" itemprop="dateModified" datetime="2025-07-04T08:05:52+08:00">2025-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="http中常见的状态码有哪些">HTTP中常见的状态码有哪些？</h3>
-<p>HTTP 状态码用于表明特定HTTP请求是否完成</p>
-<h4 id="xx-信息响应100199">1xx 信息响应（100–199）</h4>
-<blockquote>
-<p>✅“我听到了，继续吧”</p>
-</blockquote>
-<p>表示请求已接收，继续处理</p>
-<ul>
-<li><strong>100
-Continue</strong>：初始部分已接收，客户端应继续发送。</li>
-<li><strong>101 Switching Protocols</strong>：服务器：同意更改协议。
-&gt; - <strong>WebSocket</strong>：最常见，HTTP 升级为
-WebSocket，实现持久化的全双工通信。 &gt; -
-<strong>HTTP/2</strong>：部分场景下可以通过 Upgrade 机制从 HTTP/1.1
-升级到 HTTP/2。 &gt; - <strong>TLS/SSL</strong>：早期可以通过 Upgrade
-升级到加密连接（现在一般用 HTTPS 直接建立）。</li>
-<li><strong>102 Processing</strong>：服务器：已收到，正在处理。</li>
-</ul>
-<h4 id="xx-成功响应200299">2xx 成功响应（200–299）</h4>
-<p>表示请求已成功接收</p>
-<blockquote>
-<p>🎉“你请求的事我办妥了”</p>
-</blockquote>
-<ul>
-<li><strong>200 OK</strong>：请求成功。</li>
-<li><strong>201
-Created</strong>：请求成功并创建了新的资源（例如注册）</li>
-<li><strong>202 Accepted</strong>：请求已接受，但未响应
--不会有一个异步的响应去表明当前请求的结果，预期另外的进程和服务去处理请求</li>
-<li><strong>204 No Content</strong>：请求成功，但无返回内容。</li>
-<li><strong>206 Partial
-Content</strong>：当从客户端发送Range范围标头以只请求资源的一部分时，使用此响应代码（例如断点续传）</li>
-</ul>
-<hr />
-<h4 id="xx-重定向300399">3xx 重定向（300–399）</h4>
-<p>表示需要进一步操作以完成请求。</p>
-<blockquote>
-<p>🔀“去别处找”</p>
-</blockquote>
-<ul>
-<li><strong>301 Moved
-Permanently</strong>：请求的资源已永久移动到新位置。</li>
-<li><strong>302 Found</strong>：请求的资源临时从不同的 URI
-响应请求。</li>
-<li><strong>303 See Other</strong>：请求应使用另一个 URI 获取资源。</li>
-<li><strong>304 Not Modified</strong>：资源未修改，可使用缓存。</li>
-<li><strong>307 Temporary Redirect</strong>：请求的资源临时从不同的 URI
-响应请求，方法不变。</li>
-<li><strong>308 Permanent
-Redirect</strong>：请求的资源已永久移动到新位置，方法不变。</li>
-</ul>
-<h4 id="xx-客户端错误400499">4xx 客户端错误（400–499）</h4>
-<p>表示请求包含语法错误或无法完成</p>
-<ul>
-<li><strong>400 Bad Request</strong>：请求无效，服务器无法理解。</li>
-<li><strong>401 Unauthorized</strong>：请求要求客户端身份认证。</li>
-<li><strong>403
-Forbidden</strong>：服务器知道客户端身份，但客户端没有访问权限</li>
-<li><strong>404 Not Found</strong>：请求的资源未找到。</li>
-<li><strong>405 Method Not Allowed</strong>：请求方法被禁止。</li>
-<li><strong>408 Request Timeout</strong>：请求超时。</li>
-<li><strong>429 Too Many
-Requests</strong>：客户端发送的请求过多，已被限制。</li>
-</ul>
-<h4 id="xx-服务器错误500599">5xx 服务器错误（500–599）</h4>
-<p>表示服务器未能完成合法的请求。</p>
-<ul>
-<li><strong>500 Internal Server
-Error</strong>：服务器内部错误，无法完成请求。</li>
-<li><strong>501 Not Implemented</strong>：服务器不支持请求的功能。</li>
-<li><strong>502 Bad
-Gateway</strong>：服务器作为网关或代理，从上游服务器收到错误响应。</li>
-<li><strong>503 Service
-Unavailable</strong>：服务器当前无法处理请求。</li>
-<li><strong>504 Gateway
-Timeout</strong>：服务器作为网关或代理，未及时从上游服务器收到响应。</li>
-</ul>
-<h3 id="什么是强缓存和协商缓存">什么是强缓存和协商缓存</h3>
-<h4 id="一强缓存完全不发请求">🌟一、强缓存（完全不发请求）</h4>
-<blockquote>
-<p>关键词：<strong>直接使用缓存，不访问服务器</strong></p>
-</blockquote>
-<h5 id="特点">✅ 特点：</h5>
-<ul>
-<li>浏览器<strong>直接使用本地缓存资源</strong>。</li>
-<li>不向服务器发请求。</li>
-<li>若命中强缓存，浏览器将会本地模拟一个状态码
-<code>200 (from memory cache)</code> 或
-<code>200 (from disk cache)</code>。</li>
-</ul>
-<h5 id="实现方式">📌 实现方式：</h5>
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>字段</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Cache-Control: max-age=秒数</strong></td>
-<td>（相对时间，更准确）当前资源在 N 秒内有效✅推荐</td>
-</tr>
-<tr>
-<td><strong>Expires: GMT时间</strong></td>
-<td>（绝对时间，受本地时间影响）指定资源过期时间❌已过时</td>
-</tr>
-</tbody>
-</table>
-<ol type="1">
-<li><p><strong>首次访问资源</strong>：<br />
-服务器返回资源时在响应头加上
-<code>Cache-Control: max-age=秒数</code>，告知浏览器这个资源可以缓存多久。</p></li>
-<li><p><strong>再次访问时</strong>：<br />
-浏览器会用“当前时间 - 缓存时间”与 <code>max-age</code> 做比较：</p>
-<ul>
-<li>没过期 → <strong>直接用缓存，不发请求</strong>。</li>
-<li>过期 → <strong>发起新请求，向服务器重新获取资源</strong>。</li>
-</ul></li>
-<li><p><strong>服务器响应更新</strong>：<br />
-每次服务器响应时都会更新
-<code>Cache-Control</code>，供下一轮缓存使用。</p></li>
-</ol>
-<h4
-id="二协商缓存发请求服务器决定是否使用缓存">🔄二、协商缓存（发请求，服务器决定是否使用缓存）</h4>
-<blockquote>
-<p>关键词：<strong>发请求，比较“资源是否改过”</strong></p>
-</blockquote>
-<h5 id="特点-1">✅ 特点：</h5>
-<ul>
-<li>请求时会向服务器询问资源是否有更新。</li>
-<li>如果没变，返回 <strong>304 Not
-Modified</strong>，继续用本地缓存。</li>
-<li>如果变了，返回 <strong>200 + 新资源</strong>。</li>
-</ul>
-<h5 id="两种主流方式">📌 两种主流方式：</h5>
-<table>
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
-<thead>
-<tr>
-<th>方式</th>
-<th>请求头字段</th>
-<th>响应头字段</th>
-<th>原理</th>
-<th>优缺点简析</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Last-Modified</strong></td>
-<td><code>If-Modified-Since</code></td>
-<td><code>Last-Modified</code></td>
-<td>比较“上次修改时间”</td>
-<td>⛔秒级精度、不改内容也可能变时间</td>
-</tr>
-<tr>
-<td><strong>ETag</strong></td>
-<td><code>If-None-Match</code></td>
-<td><code>ETag</code></td>
-<td>比较“文件指纹/哈希”</td>
-<td>✅更精准，内容变才更新</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h4 id="三常见误区与补充">🔁三、常见误区与补充</h4>
-<ul>
-<li><strong>强缓存命中 → 不发请求</strong></li>
-<li><strong>强缓存失效 → 发请求，进入协商缓存阶段</strong></li>
-<li>如果协商缓存也失效，才真正下载新资源。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/30/kamacode16/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/05/30/kamacode16/" class="post-title-link" itemprop="url">代码随想录 | 刷题-二叉树6</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-05-30 23:44:10" itemprop="dateCreated datePublished" datetime="2025-05-30T23:44:10+08:00">2025-05-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-05-31 06:07:35" itemprop="dateModified" datetime="2025-05-31T06:07:35+08:00">2025-05-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="搜索树的最小绝对差">530.搜索树的最小绝对差</h3>
-<p>遇到在二叉搜索树上求什么最值啊，差值之类的，就把它想成在一个有序数组上求最值，求差值，这样就简单多了
-尝试自己写遍历，虽然有很多莫名其妙的值，但是居然写对了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TreeNode* maxNode = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> absd  = <span class="number">-1</span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getMinimumDifference</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> right = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">if</span>(root-&gt;left)left = <span class="built_in">getMinimumDifference</span>(root-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(maxNode != <span class="literal">nullptr</span>)&#123;</span><br><span class="line">            <span class="type">int</span> maxd = root-&gt;val - maxNode-&gt;val;</span><br><span class="line">            <span class="keyword">if</span>(absd == <span class="number">-1</span>)&#123;</span><br><span class="line">                absd = maxd;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(maxd &lt; absd)&#123;</span><br><span class="line">                absd = maxd;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        maxNode = root;</span><br><span class="line">        <span class="keyword">if</span>(root-&gt;right)right = <span class="built_in">getMinimumDifference</span>(root-&gt;right);</span><br><span class="line">        <span class="keyword">return</span> absd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="二叉搜索树中的众数">501.二叉搜索树中的众数</h3>
-<p>如果我自己写，就遍历数组取最大值好了。看题解发现可以中序遍历，按这种方法找：
-弄一个指针指向前一个节点，这样每次cur（当前节点）才能和pre（前一个节点）作比较。
-而且初始化的时候pre =
-NULL，这样当pre为NULL时候，我们就知道这是比较的第一个元素。 如果
-频率count 等于
-maxCount（最大频率），当然要把这个元素加入到结果集中（以下代码为result数组），<br />
-频率count 大于
-maxCount的时候，不仅要更新maxCount，而且要清空结果集（以下代码为result数组），因为结果集之前的元素都失效了。</p>
-<p>注意计数和判定最大值要分开，并且确定好是判定当前节点
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TreeNode* pre = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> cntMax = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;res, TreeNode* root)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root)<span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">traverse</span>(res, root-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(!pre)&#123;</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pre-&gt;val == root-&gt;val)&#123;</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123; <span class="comment">//  if(pre-&gt;val != root-&gt;val)</span></span><br><span class="line">            cnt = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(cnt == cntMax)&#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(cnt &gt; cntMax)&#123;</span><br><span class="line">            res.<span class="built_in">clear</span>();</span><br><span class="line">            cntMax = cnt;</span><br><span class="line">            res.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">        &#125;</span><br><span class="line">        pre = root;</span><br><span class="line">        <span class="built_in">traverse</span>(res, root-&gt;right);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">findMode</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">        <span class="built_in">traverse</span>(res, root);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="二叉树的最近公共祖先">236. 二叉树的最近公共祖先</h3>
-<p>我的解法就是暴力解，找到p和q的路径并比较路径中不同的节点，前一个就是公共最小祖先了
-看了题解发现还可以回溯：</p>
-<blockquote>
-<p>遇到这个题目首先想的是要是能自底向上查找就好了，这样就可以找到公共祖先了。
-那么二叉树如何可以自底向上查找呢？
-回溯啊，二叉树回溯的过程就是从底到上。
-后序遍历（左右中）就是天然的回溯过程，可以根据左右子树的返回值，来处理中节点的逻辑。</p>
-</blockquote>
-<p>搞清楚什么时候返回root也很重要 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">lowestCommonAncestor</span><span class="params">(TreeNode* root, TreeNode* p, TreeNode* q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root || root == p || root == q)<span class="keyword">return</span> root;</span><br><span class="line">        TreeNode* left = <span class="built_in">lowestCommonAncestor</span>(root-&gt;left, p, q);</span><br><span class="line">        TreeNode* right = <span class="built_in">lowestCommonAncestor</span>(root-&gt;right, p, q);</span><br><span class="line">        <span class="keyword">if</span>(left != <span class="literal">nullptr</span> &amp;&amp; right != <span class="literal">nullptr</span>)<span class="keyword">return</span> root;</span><br><span class="line">        <span class="keyword">if</span>(left == <span class="literal">nullptr</span>)<span class="keyword">return</span> right;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

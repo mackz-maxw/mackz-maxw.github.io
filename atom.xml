@@ -6,7 +6,7 @@
   <link href="https://mackz-maxw.github.io/atom.xml" rel="self"/>
   
   <link href="https://mackz-maxw.github.io/"/>
-  <updated>2025-10-26T01:28:12.781Z</updated>
+  <updated>2025-11-20T20:56:32.029Z</updated>
   <id>https://mackz-maxw.github.io/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>代码随想录 | 刷题-图论1</title>
+    <link href="https://mackz-maxw.github.io/2025/11/20/kamacode43graph/"/>
+    <id>https://mackz-maxw.github.io/2025/11/20/kamacode43graph/</id>
+    <published>2025-11-20T20:56:23.312Z</published>
+    <updated>2025-11-20T20:56:32.029Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="卡码网-98.-所有可达路径">卡码网 98. 所有可达路径</h3><p>给定一个有 n 个节点的有向无环图，节点编号从 1 到n。请编写一个程序，找出并返回所有从节点 1 到节点 n的路径。每条路径应以节点编号的列表形式表示</p><p>输入描述 &gt; 第一行包含两个整数 N，M，表示图中拥有 N 个节点，M 条边&gt; 后续 M 行，每行包含两个整数 s 和 t，表示图中的 s 节点与 t节点中有一条路径</p><p>输出描述 &gt;输出所有的可达路径，路径中所有节点之间空格隔开，每条路径独占一行，存在多条路径，路径输出的顺序可任意。如果不存在任何一条路径，则输出-1。 &gt; 注意输出的序列中，最后一个节点后面没有空格！ 例如正确的答案是<code>1 3 5</code>,而不是 <code>1 3 5</code>， 5后面没有空格！</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; result;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">const</span> vector&lt;list&lt;<span class="type">int</span>&gt;&gt; &amp;vnode, <span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="comment">// if(path.empty())path.push_back(1);</span></span><br><span class="line">    <span class="type">int</span> cur_i = path.<span class="built_in">back</span>();</span><br><span class="line">    <span class="keyword">if</span>(cur_i == n)&#123;</span><br><span class="line">        result.<span class="built_in">push_back</span>(path);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        list&lt;<span class="type">int</span>&gt; n_i = vnode[cur_i];</span><br><span class="line">        <span class="keyword">if</span>(!n_i.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i : n_i)&#123;</span><br><span class="line">                path.<span class="built_in">push_back</span>(i);</span><br><span class="line">                <span class="built_in">dfs</span>(vnode, n);</span><br><span class="line">                path.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n, m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    vector&lt;list&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">vnode</span>(n+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; i++)&#123;</span><br><span class="line">        <span class="type">int</span> node, next_i;</span><br><span class="line">        cin &gt;&gt; node &gt;&gt; next_i;</span><br><span class="line">        vnode[node].<span class="built_in">push_back</span>(next_i);</span><br><span class="line">    &#125;</span><br><span class="line">    path.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">dfs</span>(vnode, n);</span><br><span class="line">    <span class="keyword">if</span>(result.<span class="built_in">empty</span>())&#123;</span><br><span class="line">        cout &lt;&lt; <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;path : result)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; path.<span class="built_in">size</span>()<span class="number">-1</span>; i++)&#123;</span><br><span class="line">            cout &lt;&lt; path[i] &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; path.<span class="built_in">back</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;卡码网-98.-所有可达路径&quot;&gt;卡码网 98. 所有可达路径&lt;/h3&gt;
+&lt;p&gt;给定一个有 n 个节点的有向无环图，节点编号从 1 到
+n。请编写一个程序，找出并返回所有从节点 1 到节点 n
+的路径。每条路径应以节点编号的列表形式表示&lt;/p&gt;
+&lt;p&gt;输入描</summary>
+      
+    
+    
+    
+    <category term="leetcode" scheme="https://mackz-maxw.github.io/categories/leetcode/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>代码随想录 | 刷题-单调栈2</title>
+    <link href="https://mackz-maxw.github.io/2025/11/20/kamacode42monos/"/>
+    <id>https://mackz-maxw.github.io/2025/11/20/kamacode42monos/</id>
+    <published>2025-11-20T20:55:57.047Z</published>
+    <updated>2025-11-20T20:56:09.120Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="接雨水">42. 接雨水</h3><p>求雨水高度，需要弹出当前池底值，再求两边最小：min(凹槽左边高度,凹槽右边高度) - 凹槽底部高度 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> water = <span class="number">0</span>;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        st.<span class="built_in">push</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; height.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">while</span>(!st.<span class="built_in">empty</span>() &amp;&amp; height[i] &gt; height[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                <span class="type">int</span> mid = st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">                <span class="keyword">if</span>(!st.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                    <span class="type">int</span> h = <span class="built_in">min</span>(height[i], height[st.<span class="built_in">top</span>()]) - height[mid];</span><br><span class="line">                    <span class="type">int</span> w = i - st.<span class="built_in">top</span>()<span class="number">-1</span>;</span><br><span class="line">                    water += h * w;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> water;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p><h3 id="柱状图中最大的矩形">84. 柱状图中最大的矩形</h3><p>这题我初步想法是对于每个柱，求以它为高度的最大矩形。但是具体怎么用类似前后缀表的方法优化查询，我有点没思路。看了题解反应过来还是要用单调栈求区间的宽和高，同时因为我们要弹出一个元素来获取左边元素的下标，为了头尾元素能顺利出栈，需要在前后都加入0<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">largestRectangleArea</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; heights)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        <span class="type">int</span> max_h = <span class="number">0</span>;</span><br><span class="line">        heights.<span class="built_in">insert</span>(heights.<span class="built_in">begin</span>(), <span class="number">0</span>);</span><br><span class="line">        heights.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">        st.<span class="built_in">push</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; heights.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(heights[i] &gt;= heights[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                st.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(!st.<span class="built_in">empty</span>() &amp;&amp; heights[i] &lt; heights[st.<span class="built_in">top</span>()])&#123;</span><br><span class="line">                    <span class="type">int</span> mid_i = st.<span class="built_in">top</span>();</span><br><span class="line">                    st.<span class="built_in">pop</span>();</span><br><span class="line">                    <span class="type">int</span> left_i = st.<span class="built_in">top</span>();</span><br><span class="line">                    <span class="type">int</span> w = i - left_i - <span class="number">1</span>;</span><br><span class="line">                    <span class="type">int</span> h = heights[mid_i];</span><br><span class="line">                    max_h = <span class="built_in">max</span>(max_h, w * h);</span><br><span class="line">                &#125;</span><br><span class="line">                st.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max_h;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;接雨水&quot;&gt;42. 接雨水&lt;/h3&gt;
+&lt;p&gt;求雨水高度，需要弹出当前池底值，再求两边最小：min(凹槽左边高度,
+凹槽右边高度) - 凹槽底部高度 &lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutte</summary>
+      
+    
+    
+    
+    <category term="leetcode" scheme="https://mackz-maxw.github.io/categories/leetcode/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>代码随想录 | 刷题-单调栈1</title>
@@ -451,61 +501,6 @@ Creation)&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;一个进程是一个正在执行中的程序（存储在某种介质上的目标代码）。然而，进程不仅仅只是执行的程序代码（在
 Unix
 中常称为文本段）。它们还包括一系列资源，例如打开的文件和待处理的信号、内核内部数据</summary>
-      
-    
-    
-    
-    <category term="os basic" scheme="https://mackz-maxw.github.io/categories/os-basic/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统基础 | 4.7 内核模块实验</title>
-    <link href="https://mackz-maxw.github.io/2025/08/19/oper_sys21lab_kMod/"/>
-    <id>https://mackz-maxw.github.io/2025/08/19/oper_sys21lab_kMod/</id>
-    <published>2025-08-19T17:15:49.479Z</published>
-    <updated>2025-08-20T16:31:13.295Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="可加载的内核模块">可加载的内核模块</h3><h4 id="练习-1">练习 1</h4><p>准备好实验报告</p><hr /><h4 id="练习-2-编译内核模块">练习 2: 编译内核模块</h4><ol type="1"><li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 Linux Lab 集群上</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="comment"># 保存 simple_module.c 和 Makefile (内容: obj-m := simple_module.o)</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="built_in">export</span> LINUX_SOURCE=/path/to/your/linux_source/linux <span class="comment"># 设置内核源码路径</span></span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li><li><strong>答案</strong>: 提交 <code>make</code> 命令的完整输出。</li></ol><hr /><h4 id="练习-3-加载模块与系统日志">练习 3: 加载模块与系统日志</h4><ol type="1"><li><strong>步骤</strong> (在树莓派上): <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/modules</span><br><span class="line"><span class="comment"># 使用 sftp 将 simple_module.ko 传输到此目录</span></span><br><span class="line">sudo dmesg --clear</span><br><span class="line">sudo insmod ~/modules/simple_module.ko</span><br><span class="line">dmesg <span class="comment"># 查看日志</span></span><br></pre></td></tr></table></figure></li><li><strong>答案</strong>: 提交 <code>dmesg</code>中显示的模块加载信息。</li></ol><hr /><h4 id="练习-4-验证模块列表与卸载">练习 4: 验证模块列表与卸载</h4><ol type="1"><li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsmod <span class="comment"># 确认 simple_module 在列表中</span></span><br><span class="line">sudo rmmod simple_module</span><br><span class="line">lsmod <span class="comment"># 确认已移除</span></span><br><span class="line">dmesg <span class="comment"># 查看卸载信息</span></span><br></pre></td></tr></table></figure></li><li><strong>答案</strong>: 提交 <code>lsmod</code>的输出（证明已卸载）和 <code>dmesg</code> 中显示的模块卸载信息。</li></ol><hr /><h4 id="练习-5-访问内核变量-jiffies">练习 5: 访问内核变量 jiffies</h4><ol type="1"><li><strong>步骤</strong>:<ul><li>复制 <code>simple_module.c</code> 为<code>jiffies_module.c</code>。</li><li>修改其 init 和 exit 函数，使用 <code>printk</code> 打印<code>jiffies</code> 变量（类型<code>extern unsigned long volatile jiffies;</code>）。</li><li>更新 Makefile: <code>obj-m += jiffies_module.o</code>。</li><li>重新编译并传输 <code>jiffies_module.ko</code> 到树莓派。</li><li>加载并卸载模块，观察 <code>dmesg</code>。</li></ul></li><li><strong>答案</strong>:<ul><li>提交 <code>dmesg</code> 中显示加载和卸载时 <code>jiffies</code>值的日志消息。</li><li>计算并说明两条消息之间发生的滴答数（tick count）。</li></ul></li></ol><hr /><h3 id="需提交的内容">需提交的内容</h3><p>请提交一个包含以下内容的压缩包或文档： 1. <strong>答案文件</strong>:包含上述所有练习的答案。 2. <strong>源代码文件</strong>: 你新创建的<code>jiffies_module.c</code> 文件。</p><hr /><h3 id="可选拓展练习">可选拓展练习</h3><h4 id="练习-6-模块初始化返回值实验">练习 6: 模块初始化返回值实验</h4><ul><li><strong>任务</strong>: 修改 init函数，使其分别返回正数和负数（错误码，参见<code>/include/uapi/asm-generic/errno-base.h</code>）。</li><li><strong>提示</strong>:描述加载模块时发生的情况及其在系统日志中的表现。</li></ul><h4 id="练习-7-探查导出的内核符号">练习 7: 探查导出的内核符号</h4><ul><li><strong>任务</strong>: 查看 <code>/proc/kallsyms</code> 文件（例如<code>cat /proc/kallsyms</code>），了解内核符号表。查找带有<code>__kstrtab_</code> 和 <code>__ksymtab_</code>前缀的符号（这些是可供模块使用的导出符号）。</li><li><strong>提示</strong>: 内核符号是 Linux内核代码中定义的函数、变量、数据结构等的名称标签。它们代表了在内核地址空间中的一个特定内存地址。可以将内核符号理解为内核的“公共接口”或“入口点”。主要有两种类型：</li><li>导出的符号：这些是内核明确声明为可以被外部模块使用的符号。例如，printk（内核的printf）、kmalloc（内核的内存分配函数）等。模块通过使用 EXPORT_SYMBOL()或 EXPORT_SYMBOL_GPL() 宏来导出它们的符号，以便其他模块可以使用。</li><li>非导出的符号：这些是内核内部的静态函数或变量，只在它们被定义的文件或内核的特定部分中使用。它们对于内核模块是不可见的，主要用于内核自身的组织</li><li>EXPORT_SYMBOL(printk) 在编译后创建了两个内部符号：__ksymtab_printk和 __kstrtab_printk。<ul><li>__ksymtab_printk 是一个结构体，包含了 printk 的地址和指向__kstrtab_printk 的指针。</li><li>__kstrtab_printk 是一个字符串，存储着 printk 的名字。</li></ul></li><li>内核使用这个结构来高效地通过名字查找函数的地址</li></ul><h4 id="练习-8-实现用户态读取-cpu-周期计数器-ccnt-的模块">练习 8:实现用户态读取 CPU 周期计数器 (CCNT) 的模块</h4><ul><li><strong>任务</strong> (如果之前在系统调用工作室未完成):<ul><li>将提供的驱动文件放入你的内核源码树的<code>arch/arm/include/asm</code> 目录。</li><li>下载 <code>enable_ccnt.c</code> 内核模块代码到你的模块目录。</li><li>编译、传输并加载此模块 (<code>insmod enable_ccnt.ko</code>)。</li><li>使用 <code>dmesg | tail</code> 验证加载成功。</li></ul></li><li><strong>任务</strong> (主要部分):<ul><li>在树莓派上创建一个用户态程序。</li><li>该程序应 <code>#include</code> 你获取的驱动头文件。</li><li>调用 <code>unsigned long long pmccntr_get(void)</code>函数两次。</li></ul></li><li><strong>答案</strong>:<ul><li>说明运行一次 <code>pmccntr_get()</code> 函数大约需要多少 CPU周期（计算两次调用的差值）。</li><li>如果你在系统调用工作室完成过类似的练习，请对比直接调用此函数与通过系统调用获取周期计数所需的周期数。</li></ul></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;可加载的内核模块&quot;&gt;可加载的内核模块&lt;/h3&gt;
-&lt;h4 id=&quot;练习-1&quot;&gt;练习 1&lt;/h4&gt;
-&lt;p&gt;准备好实验报告&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h4 id=&quot;练习-2-编译内核模块&quot;&gt;练习 2: 编译内核模块&lt;/h4&gt;
-&lt;ol type=&quot;1&quot;&gt;
-&lt;li</summary>
-      
-    
-    
-    
-    <category term="os basic" scheme="https://mackz-maxw.github.io/categories/os-basic/"/>
-    
-    <category term="lab" scheme="https://mackz-maxw.github.io/categories/os-basic/lab/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统基础 | 4.6 内核API重构案例：IDR API</title>
-    <link href="https://mackz-maxw.github.io/2025/08/19/oper_sys20rebuildIDRApi/"/>
-    <id>https://mackz-maxw.github.io/2025/08/19/oper_sys20rebuildIDRApi/</id>
-    <published>2025-08-19T17:07:16.581Z</published>
-    <updated>2025-08-19T17:11:57.670Z</updated>
-    
-    <content type="html"><![CDATA[<p>文章内容来自 LWN.net</p><h3 id="文章摘要-summary">文章摘要 (Summary)</h3><p>这篇发表于 2013 年 2 月的文章讨论了 Linux 内核中 <strong>IDR 子系统API 的一次重大简化改革</strong>，由开发者 Tejun Heo 主导。IDR机制用于高效分配和管理整数 ID（例如设备名、POSIX 定时器 ID 等），其旧API 因其复杂性和潜在的竞争条件而闻名。</p><p><strong>核心问题：旧 API 的缺陷</strong> 1.<strong>两步分配</strong>：需要先调用 <code>idr_pre_get()</code>预分配内存（可休眠），再调用 <code>idr_get_new()</code> 获取ID（可原子上下文）。 2.<strong>必须重试循环</strong>：<code>idr_get_new()</code>可能因预分配内存被其他 CPU 耗尽而失败（返回<code>-EAGAIN</code>），要求调用者编写冗长且易错的循环重试代码。 3.<strong>全局资源竞争</strong>：<code>idr_pre_get()</code>预分配的内存是全局的，多个 CPU 竞争时，后执行的<code>idr_get_new()</code>可能因资源不足而失败，迫使代码退出原子上下文进行重试，这条路径往往缺乏测试。</p><p><strong>解决方案：新 API 的改进</strong> Tejun Heo引入了三个新函数来简化流程： 1.<code>idr_preload(gfp_t gfp_mask)</code>: 为<strong>当前 CPU</strong>预分配内存，并<strong>禁用抢占</strong>以防止预分配的内存被偷。 2.<code>idr_alloc(...)</code>: <strong>单次调用</strong>即可完成 ID分配和关联。它接受 ID范围参数，并仅在真正需要时（未预分配或预分配不足）才使用<code>gfp_mask</code> 分配内存。它只会在内存分配彻底失败时报错，消除了对<code>-EAGAIN</code> 的重试循环需求。 3. <code>idr_preload_end()</code>:在 <code>idr_alloc</code> 后调用，<strong>重新启用抢占</strong>。</p><p><strong>关键优势：</strong> *<strong>更简单</strong>：消除了遍布内核的百余处重复、易错的样板代码。 *<strong>更可靠</strong>：通过每 CPU预分配和禁用抢占，基本消除了在原子上下文中因资源竞争而失败的需要。 *<strong>更灵活</strong>：<code>idr_alloc</code> 可以指定 ID范围，并且如果能在进程上下文调用，甚至可以完全省略<code>idr_preload</code>/<code>idr_preload_end</code>。</p><p><strong>社区反应：</strong> 尽管大部分开发者接受了这个改动（给出了Acked-by），但 Eric Biederman 表达了强烈反对，认为新 API 的<code>idr_preload</code>像是一种难以理解的“魔法”。然而，文章作者（JonathanCorbet）预测，<strong>新 API带来的巨大简化优势将使其最终被内核社区接受</strong>。</p><h3 id="新旧-api-对比总结">新旧 API 对比总结</h3><div class="line-block">特性 | 旧 API (2013 年前) | 新 API (Tejun Heo提议) |<br />：--- | :--- | :--- |<br /><strong>核心函数</strong> | <code>idr_pre_get()</code>,<code>idr_get_new()</code> | <code>idr_preload()</code>,<code>idr_alloc()</code>, <code>idr_preload_end()</code> |<br /><strong>调用模式</strong> |<strong>两步过程</strong>，必须配合<strong>重试循环</strong> |<strong>单次调用</strong>(<code>idr_alloc</code>)，<strong>无需循环</strong> |<br /><strong>预分配内存</strong> | <strong>全局共享</strong>，易被其他 CPU消耗 | <strong>每 CPU独享</strong>，配合<strong>禁用抢占</strong>，不会被偷 |<br /><strong>错误处理</strong> | 可能返回<code>-EAGAIN</code>，要求调用者重试 | 仅在所有内存分配都失败时才报错|<br /><strong>原子上下文</strong> | 支持，但重试时必须退出原子上下文 |更好支持，通过 <code>preload</code>/<code>preload_end</code> 保障|<br /><strong>代码复杂度</strong> | 高，需要大量重复的样板代码 |低，调用逻辑非常简洁 |</div><h3 id="结论">结论</h3><p>这篇文章记录了一个经典的内核优化案例：通过巧妙的设计（利用每 CPU数据和禁用抢占）将一个复杂、易错、充满竞争条件的旧接口，重构为一个简洁、可靠、高效的新接口。尽管存在一些争议，但<strong>简化并提升广泛使用的底层API的价值是极其巨大的</strong>，这很可能是新方案最终被采纳的原因。这正是Linux 内核持续演进的一个缩影。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;文章内容来自 LWN.net&lt;/p&gt;
-&lt;h3 id=&quot;文章摘要-summary&quot;&gt;文章摘要 (Summary)&lt;/h3&gt;
-&lt;p&gt;这篇发表于 2013 年 2 月的文章讨论了 Linux 内核中 &lt;strong&gt;IDR 子系统
-API 的一次重大简化改革&lt;/strong</summary>
       
     
     

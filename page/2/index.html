@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,329 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/oper_sys28lab_process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/26/oper_sys28lab_process/" class="post-title-link" itemprop="url">操作系统基础 | 5.8 进程实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-27 09:27:32" itemprop="dateCreated datePublished" datetime="2025-09-27T09:27:32+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-01 00:27:46" itemprop="dateModified" datetime="2025-10-01T00:27:46+08:00">2025-10-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="进程家族树-process-family-tree"><strong>进程家族树 (Process
+Family Tree)</strong></h3>
+<ol type="1">
+<li><p><strong>实验报告</strong>：准备好实验报告</p></li>
+<li><p><strong>simple_fork.c</strong>：编写一个名为
+<code>simple_fork.c</code> 的简短程序，使用 <code>fork()</code>
+函数从父进程生成一个子进程。父进程应在 <code>fork</code>
+之前打印一条语句，并在 <code>fork</code> 之后打印出子进程的
+PID。子进程应在被生成后打印一条语句，使用 <code>getpid()</code> 和
+<code>getppid()</code> 函数打印出其自身的 PID 及其父进程的
+PID。在您的树莓派上编译并运行您的程序，并将程序的输出作为此问题的答案。
+提示：gcc编译<code>gcc [source] -o [destination]</code></p></li>
+<li><p><strong>tree_fork.c</strong>：编写第二个名为
+<code>tree_fork.c</code>
+的程序，该程序将一个整数作为命令行参数，并在最多 10
+代的固定限制内，生成一个具有指定代数的“二进制家族树”进程。这将创建
+<code>2^n - 1</code> 个进程，其中 <code>n</code> 是代数。对于
+n=1，程序将创建 1 个进程；对于 n=5，将创建 31 个进程；对于 n=10，将创建
+1023 个进程，依此类推。我们将代数限制为最多
+10，因为更大的数字会运行很长时间，甚至可能冻结您的树莓派！</p>
+<ul>
+<li>如果未提供命令行参数，程序应输出有用的用法消息并退出。</li>
+<li>否则，它应将命令行参数转换为整数并存储在 <code>generations</code>
+变量中。</li>
+<li>如果 <code>generations</code> 变量小于 1 或大于
+10，程序应输出有用的用法消息并退出。</li>
+<li>否则，它（以及它生成的任何子进程）应执行以下操作（原始程序为第一代）：
+<ul>
+<li>打印一行，说明它属于哪一代及其自身的 PID；</li>
+<li>增加当前代数计数器；</li>
+<li>如果已达到最后一代（根据 <code>generations</code> 变量），则直接返回
+0；否则，生成两个子进程；</li>
+<li>使用 <code>wait(0)</code> 等待任何成功生成的子进程完成；</li>
+<li>如果两个子进程都成功生成，则返回
+0；如果任一生成（或两者都）失败，则返回 -1。</li>
+</ul></li>
+<li><strong>提示</strong>：仔细检查每次调用
+<code>fork()</code>（或您用于生成每个子进程的任何调用）返回的
+<code>pid_t</code> 值非常重要，因为 (1)
+这些调用可能失败（由负返回值指示），(2) <code>0</code>
+表示子进程正在运行，(3) 正数表示父进程正在运行。</li>
+<li><strong>提示</strong>：基于此，使用递归，或使用带有几个
+<code>pid_t</code> 变量（每个子进程一个）的 <code>while</code>
+循环并明智地在子进程中运行的代码分支使用 <code>continue</code>
+语句，可以很直接地实现本练习的逻辑。</li>
+<li>作为此练习的答案，请展示您的程序在运行 4
+代时（如果正确实现，应总共生成 15 个进程）的输出。</li>
+</ul></li>
+<li><p><strong>修改 kobject
+示例模块</strong>：现在我们将回到使用这些思想进行内核模块设计。首先，从您的
+linux 源码目录中，找到并将文件
+<code>samples/kobject/kobject-example.c</code>
+复制到您保存内核模块代码的目录中。这是一个使用称为 <code>kobjects</code>
+的功能的内核模块，它提供了一个在内核和用户空间之间交换数据的接口。每个数据项称为一个属性（attribute），对于每个属性，您需要提供一个
+<code>show</code> 和 <code>store</code>
+函数，分别在用户空间读取和写入这些值时被调用。</p>
+<ul>
+<li>该特定模块提供三个属性：<code>foo</code>、<code>baz</code> 和
+<code>bar</code>。加载后，您可以在 sysfs 文件系统中的
+<code>/sys/kernel/kobject_example/</code> 目录下找到它们。</li>
+<li>修改此文件，以便（通过使用 <code>printk</code>）在更新
+<code>foo</code>、<code>baz</code> 或 <code>bar</code>
+中的任何一个时打印一条系统日志消息，并在消息中显示被更新变量的旧值和新值。</li>
+<li>现在我们可以像以前一样构建您修改后的模块。首先，更新您的
+<code>Makefile</code>，使其包含新模块的相应 <code>.o</code>
+文件目标，然后为您的模块生成 <code>.ko</code> 文件，如下所示：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module add arm-rpi</span><br><span class="line">LINUX_SOURCE=您的Linux内核源代码路径</span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
+<li>然后，使用 <code>sftp</code> 将生成的 <code>.ko</code>
+文件复制到您的树莓派上，并使用 <code>sudo insmod</code>
+加载该模块。</li>
+<li>在具有 root 权限的终端中，您可以使用 <code>cat</code>
+命令读取这些属性的值，并使用 <code>echo</code>
+命令将值写入这些属性，例如： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo bash</span><br><span class="line"><span class="built_in">cd</span> /sys/kernel/kobject_example/</span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示 foo 属性的当前（原始）值</span></span><br><span class="line"><span class="built_in">echo</span> 42 &gt; foo    <span class="comment"># 将值 42 写入属性 foo</span></span><br><span class="line"><span class="built_in">cat</span> foo          <span class="comment"># 显示属性 foo 的新值</span></span><br></pre></td></tr></table></figure> <em>注意：您必须有一个 root
+终端（<code>sudo bash</code> 可以给您）才能写入这些命令（即
+<code>sudo echo</code> 不起作用）。</em></li>
+<li>作为此练习的答案，请展示使用这些命令成功更改
+<code>foo</code>、<code>bar</code> 和 <code>baz</code>
+值的输出演示。</li>
+</ul></li>
+<li><p><strong>family_reader.c
+模块</strong>：现在我们将编写一个内核模块，通过 sysfs 接口读取一个
+PID，并在系统日志中打印该进程的祖先谱系。</p>
+<ul>
+<li>创建一个基于您修改后的 <code>kobject-example.c</code>
+文件的新内核模块文件
+<code>family_reader.c</code>（即，首先请复制它）。该模块应在
+<code>/sys/kernel/fam_reader/</code>
+下创建单个系统属性（像上一个练习一样是整数值）。当您向此属性写入一个整数时，您的模块应尝试打印出该
+PID
+的祖先谱系（即，它的父进程，然后是父进程的父进程，依此类推，一直追溯到
+<code>init</code> 任务）。涉及几个步骤：
+<ul>
+<li><strong>旁注</strong>：现代 Linux
+内核为了便于在不同虚拟主机之间迁移进程，区分了“真实”PID
+和“虚拟”PID。虚拟 PID 是进程从用户空间看到的 PID。</li>
+<li>您需要将整数输入转换为合适的内核 PID。使用函数
+<code>find_vpid()</code>（请参阅 <code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>），它返回一个
+<code>struct pid *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>接下来，您可以通过将 <code>struct pid *</code> 和标志
+<code>PIDTYPE_PID</code> 传递给函数 <code>get_pid_task()</code>（请参阅
+<code>include/linux/pid.h</code> 和
+<code>kernel/pid.c</code>）来将其转换为
+<code>struct task_struct *</code>。此函数可能失败，因此在解引用指针之前务必检查其返回值。</li>
+<li>一旦您有了
+<code>struct task_struct *</code>，就可以访问它存储的任何数据。特别是，<code>real_parent</code>
+字段存储了生成它的进程的 <code>struct task_struct *</code>
+指针，<code>comm</code> 字段是给出命令名称的字符串。
+<ul>
+<li><strong>注意</strong>：有一个单独的字段叫做
+<code>parent</code>，这不是我们本练习想要的。<code>parent</code>
+是共享进程组信号并允许父子进程之间等待的逻辑父进程。</li>
+</ul></li>
+<li>回溯家族树，打印出每个任务的 PID 和命令名称，一直回溯到 PID 为 1 的
+<code>init</code> 任务。</li>
+</ul></li>
+<li>像上一个模块一样编译您的新内核模块，然后使用 <code>sftp</code>
+将生成的 <code>.ko</code>
+文件复制到您的树莓派上。在您的树莓派上，安装该模块，然后使用
+<code>sudo bash</code> 为您的终端会话提供 root
+访问权限。在该模块的目录下（将在 <code>/sys/kernel/</code> 下），使用
+<code>cat</code> 和 <code>echo</code> 读取和写入该模块属性的值，然后使用
+<code>dmesg</code> 确认系统日志显示您的模块工作正常。</li>
+<li>使用 <code>ps</code> 命令查找在您当前终端窗口中运行的
+<code>sudo</code> 进程的 PID，使用 <code>echo</code>
+将您的模块属性设置为该 PID，然后使用 <code>dmesg</code>
+查看该进程的祖先谱系。作为此练习的答案，请展示显示 <code>sudo</code>
+进程祖先谱系的系统日志消息。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="可选拓展练习-optional-enrichment-exercises"><strong>可选拓展练习
+(Optional Enrichment Exercises)</strong></h3>
+<ol start="6" type="1">
+<li><strong>探索 task_struct</strong>：<code>task_struct</code>
+包含许多有趣的进程数据和进程记账信息。尝试将其他字段打印到系统日志中，并作为此练习的答案，请简要描述您打印了哪些内容，并展示执行此操作后的一些系统日志消息。</li>
+<li><strong>探索调度程序功能</strong>：<code>kernel/sched</code> 和
+<code>include/linux/sched</code>
+中的文件包含许多用于处理任务的功能，包括修改特定任务或迭代系统中每个任务的能力。例如，<code>include/linux/sched/signal.h</code>
+定义了诸如 <code>for_each_process()</code>
+之类的宏。尝试使用其中一些功能，并作为此练习的答案，请简要描述您做了什么以及观察到了什么。</li>
+</ol>
+<hr />
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/09/26/kamacode37subseq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/26/kamacode37subseq/" class="post-title-link" itemprop="url">代码随想录 | 刷题-动态规划10</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-09-27 09:25:21 / 修改时间：06:47:29" itemprop="dateCreated datePublished" datetime="2025-09-27T09:25:21+08:00">2025-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="最长递增子序列">300.最长递增子序列</h3>
+<p>这题我一开始想使用回溯找最长子序列，但是我发现需要记录的状态太多，回溯没办法解决；同时对于序列中的相同数字，如何记住遍历前后的状态也是个问题。
+题解中这题使用的是动态规划，对于每一个索引求它所在的最长递增子序列，再求所有子序列中最长的那个。</p>
+<ul>
+<li>外层循环：遍历序列中每一个索引<code>i</code></li>
+<li>内层循环：求从开头到<code>i</code>之前的数字<code>j</code>中最长的子序列，如果<code>nums[i] &gt; nums[j]</code>，则开头到<code>i</code>所在处最长子序列为<code>j</code>所在处+1</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size(), <span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> mx = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j&lt;i; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i] &gt; nums[j])dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// cout&lt;&lt;dp[i]&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">            &#125;</span><br><span class="line">            mx = <span class="built_in">max</span>(mx, dp[i]);</span><br><span class="line">            <span class="comment">// cout&lt;&lt;endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mx;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="最长连续递增序列">674. 最长连续递增序列</h3>
+<p>这题不要想得太复杂了就行 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLengthOfLCIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> lng = <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> max_l = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; nums[i<span class="number">-1</span>])&#123;</span><br><span class="line">                lng++;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                lng = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            max_l = <span class="built_in">max</span>(max_l, lng);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max_l;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="最长重复子数组">718. 最长重复子数组</h3>
+<p>这题我想可不可以分别求两个数组的最长相等前后缀表，再找重复子数组。看了动规解法我发现，一个两数组比较表能解决的事情，用前后缀表似乎有点浪费？</p>
+<p>动规解法中，<code>dp[i][j]</code>表示两个数组下标i-1，j-1个数进行比较，这样0行和0列默认初始化为0即可。如果表示下标i，j个数，则需要再初始化一下0行和0列
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findLength</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(nums1.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(nums2.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; (nums1.<span class="built_in">size</span>()+<span class="number">1</span>); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt; (nums2.<span class="built_in">size</span>()+<span class="number">1</span>); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums1[i<span class="number">-1</span>] == nums2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] &gt; len)len = dp[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for(auto line:dp)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int l:line)&#123;</span></span><br><span class="line">        <span class="comment">//         cout&lt;&lt;l&lt;&lt;&#x27; &#x27;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout&lt;&lt;endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1952,346 +2275,6 @@ list)</strong>。给定任何一个有效任务，要获取链表中的下一个
 用于遍历整个任务列表。每次迭代时，<code>task</code>
 指向列表中的下一个任务： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line">for_each_process(task) &#123;</span><br><span class="line">    <span class="comment">/* 这段代码无意义地打印每个任务的名称和 PID */</span></span><br><span class="line">    printk(<span class="string">&quot;%s[%d]\n&quot;</span>, task-&gt;comm, task-&gt;pid);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> <strong>注意</strong>
 在拥有大量进程的系统中，遍历每个任务的开销很大；代码在这样做之前应该有充分的理由（并且没有其他替代方案）。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys21lab_kMod/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/19/oper_sys21lab_kMod/" class="post-title-link" itemprop="url">操作系统基础 | 4.7 内核模块实验</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-20 01:15:49" itemprop="dateCreated datePublished" datetime="2025-08-20T01:15:49+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-08-21 00:31:13" itemprop="dateModified" datetime="2025-08-21T00:31:13+08:00">2025-08-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="可加载的内核模块">可加载的内核模块</h3>
-<h4 id="练习-1">练习 1</h4>
-<p>准备好实验报告</p>
-<hr />
-<h4 id="练习-2-编译内核模块">练习 2: 编译内核模块</h4>
-<ol type="1">
-<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 Linux Lab 集群上</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="comment"># 保存 simple_module.c 和 Makefile (内容: obj-m := simple_module.o)</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="built_in">export</span> LINUX_SOURCE=/path/to/your/linux_source/linux <span class="comment"># 设置内核源码路径</span></span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>make</code> 命令的完整输出。</li>
-</ol>
-<hr />
-<h4 id="练习-3-加载模块与系统日志">练习 3: 加载模块与系统日志</h4>
-<ol type="1">
-<li><strong>步骤</strong> (在树莓派上): <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/modules</span><br><span class="line"><span class="comment"># 使用 sftp 将 simple_module.ko 传输到此目录</span></span><br><span class="line">sudo dmesg --clear</span><br><span class="line">sudo insmod ~/modules/simple_module.ko</span><br><span class="line">dmesg <span class="comment"># 查看日志</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>dmesg</code>
-中显示的模块加载信息。</li>
-</ol>
-<hr />
-<h4 id="练习-4-验证模块列表与卸载">练习 4: 验证模块列表与卸载</h4>
-<ol type="1">
-<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsmod <span class="comment"># 确认 simple_module 在列表中</span></span><br><span class="line">sudo rmmod simple_module</span><br><span class="line">lsmod <span class="comment"># 确认已移除</span></span><br><span class="line">dmesg <span class="comment"># 查看卸载信息</span></span><br></pre></td></tr></table></figure></li>
-<li><strong>答案</strong>: 提交 <code>lsmod</code>
-的输出（证明已卸载）和 <code>dmesg</code> 中显示的模块卸载信息。</li>
-</ol>
-<hr />
-<h4 id="练习-5-访问内核变量-jiffies">练习 5: 访问内核变量 jiffies</h4>
-<ol type="1">
-<li><strong>步骤</strong>:
-<ul>
-<li>复制 <code>simple_module.c</code> 为
-<code>jiffies_module.c</code>。</li>
-<li>修改其 init 和 exit 函数，使用 <code>printk</code> 打印
-<code>jiffies</code> 变量（类型
-<code>extern unsigned long volatile jiffies;</code>）。</li>
-<li>更新 Makefile: <code>obj-m += jiffies_module.o</code>。</li>
-<li>重新编译并传输 <code>jiffies_module.ko</code> 到树莓派。</li>
-<li>加载并卸载模块，观察 <code>dmesg</code>。</li>
-</ul></li>
-<li><strong>答案</strong>:
-<ul>
-<li>提交 <code>dmesg</code> 中显示加载和卸载时 <code>jiffies</code>
-值的日志消息。</li>
-<li>计算并说明两条消息之间发生的滴答数（tick count）。</li>
-</ul></li>
-</ol>
-<hr />
-<h3 id="需提交的内容">需提交的内容</h3>
-<p>请提交一个包含以下内容的压缩包或文档： 1. <strong>答案文件</strong>:
-包含上述所有练习的答案。 2. <strong>源代码文件</strong>: 你新创建的
-<code>jiffies_module.c</code> 文件。</p>
-<hr />
-<h3 id="可选拓展练习">可选拓展练习</h3>
-<h4 id="练习-6-模块初始化返回值实验">练习 6: 模块初始化返回值实验</h4>
-<ul>
-<li><strong>任务</strong>: 修改 init
-函数，使其分别返回正数和负数（错误码，参见
-<code>/include/uapi/asm-generic/errno-base.h</code>）。</li>
-<li><strong>提示</strong>:
-描述加载模块时发生的情况及其在系统日志中的表现。</li>
-</ul>
-<h4 id="练习-7-探查导出的内核符号">练习 7: 探查导出的内核符号</h4>
-<ul>
-<li><strong>任务</strong>: 查看 <code>/proc/kallsyms</code> 文件（例如
-<code>cat /proc/kallsyms</code>），了解内核符号表。查找带有
-<code>__kstrtab_</code> 和 <code>__ksymtab_</code>
-前缀的符号（这些是可供模块使用的导出符号）。</li>
-<li><strong>提示</strong>: 内核符号是 Linux
-内核代码中定义的函数、变量、数据结构等的名称标签。它们代表了在内核地址空间中的一个特定内存地址。
-可以将内核符号理解为内核的“公共接口”或“入口点”。主要有两种类型：</li>
-<li>导出的符号：这些是内核明确声明为可以被外部模块使用的符号。例如，printk（内核的
-printf）、kmalloc（内核的内存分配函数）等。模块通过使用 EXPORT_SYMBOL()
-或 EXPORT_SYMBOL_GPL() 宏来导出它们的符号，以便其他模块可以使用。</li>
-<li>非导出的符号：这些是内核内部的静态函数或变量，只在它们被定义的文件或内核的特定部分中使用。它们对于内核模块是不可见的，主要用于内核自身的组织</li>
-<li>EXPORT_SYMBOL(printk) 在编译后创建了两个内部符号：__ksymtab_printk
-和 __kstrtab_printk。
-<ul>
-<li>__ksymtab_printk 是一个结构体，包含了 printk 的地址和指向
-__kstrtab_printk 的指针。</li>
-<li>__kstrtab_printk 是一个字符串，存储着 printk 的名字。</li>
-</ul></li>
-<li>内核使用这个结构来高效地通过名字查找函数的地址</li>
-</ul>
-<h4 id="练习-8-实现用户态读取-cpu-周期计数器-ccnt-的模块">练习 8:
-实现用户态读取 CPU 周期计数器 (CCNT) 的模块</h4>
-<ul>
-<li><strong>任务</strong> (如果之前在系统调用工作室未完成):
-<ul>
-<li>将提供的驱动文件放入你的内核源码树的
-<code>arch/arm/include/asm</code> 目录。</li>
-<li>下载 <code>enable_ccnt.c</code> 内核模块代码到你的模块目录。</li>
-<li>编译、传输并加载此模块 (<code>insmod enable_ccnt.ko</code>)。</li>
-<li>使用 <code>dmesg | tail</code> 验证加载成功。</li>
-</ul></li>
-<li><strong>任务</strong> (主要部分):
-<ul>
-<li>在树莓派上创建一个用户态程序。</li>
-<li>该程序应 <code>#include</code> 你获取的驱动头文件。</li>
-<li>调用 <code>unsigned long long pmccntr_get(void)</code>
-函数两次。</li>
-</ul></li>
-<li><strong>答案</strong>:
-<ul>
-<li>说明运行一次 <code>pmccntr_get()</code> 函数大约需要多少 CPU
-周期（计算两次调用的差值）。</li>
-<li>如果你在系统调用工作室完成过类似的练习，请对比直接调用此函数与通过系统调用获取周期计数所需的周期数。</li>
-</ul></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys20rebuildIDRApi/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/19/oper_sys20rebuildIDRApi/" class="post-title-link" itemprop="url">操作系统基础 | 4.6 内核API重构案例：IDR API</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-08-20 01:07:16 / 修改时间：01:11:57" itemprop="dateCreated datePublished" datetime="2025-08-20T01:07:16+08:00">2025-08-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>文章内容来自 LWN.net</p>
-<h3 id="文章摘要-summary">文章摘要 (Summary)</h3>
-<p>这篇发表于 2013 年 2 月的文章讨论了 Linux 内核中 <strong>IDR 子系统
-API 的一次重大简化改革</strong>，由开发者 Tejun Heo 主导。IDR
-机制用于高效分配和管理整数 ID（例如设备名、POSIX 定时器 ID 等），其旧
-API 因其复杂性和潜在的竞争条件而闻名。</p>
-<p><strong>核心问题：旧 API 的缺陷</strong> 1.
-<strong>两步分配</strong>：需要先调用 <code>idr_pre_get()</code>
-预分配内存（可休眠），再调用 <code>idr_get_new()</code> 获取
-ID（可原子上下文）。 2.
-<strong>必须重试循环</strong>：<code>idr_get_new()</code>
-可能因预分配内存被其他 CPU 耗尽而失败（返回
-<code>-EAGAIN</code>），要求调用者编写冗长且易错的循环重试代码。 3.
-<strong>全局资源竞争</strong>：<code>idr_pre_get()</code>
-预分配的内存是全局的，多个 CPU 竞争时，后执行的
-<code>idr_get_new()</code>
-可能因资源不足而失败，迫使代码退出原子上下文进行重试，这条路径往往缺乏测试。</p>
-<p><strong>解决方案：新 API 的改进</strong> Tejun Heo
-引入了三个新函数来简化流程： 1.
-<code>idr_preload(gfp_t gfp_mask)</code>: 为<strong>当前 CPU</strong>
-预分配内存，并<strong>禁用抢占</strong>以防止预分配的内存被偷。 2.
-<code>idr_alloc(...)</code>: <strong>单次调用</strong>即可完成 ID
-分配和关联。它接受 ID
-范围参数，并仅在真正需要时（未预分配或预分配不足）才使用
-<code>gfp_mask</code> 分配内存。它只会在内存分配彻底失败时报错，消除了对
-<code>-EAGAIN</code> 的重试循环需求。 3. <code>idr_preload_end()</code>:
-在 <code>idr_alloc</code> 后调用，<strong>重新启用抢占</strong>。</p>
-<p><strong>关键优势：</strong> *
-<strong>更简单</strong>：消除了遍布内核的百余处重复、易错的样板代码。 *
-<strong>更可靠</strong>：通过每 CPU
-预分配和禁用抢占，基本消除了在原子上下文中因资源竞争而失败的需要。 *
-<strong>更灵活</strong>：<code>idr_alloc</code> 可以指定 ID
-范围，并且如果能在进程上下文调用，甚至可以完全省略
-<code>idr_preload</code>/<code>idr_preload_end</code>。</p>
-<p><strong>社区反应：</strong> 尽管大部分开发者接受了这个改动（给出了
-Acked-by），但 Eric Biederman 表达了强烈反对，认为新 API 的
-<code>idr_preload</code>
-像是一种难以理解的“魔法”。然而，文章作者（Jonathan
-Corbet）预测，<strong>新 API
-带来的巨大简化优势将使其最终被内核社区接受</strong>。</p>
-<h3 id="新旧-api-对比总结">新旧 API 对比总结</h3>
-<div class="line-block">特性 | 旧 API (2013 年前) | 新 API (Tejun Heo
-提议) |<br />
-：--- | :--- | :--- |<br />
-<strong>核心函数</strong> | <code>idr_pre_get()</code>,
-<code>idr_get_new()</code> | <code>idr_preload()</code>,
-<code>idr_alloc()</code>, <code>idr_preload_end()</code> |<br />
-<strong>调用模式</strong> |
-<strong>两步过程</strong>，必须配合<strong>重试循环</strong> |
-<strong>单次调用</strong>
-(<code>idr_alloc</code>)，<strong>无需循环</strong> |<br />
-<strong>预分配内存</strong> | <strong>全局共享</strong>，易被其他 CPU
-消耗 | <strong>每 CPU
-独享</strong>，配合<strong>禁用抢占</strong>，不会被偷 |<br />
-<strong>错误处理</strong> | 可能返回
-<code>-EAGAIN</code>，要求调用者重试 | 仅在所有内存分配都失败时才报错
-|<br />
-<strong>原子上下文</strong> | 支持，但重试时必须退出原子上下文 |
-更好支持，通过 <code>preload</code>/<code>preload_end</code> 保障
-|<br />
-<strong>代码复杂度</strong> | 高，需要大量重复的样板代码 |
-低，调用逻辑非常简洁 |</div>
-<h3 id="结论">结论</h3>
-<p>这篇文章记录了一个经典的内核优化案例：通过巧妙的设计（利用每 CPU
-数据和禁用抢占）将一个复杂、易错、充满竞争条件的旧接口，重构为一个简洁、可靠、高效的新接口。尽管存在一些争议，但<strong>简化并提升广泛使用的底层
-API
-的价值是极其巨大的</strong>，这很可能是新方案最终被采纳的原因。这正是
-Linux 内核持续演进的一个缩影。</p>
 
       
     </div>

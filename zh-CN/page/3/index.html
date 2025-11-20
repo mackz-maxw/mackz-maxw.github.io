@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,346 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys21lab_kMod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/19/oper_sys21lab_kMod/" class="post-title-link" itemprop="url">操作系统基础 | 4.7 内核模块实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-08-20 01:15:49" itemprop="dateCreated datePublished" datetime="2025-08-20T01:15:49+08:00">2025-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-08-21 00:31:13" itemprop="dateModified" datetime="2025-08-21T00:31:13+08:00">2025-08-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/lab/" itemprop="url" rel="index"><span itemprop="name">lab</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="可加载的内核模块">可加载的内核模块</h3>
+<h4 id="练习-1">练习 1</h4>
+<p>准备好实验报告</p>
+<hr />
+<h4 id="练习-2-编译内核模块">练习 2: 编译内核模块</h4>
+<ol type="1">
+<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 Linux Lab 集群上</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="built_in">cd</span> /project/scratch01/compile/your-username/modules</span><br><span class="line"><span class="comment"># 保存 simple_module.c 和 Makefile (内容: obj-m := simple_module.o)</span></span><br><span class="line">module add arm-rpi</span><br><span class="line"><span class="built_in">export</span> LINUX_SOURCE=/path/to/your/linux_source/linux <span class="comment"># 设置内核源码路径</span></span><br><span class="line">make -C <span class="variable">$LINUX_SOURCE</span> ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- M=<span class="variable">$PWD</span> modules</span><br></pre></td></tr></table></figure></li>
+<li><strong>答案</strong>: 提交 <code>make</code> 命令的完整输出。</li>
+</ol>
+<hr />
+<h4 id="练习-3-加载模块与系统日志">练习 3: 加载模块与系统日志</h4>
+<ol type="1">
+<li><strong>步骤</strong> (在树莓派上): <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/modules</span><br><span class="line"><span class="comment"># 使用 sftp 将 simple_module.ko 传输到此目录</span></span><br><span class="line">sudo dmesg --clear</span><br><span class="line">sudo insmod ~/modules/simple_module.ko</span><br><span class="line">dmesg <span class="comment"># 查看日志</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>答案</strong>: 提交 <code>dmesg</code>
+中显示的模块加载信息。</li>
+</ol>
+<hr />
+<h4 id="练习-4-验证模块列表与卸载">练习 4: 验证模块列表与卸载</h4>
+<ol type="1">
+<li><strong>步骤</strong>: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lsmod <span class="comment"># 确认 simple_module 在列表中</span></span><br><span class="line">sudo rmmod simple_module</span><br><span class="line">lsmod <span class="comment"># 确认已移除</span></span><br><span class="line">dmesg <span class="comment"># 查看卸载信息</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>答案</strong>: 提交 <code>lsmod</code>
+的输出（证明已卸载）和 <code>dmesg</code> 中显示的模块卸载信息。</li>
+</ol>
+<hr />
+<h4 id="练习-5-访问内核变量-jiffies">练习 5: 访问内核变量 jiffies</h4>
+<ol type="1">
+<li><strong>步骤</strong>:
+<ul>
+<li>复制 <code>simple_module.c</code> 为
+<code>jiffies_module.c</code>。</li>
+<li>修改其 init 和 exit 函数，使用 <code>printk</code> 打印
+<code>jiffies</code> 变量（类型
+<code>extern unsigned long volatile jiffies;</code>）。</li>
+<li>更新 Makefile: <code>obj-m += jiffies_module.o</code>。</li>
+<li>重新编译并传输 <code>jiffies_module.ko</code> 到树莓派。</li>
+<li>加载并卸载模块，观察 <code>dmesg</code>。</li>
+</ul></li>
+<li><strong>答案</strong>:
+<ul>
+<li>提交 <code>dmesg</code> 中显示加载和卸载时 <code>jiffies</code>
+值的日志消息。</li>
+<li>计算并说明两条消息之间发生的滴答数（tick count）。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="需提交的内容">需提交的内容</h3>
+<p>请提交一个包含以下内容的压缩包或文档： 1. <strong>答案文件</strong>:
+包含上述所有练习的答案。 2. <strong>源代码文件</strong>: 你新创建的
+<code>jiffies_module.c</code> 文件。</p>
+<hr />
+<h3 id="可选拓展练习">可选拓展练习</h3>
+<h4 id="练习-6-模块初始化返回值实验">练习 6: 模块初始化返回值实验</h4>
+<ul>
+<li><strong>任务</strong>: 修改 init
+函数，使其分别返回正数和负数（错误码，参见
+<code>/include/uapi/asm-generic/errno-base.h</code>）。</li>
+<li><strong>提示</strong>:
+描述加载模块时发生的情况及其在系统日志中的表现。</li>
+</ul>
+<h4 id="练习-7-探查导出的内核符号">练习 7: 探查导出的内核符号</h4>
+<ul>
+<li><strong>任务</strong>: 查看 <code>/proc/kallsyms</code> 文件（例如
+<code>cat /proc/kallsyms</code>），了解内核符号表。查找带有
+<code>__kstrtab_</code> 和 <code>__ksymtab_</code>
+前缀的符号（这些是可供模块使用的导出符号）。</li>
+<li><strong>提示</strong>: 内核符号是 Linux
+内核代码中定义的函数、变量、数据结构等的名称标签。它们代表了在内核地址空间中的一个特定内存地址。
+可以将内核符号理解为内核的“公共接口”或“入口点”。主要有两种类型：</li>
+<li>导出的符号：这些是内核明确声明为可以被外部模块使用的符号。例如，printk（内核的
+printf）、kmalloc（内核的内存分配函数）等。模块通过使用 EXPORT_SYMBOL()
+或 EXPORT_SYMBOL_GPL() 宏来导出它们的符号，以便其他模块可以使用。</li>
+<li>非导出的符号：这些是内核内部的静态函数或变量，只在它们被定义的文件或内核的特定部分中使用。它们对于内核模块是不可见的，主要用于内核自身的组织</li>
+<li>EXPORT_SYMBOL(printk) 在编译后创建了两个内部符号：__ksymtab_printk
+和 __kstrtab_printk。
+<ul>
+<li>__ksymtab_printk 是一个结构体，包含了 printk 的地址和指向
+__kstrtab_printk 的指针。</li>
+<li>__kstrtab_printk 是一个字符串，存储着 printk 的名字。</li>
+</ul></li>
+<li>内核使用这个结构来高效地通过名字查找函数的地址</li>
+</ul>
+<h4 id="练习-8-实现用户态读取-cpu-周期计数器-ccnt-的模块">练习 8:
+实现用户态读取 CPU 周期计数器 (CCNT) 的模块</h4>
+<ul>
+<li><strong>任务</strong> (如果之前在系统调用工作室未完成):
+<ul>
+<li>将提供的驱动文件放入你的内核源码树的
+<code>arch/arm/include/asm</code> 目录。</li>
+<li>下载 <code>enable_ccnt.c</code> 内核模块代码到你的模块目录。</li>
+<li>编译、传输并加载此模块 (<code>insmod enable_ccnt.ko</code>)。</li>
+<li>使用 <code>dmesg | tail</code> 验证加载成功。</li>
+</ul></li>
+<li><strong>任务</strong> (主要部分):
+<ul>
+<li>在树莓派上创建一个用户态程序。</li>
+<li>该程序应 <code>#include</code> 你获取的驱动头文件。</li>
+<li>调用 <code>unsigned long long pmccntr_get(void)</code>
+函数两次。</li>
+</ul></li>
+<li><strong>答案</strong>:
+<ul>
+<li>说明运行一次 <code>pmccntr_get()</code> 函数大约需要多少 CPU
+周期（计算两次调用的差值）。</li>
+<li>如果你在系统调用工作室完成过类似的练习，请对比直接调用此函数与通过系统调用获取周期计数所需的周期数。</li>
+</ul></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/08/19/oper_sys20rebuildIDRApi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/19/oper_sys20rebuildIDRApi/" class="post-title-link" itemprop="url">操作系统基础 | 4.6 内核API重构案例：IDR API</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-08-20 01:07:16 / 修改时间：01:11:57" itemprop="dateCreated datePublished" datetime="2025-08-20T01:07:16+08:00">2025-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>文章内容来自 LWN.net</p>
+<h3 id="文章摘要-summary">文章摘要 (Summary)</h3>
+<p>这篇发表于 2013 年 2 月的文章讨论了 Linux 内核中 <strong>IDR 子系统
+API 的一次重大简化改革</strong>，由开发者 Tejun Heo 主导。IDR
+机制用于高效分配和管理整数 ID（例如设备名、POSIX 定时器 ID 等），其旧
+API 因其复杂性和潜在的竞争条件而闻名。</p>
+<p><strong>核心问题：旧 API 的缺陷</strong> 1.
+<strong>两步分配</strong>：需要先调用 <code>idr_pre_get()</code>
+预分配内存（可休眠），再调用 <code>idr_get_new()</code> 获取
+ID（可原子上下文）。 2.
+<strong>必须重试循环</strong>：<code>idr_get_new()</code>
+可能因预分配内存被其他 CPU 耗尽而失败（返回
+<code>-EAGAIN</code>），要求调用者编写冗长且易错的循环重试代码。 3.
+<strong>全局资源竞争</strong>：<code>idr_pre_get()</code>
+预分配的内存是全局的，多个 CPU 竞争时，后执行的
+<code>idr_get_new()</code>
+可能因资源不足而失败，迫使代码退出原子上下文进行重试，这条路径往往缺乏测试。</p>
+<p><strong>解决方案：新 API 的改进</strong> Tejun Heo
+引入了三个新函数来简化流程： 1.
+<code>idr_preload(gfp_t gfp_mask)</code>: 为<strong>当前 CPU</strong>
+预分配内存，并<strong>禁用抢占</strong>以防止预分配的内存被偷。 2.
+<code>idr_alloc(...)</code>: <strong>单次调用</strong>即可完成 ID
+分配和关联。它接受 ID
+范围参数，并仅在真正需要时（未预分配或预分配不足）才使用
+<code>gfp_mask</code> 分配内存。它只会在内存分配彻底失败时报错，消除了对
+<code>-EAGAIN</code> 的重试循环需求。 3. <code>idr_preload_end()</code>:
+在 <code>idr_alloc</code> 后调用，<strong>重新启用抢占</strong>。</p>
+<p><strong>关键优势：</strong> *
+<strong>更简单</strong>：消除了遍布内核的百余处重复、易错的样板代码。 *
+<strong>更可靠</strong>：通过每 CPU
+预分配和禁用抢占，基本消除了在原子上下文中因资源竞争而失败的需要。 *
+<strong>更灵活</strong>：<code>idr_alloc</code> 可以指定 ID
+范围，并且如果能在进程上下文调用，甚至可以完全省略
+<code>idr_preload</code>/<code>idr_preload_end</code>。</p>
+<p><strong>社区反应：</strong> 尽管大部分开发者接受了这个改动（给出了
+Acked-by），但 Eric Biederman 表达了强烈反对，认为新 API 的
+<code>idr_preload</code>
+像是一种难以理解的“魔法”。然而，文章作者（Jonathan
+Corbet）预测，<strong>新 API
+带来的巨大简化优势将使其最终被内核社区接受</strong>。</p>
+<h3 id="新旧-api-对比总结">新旧 API 对比总结</h3>
+<div class="line-block">特性 | 旧 API (2013 年前) | 新 API (Tejun Heo
+提议) |<br />
+：--- | :--- | :--- |<br />
+<strong>核心函数</strong> | <code>idr_pre_get()</code>,
+<code>idr_get_new()</code> | <code>idr_preload()</code>,
+<code>idr_alloc()</code>, <code>idr_preload_end()</code> |<br />
+<strong>调用模式</strong> |
+<strong>两步过程</strong>，必须配合<strong>重试循环</strong> |
+<strong>单次调用</strong>
+(<code>idr_alloc</code>)，<strong>无需循环</strong> |<br />
+<strong>预分配内存</strong> | <strong>全局共享</strong>，易被其他 CPU
+消耗 | <strong>每 CPU
+独享</strong>，配合<strong>禁用抢占</strong>，不会被偷 |<br />
+<strong>错误处理</strong> | 可能返回
+<code>-EAGAIN</code>，要求调用者重试 | 仅在所有内存分配都失败时才报错
+|<br />
+<strong>原子上下文</strong> | 支持，但重试时必须退出原子上下文 |
+更好支持，通过 <code>preload</code>/<code>preload_end</code> 保障
+|<br />
+<strong>代码复杂度</strong> | 高，需要大量重复的样板代码 |
+低，调用逻辑非常简洁 |</div>
+<h3 id="结论">结论</h3>
+<p>这篇文章记录了一个经典的内核优化案例：通过巧妙的设计（利用每 CPU
+数据和禁用抢占）将一个复杂、易错、充满竞争条件的旧接口，重构为一个简洁、可靠、高效的新接口。尽管存在一些争议，但<strong>简化并提升广泛使用的底层
+API
+的价值是极其巨大的</strong>，这很可能是新方案最终被采纳的原因。这正是
+Linux 内核持续演进的一个缩影。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1494,371 +1834,6 @@ fox，<code>fox.list.prev</code> 指向上一个 fox。</li>
 <h3 id="打家劫舍iii">337.打家劫舍III</h3>
 <p>直接使用递归，计算抢当前节点还是不抢当前节点时，对相同的子树进行了多次独立的递归调用。会超时，推荐记忆化：
 利用递归，每层返回一个保存当前节点偷还是不偷的数组 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// struct TreeNode&#123;</span></span><br><span class="line"><span class="comment">//     int val;</span></span><br><span class="line"><span class="comment">//     TreeNode* left;</span></span><br><span class="line"><span class="comment">//     TreeNode* right;</span></span><br><span class="line"><span class="comment">//     TreeNode(int v) : val(v), left(nullptr), right(nullptr)&#123;&#125;</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">rob_tree</span><span class="params">(TreeNode* root)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)<span class="keyword">return</span> vector&lt;<span class="type">int</span>&gt;&#123;<span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; left = <span class="built_in">rob_tree</span>(root-&gt;left);</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; right = <span class="built_in">rob_tree</span>(root-&gt;right);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↓不抢当前节点时，既可以选择抢子节点，也可选择不抢，可能会有跳过两个节点抢更优的情况</span></span><br><span class="line">        <span class="type">int</span> next_h = <span class="built_in">max</span>(left[<span class="number">0</span>], left[<span class="number">1</span>])+<span class="built_in">max</span>(right[<span class="number">0</span>], right[<span class="number">1</span>]);</span><br><span class="line">        <span class="type">int</span> this_h = root-&gt;val+left[<span class="number">0</span>]+right[<span class="number">0</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;next_h, this_h&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rob</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res = <span class="built_in">rob_tree</span>(root);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(res[<span class="number">0</span>], res[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/31/kamabagu6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/31/kamabagu6/" class="post-title-link" itemprop="url">代码随想录 | 八股-TCP机制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-08-01 00:14:16" itemprop="dateCreated datePublished" datetime="2025-08-01T00:14:16+08:00">2025-08-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-03 04:36:07" itemprop="dateModified" datetime="2025-10-03T04:36:07+08:00">2025-10-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="tcp连接如何确保可靠性">TCP连接如何确保可靠性</h3>
-<p><strong>序列号与确认应答：</strong> * <strong>序列号：</strong>
-发送方为每个<strong>字节</strong>的数据分配一个唯一的序列号。TCP报文段的首部包含该报文段中<strong>第一个数据字节的序列号</strong>。
-* <strong>确认号：</strong>
-接收方收到数据后，会发送一个<strong>确认报文段</strong>。该报文段中的<strong>确认号</strong>字段表示接收方<strong>期望收到的下一个字节的序列号</strong>。例如，接收方正确收到了序列号为
-1001-2000 的数据，它会发送确认号 2001，表示“我已正确收到序列号 2000
-及之前的所有字节，请从序列号 2001 开始发送”。 * <strong>机制：</strong>
-发送方发送数据后，会等待接收方的确认。如果收到预期的确认，说明数据已成功送达。这是可靠性的基石。</p>
-<p><strong>校验和：</strong> * <strong>计算：</strong>
-发送方在发送数据前，会计算报文段（首部和数据）的<strong>校验和</strong>，并将结果放入首部的校验和字段。
-* <strong>验证：</strong>
-接收方收到报文段后，会使用相同的算法重新计算校验和。 *
-<strong>丢弃：</strong>
-如果接收方计算出的校验和与报文段首部中的校验和不匹配，说明数据在传输过程中发生了比特错误（比特翻转）。接收方会<strong>丢弃</strong>该损坏的报文段，并且<strong>不会发送任何确认</strong>。
-* <strong>触发重传：</strong>
-由于发送方没有收到确认（见第1、2点），最终会触发超时重传。</p>
-<p><strong>流量控制：</strong> * <strong>目的：</strong>
-防止发送方发送数据过快，导致接收方缓冲区溢出而丢失数据。 *
-<strong>滑动窗口：</strong>
-接收方通过TCP首部中的<strong>窗口大小</strong>字段告知发送方自己当前<strong>接收缓冲区</strong>的可用空间大小。这个值称为<strong>接收窗口</strong>。
-* <strong>发送窗口限制：</strong>
-发送方维护一个<strong>发送窗口</strong>，其大小不能超过接收方通告的接收窗口大小。发送窗口内的数据是允许发送但尚未被确认的数据。
-* <strong>动态调整：</strong>
-随着接收方处理数据并释放缓冲区空间，它会通过后续的确认报文段更新其通告的窗口大小，发送方据此调整自己的发送窗口。这确保了发送速率不会超过接收方的处理能力。</p>
-<p><strong>拥塞控制：</strong> * <strong>目的：</strong>
-防止发送方发送数据过快，导致网络中间设备（如路由器）的缓冲区溢出，引发网络拥塞和数据包丢失。这是对整个网络的保护机制。
-* <strong>核心机制：</strong>
-发送方维护一个<strong>拥塞窗口</strong>，它限制了在任何时候可以发送但未被确认的数据量。发送窗口的实际大小是<code>min(接收窗口, 拥塞窗口)</code>。</p>
-<p><strong>超时重传：</strong> * <strong>核心思想：</strong>
-发送方发送一个报文段后启动一个<strong>重传计时器</strong>。如果在计时器超时之前没有收到该报文段的确认，发送方就认为该报文段已丢失或损坏，会<strong>重新发送</strong>该报文段。
-* <strong>动态计算超时时间：</strong>
-超时时间是根据历史数据包往返时间动态计算出来的，称为<strong>RTO</strong>。这确保了在网络状况变化时也能有效工作。</p>
-<h3 id="拥塞控制是怎么实现的">拥塞控制是怎么实现的</h3>
-<ul>
-<li><strong>慢启动：</strong>
-连接开始时，拥塞窗口从一个很小的值开始，并随着每个成功确认的报文段而<strong>指数增长</strong>（每收到一个ACK，cwnd增加1个MSS），快速探测可用带宽。</li>
-<li><strong>拥塞避免：</strong>
-当拥塞窗口增长到某个<strong>阈值</strong>时，进入拥塞避免阶段，窗口变为<strong>线性增长</strong>（每收到一个RTT内的所有ACK，cwnd增加1个MSS），增速放缓。</li>
-<li><strong>拥塞检测：</strong>
-<ul>
-<li><strong>超时：</strong>
-如果发生超时（表明有严重丢包），阈值被设置为当前拥塞窗口的一半（<code>ssthresh = cwnd / 2</code>），拥塞窗口被重置为1（或一个很小的值），重新进入慢启动。</li>
-<li><strong>快速重传与快速恢复：</strong>
-如果发送方收到<strong>3个重复的ACK</strong>（表明有单个数据包丢失，但后续数据包接收方还能收到），它立即重传丢失的报文段（快速重传），并将阈值设置为当前拥塞窗口的一半（<code>ssthresh = cwnd / 2</code>），拥塞窗口设置为阈值加3（或类似算法），然后进入<strong>快速恢复</strong>阶段。在快速恢复阶段，每收到一个重复ACK，拥塞窗口增加1个MSS。当收到一个新数据的ACK时（表明重传成功），退出快速恢复，将拥塞窗口设置为阈值大小，进入拥塞避免阶段。这比超时恢复要快得多。</li>
-</ul></li>
-</ul>
-<h3 id="tcp流量控制是怎么实现的">TCP流量控制是怎么实现的</h3>
-<p>TCP流量控制的实现核心在于<strong>滑动窗口协议（Sliding Window
-Protocol）</strong>，其目的是<strong>防止发送方发送数据过快导致接收方缓冲区溢出</strong>。这是通过接收方动态通告其<strong>接收窗口大小</strong>来实现的。</p>
-<ol type="1">
-<li><strong>初始通告：</strong>
-<ul>
-<li>连接建立时（三次握手阶段），接收方在其<code>SYN+ACK</code>报文段中设置<code>窗口大小</code>字段，告知发送方其初始接收缓冲区大小。</li>
-</ul></li>
-<li><strong>动态窗口通告：</strong>
-<ul>
-<li><strong>接收方处理数据：</strong>
-当接收方应用程序从缓冲区读取数据后，缓冲区空间被释放，可用空间增加。</li>
-<li><strong>发送更新窗口：</strong>
-接收方在发送给发送方的<strong>任何报文段</strong>（包括数据报文段、纯ACK确认报文段）中，都会携带最新的<code>窗口大小</code>值。</li>
-<li><strong>即时生效：</strong>
-发送方收到包含新窗口大小的报文段后，<strong>立即更新</strong>其对接收方接收窗口的理解。</li>
-</ul></li>
-<li><strong>发送方行为 - 滑动窗口：</strong>
-<ul>
-<li><strong>维护状态：</strong> 发送方维护三个指针：
-<ul>
-<li><code>SND.UNA</code>：最早未确认字节的序列号。</li>
-<li><code>SND.NXT</code>：下一个要发送字节的序列号。</li>
-<li><strong>发送窗口大小
-(<code>swnd</code>)</strong>：<code>swnd = min(接收方通告的接收窗口, 拥塞窗口)</code>。流量控制关注的是接收窗口部分。</li>
-</ul></li>
-<li><strong>发送约束：</strong> 发送方只能发送序列号在
-<code>[SND.UNA, SND.UNA + swnd)</code> 范围内的数据。</li>
-<li><strong>窗口滑动：</strong>
-<ul>
-<li>当发送方收到新的ACK确认（推进了<code>SND.UNA</code>），并且接收方通告了新的（可能更大的）窗口大小时，发送窗口会向右“滑动”。</li>
-<li>滑动后，<code>SND.NXT</code>可能可以继续发送新的数据（如果可用窗口
-&gt; 0）。</li>
-</ul></li>
-</ul></li>
-<li><strong>关键操作示例：</strong>
-<ul>
-<li>假设接收方初始通告<code>rwnd = 4000</code>字节。</li>
-<li>发送方发送2000字节（<code>SND.NXT</code>前进2000）。</li>
-<li>接收方收到这2000字节，但应用程序只读取了1000字节。此时接收缓冲区：
-<ul>
-<li>已用空间 = 1000字节（2000收到 - 1000被读走）</li>
-<li>可用空间 = 3000字节（初始4000 - 1000占用）。</li>
-<li>接收方在ACK中设置<code>rwnd = 3000</code>。</li>
-</ul></li>
-<li>发送方收到ACK和<code>rwnd=3000</code>：
-<ul>
-<li><code>SND.UNA</code>前进2000（假设ACK确认了前2000字节）。</li>
-<li>更新<code>swnd = min(3000, cwnd)</code>。</li>
-<li>新发送窗口变为 <code>[新SND.UNA, 新SND.UNA + 3000)</code>。</li>
-<li><code>SND.NXT</code>可能指向新窗口内的位置，允许发送最多3000字节新数据（减去已在传输中的）。</li>
-</ul></li>
-</ul></li>
-<li><strong>处理零窗口 - 死锁预防：</strong>
-<ul>
-<li><strong>问题：</strong>
-如果接收方缓冲区满，它会通告<code>rwnd = 0</code>。发送方必须立即停止发送数据。但如果之后接收方应用程序读取数据释放了缓冲区，它需要通知发送方<code>rwnd &gt; 0</code>。如果这个通知（携带新<code>rwnd</code>的ACK）丢失了怎么办？双方会陷入死锁：发送方在等待窗口更新，接收方以为发送方知道窗口已打开。</li>
-<li><strong>解决方案：零窗口探测：</strong>
-<ul>
-<li>当发送方收到<code>rwnd = 0</code>时，启动一个<strong>持续计时器</strong>。</li>
-<li>计时器超时后，发送方发送一个<strong>1字节的探测报文段</strong>。</li>
-<li>接收方收到探测报文段：
-<ul>
-<li>如果缓冲区仍满，再次回复<code>rwnd = 0</code>，发送方重置持续计时器。</li>
-<li>如果缓冲区已有空间，回复包含当前<code>rwnd &gt; 0</code>的ACK。</li>
-</ul></li>
-<li>探测报文段确保即使窗口更新ACK丢失，死锁也能被打破。</li>
-</ul></li>
-</ul></li>
-</ol>
-<h3 id="udp怎么实现可靠传输">UDP怎么实现可靠传输</h3>
-<p>（参考HTTP版本-HTTP3.0）</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/30/kamabagu5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/30/kamabagu5/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP安全与TCP连接</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-31 04:30:07 / 修改时间：11:43:31" itemprop="dateCreated datePublished" datetime="2025-07-31T04:30:07+08:00">2025-07-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="https和http有哪些区别">HTTPS和HTTP有哪些区别</h3>
-<ol type="1">
-<li><strong>加密性</strong>
-<ul>
-<li>HTTP：数据明文传输，容易被窃听和篡改。<br />
-</li>
-<li>HTTPS：在 HTTP 基础上增加了 SSL/TLS 加密层，数据传输安全。</li>
-</ul></li>
-<li><strong>连接建立流程</strong>
-<ul>
-<li>HTTP：TCP 三次握手后即可传输数据。<br />
-</li>
-<li>HTTPS：TCP 三次握手后，还需进行 SSL/TLS
-握手，协商密钥后才能加密传输数据。</li>
-</ul></li>
-<li><strong>端口号</strong>
-<ul>
-<li>HTTP：默认端口 80<br />
-</li>
-<li>HTTPS：默认端口 443</li>
-</ul></li>
-<li><strong>证书机制</strong>
-<ul>
-<li>HTTP：不需要证书。<br />
-</li>
-<li>HTTPS：需要向 CA 申请数字证书，验证服务器身份，防止伪造。</li>
-</ul></li>
-</ol>
-<h3
-id="https的工作原理https建立连接的过程">HTTPS的工作原理（HTTPS建立连接的过程）</h3>
-<ol type="1">
-<li><p><strong>密钥交换</strong><br />
-客户端发起HTTPS请求，服务器发送公钥证书给客户端。</p></li>
-<li><p><strong>证书验证</strong><br />
-客户端验证服务器证书是否由受信任的CA签发，并检查证书有效性。</p></li>
-<li><p><strong>加密通信协商</strong><br />
-客户端生成一个随机的对称加密密钥，用服务器公钥加密后发送给服务器。</p></li>
-<li><p><strong>建立安全连接</strong><br />
-服务器用私钥解密，得到对称加密密钥。此时双方拥有相同密钥，可以进行加密通信。</p></li>
-<li><p><strong>数据传输</strong><br />
-双方用对称加密密钥对数据进行加密传输，保证安全性。</p></li>
-<li><p><strong>完整性校验</strong><br />
-SSL/TLS协议还会对数据进行完整性校验，防止数据被篡改。</p></li>
-<li><p><strong>结束连接</strong><br />
-通信结束后，会话密钥被销毁，避免安全隐患。</p></li>
-</ol>
-<h3 id="tcp和udp的区别">TCP和UDP的区别</h3>
-<ol type="1">
-<li><strong>连接方式</strong>
-<ul>
-<li>TCP：面向连接，传输前需建立连接（三次握手）。<br />
-</li>
-<li>UDP：无连接，直接发送数据。</li>
-</ul></li>
-<li><strong>可靠性</strong>
-<ul>
-<li>TCP：可靠传输，保证数据顺序和完整性，丢包会重传。<br />
-</li>
-<li>UDP：不保证可靠性，可能丢包、乱序、不重传。</li>
-</ul></li>
-<li><strong>流量与拥塞控制</strong>
-<ul>
-<li>TCP：有流量控制（滑动窗口）和拥塞控制，能根据网络状况调整速率。<br />
-</li>
-<li>UDP：没有流量和拥塞控制，发送速率固定。</li>
-</ul></li>
-<li><strong>报文头部</strong>
-<ul>
-<li>TCP：头部复杂，包含序列号、确认号等。<br />
-</li>
-<li>UDP：头部简单，只有基本信息。</li>
-</ul></li>
-<li><strong>性能开销</strong>
-<ul>
-<li>TCP：机制多，性能开销大，延迟高。<br />
-</li>
-<li>UDP：机制简单，开销小，延迟低。</li>
-</ul></li>
-<li><strong>适用场景</strong>
-<ul>
-<li>TCP：适合需要可靠传输的场景，如网页浏览、文件传输等。<br />
-</li>
-<li>UDP：适合对实时性要求高的场景，如语音通话、视频会议等。</li>
-</ul></li>
-</ol>
 
       
     </div>

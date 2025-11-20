@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,89 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/Ubuntu_setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/Ubuntu_setup/" class="post-title-link" itemprop="url">设置Ubuntu</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:56" itemprop="dateModified" datetime="2025-01-22T10:30:56+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="设置apt源">设置apt源</h3>
+<p>检查Ubuntu的系统版本和代号是否与要安装的源一致 在终端中输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure> source APT源： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c &#x27;echo &quot;deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse&quot; &gt; /etc/apt/sources.list&#x27;</span><br></pre></td></tr></table></figure> 检查source list：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/apt/sources.list</span><br></pre></td></tr></table></figure> 从源获取包信息： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure></p>
+<h3 id="vim技巧">vim技巧</h3>
+<p>虚拟块模式（选择一块代码）：ctrl + q 在虚拟块模式中删除选中：d</p>
+<h3 id="设置vim">设置vim</h3>
+<p>生成并打开设置文件： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/vim/vimrc ~/.vimrc</span><br><span class="line">cd ~</span><br><span class="line">ls -a</span><br><span class="line">vim .vimrc</span><br></pre></td></tr></table></figure> 具体设置更改： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">syntax on   &quot; 语法高亮</span><br><span class="line">set background=dark</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set showmatch          &quot; Show matching brackets.</span><br><span class="line">set ignorecase         &quot; Do case insensitive matching</span><br><span class="line">set smartcase          &quot; Do smart case matching</span><br><span class="line">set incsearch          &quot; Incremental search</span><br><span class="line">set hidden             &quot; Hide buffers when they are abandoned</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -244,6 +327,117 @@ or other reference you trust.</li>
 <p>终于可以玩了！</p>
 <p>这个游戏里用setPhoneCallback蛮多次的，在这里存下这些代码，免得往回翻了。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">map.getPlayer().setPhoneCallback(function () &#123;</span><br><span class="line">       var player = map.getPlayer();</span><br><span class="line">       if(player.getColor() == &quot;#0f0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#f00&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#f00&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#ff0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       else if(player.getColor() == &quot;#ff0&quot;)&#123;</span><br><span class="line">       	return player.setColor(&quot;#0f0&quot;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2024/12/20/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/12/20/hello-world/" class="post-title-link" itemprop="url">搭建博客</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-12-21 12:10:52" itemprop="dateCreated datePublished" datetime="2024-12-21T12:10:52+08:00">2024-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-22 10:30:16" itemprop="dateModified" datetime="2025-01-22T10:30:16+08:00">2025-01-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>虽然遇到了一些问题，不过都很快找到方法解决了。看来之前安装VS和openCV的坑不是白踩的。</p>
+<p>Maxw终于有了自己的博客啦！有点激动，也有点犹豫跟纠结，虽然理由已经充分到说服自己无数遍，但我仍无法预测自己毅然走出专业的圈走进写代码的坑是不是更加正确的选择...</p>
+<h2 id="section">2/23-2/24</h2>
+<h3 id="git初试">git初试</h3>
+<p>follow <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103391101">枫叶的教程</a> problem
+occur: can' t clone existing repostory with git bash reports timeout or
+OpenSSL SSL_read: Connection was reset, errno 10054</p>
+<p>从GitHub上clone仓库的时候，试了几次，有时git
+bash报错10054，有时timeout。</p>
+<p>我先是按<a
+target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44795128/article/details/119214048?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EHighlightScore-1.queryctrv2&amp;utm_relevant_index=1">网上教程</a>改了git的global
+config，还是报错</p>
+<p>想到自己上GitHub都要科学方法，就觉得应该是代理的问题。git应该并非使用系统代理设置，而是需要自行设置，果不其然。</p>
+<p>solve: setup proxy for git, following <a
+target="_blank" rel="noopener" href="https://www.jianshu.com/p/290152303598">git设置代理</a></p>
+<h3 id="博客搭建">博客搭建</h3>
+<p>follow <a
+target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1201860091307458560">枫叶的教程合集</a></p>
+<p>感谢枫叶大佬的教程，有时间一定上知乎评论区里发个反馈。</p>
+<p>安装node.js与插件的过程中报错属于node.js本地的文件夹无法访问。一开始觉得很奇怪，明明特意从c盘卸载了安别的盘，后来我想起来那个盘是我从c盘分出去的了，草（感叹词）。所以应该是因为也需要管理员权限（也可能是我把git安到c盘了？）。果然管理员启动bash之后，安装就顺畅了。</p>
+<p>枫叶的教程里面设置npm的环境变量那里可能有点问题，设置好之后应该是不需要像网上一些教程说的那样安装两遍npm的。npm所在目录需要保留而不是更改，再按教程添加node的目录。在系统变量里添加node的路径后，path里需要添加对应的%NODE_PATH%，这也是教程里未提及的。</p>
+<p>其他问题应该就只是跟版本有关了，比如GitHub把主分支从master改成main，创建个人网页的setting单独分页了等等。以及博客更新后无需删除.git重新上传，hexo的操作估计是有延迟的。</p>
+<p>我跳过了教程里设置自己的域名的部分。（以后博客里内容多了再为它花钱吧）</p>
+<p>在菜单中增加新页面需要同时hexo new
+page以及在主题的config文件中设置（参考枫叶的教程）</p>
+<h3 id="一些感叹">一些感叹</h3>
+<p>虽然我对于文件系统和权限的理解仅限一鳞半爪，但在配置网站的过程中，这些知识还是帮了我不少忙。不愧是程序员的基本功。</p>
+<h3 id="一些bug">一些bug</h3>
+<p>git报错the remote end hung up unexpectedly：照此教程解决了：
+https://jingyan.baidu.com/article/afd8f4de38d87174e386e967.html</p>
+<h3 id="一些bug-2.0">一些bug 2.0</h3>
+<p>。。。又给git的proxy摆了一道没办法deploy博客，不想用的时候一定要记得<code>git config --global --unset http.proxy</code>重置啊！设置回来则是<code>git config --global http.proxy proxyaddress:port</code></p>
+<p>最近总感觉自己记性有点差，这是写完博客后如何deploy:
+在博客的根文件夹（那个有.deploy_git的文件夹）打开git bash，输入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
