@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,283 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/12/04/oper_sys29timer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/12/04/oper_sys29timer/" class="post-title-link" itemprop="url">操作系统基础 | 6.1 定时器与时间管理 - 定时器：节拍，赫兹和jiffies</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-12-05 06:51:56 / 修改时间：06:53:35" itemprop="dateCreated datePublished" datetime="2025-12-05T06:51:56+08:00">2025-12-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="定时器与时间管理"><strong>定时器与时间管理</strong></h3>
+<p>时间的流逝对内核至关重要。大量内核函数是由时间驱动的，而非事件驱动¹。其中一些函数是周期性的，例如调度器运行队列的平衡或屏幕刷新。它们按照固定计划执行，比如每秒100次。内核还会在未来某个相对时间调度其他函数，例如延迟的磁盘I/O。举例来说，内核可能会调度一个500毫秒后执行的任务。最后，内核还必须管理系统运行时间以及当前日期和时间。</p>
+<p>需注意相对时间与绝对时间的区别。调度一个5秒后发生的事件不需要绝对时间的概念——只需相对时间（例如，从现在起5秒后）。相反，管理当前时间不仅要求内核理解时间的流逝，还需要掌握某种绝对时间度量。这两个概念对时间管理都至关重要。</p>
+<p>此外，处理周期性事件与内核调度未来特定时间点事件的方式在实现上有所不同。周期性事件（比如每10毫秒一次）由系统定时器驱动。系统定时器是一种可编程硬件，能够以固定频率发出中断。该定时器的中断处理程序（称为定时器中断）负责更新系统时间并执行周期性工作。系统定时器及其定时器中断是Linux的核心，也是本章的重点内容。</p>
+<p>本章的另一个重点是动态定时器，这种机制用于调度在指定时间间隔后仅执行一次的事件。例如，软盘设备驱动程序使用定时器在指定空闲时间后关闭软盘驱动器电机。内核可以动态创建和销毁定时器。本章将探讨动态定时器的内核实现，以及可供代码调用的相关接口。</p>
+<p>¹
+更准确地说，时间驱动事件也属于事件驱动——这里的事件即指时间的流逝。但在本章中，我们特别强调时间驱动事件，因为其在内核中出现的频率及重要性尤为突出。</p>
+<h3 id="内核的时间概念"><strong>内核的时间概念</strong></h3>
+<p>显然，计算机对时间的理解有些抽象。实际上，内核必须与系统硬件协同工作来理解和管理时间。硬件提供了一个系统定时器，内核借助它来度量时间的流逝。该系统定时器基于电子时钟源运行，例如数字时钟或处理器频率。系统定时器会按照预设频率（称为节拍率）触发（通常称为"命中"或"弹出"）。当系统定时器触发时，它会发出一个中断，内核通过特定的中断处理程序来处理该中断。</p>
+<p>由于内核知晓预设的节拍率，它就能计算出任意两次连续定时器中断之间的时间间隔。这个周期称为一个"节拍"，相当于
+1/(节拍率) 秒。这正是内核追踪实际时间和系统运行时间的方式。</p>
+<p>实际时间（即一天中的具体时刻）对用户空间应用程序至关重要。内核之所以要追踪实际时间，根本原因在于内核控制着定时器中断。一系列系统调用向用户空间提供日期和时间信息。系统运行时间（即系统启动后的相对时间）对内核空间和用户空间都很有用。大量代码必须感知时间的流逝。两次运行时间读数（当前值与过去值）之间的差值，就是这种相对性的简单度量。</p>
+<p>定时器中断对操作系统的管理至关重要。大量内核功能的生灭都与时间流逝紧密相关。定时器中断定期执行的部分工作包括：</p>
+<ul>
+<li>更新系统运行时间</li>
+<li>更新实际时间</li>
+<li>在SMP系统上，确保调度器运行队列处于平衡状态，若不平衡则进行平衡调整（如第4章"进程调度"所述）</li>
+<li>运行所有已到期的动态定时器</li>
+<li>更新资源使用情况和处理器时间统计信息</li>
+</ul>
+<p>其中部分工作会在每次定时器中断时执行——也就是说，这些工作以节拍率的频率执行。而其他函数则定期执行，但仅在第n次定时器中断时才触发。也就是说，这些函数以节拍率的某个分数频率执行。在"定时器中断处理程序"一节中，我们将详细探讨该中断处理程序。</p>
+<h3 id="节拍率hz">节拍率：HZ</h3>
+<p>系统定时器的频率（即节拍率）是在系统启动时，基于一个静态的预处理器定义
+HZ 来设定的。对于每个受支持的体系结构，HZ
+的值都不同。在某些受支持的体系结构中，它甚至在不同的机器类型之间也存在差异。</p>
+<p>内核在 <code>&lt;asm/param.h&gt;</code>
+头文件中定义了该值。节拍率的频率为 HZ 赫兹，周期为 1/HZ
+秒。例如，在默认情况下，x86 架构将 HZ 定义为 100。因此，i386
+上的定时器中断频率为 100Hz，即每秒发生 100
+次（每百分之一秒一次，也就是每 10 毫秒一次）。HZ 的其他常见值还有 250 和
+1000，分别对应 4 毫秒和 1 毫秒的周期。</p>
+<p>在编写内核代码时，切勿假定 HZ
+具有任何特定值。如今这已不是一个常见的错误，因为许多体系结构的节拍率各不相同。然而，在过去，Alpha
+是唯一节拍率不等于 100Hz 的架构，经常会看到代码错误地硬编码了值
+100，而实际上本应使用 HZ 值。后文将展示在内核代码中使用 HZ 的示例。</p>
+<p>定时器中断的频率至关重要。正如您所看到的，定时器中断执行大量工作。实际上，内核的整个时间概念都源于系统定时器的周期性。选择合适的值，就像经营一段成功的关系，全在于权衡妥协。</p>
+<h4 id="理想的-hz-值">理想的 HZ 值</h4>
+<p>从 Linux 的最初版本开始，i386 架构的定时器中断频率一直是 100
+Hz。然而，在 2.5 开发系列期间，频率被提升到了 1000
+Hz，并且（像这类事情一样）引起了争议。尽管频率后来又回到了 100
+Hz，但它现在是一个配置选项，允许用户编译具有自定义 HZ
+值的内核。由于系统的许多部分都依赖于定时器中断，改变其频率会对系统产生显著影响。当然，选择较大或较小的
+HZ 值各有优缺点。</p>
+<p>提高节拍率意味着定时器中断运行得更频繁。因此，它执行的工作也会更频繁地发生。这带来以下好处：</p>
+<ul>
+<li>定时器中断具有更高的分辨率，因此所有定时事件也具有更高的分辨率。</li>
+<li>定时事件的准确性得到提高。</li>
+</ul>
+<p>分辨率随着节拍率的提高而同比例提升。例如，当 HZ=100
+时，定时器的粒度是 10 毫秒。换句话说，所有周期性事件都沿着定时器中断的
+10
+毫秒周期发生，无法保证更精细的精度(我们这里使用的是计算机领域的"精度"含义，而非科学上的。科学上的精度是对可重复性的统计度量。在计算机中，精度是指用于表示一个值的有效数字位数)。而当
+HZ=1000 时，分辨率是 1 毫秒——精细了 10 倍。尽管内核代码可以创建具有 1
+毫秒分辨率的定时器，但并不能保证在 HZ=100 时提供的精度足以在优于 10
+毫秒间隔的任何时间点上执行定时器。</p>
+<p>同样，准确性也以相同的方式提高。假设内核在随机时间启动定时器，由于定时器可能在任何时间到期，但仅在定时器中断发生时才会被执行，因此定时器的平均误差为定时器中断周期的一半。例如，对于
+HZ=100，事件发生的时间平均会在期望时间的 +/- 5
+毫秒范围内。因此，平均误差为 5 毫秒。对于 HZ=1000，平均误差降至 0.5
+毫秒——提高了十倍。</p>
+<h4 id="提高-hz-值节拍率的优势"><strong>提高 HZ
+值（节拍率）的优势</strong></h4>
+<p>更高的分辨率和准确性带来了多重优势：</p>
+<ul>
+<li>内核定时器以更精细的分辨率和更高的准确性执行。（这带来了大量改进，其中之一如下所述。）</li>
+<li>诸如 <code>poll()</code> 和 <code>select()</code>
+这类可选择使用超时值的系统调用，能够以更高的精度执行。</li>
+<li>资源使用情况或系统运行时间等测量值，能以更精细的分辨率被记录。</li>
+<li>进程抢占的发生更加精确。</li>
+</ul>
+<p>最显而易见的性能提升，来自于 <code>poll()</code> 和
+<code>select()</code>
+超时精度的改善。这种改进可能相当显著；一个重度使用这些系统调用的应用程序，可能会浪费大量时间等待定时器中断，而实际上超时时间早已到期。请记住，平均误差（即可能浪费的时间）是定时器中断周期的一半。</p>
+<p>提高节拍率的另一个好处是进程抢占的准确性更高，从而降低了调度延迟。回顾第
+4 章，定时器中断负责递减运行进程的时间片计数。当计数减至零时，会设置
+<code>need_resched</code>
+标志，并且内核会尽快运行调度器。现在假设一个给定的进程正在运行，其时间片剩余
+2 毫秒。在 2
+毫秒后，调度器应该抢占当前运行进程并开始执行一个新进程。但不幸的是，这个事件直到下一次定时器中断发生时才会被处理，而这可能不是在
+2 毫秒之后。最坏的情况下，下一次定时器中断可能要在 <code>1/HZ</code>
+秒之后才会到来！当 <code>HZ=100</code> 时，一个进程可能额外多运行近 10
+毫秒。当然，这一切会达到平衡，公平性得以保持，因为所有任务在调度时都承受着相同的不精确度——但问题不在这里。问题的根源在于延迟抢占所产生的<strong>延迟</strong>。如果待调度的任务有对时间敏感的操作需要执行，例如重新填充音频缓冲区，那么这种延迟可能是不可接受的。将节拍率提高到
+1000Hz，能将最坏情况下的调度超限降低到仅 1
+毫秒，平均情况下的超限降低到仅 0.5 毫秒。</p>
+<h4 id="提高-hz-值节拍率的劣势"><strong>提高 HZ
+值（节拍率）的劣势</strong></h4>
+<p>既然提高节拍率有这么多好处，那它一定有某些缺点，否则最初就会设定为
+1000Hz（甚至更高）。确实，存在一个主要问题：更高的节拍率意味着更频繁的定时器中断，也就意味着更高的开销，因为处理器必须花费更多时间来执行定时器中断处理程序。节拍率越高，处理器执行定时器中断所花费的时间就越多。这不仅导致可用于其他工作的处理器时间减少，还会更频繁地冲击处理器的缓存并增加功耗。</p>
+<p>关于开销影响的问题存在争议。从 <code>HZ=100</code> 提高到
+<code>HZ=1000</code>
+显然会带来十倍的开销。然而，最初的开销究竟有多大呢？最终的共识是，至少在现代系统上，<code>HZ=1000</code>
+并不会产生不可接受的开销，并且向 1000Hz
+定时器的转变对性能的损害并不大。尽管如此，在 2.6
+内核中，仍然可以在编译时为 <code>HZ</code>
+设置不同的值（并非任意值，例如在x86上一般为100，500和1000）。</p>
+<p><strong>无节拍操作系统</strong></p>
+<p>您可能会问，操作系统是否真的需要一个固定的定时器中断？尽管这已成为 40
+年来的常态，几乎所有通用操作系统都采用类似于本章所述的定时器中断，但
+Linux 内核支持一个称为"无节拍操作"的选项。当内核构建时设置了
+<code>CONFIG_HZ</code>
+配置选项，系统会根据待处理的定时器动态地调度定时器中断。定时器中断不再是固定地每
+1
+毫秒触发一次，而是根据需要被动态地调度和重新调度。如果下一个定时器设定在
+3 毫秒后触发，那么定时器中断就在 3
+毫秒后触发。在此之后，如果没有工作需要处理的时间长达 50
+毫秒，内核会将中断重新调度到 50 毫秒后再触发。</p>
+<p>减少开销是受欢迎的，但真正的收益在于功耗的节省，尤其是在空闲系统上。在基于标准节拍的系统中，即使是在空闲期间，内核也需要处理定时器中断。而在无节拍系统中，空闲时刻不会被不必要的定时中断所打断，从而降低了系统功耗。无论空闲期是
+200 毫秒还是 200 秒，长期累积的收益将转化为可观的节电效果。</p>
+<h3 id="jiffies变量">jiffies变量</h3>
+<ul>
+<li>jiffies
+是一个全局变量，记录自系统启动以来发生的时钟“滴答”（tick）数量。内核在启动时将其初始化为
+0，并在每次定时器中断时将其加 1。</li>
+<li>由于每秒有 HZ 次定时器中断，所以每秒有 HZ 个
+jiffies。系统运行时间（uptime）等于 jiffies / HZ（秒）。</li>
+<li>实际实现略有复杂：内核初始化 jiffies
+为一个“特殊的初始值”（offset），使变量更频繁地溢出以便捕捉
+bug；要取得真实值时要先减去这个偏移。</li>
+</ul>
+<h4 id="在内核中的声明与常用换算">在内核中的声明与常用换算</h4>
+<ul>
+<li>jiffies 在头文件 &lt;linux/jiffies.h&gt; 中声明为： extern unsigned
+long volatile jiffies;</li>
+<li>把秒转换为 jiffies（ticks）： seconds * HZ</li>
+<li>把 jiffies 转换为秒： jiffies / HZ</li>
+<li>将秒换算为 ticks 更常见，例如设置未来某个时间点： unsigned long
+time_stamp = jiffies; /* now <em>/ unsigned long next_tick = jiffies +
+1; /</em> one tick from now <em>/ unsigned long later = jiffies +
+5</em>HZ; /* five seconds from now <em>/ unsigned long fraction =
+jiffies + HZ / 10; /</em> a tenth of a second from now */</li>
+<li>一般只有与用户空间通信时才会把 ticks
+换算为秒，内核内部通常不关心绝对时间。</li>
+</ul>
+<h4 id="jiffies-的内部表示与溢出问题">jiffies 的内部表示与溢出问题</h4>
+<ul>
+<li>jiffies 一直定义为 unsigned long：在 32 位架构上是 32 位，在 64
+位架构上是 64 位。</li>
+<li>示例溢出时间：若 HZ=100，32-bit jiffies 大约在 497 天后溢出；若
+HZ=1000，则约在 49.7 天后溢出。</li>
+<li>如果在所有架构上都把 jiffies 存为 64 位（u64），对于合理的 HZ
+值，jiffies
+将几乎永远不会溢出。但出于性能和历史兼容性的考虑，开发者希望保留 jiffies
+为 unsigned long。</li>
+<li>解决办法（linker magic）：在 &lt;linux/jiffies.h&gt; 中除了 jiffies
+之外还声明了一个 64 位变量： extern u64 jiffies_64;
+链接脚本（ld）在链接内核镜像时将 jiffies 覆盖到 jiffies_64 的起始位置：
+jiffies = jiffies_64; 因此，在 32 位机器上，jiffies 代表 jiffies_64 的低
+32 位；大多数代码仍然直接读 jiffies（低 32
+位），而时间管理代码会使用完整的 64 位值以防止溢出。</li>
+<li>在 64 位架构上，jiffies_64 和 jiffies 指向相同的值；可以直接读取
+jiffies，也可以调用 get_jiffies_64() 来读取完整的 64
+位值，二者等效。</li>
+</ul>
+<blockquote>
+<p>在 32 位架构上，无法以原子方式一次性读取 64 位值的两个 32
+位字。因此需要get_jiffies_64()来读取完整的 64 位
+jiffies。该特殊函数在读取之前通过 xtime_lock 对 jiffies
+计数加锁，从而保证读取的一致性与原子性。</p>
+</blockquote>
+<h4 id="jiffies-的环绕wraparound">jiffies 的环绕（Wraparound）</h4>
+<p>像任何 C 整数一样，当 jiffies
+增加超过其能表示的最大值时会发生溢出（wraparound）。对于 32
+位无符号整数，最大值是 2^32 − 1 =
+4294967295，因此计数在达到该值后再加一就会回绕到 0。</p>
+<p>举例说明一个潜在的问题： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">long</span> timeout = jiffies + HZ/<span class="number">2</span>;        <span class="comment">/* timeout in 0.5s */</span></span><br><span class="line"><span class="comment">/* do some work ... */</span></span><br><span class="line"><span class="comment">/* then see whether we took too long */</span></span><br><span class="line"><span class="keyword">if</span> (timeout &gt; jiffies) &#123;</span><br><span class="line">    <span class="comment">/* we did not time out, good ... */</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">/* we timed out, error ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 意图是在半秒后超时。若在设置
+<code>timeout</code> 之后 <code>jiffies</code> 发生了回绕（从最大值回到
+0），那么 <code>jiffies</code> 可能变得比 <code>timeout</code> 小，导致
+<code>if</code>
+条件结果被颠倒（逻辑上已经超时但条件判断显示未超时），从而产生错误。</p>
+<p>为避免这种情况，内核提供了四个用于比较 tick 计数的宏（位于
+<code>&lt;linux/jiffies.h&gt;</code>），它们能正确处理回绕。下面是简化版定义：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> time_after(unknown, known) ((long)(known) - (long)(unknown) &lt; 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> time_before(unknown, known) ((long)(unknown) - (long)(known) &lt; 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> time_after_eq(unknown, known) ((long)(unknown) - (long)(known) &gt;= 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> time_before_eq(unknown, known) ((long)(known) - (long)(unknown) &gt;= 0)</span></span><br></pre></td></tr></table></figure> - 参数说明：<code>unknown</code> 通常为
+<code>jiffies</code>（当前时间），<code>known</code>
+为要比较的目标时间（例如 <code>timeout</code>）。 - 语义： -
+<code>time_after(unknown, known)</code>：若 unknown 在 known 之后则返回
+true。 - <code>time_before(unknown, known)</code>：若 unknown 在 known
+之前则返回 true。 - 带 <code>_eq</code> 的版本在等于时也返回 true。</p>
+<p>使用这些宏修改后的超时示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">long</span> timeout = jiffies + HZ/<span class="number">2</span>;        <span class="comment">/* timeout in 0.5s */</span></span><br><span class="line"><span class="comment">/* ... */</span></span><br><span class="line"><span class="keyword">if</span> (time_before(jiffies, timeout)) &#123;</span><br><span class="line">    <span class="comment">/* we did not time out, good ... */</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">/* we timed out, error ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>为什么这些宏能防止回绕带来的错误？ -
+这些宏利用有符号整数（long）的减法和符号位来判断先后关系：无论是否发生了回绕，通过把差值作为带符号数比较，仍能得到正确的先后顺序（在合理的时间差范围内，这些宏为标准做法并被广泛使用）。你可以用不同参数值自己演练，模拟某一参数回绕到
+0 后的情况，观察结果如何保持正确。</p>
+<h2 id="用户空间与-hzuser-space-and-hz">用户空间与 HZ（User-Space and
+HZ）</h2>
+<p>早期内核（2.6 之前）直接以内核的 HZ 值向用户空间导出基于 tick
+的值，这会导致当内核 HZ 改变时用户空间看到的数值不再正确 ——
+因为某些用户空间程序假定了特定的 HZ 值。举例：若内核 HZ 被扩大，导出的
+uptime 等值会被误放大，用户看到的“20 小时”实际上可能只有 2 小时。</p>
+<p>为避免这种兼容性问题，内核定义了 USER_HZ，表示用户空间所期望的 HZ
+值（在 x86 上历史上 USER_HZ = 100）。内核中提供了函数用来把以内核 HZ
+单位计数的 jiffies 转换成以 USER_HZ 单位的值： -
+jiffies_to_clock_t()：将（32 位）jiffies（以 HZ 为单位）转换为以 USER_HZ
+为单位的 “clock ticks” 值。 - jiffies_64_to_clock_t()：将 64 位
+jiffies_64 从 HZ 转换到 USER_HZ。</p>
+<p>当 USER_HZ 与 HZ 是整倍数关系、且 USER_HZ ≤ HZ
+时，转换表达式较简单，例如： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> x / (HZ / USER_HZ);</span><br></pre></td></tr></table></figure>
+若两者不是整倍数关系，则使用更复杂的算法以保持精度与兼容性。</p>
+<p>示例（将计时结果转换并输出给用户空间）： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">long</span> start;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">long</span> total_time;</span><br><span class="line"></span><br><span class="line">start = jiffies;</span><br><span class="line"><span class="comment">/* do some work ... */</span></span><br><span class="line">total_time = jiffies - start;</span><br><span class="line">printk(<span class="string">&quot;That took %lu ticks\n&quot;</span>, <span class="type">jiffies_to_clock_t</span>(total_time));</span><br></pre></td></tr></table></figure>
+用户空间期望看到的值是以 USER_HZ 为单位的
+ticks。如果你想对用户更友好地显示，通常应把结果转换为秒：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printk(<span class="string">&quot;That took %lu seconds\n&quot;</span>, total_time / HZ);</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -958,135 +1235,6 @@ n。请编写一个程序，找出并返回所有从节点 1 到节点 n
 <h3 id="判断子序列">392.判断子序列</h3>
 <p>常规做的话双指针法即可，按照动态规划来做是和第一题是差不多的思路
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isSubsequence</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(s.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(t.<span class="built_in">size</span>()+<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= s.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt;= t.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(s[i<span class="number">-1</span>] == t[j<span class="number">-1</span>])&#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j] = dp[i][j<span class="number">-1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[s.<span class="built_in">size</span>()][t.<span class="built_in">size</span>()] == s.<span class="built_in">size</span>() ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/10/02/kamabagu7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/02/kamabagu7/" class="post-title-link" itemprop="url">代码随想录 | 八股-TCP连接</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-10-03 05:29:05 / 修改时间：05:48:16" itemprop="dateCreated datePublished" datetime="2025-10-03T05:29:05+08:00">2025-10-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3
-id="tcp连接三次握手的过程为什么是三次可以是两次或者更多吗">TCP连接三次握手的过程，为什么是三次，可以是两次或者更多吗？</h3>
-<ol type="1">
-<li>三次握手的过程</li>
-</ol>
-<p>第一次握手：客户端向服务器发送一个SYN
-（同步序列编号）报文，请求建立连接，客户端进入SYN_SENT 状态。
-第二次握手：服务器收到SYN 报文后，如果同意建立连接，则会发送一个SYN-ACK
-（同步确认）报文作为响应，同时进入SYN_RCVD 状态。
-第三次握手：客户端收到服务器的SYN-ACK 报文后，会发送一个ACK
-（确认）报文作为最终响应，之后客户端和服务器都进入ESTABLISHED
-状态，连接建立成功。</p>
-<p>(2)为什么需要三次握手
-因为TCP需要简历双向的数据连接。通过三次握手，客户端和服务器都能够确认对方的接收和发送能力。第一次握手确认了客户端到服务器的通道是开放的；第二次握手确认了服务器到客户端的通道是开放的；第三次握手则确认了客户端接收到服务器的确认，从而确保了双方的通道都是可用的。</p>
-<p>而如果仅使用两次握手，服务器可能无法确定客户端的接收能力是否正常，比如客户端可能已经关闭了连接，但之前发送的连接请求报文在网络上延迟到达了服务器，服务器就会主动去建立一个连接，但是客户端接收不到，导致资源的浪费。而四次握手可以优化为三次。</p>
-<h3
-id="tcp连接四次挥手的过程为什么是四次">TCP连接四次挥手的过程，为什么是四次？</h3>
-<p>（1）四次挥手的过程</p>
-<p>第一次挥手：客户端发送一个FIN报文给服务端，表示自己要断开数据传送，报文中会指定一个序列号
-(seq=x)。然后,客户端进入FIN-WAIT-1 状态。
-第二次挥手：服务端收到FIN报文后，回复ACK报文给客户端，且把客户端的序列号值+1，作为ACK报文的序列号(seq=x+1)。然后，服务端进入CLOSE-WAIT(seq=x+1)状态，客户端进入FIN-WAIT-2状态。
-第三次挥手：服务端也要断开连接时，发送FIN报文给客户端，且指定一个序列号(seq=y+1)，随后服务端进入LAST-ACK状态。
-第四次挥手：客户端收到FIN报文后，发出ACK报文进行应答，并把服务端的序列号值+1作为ACK报文序列号(seq=y+2)。此时客户端进入TIME-WAIT状态。服务端在收到客户端的ACK
-报文后进入CLOSE 状态。如果客户端等待2MSL没有收到回复，才关闭连接。</p>
-<p>（2）为什么需要四次挥手</p>
-<p>TCP是全双工通信，可以双向传输数据。任何一方都可以在数据传送结束后发出连接释放的通知，待对方确认后进入半关闭状态。
-当另一方也没有数据再发送的时候，则发出连接释放通知，对方确认后才会完全关闭
-TCP
-连接。因此两次挥手可以释放一端到另一端的TCP连接，完全释放连接一共需要四次挥手。</p>
-<p>只有通过四次挥手，才可以确保双方都能接收到对方的最后一个数据段的确认，主动关闭方在发送完最后一个ACK后进入TIME-WAIT
-状态，这是为了确保被动关闭方接收到最终的ACK
-，如果被动关闭方没有接收到，它可以重发FIN
-报文，主动关闭方可以再次发送ACK 。</p>
-<p>而如果使用三次挥手，被动关闭方可能在发送最后一个数据段后立即关闭连接，而主动关闭方可能还没有接收到这个数据段的确认。</p>
-<h3
-id="http的keep-alive是什么tcp-的-keepalive-和-http-的-keep-alive-是一个东西吗">HTTP的Keep-Alive是什么？TCP
-的 Keepalive 和 HTTP 的 Keep-Alive 是一个东西吗？</h3>
-<p>HTTP 的 Keep-Alive，是由应用层实现的，称为 HTTP 长连接
-每次请求都要经历这样的过程：建立 TCP连接 -&gt; HTTP请求资源 -&gt;
-响应资源 -&gt;
-释放连接，这就是HTTP短连接，但是这样每次建立连接都只能请求一次资源，所以HTTP
-的 Keep-Alive实现了使用同一个 TCP 连接来发送和接收多个 HTTP
-请求/应答，避免了连接建立和释放的开销，就就是 HTTP
-长连接。通过设置HTTP头Connection: keep-alive来实现。</p>
-<p>TCP 的 Keepalive，是由TCP 层（内核态）实现的，称为 TCP
-保活机制，是一种用于在 TCP 连接上检测空闲连接状态的机制
-当TCP连接建立后，如果一段时间内没有任何数据传输，TCP
-Keepalive会发送探测包来检查连接是否仍然有效。</p>
-<p>补充说明：</p>
-<p>其实这里tcp的keepalive，不只是支持http，还可以支持ftp和smtp的，他是一个能力，类似于gc。</p>
-<p>http的这个keepalive感觉更是一种策略吧，比如你有一个http用了keepalive，然后过了一会，你不传输数据了，这个时候没有通知对方close，这个时候tcp的keepalive就会起到用处去关闭这次链接。</p>
 
       
     </div>

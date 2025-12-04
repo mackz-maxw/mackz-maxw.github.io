@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,354 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/07/03/kamabagu4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/kamabagu4/" class="post-title-link" itemprop="url">代码随想录 | 八股-HTTP版本</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-04 08:06:11" itemprop="dateCreated datePublished" datetime="2025-07-04T08:06:11+08:00">2025-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-27 04:18:53" itemprop="dateModified" datetime="2025-07-27T04:18:53+08:00">2025-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/comp-basic/" itemprop="url" rel="index"><span itemprop="name">comp basic</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="http1.0和http1.1的区别">HTTP1.0和HTTP1.1的区别</h3>
+<p><strong>🚗 连接方式：从“一次一请”到“多次复用”</strong> * <strong>HTTP
+1.0：</strong>
+<strong>默认短连接</strong>。浏览器每请求一个资源（图片、CSS、JS等），都要和服务器<strong>建立一次新的TCP连接</strong>，用完后立即关闭。
+* <strong>HTTP 1.1：</strong>
+<strong>默认持久连接</strong>。浏览器和服务器建立一个TCP连接后，可以在这个连接上<strong>连续发送多个请求和接收多个响应</strong>通过Connection:
+keep-alive头来实现持久连接。</p>
+<p><strong>🏠 Host头：从“单间平房”到“共享公寓”</strong> * <strong>HTTP
+1.0：</strong>
+请求中<strong>没有<code>Host</code>请求头</strong>。服务器认为一个IP地址就对应一个网站（一个“主机”）。想象成：一个门牌号只住一户人家。
+* <strong>HTTP 1.1：</strong>
+<strong>请求中必须包含<code>Host</code>请求头</strong>。指明请求要访问的是服务器上的哪个<strong>虚拟主机/域名</strong>。这使<strong>虚拟主机托管</strong>成为可能（一台服务器托管多个不同域名的网站）。象成：一个门牌号（服务器IP）里住了好几户人家（不同网站），送快递必须写明收件人姓名（<code>Host</code>头）才知道送到哪户。</p>
+<p><strong>🚀 请求处理：从“排队等”到“连续发”（理论上）</strong> *
+<strong>HTTP 1.0：</strong>
+客户端必须<strong>等前一个请求的响应完全返回后，才能发送下一个请求</strong>。想象成：收费站，前一辆车完全通过栏杆落下再抬起，后一辆车才能进。
+* <strong>HTTP 1.1：</strong>
+支持<strong>管道化</strong>。客户端可以<strong>在一个连接上连续发送多个请求，而不用等待每个响应</strong>。服务器必须按照收到请求的顺序返回响应。想象成：收费站允许连续进多辆车，出来的顺序必须和进去的顺序一致。<strong>（理论上提升速度，但实践中问题多，较少用）</strong></p>
+<p><strong>🧊 缓存控制：从“简单指示”到“精细管理”</strong> * <strong>HTTP
+1.0：</strong>
+主要用<code>If-Modified-Since/Expires</code>（绝对过期时间）和<code>Pragma: no-cache</code>（简单不缓存）控制缓存。功能简单，不够灵活。
+* <strong>HTTP 1.1：</strong>
+引入了更强大、更精细的<strong><code>Cache-Control</code>头</strong>。可以指定<code>max-age</code>（相对过期时间）、<code>no-cache</code>（需重新验证）、<code>no-store</code>（禁止存储）、<code>public``private</code>等众多指令。<strong>（缓存控制能力大大增强！）</strong>也可使用<code>If-None-Match/Etag</code></p>
+<p><strong>⏳ 带宽优化：从“全有全无”到“按需取件”</strong> * <strong>HTTP
+1.0：</strong>
+如果下载大文件中断，<strong>必须从头开始重新下载</strong>。 *
+<strong>HTTP 1.1：</strong>
+支持<strong>断点续传</strong>。使用<code>Range</code>请求头可以指定只请求资源的一部分（如从第1000个字节开始），服务器用<code>206 Partial Content</code>状态码和<code>Content-Range</code>响应头回部分内容。想象成：下载电影断网了，续播时可以从上次断开的地方继续下载，不用重头看。</p>
+<p><strong>📦 分块传输：从“等菜齐”到“边做边上”</strong> * <strong>HTTP
+1.0：</strong>
+服务器必须在知道资源的<strong>完整长度</strong>（<code>Content-Length</code>）后才能开始发送响应。对于动态生成的内容，需要等全部生成完才能发送。
+* <strong>HTTP 1.1：</strong>
+引入了<strong>分块传输编码</strong>。服务器可以将响应分成多个“块”发送，并在最后一个块发送完毕后标记结束。使用<code>Transfer-Encoding: chunked</code>响应头。想象成：厨房边菜边端上桌，不用等所有菜都做好。<strong>（提升动态内容响应速度，减少延迟）</strong></p>
+<p><strong>📝 错误处理：从“模糊”到“更明确”</strong> * <strong>HTTP
+1.1：</strong> 新增了一些状态码，提供更精确的错误信息： *
+<code>409 Conflict</code>：请求与服务器当前状态冲突。 *
+<code>410 Gone</code>：资源被永久删除（比<code>404 Not Found</code>更明确）。
+*
+<code>100 Continue</code>：客户端发送大请求体前，先询问服务器是否愿意接收，服务器同意（<code>100 Continue</code>）后再发完整请求。避免带宽浪费。
+* <strong>响应格式：</strong> HTTP 1.1
+要求响应行中必须包含<strong>原因短语</strong>（如
+<code>HTTP/1.1 200 OK</code>），而 1.0
+只要求状态码是可选的（虽然实践中通常都有）。</p>
+<h3 id="http2.0与http1.1的区别">HTTP2.0与HTTP1.1的区别？</h3>
+<blockquote>
+<p><strong>一句话记忆：HTTP/2 = 更快、更智能、更省资源！</strong></p>
+</blockquote>
+<h4 id="传输方式从文本排队到二进制分帧">1️⃣
+<strong>传输方式：从“文本排队”到“二进制分帧”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>用<strong>纯文本格式</strong>发送请求和响应（比如
+<code>GET /index.html HTTP/1.1</code>）。<br />
+</li>
+<li>多个请求必须<strong>排队串行处理</strong>（即使开了管道化也有队头阻塞问题）。<br />
+</li>
+<li><strong>想象：</strong>
+邮局用明信片寄信，一次只能寄一张，必须等回信才能寄下一张，效率低。✉️➡️✉️➡️✉️</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>将数据拆分成更小的<strong>二进制帧（Frame）</strong>（头部帧 HEADERS
++ 数据帧 DATA）。<br />
+</li>
+<li>同一个连接上，<strong>多个请求/响应的帧可以混合发送、并行传输</strong>，互不阻塞！<br />
+</li>
+<li><strong>想象：</strong>
+快递公司把包裹拆成小件，打上标签，通过立体分拣通道同时运输，到目的地再组装。📦📦📦
+→ 🚚💨</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：彻底解决队头阻塞，大幅提升并发效率！</strong></p>
+<h4 id="连接方式从多路排队到真多路复用">2️⃣
+<strong>连接方式：从“多路排队”到“真·多路复用”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>虽然支持持久连接（一个TCP连多个请求），但<strong>响应必须按顺序返回</strong>（队头阻塞）。<br />
+</li>
+<li>浏览器通常开 <strong>6~8个TCP连接</strong>
+并行请求资源（但占用资源多）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li><strong>一个TCP连接</strong> 上即可实现
+<strong>成百上千个流的并行传输</strong>（每个流是一个请求/响应）。<br />
+</li>
+<li>帧自带流ID标识，接收方能按ID重组数据，无需排队等待！<br />
+</li>
+<li><strong>想象：</strong> 从多条乡间小路 →
+升级成一条双向十车道高速路，所有车辆（请求）畅通无阻。🛣️🚗🚙🚕</li>
+</ul></li>
+</ul>
+<p>👉
+<strong>核心价值：一个连接解决所有请求，省资源、低延迟！</strong></p>
+<h4 id="头部信息从重复臃肿到高效压缩">3️⃣
+<strong>头部信息：从“重复臃肿”到“高效压缩”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>每次请求都携带大量<strong>重复的文本头部</strong>（如Cookie、User-Agent），不压缩。<br />
+</li>
+<li><strong>浪费带宽</strong>（尤其小文件请求时，头部可能比数据还大）。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>使用 <strong>HPACK 算法压缩头部</strong>：
+<ul>
+<li>客户端和服务端维护<strong>“头部字典”</strong>，相同头部只传索引；<br />
+</li>
+<li>用霍夫曼编码压缩文本。<br />
+</li>
+</ul></li>
+<li><strong>头部大小减少 30%~90%</strong>！<br />
+</li>
+<li><strong>想象：</strong> 从每次寄信都手写完整地址 →
+改用电子二维码扫码寄件，地址库自动匹配。📮→📲</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：大幅节省带宽，加快小资源加载！</strong></p>
+<h4 id="服务器主动推送从被动响应到主动送货">4️⃣
+<strong>服务器主动推送：从“被动响应”到“主动送货”</strong></h4>
+<ul>
+<li><strong>HTTP/1.1：</strong>
+<ul>
+<li>服务器<strong>只能被动响应</strong>客户端请求。<br />
+</li>
+<li>浏览器需解析HTML后，再请求CSS/JS/图片等依赖资源。</li>
+</ul></li>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>服务器可<strong>主动推送</strong>客户端可能需要的资源（如CSS/JS）！<br />
+</li>
+<li>客户端可缓存推送内容，下次直接使用。<br />
+</li>
+<li><strong>想象：</strong>
+点外卖时，商家不仅送米饭，还主动附赠了筷子和纸巾（你知道你一定会需要）。🍚+🥢+🧻</li>
+</ul></li>
+</ul>
+<p>👉 <strong>核心价值：减少请求往返次数，加速页面渲染！</strong></p>
+<h4 id="优先级与流量控制更智能的资源调度">5️⃣
+<strong>优先级与流量控制：更智能的资源调度</strong></h4>
+<ul>
+<li><strong>HTTP/2：</strong>
+<ul>
+<li>客户端可为请求标记<strong>优先级</strong>（如CSS &gt;
+图片），服务器优先处理高优先级流。<br />
+</li>
+<li>支持精细的<strong>流量控制</strong>（基于每个流控制传输速率）。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/1.1：</strong>
+无法真正实现优先级调度（依赖浏览器启发式策略）。</li>
+</ul>
+<h4 id="注意">⚠️ 注意：</h4>
+<ol type="1">
+<li>HTTP/2 <strong>未加密</strong>，但所有主流浏览器只支持
+<strong>HTTP/2 Over TLS</strong>（即 HTTPS）。<br />
+</li>
+<li>HTTP/2 解决了应用层队头阻塞，但 <strong>TCP
+层仍有队头阻塞</strong>（丢包会阻塞所有流）。<br />
+</li>
+<li>这是 HTTP/3（基于QUIC/UDP）要解决的下一代问题！</li>
+</ol>
+<h3 id="http3.0有了解过吗">HTTP3.0有了解过吗？</h3>
+<p>🚀 <strong>核心一句话：HTTP/3 = 抛弃TCP！拥抱QUIC！</strong> &gt;
+<strong>解决 HTTP/2 的终极痛点：TCP 的队头阻塞！</strong></p>
+<h4 id="底层协议革命从-tcp-到-quic基于udp">1️⃣ <strong>底层协议革命：从
+TCP 到 QUIC（基于UDP）</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong> 都跑在 <strong>TCP</strong>
+协议之上。
+<ul>
+<li><strong>TCP 问题：</strong>
+如果传输中<strong>丢了一个包</strong>，后续所有包都要等待重传（即使它们属于不同请求），这就是
+<strong>TCP 队头阻塞</strong>。<br />
+</li>
+<li><strong>想象：</strong>
+快递车队走一条单行道，前一辆车抛锚，后面所有车都得堵着等（无论是不是同一批货物）。🚚❌🚛🚗🚐<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3：</strong> 彻底抛弃 TCP，改用全新协议
+<strong>QUIC（Quick UDP Internet Connections）</strong>，运行在
+<strong>UDP</strong> 之上。
+<ul>
+<li><strong>QUIC 优势：</strong>
+每个请求/响应流是<strong>独立传输的</strong>，丢包只影响当前流，其他流畅通无阻！<br />
+</li>
+<li><strong>想象：</strong>
+快递改用无人机配送，每件包裹独立飞行路线，一个包裹出问题，其他包裹照常送达。✈️📦➡️🏠
+| ✈️📦➡️🏠 | 💥📦❌ | ✈️📦➡️🏠<br />
+👉
+<strong>核心价值：彻底消灭传输层队头阻塞，网络波动时性能大幅提升！</strong></li>
+</ul></li>
+</ul>
+<h4 id="建连速度飞跃0-rtt-与-1-rtt-握手">2️⃣ <strong>建连速度飞跃：0-RTT
+与 1-RTT 握手</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2（TCP+TLS）：</strong>
+<ul>
+<li>首次连接需 <strong>TCP 三次握手（1.5 RTT） + TLS 握手（1~2 RTT） =
+总计 2~3.5 RTT</strong> 延迟才能发送数据。<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li><strong>首次连接：1-RTT 握手</strong>（QUIC
+将传输和加密握手合并）。<br />
+</li>
+<li><strong>重连用户：0-RTT
+握手</strong>！客户端缓存了服务器密钥，首次请求可直接带上加密数据。<br />
+</li>
+<li><strong>想象：</strong>
+进地铁站——旧方式：先排队买票（TCP握手），再安检（TLS握手）；新方式：刷脸直接进（0-RTT）！🎫→🛂→🚇
+→ 😃🔜🚇<br />
+👉 <strong>核心价值：首次访问更快，重复访问“闪电启动”！</strong></li>
+</ul></li>
+</ul>
+<h4 id="连接迁移网络切换不断线">3️⃣
+<strong>连接迁移：网络切换不断线</strong></h4>
+<ul>
+<li><strong>HTTP/1.1 &amp; HTTP/2：</strong>
+<ul>
+<li>连接绑定 <strong>IP + 端口 +
+TCP协议</strong>。切换网络（如WiFi→4G）会导致IP变化，连接必须重建！<br />
+</li>
+</ul></li>
+<li><strong>HTTP/3（QUIC）：</strong>
+<ul>
+<li>使用 <strong>连接ID（Connection ID）</strong> 唯一标识连接。<br />
+</li>
+<li>切换网络时，只要客户端能通信，连接ID不变，会话无缝延续！<br />
+</li>
+<li><strong>想象：</strong>
+旧手机卡换手机要重新插卡激活；eSIM卡换手机自动联网，号码不变。📱➡️📱 =
+❌ vs 📱➡️📱 = ✅<br />
+👉
+<strong>核心价值：移动端福音！地铁进隧道、WiFi切5G，视频会议不中断！</strong></li>
+</ul></li>
+</ul>
+<h4 id="内嵌加密安全是强制要求">4️⃣
+<strong>内嵌加密：安全是强制要求</strong></h4>
+<ul>
+<li><strong>QUIC 协议设计之初就强制加密</strong>（使用 TLS 1.3）。<br />
+</li>
+<li><strong>没有明文的 QUIC！</strong> 所有头部和载荷默认加密。<br />
+</li>
+<li><strong>对比：</strong> HTTP/2
+的加密（HTTPS）是可选但事实强制，HTTP/3 直接内嵌到协议层。<br />
+👉
+<strong>核心价值：提升安全性，防止运营商劫持、降低中间设备干扰。</strong></li>
+</ul>
+<h4 id="改进的多路复用-头部压缩">5️⃣ <strong>改进的多路复用 &amp;
+头部压缩</strong></h4>
+<ul>
+<li><strong>多路复用：</strong> 继承 HTTP/2
+的流多路复用（一个连接并发多个流），且由于基于
+QUIC，<strong>无队头阻塞</strong>。<br />
+</li>
+<li><strong>头部压缩：</strong> 升级为 <strong>QPACK</strong> 算法（类似
+HTTP/2 的 HPACK，但适应 QUIC 乱序特性）。<br />
+👉 <strong>核心价值：在 HTTP/2 高效基础上，更稳定！</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1914,234 +2262,6 @@ Shell 作业控制（Process Groups and Shell Job Control）</h3>
 通常等于组内某个进程（称为进程组领导者）的进程 ID。</li>
 <li>内核支持对进程组的操作（如发送信号），shell
 利用这一特性实现对整个管道作业的挂起、恢复等控制。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/oper_sys6%E7%BB%84%E6%88%902/" class="post-title-link" itemprop="url">操作系统基础 | 2.6 linux组成概述2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-24 05:07:51 / 修改时间：05:24:46" itemprop="dateCreated datePublished" datetime="2025-06-24T05:07:51+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os-basic/" itemprop="url" rel="index"><span itemprop="name">os basic</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="程序programs">程序（Programs）</h3>
-<ul>
-<li>程序通常有两种形式：
-<ol type="1">
-<li><strong>源代码</strong>：人类可读的文本，使用如 C
-这样的编程语言编写。<br />
-</li>
-<li><strong>二进制机器码</strong>：计算机可执行的指令。源代码需经过编译和链接，才能变为机器码。<br />
-</li>
-</ol></li>
-<li>脚本（script）是包含命令的文本文件，由 shell
-或其他命令解释器直接处理。</li>
-<li>“程序”这两个含义通常可以互换，因为编译和链接会将源代码转换为等价的二进制代码。</li>
-</ul>
-<h4 id="过滤器filters">过滤器（Filters）</h4>
-<ul>
-<li>过滤器是指一类程序：从标准输入（stdin）读取数据，处理后将结果写到标准输出（stdout）。</li>
-<li>常见过滤器有：<code>cat</code>、<code>grep</code>、<code>tr</code>、<code>sort</code>、<code>wc</code>、<code>sed</code>、<code>awk</code>
-等。</li>
-</ul>
-<h4 id="命令行参数command-line-arguments">命令行参数（Command-line
-arguments）</h4>
-<ul>
-<li>在 C 语言中，程序可以通过 main 函数的参数访问命令行参数：
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>argc</code>：参数个数</li>
-<li><code>argv</code>：参数字符串数组，<code>argv[0]</code>
-通常是程序名</li>
-</ul></li>
-</ul>
-<h3 id="进程processes">进程（Processes）</h3>
-<ul>
-<li>进程是正在运行的程序实例。</li>
-<li>当程序被执行时，内核会将其代码加载到虚拟内存，分配变量空间，并建立记录进程信息的数据结构（如进程ID、终止状态、用户ID、组ID等）。</li>
-<li>内核负责在进程间分配和管理有限资源（如内存、CPU、网络带宽等），进程结束时，资源会被回收。</li>
-</ul>
-<h4 id="进程内存布局">进程内存布局</h4>
-<p>进程的内存逻辑上分为以下几个部分（段）： -
-<strong>Text</strong>：程序指令（代码段） -
-<strong>Data</strong>：静态变量 -
-<strong>Heap</strong>：动态分配内存区域 -
-<strong>Stack</strong>：函数调用和局部变量的栈空间</p>
-<h4 id="进程创建与程序执行">进程创建与程序执行</h4>
-<ul>
-<li>进程可通过 <code>fork()</code> 系统调用创建新进程。调用
-<code>fork()</code> 的为父进程，新创建的为子进程。</li>
-<li>子进程会复制父进程的数据、堆和栈（代码段通常只读并共享）。</li>
-<li>子进程可以继续执行父进程的代码，也可以通过 <code>execve()</code>
-系统调用加载并执行新程序。<code>execve()</code>
-会用新程序的代码和数据替换原有的段。</li>
-<li>C 标准库还提供了一系列以 <code>exec</code> 开头的函数，都是对
-<code>execve()</code> 的封装，统称为 <code>exec()</code>。</li>
-</ul>
-<h4 id="进程id与父进程id">进程ID与父进程ID</h4>
-<ul>
-<li>每个进程有唯一的进程ID（PID）。</li>
-<li>每个进程还有一个父进程ID（PPID），表示哪个进程创建了它。</li>
-</ul>
-<h4 id="进程终止与终止状态">进程终止与终止状态</h4>
-<ul>
-<li>进程可以通过 <code>_exit()</code> 系统调用（或相关的
-<code>exit()</code> 库函数）主动终止，也可以被信号杀死。</li>
-<li>进程终止时会返回一个终止状态（小的非负整数），父进程可以通过
-<code>wait()</code> 系统调用获取。</li>
-<li>约定：终止状态为 0 表示成功，非零表示出错。大多数 shell 用变量
-<code>$?</code> 保存上一个程序的终止状态。 整理与翻译如下：</li>
-</ul>
-<h4 id="进程的用户和组标识凭证">进程的用户和组标识（凭证）</h4>
-<p>每个进程都关联有多个用户ID（UID）和组ID（GID），包括：</p>
-<ul>
-<li><strong>实际用户ID（real UID）和实际组ID（real
-GID）</strong>：标识进程所属的用户和组。新进程从父进程继承这些ID。登录
-shell 的实际UID和GID来自系统密码文件（/etc/passwd）中的相应字段。</li>
-<li><strong>有效用户ID（effective UID）和有效组ID（effective
-GID）</strong>：这两个ID（加上补充组ID）用于判断进程访问受保护资源（如文件、进程间通信对象）时的权限。通常有效ID与实际ID相同。更改有效ID可以让进程临时获得其他用户或组的权限。</li>
-<li><strong>补充组ID（supplementary group
-IDs）</strong>：标识进程所属的其他组。新进程从父进程继承这些ID，登录
-shell 的补充组ID来自系统组文件（/etc/group）。</li>
-</ul>
-<h4 id="特权进程">特权进程</h4>
-<ul>
-<li>在传统 UNIX 系统中，有效用户ID为0（即超级用户
-root）的进程被称为<strong>特权进程</strong>，可以绕过内核的权限检查。</li>
-<li>其他用户运行的进程称为<strong>非特权进程</strong>，其有效用户ID非0，必须遵守内核的权限规则。</li>
-<li>进程可以通过由特权进程创建（如 root 启动的 shell），或通过
-set-user-ID 机制（程序文件设置了 setuid
-位，进程获得该文件所有者的有效UID）获得特权。</li>
-</ul>
-<h4 id="能力capabilities">能力（Capabilities）</h4>
-<ul>
-<li>从 Linux 2.2
-内核开始，传统上属于超级用户的权限被细分为多个<strong>能力（capabilities）</strong>。</li>
-<li>每个特权操作都对应一个能力，进程只有拥有相应能力才能执行该操作。</li>
-<li>传统的超级用户进程（有效UID为0）等价于拥有所有能力的进程。</li>
-<li>只授予进程部分能力，可以让它执行部分特权操作，同时限制其他操作。</li>
-<li>能力名称以 <code>CAP_</code> 开头，如 <code>CAP_KILL</code>。</li>
-</ul>
-<h4 id="init-进程">init 进程</h4>
-<ul>
-<li>系统启动时，内核会创建一个特殊进程
-<strong>init</strong>（所有进程的“父进程”），其程序文件为
-<code>/sbin/init</code>。</li>
-<li>系统中所有进程都是由 init 或其子孙进程通过 fork() 创建的。</li>
-<li>init
-进程的进程ID永远为1，拥有超级用户权限，不能被杀死（即使是超级用户也不行），只会在系统关机时终止。</li>
-<li>init 的主要任务是创建和管理系统运行所需的各种进程。</li>
-</ul>
-<h4 id="守护进程daemon-processes">守护进程（Daemon processes）</h4>
-<ul>
-<li>守护进程是一类特殊用途的进程，由系统创建和管理，其特点包括：
-<ul>
-<li><strong>生命周期长</strong>：通常在系统启动时启动，直到系统关闭才结束。</li>
-<li><strong>后台运行</strong>：没有控制终端，无法直接读取输入或输出到终端。</li>
-</ul></li>
-<li>常见的守护进程有
-<code>syslogd</code>（记录系统日志）、<code>httpd</code>（提供网页服务）等。</li>
-</ul>
-<hr />
-<h4 id="环境变量列表environment-list">环境变量列表（Environment
-list）</h4>
-<ul>
-<li>每个进程都有一个环境变量列表，存储在进程的用户空间内存中。每个环境变量由名称和值组成。</li>
-<li>通过 <code>fork()</code>
-创建新进程时，子进程会继承父进程的环境变量列表。这为父进程向子进程传递信息提供了机制。</li>
-<li>进程用 <code>exec()</code>
-执行新程序时，可以选择继承原有环境变量，或指定新的环境变量。</li>
-<li>在大多数 shell 中，用 <code>export</code> 命令（C shell 用
-<code>setenv</code>）创建环境变量，例如： <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MYVAR=<span class="string">&#x27;Hello world&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>C 程序可以通过外部变量 <code>char **environ</code>
-访问环境变量，也可用相关库函数获取和修改环境变量。</li>
-<li>环境变量用途广泛，如
-<code>HOME</code>（用户主目录）、<code>PATH</code>（shell
-查找命令的目录列表）等。</li>
-</ul>
-<h4 id="资源限制resource-limits">资源限制（Resource limits）</h4>
-<ul>
-<li>每个进程都会消耗资源，如打开的文件数、内存、CPU 时间等。</li>
-<li>进程可用 <code>setrlimit()</code>
-系统调用设置资源消耗的上限。每种资源限制有两个值：
-<ul>
-<li><strong>软限制（soft limit）</strong>：进程实际可用的资源上限。</li>
-<li><strong>硬限制（hard limit）</strong>：软限制可调整的最大值。</li>
-</ul></li>
-<li>非特权进程可以将软限制调整到硬限制以内的任意值，但只能降低硬限制，不能提高。</li>
-<li>新进程通过 <code>fork()</code>
-创建时，会继承父进程的资源限制设置。</li>
-<li>shell 可用 <code>ulimit</code> 命令（C shell 用
-<code>limit</code>）调整资源限制，这些设置会被子进程继承。</li>
 </ul>
 
       

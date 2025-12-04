@@ -122,7 +122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,99 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/05/22/kamacode9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mackz-Maxw">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Maxw的小站">
+      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Maxw的小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/22/kamacode9/" class="post-title-link" itemprop="url">代码随想录 | 刷题-栈与队列</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-23 05:28:26 / 修改时间：03:47:23" itemprop="dateCreated datePublished" datetime="2025-05-23T05:28:26+08:00">2025-05-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="用栈实现队列">232.用栈实现队列</h3>
+<p>我的想法是一旦pop或者peek就把数据导到输出栈，输出后再一个一个push回去。看了题解有更简捷的方式：</p>
+<blockquote>
+<p>在push数据的时候，只要数据放进输入栈就好，但在pop的时候，操作就复杂一些，输出栈如果为空，就把进栈数据全部导入进来（注意是全部导入），再从出栈弹出数据，如果输出栈不为空，则直接从出栈弹出数据就可以了。
+最后如何判断队列为空呢？如果进栈和出栈都为空的话，说明模拟的队列为空了。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyQueue</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; inStack;</span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; outStack;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyQueue</span>() &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        inStack.<span class="built_in">push</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(outStack.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="keyword">while</span>(!inStack.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                outStack.<span class="built_in">push</span>(inStack.<span class="built_in">top</span>());</span><br><span class="line">                inStack.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> r = outStack.<span class="built_in">top</span>();</span><br><span class="line">        outStack.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> r = <span class="keyword">this</span>-&gt;<span class="built_in">pop</span>();</span><br><span class="line">        outStack.<span class="built_in">push</span>(r);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> inStack.<span class="built_in">empty</span>() &amp;&amp; outStack.<span class="built_in">empty</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="用队列实现栈">225. 用队列实现栈</h3>
+<p>用一个队列实现的方法比较简洁。注意队列和栈两种数据结构的函数用法不一样
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyStack</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyStack</span>() &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        q.<span class="built_in">push</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> s = q.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(s&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            s--;</span><br><span class="line">            <span class="type">int</span> a = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            q.<span class="built_in">push</span>(a);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> r = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> r = <span class="keyword">this</span>-&gt;<span class="built_in">pop</span>();</span><br><span class="line">        q.<span class="built_in">push</span>(r);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> q.<span class="built_in">empty</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="有效的括号">20. 有效的括号</h3>
+<p>注意一下几种可能遇到的错误情况即可 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isValid</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">char</span>&gt; pairP;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: s)&#123;</span><br><span class="line">            <span class="keyword">if</span>(c == <span class="string">&#x27;(&#x27;</span> || c == <span class="string">&#x27;[&#x27;</span> || c==<span class="string">&#x27;&#123;&#x27;</span>)&#123;</span><br><span class="line">                pairP.<span class="built_in">push</span>(c);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;)&#x27;</span> || c == <span class="string">&#x27;]&#x27;</span> || c == <span class="string">&#x27;&#125;&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(pairP.<span class="built_in">empty</span>())<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="type">char</span> lPair = pairP.<span class="built_in">top</span>();</span><br><span class="line">                <span class="keyword">if</span>( (c == <span class="string">&#x27;)&#x27;</span> &amp;&amp; lPair == <span class="string">&#x27;(&#x27;</span>) || (c == <span class="string">&#x27;]&#x27;</span> &amp;&amp; lPair == <span class="string">&#x27;[&#x27;</span>)||(c == <span class="string">&#x27;&#125;&#x27;</span> &amp;&amp; lPair == <span class="string">&#x27;&#123;&#x27;</span>))&#123;</span><br><span class="line">                    pairP.<span class="built_in">pop</span>();</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(!pairP.<span class="built_in">empty</span>())<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="删除字符串中的所有相邻重复项">1047.
+删除字符串中的所有相邻重复项</h3>
+<p>有了前面的经验，这一题就相对简单了 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">removeDuplicates</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">char</span>&gt; adjStack;</span><br><span class="line">        string r;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c: s)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!adjStack.<span class="built_in">empty</span>() &amp;&amp; adjStack.<span class="built_in">top</span>() == c)&#123;</span><br><span class="line">                adjStack.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                adjStack.<span class="built_in">push</span>(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(!adjStack.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            <span class="type">char</span> c = adjStack.<span class="built_in">top</span>();</span><br><span class="line">            adjStack.<span class="built_in">pop</span>();</span><br><span class="line">            r.<span class="built_in">push_back</span>(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(r.<span class="built_in">empty</span>())<span class="keyword">return</span> r;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = r.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;right)&#123;</span><br><span class="line">            <span class="type">char</span> e = r[left];</span><br><span class="line">            r[left] = r[right];</span><br><span class="line">            r[right] = e;</span><br><span class="line">            left++;</span><br><span class="line">            right--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1332,250 +1425,6 @@ right，后来发现在处理仅两个元素，且target小于最小元素的数
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://mackz-maxw.github.io/2025/01/20/fed-sched-int/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mackz-Maxw">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Maxw的小站">
-      <meta itemprop="description" content="乘上燃犀船，还未曾去过倒悬山。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Maxw的小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/01/20/fed-sched-int/" class="post-title-link" itemprop="url">fed_sched_int</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-01-20 22:45:29" itemprop="dateCreated datePublished" datetime="2025-01-20T22:45:29+08:00">2025-01-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-01-22 10:30:04" itemprop="dateModified" datetime="2025-01-22T10:30:04+08:00">2025-01-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/realtime-sched/" itemprop="url" rel="index"><span itemprop="name">realtime sched</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>摘录一下Marion的论文要点，方便查阅</p>
-<hr />
-<h3 id="任务模型">任务模型</h3>
-<p>每个任务 <span class="math inline">\(\tau_i\)</span> 由一组子任务
-<span class="math inline">\(\tau_{i,j}\)</span>
-组成，并在其间具有优先关系 <span
-class="math inline">\(&lt;\)</span>。每个子任务 <span
-class="math inline">\(\tau_{i,j}\)</span> 的特征为： - 工作量 <span
-class="math inline">\(c_{i,j} \in
-\mathbb{N}\)</span>，表示其最坏情况下的执行时间。</p>
-<p>子任务必须顺序执行，即它是一组必须按顺序完成的指令的集合，执行时间最长为
-<span
-class="math inline">\(c_{i,j}\)</span>。假设子任务执行是可重入的：执行可以被其他子任务抢占，且无需在系统中同一个核心上恢复。</p>
-<p>优先关系限制了子任务的执行顺序，例如 <span
-class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span>，则 <span
-class="math inline">\(\tau_{i,a}\)</span> 必须在 <span
-class="math inline">\(\tau_{i,b}\)</span> 之前完全执行。我们说，当任务
-<span class="math inline">\(\tau_{i,a}\)</span> 的所有前驱任务 <span
-class="math inline">\(\tau_{i,a&#39;}\)</span> 完成时，<span
-class="math inline">\(\tau_{i,a}\)</span> 变为“可用”（available）。</p>
-<p>根据 [26]，我们将任务分为两类： 1. <strong>轻量任务（light
-tasks）</strong>：满足 <span class="math inline">\(C_i &lt;
-D_i\)</span>； 2. <strong>重量任务（heavy tasks）</strong>：满足 <span
-class="math inline">\(C_i \geq
-D_i\)</span>，此类任务必须利用其潜在的并行性才能满足调度要求。</p>
-<p>本文的重点是<strong>联合调度</strong>（federated
-scheduling），对于每个重量任务，其被分配到一个专用核心集上并独占执行。我们仅考虑截止时间
-<span class="math inline">\(D_i\)</span> 和子任务工作量 <span
-class="math inline">\(c_{i,j}\)</span>
-为正整数的任务，称为<strong>整数值任务</strong>（integer-valued
-tasks）。</p>
-<hr />
-<h3 id="优先关系的dag表示">优先关系的DAG表示</h3>
-<p>子任务执行的优先关系可表示为一个<strong>有向无环图（DAG）</strong>。对于每个并行任务
-<span class="math inline">\(\tau_i\)</span>，存在一个DAG <span
-class="math inline">\(G_i\)</span>，其包含的顶点集合为 <span
-class="math inline">\(v_{i,j}\)</span>，对应于任务 <span
-class="math inline">\(\tau_i\)</span> 的子任务 <span
-class="math inline">\(\tau_{i,j}\)</span>： - 每个顶点 <span
-class="math inline">\(v_{i,j}\)</span> 的属性为子任务的工作量 <span
-class="math inline">\(c_{i,j}\)</span>； - 边 <span
-class="math inline">\(v_{i,a} \to v_{i,b}\)</span> 存在当且仅当 <span
-class="math inline">\(\tau_{i,a} &lt; \tau_{i,b}\)</span> 且不存在 <span
-class="math inline">\(v_{i,c}\)</span> 满足 <span
-class="math inline">\(\tau_{i,a} &lt; \tau_{i,c} &lt;
-\tau_{i,b}\)</span>，即 <span class="math inline">\(v_{i,b}\)</span>
-直接继承 <span class="math inline">\(v_{i,a}\)</span>。</p>
-<hr />
-<h3 id="关键路径长度的定义">关键路径长度的定义</h3>
-<p>对于每个图顶点 <span
-class="math inline">\(v_{i,j}\)</span>，我们定义其<strong>关键路径长度</strong>或<strong>跨度</strong>
-<span class="math inline">\(l_{i,j} \in \mathbb{N}\)</span>
-为从该顶点起始的最长路径的长度，该路径由沿路径每个顶点的执行时间（包括起始顶点的权重
-<span class="math inline">\(c_{i,j}\)</span>）加权。</p>
-<p>对于相应的任务 <span class="math inline">\(\tau_i\)</span>，跨度
-<span class="math inline">\(L_i \in \mathbb{N}\)</span>
-是所有顶点的跨度中的最大值，即整个DAG的关键路径长度。跨度对应于任务在给定无限数量核心时相对于其激活时间的最早完成时间。</p>
-<p>显然，为使任务可调度，必须满足： <span class="math display">\[
-L_i \leq D_i
-\]</span></p>
-<h2 id="适用于整数值任务的联合调度">适用于整数值任务的联合调度</h2>
-<p>对于一个重量任务 <span
-class="math inline">\(\tau_i\)</span>，其特征为工作量 <span
-class="math inline">\(C_i\)</span>、跨度 <span
-class="math inline">\(L_i\)</span> 和截止时间 <span
-class="math inline">\(D_i\)</span>，在提供足够核心的情况下，任何工作保留型（work-conserving，即贪婪型）调度器均可调度该任务。分配给任务
-<span class="math inline">\(\tau_i\)</span> 的核心数可以表示为： <span
-class="math display">\[
-n_i = \left\lceil \frac{C_i - L_i}{D_i - L_i} \right\rceil \tag{1}
-\]</span></p>
-<p>我们在此证明，对于一个并行任务，如果其截止时间和所有子任务的工作量均为整数，则分配的核心数可以改进为：
-<span class="math display">\[
-n_i&#39; = \left\lceil \frac{C_i - L_i + 1}{D_i - L_i + 1} \right\rceil
-\]</span></p>
-<p>这一公式比方程 (1)
-在限制重量任务的核心数方面提供了实际且直观的优势。</p>
-<h2
-id="单工作量表调度unit-workload-list-scheduling">单工作量表调度（Unit-Workload
-List Scheduling）</h2>
-<p>第4节中提出的联合调度方法为高利用率的整数值任务分配了足够的处理器，以保证任何工作保留型调度器的可行性，前提是给定每个任务的工作量、关键路径长度和截止时间。然而，这种常量时间的分配方法可能会导致对重量任务的处理器过度分配，进而造成资源浪费。</p>
-<p>在 [3] 中，Graham 的表调度方法（list
-scheduling）被应用于重量任务；通过使用多种启发式方法为子任务排序，可以在更少的处理器上生成可行的调度。表调度以非抢占式方式将可用子任务分配给空闲处理器；如
-[14]
-所述，这可能导致对重量任务的处理器分配过多。然而，允许空闲子任务进行抢占可能会引入切换问题。</p>
-<h3 id="方法改进">方法改进</h3>
-<p>为了解决这个问题，我们提出了<strong>单工作量子任务的表调度</strong>。<br />
-- 一个整数值并行任务 <span class="math inline">\(\tau_i\)</span>，由DAG
-<span class="math inline">\(G_i\)</span>
-表示，可以被分解为一个包含单工作量顶点的DAG <span
-class="math inline">\(G_i^*\)</span>。<br />
-- 在 <span class="math inline">\(G_i\)</span> 中具有工作量 <span
-class="math inline">\(c\)</span> 的顶点 <span
-class="math inline">\(v_{i,j}\)</span>
-被映射为一个完全有序的顶点序列，在 <span
-class="math inline">\(G_i^*\)</span> 中形成从起点到终点的路径。</p>
-<p>对于 <span class="math inline">\(G_i^*\)</span> 中的任何边 <span
-class="math inline">\(v_{i,j}\)</span>，其连接方式如下： 1. <span
-class="math inline">\(G_i^*\)</span> 中进入 <span
-class="math inline">\(v_{i,j}\)</span>
-的任何边连接到其分解后路径中的第一个顶点； 2. 在 <span
-class="math inline">\(G_i\)</span> 中离开 <span
-class="math inline">\(v_j\)</span> 的任何边，现在连接到 <span
-class="math inline">\(v_{i,j}\)</span> 的分解路径中的最后一个顶点。</p>
-<h3 id="优势">优势</h3>
-<p>对于这样的DAG，表调度方法可以为每个单位工作量分配一个优先级；<br />
-这使得原始DAG <span class="math inline">\(G_i\)</span>
-中的相应子任务能够在单位时间步边界内被抢占。</p>
-<h3 id="常见的表调度启发式方法">5.1 常见的表调度启发式方法</h3>
-<h4 id="关键路径规则critical-path-rule-cp">关键路径规则（Critical Path
-Rule, CP）</h4>
-<p>关键路径规则用于表调度时，以<strong>最长跨度</strong>的顺序选择可用子任务进行执行。<br />
--
-子任务跨度的分配可以以深度优先搜索的方式完成；当为每个顶点分配跨度后，图的总跨度
-<span class="math inline">\(L\)</span> 会被更新。 - 该过程的时间复杂度为
-<span class="math inline">\(O(|V| + |E|)\)</span>。</p>
-<h4 id="dag分解">DAG分解</h4>
-<p>DAG <span class="math inline">\(G\)</span> 分解为单位工作量的 DAG
-<span class="math inline">\(G^*\)</span> 的过程表示为函数
-<strong>Convert_Unit_DAG</strong>： 1. 初始化 <span
-class="math inline">\(G^*\)</span> 为 <span
-class="math inline">\(G\)</span> 的副本。 2. 建立一个顶点集合 <span
-class="math inline">\(V^*\)</span>，其由 <span
-class="math inline">\(G^*\)</span>
-中的顶点（实际代码中可能为指向顶点的指针）组成。 3. 对于 <span
-class="math inline">\(V^*\)</span> 中的每个顶点 <span
-class="math inline">\(v_i\)</span>： - 将 <span
-class="math inline">\(v_i\)</span> 的工作量 <span
-class="math inline">\(c_i\)</span> 转化为单位工作量顶点序列，这些顶点在
-<span class="math inline">\(G^*\)</span> 中形成路径： -
-路径中的每个顶点之间用边连接，第一个顶点的跨度等于 <span
-class="math inline">\(v_i\)</span> 的跨度 <span
-class="math inline">\(l_i\)</span>； -
-每个后续顶点的跨度比前一个顶点小1。 - 删除原始顶点 <span
-class="math inline">\(v_i\)</span>。</p>
-<ol start="4" type="1">
-<li>处理完成后，<span class="math inline">\(G^*\)</span>
-中仅包含单位工作量的顶点：
-<ul>
-<li>通过分解，生成了 <span class="math inline">\(C - |V|\)</span>
-个额外顶点，以及 <span class="math inline">\(C - |V|\)</span>
-条额外边。</li>
-<li>因此，总运行时间为 <span class="math inline">\(O(|V| + C - |V| + |E|
-+ C - |V|)\)</span>，简化为 <span class="math inline">\(O(C +
-|E|)\)</span>。</li>
-</ul></li>
-</ol>
-<h4
-id="后继数量规则largest-number-of-successors-rule-lns">后继数量规则（Largest
-Number of Successors Rule, LNS）</h4>
-<p>LNS规则以<strong>后继任务的总工作量</strong>为顺序，选择可用子任务进行执行：
-- 子任务 <span class="math inline">\(v_i \in G\)</span> 的后继工作量由与
-<span class="math inline">\(v_i\)</span>
-通过路径相连的所有顶点的工作量之和定义。 -
-可以通过动态规划在整个图上实现这一过程，其时间复杂度为 <span
-class="math inline">\(O(|V| + |E|)\)</span>。</p>
-<p>LNS规则也可以应用于单位工作量子任务的表调度，并保持伪多项式时间复杂度。</p>
-<h4 id="注意">注意</h4>
-<p>将整数值任务的 DAG <span class="math inline">\(G\)</span>
-分解为单位工作量的 DAG <span class="math inline">\(G^*\)</span>
-时，还需要为每个单位工作量顶点分配一个子图工作量。这与跨度的分配类似，不会影响算法的时间复杂度。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/zh-CN/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/zh-CN/page/10/">10</a><a class="page-number" href="/zh-CN/page/11/">11</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/zh-CN/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1653,7 +1502,7 @@ class="math inline">\(O(|V| + |E|)\)</span>。</p>
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
